@@ -2,10 +2,26 @@
   "name": "new-zealand-slow-trip-2026",
   "version": "1.0.0",
   "private": true,
-  "description": "2026 新西兰南北岛双人松弛旅行攻略静态站点",
+  "description": "2026 新西兰南北岛双人松弛旅行攻略 React + Vite 项目",
+  "type": "module",
   "scripts": {
-    "start": "python3 -m http.server 4173 --bind 127.0.0.1",
-    "dev": "npm start",
-    "preview": "npm start"
+    "dev": "vite --host 127.0.0.1 --port 4173",
+    "start": "npm run dev",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/icons-material": "^6.4.0",
+    "@mui/lab": "^6.0.0-beta.22",
+    "@mui/material": "^6.4.0",
+    "@react-google-maps/api": "^2.20.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7"
   }
 }

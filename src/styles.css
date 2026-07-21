@@ -1,0 +1,784 @@
+:root {
+  --ink: #18342e;
+  --ink-soft: #58716a;
+  --forest: #123f36;
+  --mint: #dcebdd;
+  --mint-soft: #edf5ec;
+  --lake: #347e90;
+  --sun: #f2b86b;
+  --coral: #df7659;
+  --cream: #f7f2e8;
+  --paper: #fffdf8;
+  --surface: #f4f7f3;
+  --line: #d9e3dc;
+  --shadow-sm: 0 10px 30px rgba(18, 63, 54, 0.07);
+  --shadow-lg: 0 24px 70px rgba(18, 63, 54, 0.13);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 85% 5%, rgba(52, 126, 144, 0.13), transparent 30rem),
+    radial-gradient(circle at 10% 95%, rgba(242, 184, 107, 0.13), transparent 28rem),
+    var(--surface);
+}
+
+a {
+  color: inherit;
+}
+
+.page-shell {
+  min-height: 100dvh;
+}
+
+.layout {
+  display: grid !important;
+  grid-template-columns: 238px minmax(0, 1fr);
+  gap: 24px;
+  width: min(1440px, calc(100% - 32px)) !important;
+  min-height: 100dvh;
+  padding: 18px 0 54px !important;
+}
+
+.sidebar {
+  position: sticky;
+  top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  min-height: calc(100dvh - 36px);
+  padding: 22px 16px 16px;
+  border-radius: 30px !important;
+  color: #fff;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.08), transparent 28%),
+    var(--forest) !important;
+  box-shadow: var(--shadow-lg);
+}
+
+.brand-mark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--forest);
+  background: var(--sun);
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.brand-kicker {
+  margin: 20px 0 4px !important;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.brand-title {
+  font-family: Georgia, "Songti SC", serif !important;
+  font-size: 27px !important;
+  line-height: 1.18 !important;
+}
+
+.brand-date {
+  margin-top: 8px !important;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px !important;
+}
+
+.side-tabs {
+  margin-top: 34px;
+}
+
+.side-tabs .MuiTabs-indicator {
+  display: none;
+}
+
+.side-tabs .MuiTab-root {
+  align-items: flex-start;
+  min-height: 54px;
+  margin: 4px 0;
+  padding: 0 12px;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 900;
+}
+
+.side-tabs .MuiTab-root::before {
+  width: 9px;
+  height: 9px;
+  margin-right: 10px;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  content: "";
+}
+
+.side-tabs .Mui-selected {
+  color: var(--forest) !important;
+  background: var(--cream);
+}
+
+.side-tabs .Mui-selected::before {
+  border-color: var(--coral);
+  background: var(--coral);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.progress {
+  height: 7px !important;
+  margin: 8px 0 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.progress .MuiLinearProgress-bar {
+  border-radius: inherit;
+  background: var(--sun);
+}
+
+.sidebar .MuiButton-outlined {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.content {
+  min-width: 0;
+}
+
+.topbar {
+  min-height: 50px;
+  padding: 4px 8px 14px;
+}
+
+.hero-card {
+  position: relative;
+  isolation: isolate;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 30px !important;
+  color: #fff !important;
+  background: var(--forest) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.hero-card > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, rgba(8, 35, 31, 0.97) 0%, rgba(8, 35, 31, 0.72) 40%, rgba(8, 35, 31, 0.1) 78%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 590px;
+  min-height: 260px;
+  padding: clamp(30px, 5vw, 58px) !important;
+}
+
+.hero-content-minimal {
+  justify-content: flex-end;
+  max-width: none;
+}
+
+.hero-content h1 {
+  max-width: 440px;
+  font-size: clamp(44px, 5.2vw, 66px);
+  line-height: 1.05;
+}
+
+.eyebrow {
+  margin-bottom: 14px !important;
+  color: var(--sun);
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.hero-text {
+  max-width: 530px;
+  margin-top: 16px !important;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 16px !important;
+}
+
+.chip-row,
+.map-chip-row,
+.day-heading {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.glass-chip {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  font-weight: 800;
+}
+
+.stat-card,
+.map-card,
+.shopping-plan-card,
+.calendar-card,
+.booking-card,
+.progress-card,
+.MuiCard-root {
+  border: 1px solid var(--line);
+  border-radius: 22px !important;
+  background: var(--paper) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.stat-value {
+  display: block;
+  margin-top: 4px !important;
+  font-family: Georgia, serif !important;
+  font-size: 30px !important;
+  font-weight: 900 !important;
+}
+
+.shopping-callout {
+  height: 100%;
+  min-height: 360px;
+  color: #fff !important;
+  background: var(--forest) !important;
+}
+
+.shopping-callout .MuiTypography-root {
+  color: inherit;
+}
+
+.shopping-callout p {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.callout-title {
+  margin-top: 18px !important;
+}
+
+.callout-copy {
+  margin-top: 12px !important;
+}
+
+.callout-button {
+  margin-top: 24px !important;
+}
+
+.map-card {
+  overflow: hidden;
+}
+
+.map-frame {
+  position: relative;
+  flex: 1.1;
+  min-height: 420px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--mint-soft);
+}
+
+.map-frame-full {
+  width: 100%;
+}
+
+.google-route-map {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  font-family: inherit;
+}
+
+.google-route-preview {
+  display: block;
+  width: 100%;
+  min-height: 420px;
+  border: 0;
+}
+
+.map-info-window {
+  max-width: 220px;
+  color: var(--ink);
+}
+
+.map-info-window p {
+  margin: 2px 0 0;
+}
+
+.map-placeholder {
+  display: grid;
+  min-height: 420px;
+  padding: 28px;
+  place-content: center;
+  gap: 8px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(52, 126, 144, 0.18), transparent 18rem),
+    radial-gradient(circle at 80% 70%, rgba(242, 184, 107, 0.2), transparent 18rem),
+    var(--mint-soft);
+}
+
+.map-actions {
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+.map-stop-grid {
+  margin-top: 16px;
+}
+
+.map-stop {
+  height: 100%;
+  padding: 14px;
+  border: 1px solid;
+  border-color: var(--stop-color);
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+.map-stop-tag {
+  color: #fff !important;
+  background: var(--stop-color) !important;
+  font-weight: 900 !important;
+}
+
+.map-stop-desc {
+  margin-top: 4px !important;
+}
+
+.section-title {
+  align-items: end;
+  margin: 6px 4px 14px;
+}
+
+.section-title h2 {
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.15;
+}
+
+.section-title p {
+  max-width: 500px;
+  text-align: right;
+}
+
+.photo-card {
+  position: relative;
+  isolation: isolate;
+  min-height: 250px;
+  overflow: hidden;
+  border-radius: 22px !important;
+  background: var(--forest) !important;
+}
+
+.photo-card img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-card:hover img {
+  transform: scale(1.035);
+}
+
+.photo-gradient {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 35%, rgba(6, 28, 24, 0.82));
+}
+
+.photo-caption {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  left: 20px;
+  color: #fff;
+}
+
+.photo-caption .MuiTypography-caption {
+  color: rgba(255, 255, 255, 0.67);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.photo-caption h3 {
+  font-size: 25px;
+}
+
+.panel-hero {
+  position: relative;
+  min-height: 290px;
+  overflow: hidden;
+  color: #fff !important;
+  background: var(--forest) !important;
+}
+
+.panel-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.panel-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 35, 31, 0.92), rgba(8, 35, 31, 0.18));
+}
+
+.panel-hero .MuiCardContent-root {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  padding: 42px !important;
+}
+
+.panel-hero h2 {
+  margin-bottom: 12px;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.08;
+}
+
+.panel-hero p:not(.eyebrow) {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.month-calendar {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+}
+
+.month-calendar-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.month-calendar-header h2 {
+  font-size: clamp(24px, 3vw, 34px);
+}
+
+.month-weekdays,
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.month-weekdays {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  background: rgba(237, 245, 236, 0.76);
+}
+
+.month-weekdays p {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.month-grid {
+  background: var(--line);
+  gap: 1px;
+}
+
+.month-cell {
+  min-height: 142px;
+  padding: 10px;
+  background: var(--paper);
+}
+
+.month-cell[data-muted="true"] {
+  color: rgba(24, 52, 46, 0.32);
+  background: #f6f6f0;
+}
+
+.month-cell.has-trip {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.98)),
+    var(--day-color);
+}
+
+.month-cell.has-trip::before {
+  position: absolute;
+  inset: 0;
+  border-top: 5px solid var(--day-color);
+  pointer-events: none;
+  content: "";
+}
+
+.month-cell-date {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+}
+
+.month-cell-date > p {
+  font-weight: 900;
+}
+
+.month-cell-date .MuiChip-root {
+  height: 22px;
+  color: #fff;
+  background: var(--day-color);
+  font-weight: 900;
+}
+
+.calendar-event {
+  position: relative;
+  z-index: 1;
+}
+
+.calendar-event-title {
+  color: var(--ink);
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+}
+
+.calendar-event-subtitle {
+  margin-top: 3px !important;
+  color: var(--ink-soft);
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.calendar-event-times {
+  margin-top: 8px;
+}
+
+.calendar-event-times p {
+  overflow: hidden;
+  color: rgba(24, 52, 46, 0.78);
+  font-size: 11px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-event-stay {
+  margin-top: 8px !important;
+  padding-top: 7px;
+  border-top: 1px dashed rgba(24, 52, 46, 0.18);
+  color: var(--ink-soft);
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+}
+
+.shopping-plan-card {
+  height: 100%;
+}
+
+.shopping-plan-card .MuiListItem-root {
+  align-items: flex-start;
+}
+
+.shopping-stop .MuiListItemText-root {
+  margin-left: 12px;
+}
+
+.booking-card {
+  height: 100%;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+  border-color: #aac4b5;
+}
+
+.booking-card.checked {
+  border-color: #a8c5b0;
+  background: var(--mint-soft) !important;
+}
+
+.progress-card {
+  position: sticky;
+  top: 18px;
+  color: #fff !important;
+  background: var(--forest) !important;
+}
+
+.progress-card .MuiTypography-root {
+  color: inherit;
+}
+
+.progress-note {
+  margin-top: 16px !important;
+}
+
+.credits-copy {
+  margin-top: 8px !important;
+}
+
+.progress-card .MuiLinearProgress-root {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.progress-card .MuiLinearProgress-bar {
+  border-radius: inherit;
+  background: var(--sun);
+}
+
+.big-progress {
+  margin: 8px 0 !important;
+  font-family: Georgia, serif !important;
+  font-size: 58px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.mobile-nav {
+  position: fixed;
+  z-index: 100;
+  right: 10px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  left: 10px;
+  overflow: hidden;
+  border-radius: 18px !important;
+}
+
+@media (max-width: 1040px) {
+  .layout {
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .hero-card,
+  .hero-content {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 900px) {
+  body {
+    padding-bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+
+  .layout {
+    display: block !important;
+    width: min(100% - 20px, 720px) !important;
+    padding-top: 10px !important;
+  }
+
+  .topbar {
+    align-items: flex-start !important;
+    min-height: 54px;
+  }
+
+  .topbar .MuiStack-root {
+    display: none;
+  }
+
+  .hero-card,
+  .hero-content {
+    min-height: 250px;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(0deg, rgba(8, 35, 31, 0.97) 0%, rgba(8, 35, 31, 0.7) 58%, rgba(8, 35, 31, 0.05) 100%);
+  }
+
+  .hero-content {
+    justify-content: flex-end;
+    padding: 28px 22px 30px !important;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(42px, 12vw, 58px);
+  }
+
+  .map-frame,
+  .google-route-map,
+  .map-placeholder {
+    min-height: 300px;
+  }
+
+  .section-title {
+    align-items: flex-start;
+  }
+
+  .section-title p {
+    text-align: left;
+  }
+
+  .panel-hero {
+    min-height: 340px;
+  }
+
+  .panel-gradient {
+    background: linear-gradient(0deg, rgba(8, 35, 31, 0.94), rgba(8, 35, 31, 0.08));
+  }
+
+  .panel-hero .MuiCardContent-root {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 26px !important;
+  }
+
+  .month-calendar {
+    overflow-x: auto;
+  }
+
+  .month-weekdays,
+  .month-grid {
+    min-width: 760px;
+  }
+
+  .month-cell {
+    min-height: 132px;
+  }
+}
+
+@media print {
+  .sidebar,
+  .topbar,
+  .mobile-nav,
+  .MuiButton-root {
+    display: none !important;
+  }
+
+  .layout {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .MuiAccordionDetails-root {
+    display: block !important;
+  }
+}
