@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Box, Chip, Container, Divider, Paper, Stack, Tab, Tabs, useMediaQuery } from "@mui/material";
+import { Box, Container, Divider, Paper, Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Sidebar } from "./components/Sidebar";
 import { BookingPanel } from "./components/panels/BookingPanel";
@@ -7,6 +7,7 @@ import { NorthPanel } from "./components/panels/NorthPanel";
 import { NotesPanel } from "./components/panels/NotesPanel";
 import { OverviewPanel } from "./components/panels/OverviewPanel";
 import { SouthPanel } from "./components/panels/SouthPanel";
+import { tabLabel } from "./components/tabIcons";
 import { bookingItems, tabs } from "./tripData";
 
 const storageKey = "nz-trip-booking-react-v1";
@@ -51,12 +52,6 @@ export default function App() {
       <Container maxWidth={false} className="layout">
         {!isMobile && <Sidebar tab={tab} onTabChange={setTab} progress={progress} />}
         <Box component="main" className="content">
-          <Stack direction="row" justifyContent="flex-end" alignItems="center" className="topbar">
-            <Stack direction="row" spacing={1}>
-              {["13天", "南北岛", "自驾 + 飞机"].map((item) => <Chip key={item} label={item} />)}
-            </Stack>
-          </Stack>
-
           {tab === "overview" && <OverviewPanel onJumpNorth={() => setTab("north")} />}
           {tab === "south" && <SouthPanel />}
           {tab === "north" && <NorthPanel />}
@@ -72,7 +67,7 @@ export default function App() {
           <Divider />
           <Paper className="mobile-nav" elevation={8}>
             <Tabs value={tab} onChange={(_, value) => setTab(value)} variant="fullWidth">
-              {tabs.map((item) => <Tab key={item.value} value={item.value} label={item.short} />)}
+              {tabs.map((item) => <Tab key={item.value} value={item.value} label={tabLabel(item, "short")} />)}
             </Tabs>
           </Paper>
         </>
