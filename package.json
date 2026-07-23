@@ -8,6 +8,8 @@
     "dev": "vite --host 127.0.0.1 --port 4173",
     "start": "npm run dev",
     "build": "vite build",
+    "audit:event-media": "node scripts/audit-event-media.mjs",
+    "audit:social-guides": "node scripts/audit-social-guides.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173"
   },
   "dependencies": {

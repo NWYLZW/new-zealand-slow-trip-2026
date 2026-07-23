@@ -1,0 +1,793 @@
+import { verifiedAucklandShoppingGuides, verifiedFlightTransitGuides } from "./socialGuidesLateEvents.js";
+import { verifiedQueenstownRegionGuides } from "./socialGuidesQueenstown.js";
+
+const redbookSearch = (query) => `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(query)}&source=web_explore_feed`;
+const redditSearch = (query) => `https://www.reddit.com/search/?q=${encodeURIComponent(query)}`;
+const youtubeSearch = (query) => `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+
+const englishCopyByTitle = {
+  "2026新西兰皇后镇停车攻略🔥不花冤枉钱": {
+    title: "2026 Queenstown parking guide: avoid unnecessary costs",
+    points: ["Yellow zones are no-parking areas; never use accessible parking bays.", "Central Queenstown uses camera enforcement, so plan where to park before driving in.", "Lakeview is a cost-effective option; arrive early if you want one of the free spaces."],
+    tip: "Use the post as a parking-planning reference and follow the signs at the actual bay.",
+  },
+  "新西兰租车🇳🇿省钱&实用超全攻略！": {
+    title: "New Zealand car rental: a practical money-saving guide",
+    points: ["00:29 — required rental documents.", "00:51 — recommendation to choose full coverage.", "01:25 — where and how to rent and save.", "02:13 — notes on New Zealand road rules."],
+    tip: "This video is sponsored and includes a Ctrip car-rental promotion. Use its checklist structure, but verify promotional claims, prices, cover and contract terms independently.",
+  },
+  "一分钟讲清楚：库克山直升机🚁，干嘛老取消😵": {
+    title: "Why Mount Cook helicopter flights are often cancelled — explained in one minute",
+    points: [],
+    tip: "The operator's same-day decision determines whether the flight can proceed.",
+  },
+  "皇后镇松弛玩法与餐饮避坑": {
+    title: "A relaxed Queenstown itinerary and dining tips",
+    points: ["Save lakefront walks, Queenstown Gardens and nearby restaurants together to avoid moving the car repeatedly.", "Popular dinner spots can queue; book ahead or eat outside peak hours.", "Treat posted prices and opening hours as leads, then confirm them on official pages."],
+    tip: "Useful for arrival, free time and easy days based in central Queenstown.",
+  },
+  "The Perfect 3 Day Queenstown Itinerary": {
+    points: ["The chapters combine the Glenorchy road, Skyline and Arrowtown, making it easier to judge timing.", "Real footage helps assess gradients, walking distances and the practical city-centre flow."],
+    tip: "Use the video to set the pace; verify opening and maintenance updates officially.",
+  },
+  "瓦纳卡湖畔与轻徒步组合": {
+    title: "Lake Wānaka and easy-walk combinations",
+    points: ["The lakefront can be windy around sunrise and sunset, so bring a warm, windproof layer.", "That Wānaka Tree is a short stop that pairs well with Mount Iron or Puzzling World.", "Keep indoor activities for wet weather and save the trails for a clear window."],
+    tip: "Stay behind barriers and protect the tree-root area when taking photos.",
+  },
+  "库克山天气、直升机和备选安排": {
+    title: "Mount Cook weather, helicopter and backup planning",
+    points: ["Alpine conditions change quickly; check once the night before and again in the morning.", "If a flight is cancelled, ask for the next morning first, then consider a refund.", "Lake Pukaki, the visitor centre and short hotel-area walks are useful low-effort backups."],
+    tip: "Social posts help with preparation, but the operator makes the final weather call.",
+  },
+  "South Island itinerary advice · Mount Cook": {
+    points: ["The discussion combines Hooker Valley, Lake Pukaki viewpoints and Tasman Glacier.", "Community feedback is useful for judging activity density and physical effort."],
+    tip: "Posts are not live conditions: check DOC for tracks and the operator for flights.",
+  },
+  "奥克兰 CBD 与 Newmarket 一日购物动线": {
+    title: "Auckland CBD and Newmarket shopping route",
+    points: ["Queen Street, Britomart and Commercial Bay work well as one walkable CBD loop.", "Newmarket concentrates more brands, so leave larger purchases for the afternoon.", "Allow extra time for the airport return during peak traffic."],
+    tip: "Confirm tax and stock policies directly with each store.",
+  },
+  "霍比屯集合、入场与拍照节奏": {
+    title: "Hobbiton arrival, entry and photo timing",
+    points: ["Navigate to The Shire’s Rest rather than the centre of the film set.", "Arrive at least 20 minutes early for parking, check-in and facilities.", "The tour keeps moving, so take photos without delaying the group."],
+    tip: "Follow the meeting instructions and session time on the booking confirmation.",
+  },
+  "Hobbiton Movie Set 实景参观预览": {
+    title: "Hobbiton Movie Set tour preview",
+    points: ["Recent videos help preview surfaces, photo stops and the guided walking pace.", "Avoid full walk-throughs if you would rather keep the on-site details a surprise."],
+    tip: "Prefer the official channel or a recent, clearly dated visit.",
+  },
+  "罗托鲁瓦地热与红杉林轻松玩法": {
+    title: "An easy Rotorua geothermal and Redwoods plan",
+    points: ["Plan arrival at Te Puia around the guided-tour session.", "A washable outer layer is practical around the sulphur-rich geothermal area.", "Choose a short Redwoods trail to keep this a relaxed day."],
+    tip: "Follow photography and conduct guidance at Māori cultural sites.",
+  },
+  "吉隆坡 T1 转机与新西兰入境经验": {
+    title: "Kuala Lumpur T1 connection and New Zealand arrival tips",
+    points: ["For a short connection, follow Transfer signs instead of entering Malaysia.", "Keep the onward boarding pass, passport and baggage receipt accessible.", "When entering New Zealand, declare food and outdoor equipment whenever in doubt."],
+    tip: "Recheck terminal, airline and New Zealand Customs guidance before departure.",
+  },
+  "Air New Zealand A320 · Auckland to Queenstown": {
+    points: ["The video follows the domestic-terminal process, A320 cabin and arrival in Queenstown.", "It gives a practical preview of boarding pace and the views en route."],
+    tip: "Aircraft, counters, schedule and baggage rules may change; use the live airline information.",
+  },
+  "New Zealand rental car tips before pickup": {
+    points: ["The guide covers vehicle choice, insurance, collection, return and local driving preparation.", "Use it as a checklist before signing the rental agreement."],
+    tip: "Insurance cover, snow chains and one-way fees are governed by the Omega contract.",
+  },
+  "Ultimate Queenstown Travel Guide: Glenorchy and Wānaka": {
+    points: ["The footage covers Queenstown, Glenorchy and Wānaka and helps judge a realistic day density.", "Road and viewpoint footage makes the distances easier to understand than a map alone."],
+    tip: "Mountain-road travel can exceed navigation estimates; reduce stops in poor weather.",
+  },
+  "皇后镇—格林诺奇湖岸公路停靠点": {
+    title: "Queenstown–Glenorchy lakeside road stops",
+    points: ["Bob’s Cove, Bennett’s Bluff and Glenorchy Wharf form a convenient sequence.", "The road is winding, so stop only in proper parking areas.", "Allow for changing light and weather on the return trip."],
+    tip: "Never stop informally on the carriageway for a photo.",
+  },
+  "TSS Earnslaw & Walter Peak Farm Tour": {
+    points: ["The video shows the steamship crossing, farm visit and core on-site experience.", "It is useful for judging clothing, walking and the overall pace."],
+    tip: "Meals and farm activities vary by ticket type; check the booking details.",
+  },
+  "Come to Walter Peak": {
+    points: ["RealNZ’s short video previews the steamship, gardens and working high-country farm.", "It is a quick overview of what the combined experience includes."],
+    tip: "Facebook may require sign-in; use the RealNZ website for availability and booking.",
+  },
+  "Queenstown to Wānaka over the Crown Range Road": {
+    points: ["The full driving view follows the Crown Range and Cardrona route.", "It helps preview gradients, bends and the general road character."],
+    tip: "This is not live road information; check NZTA before setting off.",
+  },
+  "箭镇—Crown Range—瓦纳卡自驾": {
+    title: "Arrowtown–Crown Range–Wānaka drive",
+    points: ["Visit Arrowtown and have lunch before crossing the Crown Range.", "Use the Cromwell route instead when mountain conditions are poor."],
+    tip: "Choose the route using the day’s NZTA road report.",
+  },
+  "Mount Cook Ski Planes and Helicopters · Adventure Awaits": {
+    points: ["Operator footage shows the glacier overflight and snow landing that define the experience.", "It is a useful preview of the flight and the clothing required."],
+    tip: "A snow landing depends on conditions; promotional footage does not guarantee departure.",
+  },
+  "Big Sky Stargazing Aoraki / Mount Cook": {
+    points: ["The Hermitage video introduces the dark-sky setting and deep-sky observation focus.", "It helps preview the format and the need for warm night-time clothing."],
+    tip: "Cloud and moonlight matter greatly, so keep a cancellable alternative.",
+  },
+  "Is 3 Days at Mt Cook too much?": {
+    points: ["The visit combines walks, a helicopter flight and glacier activities.", "It helps compare substitutes when weather forces a change."],
+    tip: "Use DOC for track status and the operator for the flight decision.",
+  },
+  "库克山—蒂卡波—基督城长途日": {
+    title: "Mount Cook–Tekapo–Christchurch driving day",
+    points: ["Keep Tekapo to the church, lakefront and lunch so the stop does not overrun.", "Schedule a deliberate rest on the long drive and avoid arriving after dark.", "Confirm fuel and road information before leaving the alpine area."],
+    tip: "If the morning helicopter backup operates, shorten the Tekapo stop.",
+  },
+  "基督城市中心半日步行": {
+    title: "Half-day walk in central Christchurch",
+    points: ["Start with brunch at Riverside Market, then continue to nearby central sights.", "The Botanic Gardens are extensive, so choose a short loop around the flight schedule.", "Leave the centre early enough for the airport car return."],
+    tip: "Do not risk the return-car or flight deadline for another photo stop.",
+  },
+  "Commercial Bay Mall Auckland walk-through": {
+    points: ["The walk-through shows the mall layout, dining areas and broad store mix.", "It helps estimate how much time to allocate to Commercial Bay."],
+    tip: "The video is older; confirm current stores and hours on the official website.",
+  },
+  "Hobbiton Movie Set": {
+    points: ["The official page posts seasonal scenery and current visitor notices.", "It is useful for a final check shortly before the visit."],
+    tip: "Popular sessions still require advance booking on the website; social posts do not indicate availability.",
+  },
+  "Te Puia · Rotorua": {
+    points: ["The official page shares updates on geothermal activity, Māori culture and the carving school.", "Use it to see what is currently happening before the visit."],
+    tip: "Facebook may require sign-in; ticket types and sessions belong on the official website.",
+  },
+  "North Island trip report · What was worth it": {
+    points: ["The visitor report discusses the geyser, Māori culture and kiwi experience.", "It adds a value-for-time perspective beyond official marketing."],
+    tip: "One visitor’s experience does not replace the ticket description.",
+  },
+};
+
+const sourceEnBySource = {
+  "平台检索页": "Platform search results",
+  "小红书 · 已核验原帖": "Xiaohongshu · verified post",
+  "YouTube · 实景行程": "YouTube · on-location itinerary",
+  "Reddit · r/newzealand_travel": "Reddit · r/newzealand_travel",
+  "YouTube · 近期实飞": "YouTube · recent flight",
+  "YouTube · 自驾准备": "YouTube · driving preparation",
+  "YouTube · 公路实景": "YouTube · road footage",
+  "YouTube · 完整体验": "YouTube · full experience",
+  "RealNZ 官方": "Official RealNZ account",
+  "YouTube · 全程驾驶视角": "YouTube · full driving view",
+  "YouTube · 运营方": "YouTube · operator video",
+  "The Hermitage 官方": "Official Hermitage account",
+  "YouTube · 多项目实测": "YouTube · multi-activity visit",
+  "YouTube · 商场实拍": "YouTube · mall walk-through",
+  "Hobbiton 官方页面": "Official Hobbiton page",
+  "Te Puia 官方页面": "Official Te Puia page",
+  "Reddit · 游客复盘": "Reddit · visitor trip report",
+};
+
+// Rich, verified posts may additionally provide sourceUrl, coverImage/videoThumbnail,
+// mediaType, author (or authorName/authorAvatar/authorHandle), excerpt, verified,
+// and stance/sentiment ("positive" or "pitfall").
+// The legacy fields below remain valid so curated summaries keep rendering until a
+// real post has been reviewed and its media/author metadata is supplied.
+export const guide = ({
+  author,
+  authorAvatar,
+  authorHandle,
+  authorName,
+  coverAlt,
+  coverImage,
+  excerpt,
+  excerptEn,
+  media,
+  mediaType,
+  mediaUrl,
+  platform,
+  points,
+  pointsEn,
+  query,
+  source = "平台检索页",
+  sourceUrl,
+  stance,
+  sentiment,
+  tip,
+  tipEn,
+  title,
+  titleEn,
+  type = "redbook",
+  url,
+  verified,
+  videoThumbnail,
+  videoUrl,
+}) => ({
+  author,
+  authorAvatar,
+  authorHandle,
+  authorName,
+  coverAlt,
+  coverImage,
+  excerpt,
+  excerptEn,
+  media,
+  mediaType,
+  mediaUrl,
+  platform,
+  isSearchEntry: !url && !sourceUrl,
+  points,
+  pointsEn: pointsEn ?? englishCopyByTitle[title]?.points,
+  source,
+  sourceEn: sourceEnBySource[source] ?? source,
+  tip,
+  tipEn: tipEn ?? englishCopyByTitle[title]?.tip,
+  title,
+  titleEn: titleEn ?? englishCopyByTitle[title]?.title ?? title,
+  sourceUrl,
+  stance: stance ?? sentiment,
+  sentiment: sentiment ?? stance,
+  url: url ?? sourceUrl ?? (type === "reddit" ? redditSearch(query) : type === "youtube" ? youtubeSearch(query) : redbookSearch(query)),
+  verified,
+  videoThumbnail,
+  videoUrl,
+});
+
+// Use this for posts whose URL and contents were checked in an authenticated
+// Xiaohongshu session. It intentionally supplies no media, author or copy by
+// itself: callers still have to pass only facts observed in the verified post.
+export const verifiedXhsPost = (post) => guide({
+  ...post,
+  platform: "小红书",
+  source: "小红书 · 已核验原帖",
+  verified: true,
+});
+
+const generalByRegion = {
+  queenstown: [
+    guide({
+      platform: "小红书",
+      title: "皇后镇松弛玩法与餐饮避坑",
+      query: "新西兰 皇后镇 自由行 餐厅 停车 攻略",
+      points: ["优先收藏步行可达的湖畔、花园和餐厅，减少重复停车。", "热门餐厅晚餐时段可能排队，适合提前订位或错峰。", "帖子里的价格和营业时间只作线索，出发前再看官方页面。"],
+      tip: "适合皇后镇市区、取车入住和自由活动日。",
+    }),
+    guide({
+      platform: "YouTube",
+      title: "The Perfect 3 Day Queenstown Itinerary",
+      source: "YouTube · 实景行程",
+      url: "https://www.youtube.com/watch?v=Jp8tyQw7w_s",
+      points: ["章节包含 Glenorchy 公路、Skyline 与 Arrowtown，可判断项目组合和时长。", "画面能帮助判断坡度、步行距离和市区真实动线。"],
+      tip: "视频用于判断节奏，营业与维护信息仍以官方公告为准。",
+    }),
+  ],
+  wanaka: [
+    guide({
+      platform: "小红书",
+      title: "瓦纳卡湖畔与轻徒步组合",
+      query: "瓦纳卡 That Wanaka Tree Mount Iron Puzzling World 攻略",
+      points: ["日出日落时湖边风大，保暖层和防风外套很实用。", "That Wānaka Tree 停留时间不必太长，可与 Mount Iron 或 Puzzling World 组合。", "雨天优先室内项目，晴天再走步道。"],
+      tip: "不要越过围栏或踩入树根区域拍照。",
+    }),
+  ],
+  mountCook: [
+    guide({
+      platform: "小红书",
+      title: "库克山天气、直升机和备选安排",
+      query: "库克山 直升机 冰川降落 天气 取消 攻略",
+      points: ["山区天气变化快，前一晚和当天早晨都要确认状态。", "直升机停飞时先争取改到次日早班，再考虑退款。", "Lake Pukaki、游客中心和酒店周边都可作为低强度备选。"],
+      tip: "社交经验只用于准备，能否飞行以运营方当天决定为准。",
+    }),
+    guide({
+      platform: "Reddit",
+      title: "South Island itinerary advice · Mount Cook",
+      source: "Reddit · r/newzealand_travel",
+      url: "https://www.reddit.com/r/newzealand_travel/comments/1jpxmoz/south_island_any_itinerary_advice_appreciated/",
+      points: ["讨论把 Hooker Valley、Lake Pukaki lookout 与 Tasman Glacier 组合安排。", "社区建议有助于判断山区项目密度和体力要求。"],
+      tip: "帖子不代表实时路况；步道查 DOC，飞行由运营方当天决定。",
+    }),
+  ],
+  auckland: [
+    guide({
+      platform: "小红书",
+      title: "奥克兰 CBD 与 Newmarket 一日购物动线",
+      query: "奥克兰 购物 Queen Street Commercial Bay Newmarket 攻略",
+      points: ["CBD 适合步行串联 Queen Street、Britomart 与 Commercial Bay。", "Newmarket 品牌集中，建议把大件采购放在下午。", "返机场时预留高峰期交通缓冲。"],
+      tip: "退税和商品库存政策以门店现场为准。",
+    }),
+  ],
+  hobbiton: [
+    guide({
+      platform: "小红书",
+      title: "霍比屯集合、入场与拍照节奏",
+      query: "霍比屯 The Shire's Rest 自驾 入场 拍照 攻略",
+      points: ["导航终点应设为 The Shire’s Rest，而不是景区中心。", "至少提前 20 分钟抵达，先停车、签到和上洗手间。", "全程跟随导览，拍照要兼顾团队移动节奏。"],
+      tip: "场次与集合要求以订单和官网通知为准。",
+    }),
+    guide({
+      platform: "YouTube",
+      title: "Hobbiton Movie Set 实景参观预览",
+      query: "Hobbiton Movie Set tour The Shire's Rest guide",
+      points: ["视频可以提前了解步行路面、停留点和导览速度。", "避免观看包含完整剧情式导览的视频，以保留现场体验。"],
+      tip: "查看官方频道或近期完整游记。",
+      type: "youtube",
+    }),
+  ],
+  rotorua: [
+    guide({
+      platform: "小红书",
+      title: "罗托鲁瓦地热与红杉林轻松玩法",
+      query: "罗托鲁瓦 Te Puia Redwoods 自驾 攻略",
+      points: ["Te Puia 建议按导览场次安排到达时间。", "地热区硫磺气味明显，穿易清洗的外层更省心。", "Redwoods 可按体力选择短步道，不必追求长线。"],
+      tip: "尊重毛利文化场所的拍摄和行为提示。",
+    }),
+  ],
+  transit: [
+    guide({
+      platform: "小红书",
+      title: "吉隆坡 T1 转机与新西兰入境经验",
+      query: "马航 吉隆坡 T1 转机 奥克兰 入境 攻略",
+      points: ["短转机优先跟随 Transfer 指示，不要先走入境通道。", "随身保留下一段登机牌、护照和行李凭证。", "新西兰入境申报宁可多申报，不要漏报食品和户外装备。"],
+      tip: "航站楼和入境规则以机场、航司和新西兰海关最新公告为准。",
+    }),
+  ],
+};
+
+const rentalInsurancePitfallPost = verifiedXhsPost({
+  title: "新西兰自驾 租车避雷 保险篇！（个人经验）",
+  titleEn: "New Zealand self-drive rental warning: insurance lessons from personal experience",
+  author: "人生不过一场升级打怪",
+  mediaType: "image",
+  coverImage: "/new-zealand-slow-trip-2026/images/xhs-nz-rental-insurance-pitfall.webp",
+  coverAlt: "新西兰自驾租车保险避雷个人经验帖封面",
+  excerpt: "作者原计划线上买基础险、到店补全险，但车行拒绝现场升级；最终每天加付 20 新西兰元也只把免赔额从 5000 降至 2000 新西兰元，玻璃与轮胎合计最高赔 3000。评论还提醒，第三方全险出险时可能需要先垫付再理赔。",
+  excerptEn: "The author planned to buy basic cover online and upgrade at pickup, but the rental company refused. An extra NZD 20 per day only reduced the excess from NZD 5,000 to NZD 2,000, with glass and tyre cover capped at NZD 3,000 combined. Comments also warn that third-party cover may require paying costs upfront before reimbursement.",
+  points: ["不要默认车行允许到店升级全险。", "第三方全险可能需要先垫付维修费用。", "取车后约 100 公里才发现车身抖动，会让返店换车非常被动。"],
+  pointsEn: ["Do not assume the rental desk will allow a full-cover upgrade at pickup.", "Third-party comprehensive cover may require upfront payment.", "A vehicle vibration noticed about 100 km after pickup made returning for a replacement impractical."],
+  tip: "预订时直接选好保障，或提前书面确认能否现场升级；取车后先在附近试驾并检查异响、抖动、轮胎和玻璃，再进入长途路段。",
+  tipEn: "Choose the required cover when booking or obtain written confirmation that an on-site upgrade is allowed. Test-drive near the depot and check for vibration, noise, tyres and glass before starting a long route.",
+  stance: "pitfall",
+  url: "https://www.xiaohongshu.com/explore/69ad34a1000000002203384b",
+});
+
+const mountCookVerifiedPosts = [
+  verifiedXhsPost({
+    title: "如果新西兰只能去一座山，那一定是库克山",
+    titleEn: "If you visit only one mountain in New Zealand, make it Mount Cook",
+    author: "新西兰女司导Karen",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-mount-cook-one-mountain.webp",
+    coverAlt: "库克山公路、徒步、冰川直升机与银河攻略封面",
+    excerpt: "作者把 Hooker Valley Track、Tasman Glacier、冰川直升机雪降和晴夜银河列为库克山的核心体验，并推荐 SH80 的经典公路视角；夏季较适合徒步。",
+    excerptEn: "The author highlights Hooker Valley Track, Tasman Glacier, a glacier helicopter snow landing and the Milky Way on a clear night, as well as the classic SH80 road view. Summer is presented as a good hiking season.",
+    points: ["SH80 本身就是抵达库克山的重要景观段。", "徒步、飞行和观星都依赖当天山地天气。"],
+    pointsEn: ["SH80 is a major scenic part of the approach to Mount Cook.", "Hiking, flying and stargazing all depend on the day's alpine conditions."],
+    tip: "不要把四种体验全部排成不可调整的连续项目；先看天气，再决定徒步、飞行和夜间观星的顺序。",
+    tipEn: "Do not lock all four experiences into an inflexible sequence. Check the weather first, then order the walk, flight and night-time stargazing accordingly.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/6a606fdc000000001c01116f",
+  }),
+  verifiedXhsPost({
+    title: "🇳🇿新西兰｜放弃直升机，徒步20分钟看冰川",
+    titleEn: "New Zealand: skip the helicopter and walk 20 minutes to see the glacier",
+    author: "煎椒河豚",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-tasman-lake-walk.webp",
+    coverAlt: "Tasman Lake Track 免费冰川徒步攻略封面",
+    excerpt: "作者因直升机价格高改走免费的 Tasman Lake Track：导航 Tasman Glacier Parking 或 Blue Lakes Car Park，单程约 20–30 分钟、往返至少留 1 小时。正文称低中难度，但评论提醒末段乱石可能需手脚并用，冬季也会打滑。",
+    excerptEn: "Because the helicopter cost several thousand yuan per person, the author chose the free Tasman Lake Track. Navigate to Tasman Glacier Parking or Blue Lakes Car Park, allow about 20–30 minutes each way and at least one hour return. The post calls it easy-to-moderate, while comments warn that the rocky final section may require using hands and can be slippery in winter.",
+    points: ["岔路可分别前往 Tasman Lake 与 Tasman River。", "沿途无补给，需要防风层和饮水。", "不要下到冰川湖水边冒险。"],
+    pointsEn: ["The fork leads separately toward Tasman Lake and Tasman River.", "There are no supplies on the route; carry water and a windproof layer.", "Do not climb down into the glacial-lake danger area."],
+    tip: "把“20 分钟”当作作者个人步速而不是承诺；给乱石路、拍照和天气变化留足时间，冬季先查步道情况。",
+    tipEn: "Treat the '20 minutes' as the author's pace, not a guarantee. Allow time for rocks, photos and changing weather, and check track conditions in winter.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/6a5cd55c000000001d0210e5",
+  }),
+  verifiedXhsPost({
+    title: "不太值得的库克山直升机后排中间位置",
+    titleEn: "The Mount Cook helicopter rear-middle seat did not feel worth it",
+    author: "铭",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-mount-cook-heli-middle-seat.webp",
+    coverAlt: "库克山直升机后排中间座真实视角封面",
+    excerpt: "作者特意展示后排中间座的真实视角，认为遮挡明显、体验不值；评论有人对比约 600 元坐副驾、飞行约半小时。价格和座位案例属于个体经历，但能说明宣传图不代表所有座位。",
+    excerptEn: "The author shows the real view from the rear-middle seat and felt that obstruction made it poor value. A commenter compared it with paying about CNY 600 for a front seat on a roughly half-hour flight. These price and seating examples are individual experiences, but they show that promotional imagery does not represent every seat.",
+    points: ["后排中间座的视野可能明显弱于窗边或副驾。", "不同运营方、机型和班次的座位规则可能不同。"],
+    pointsEn: ["The rear-middle view can be substantially worse than a window or front seat.", "Seat policies may differ by operator, aircraft and departure."],
+    tip: "下单前询问座位如何分配、能否付费升级、是否保证窗边；若不保证，就把被安排到中间座的可能性计入价值判断。",
+    tipEn: "Before booking, ask how seats are allocated, whether a paid upgrade is available and whether a window seat is guaranteed. If not, factor the possibility of a middle seat into the value decision.",
+    stance: "pitfall",
+    url: "https://www.xiaohongshu.com/explore/69eef058000000003601c84d",
+  }),
+  verifiedXhsPost({
+    title: "刚在库克山被取消3次直升机的人含泪总结😭",
+    titleEn: "Lessons after three Mount Cook helicopter cancellations",
+    author: "新岛旅行 Joyisle Travel",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-mount-cook-heli-cancelled-three-times.webp",
+    coverAlt: "库克山直升机三次取消经验总结封面",
+    excerpt: "作者经历三次取消，建议优先首班或早间 8–11 点并保留改期空间，出发前两小时查看 MetService 高山天气和 webcam，同时索要书面取消证明。帖内成功率和风速阈值未经官方核验。",
+    excerptEn: "After three cancellations, the author recommends the first departure or an 8–11 a.m. window, keeping room to reschedule, checking MetService alpine forecasts and webcams two hours beforehand, and obtaining written cancellation proof. The post's claimed success rates and wind thresholds are not officially verified.",
+    points: ["任何“100% 起飞”的说法都不可信。", "书面取消证明有助于退款或保险处理。", "经验性风速阈值不能替代运营方判断。"],
+    pointsEn: ["Claims of a 100% guaranteed departure are not credible.", "Written cancellation evidence can help with refunds or insurance.", "Anecdotal wind thresholds do not replace the operator's decision."],
+    tip: "把早班和天气工具当作提高概率的方法，不当作保证；最终是否起飞只认运营方当天确认。",
+    tipEn: "Use early departures and weather tools to improve the odds, not as a guarantee. The operator's same-day confirmation is the final decision.",
+    stance: "pitfall",
+    url: "https://www.xiaohongshu.com/explore/67a71b4c000000002903f537",
+  }),
+  verifiedXhsPost({
+    title: "劝退帖🥲 直升机飞库克山，真的不要太早订",
+    titleEn: "A cautionary post: do not lock in a Mount Cook helicopter too early",
+    author: "Carmen 卡门",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-mount-cook-heli-booking-window.webp",
+    coverAlt: "库克山直升机提前预订遇天气取消封面",
+    excerpt: "作者提前预订后遇厚云和强风，反复改期仍被取消，线上订单退款等待数日；后来到皇后镇后观察天气窗口、线下订飞才成功。她建议留约四天弹性并在前一晚确认。",
+    excerptEn: "After booking well in advance, the author encountered thick cloud and strong wind, repeatedly rescheduled and was ultimately cancelled; the online refund took several days. Later, she watched for a weather window in Queenstown and successfully booked locally. She recommends roughly four flexible days and confirming the night before.",
+    points: ["过早锁死单一时段会放大山区天气风险。", "线上退款可能不是即时到账。", "临近出发再订可能更灵活，但也有售罄风险。"],
+    pointsEn: ["Locking in one distant time slot amplifies alpine-weather risk.", "An online refund may take several days.", "Booking near departure can be more flexible but also carries sell-out risk."],
+    tip: "优先选择可免费改期或退款的票，并给行程留多个天气窗口；不要为了飞行牺牲后续固定航班或住宿。",
+    tipEn: "Prefer a fare with free rescheduling or refunds and keep several weather windows. Do not jeopardise fixed flights or accommodation later in the trip for the helicopter.",
+    stance: "pitfall",
+    url: "https://www.xiaohongshu.com/explore/695e603200000000220307ae",
+  }),
+];
+
+const mountCookContextByEvent = {
+  drive: {
+    excerpt: "作为抵达库克山前的决策参考：",
+    excerptEn: "For planning the approach to Mount Cook: ",
+    tip: "自驾当天先保障安全抵达和天黑前入住。",
+    tipEn: "On the driving day, prioritise a safe arrival and checking in before dark. ",
+  },
+  helicopter: {
+    excerpt: "作为冰川直升机是否预订、如何留备选的参考：",
+    excerptEn: "For deciding whether and how to book the glacier helicopter: ",
+    tip: "把退款、改期、座位和天气确认放在飞行画面之前核对。",
+    tipEn: "Check refund, rescheduling, seating and weather-confirmation terms before focusing on the flight imagery. ",
+  },
+  stargazing: {
+    excerpt: "作为库克山观星夜的天气与白天活动参考：",
+    excerptEn: "For planning the Mount Cook stargazing night and daytime alternatives: ",
+    tip: "白天保留体力，并在傍晚根据云量决定是否继续夜间观星。",
+    tipEn: "Preserve energy during the day and decide at dusk whether cloud conditions justify continuing with stargazing. ",
+  },
+  fallback: {
+    excerpt: "作为库克山天气变化时的候补方案参考：",
+    excerptEn: "For choosing a Mount Cook backup when weather changes: ",
+    tip: "优先切换到可随时开始、随时结束的活动，不让候补项目拖累后续长途驾驶。",
+    tipEn: "Prefer an activity that can start or finish flexibly so the fallback does not compromise the later long drive. ",
+  },
+};
+
+const mountCookPostsFor = (eventContext, includedIndexes = [0, 1, 2, 3, 4]) => {
+  const context = mountCookContextByEvent[eventContext];
+  return includedIndexes.map((index) => {
+    const post = mountCookVerifiedPosts[index];
+    return {
+      ...post,
+      excerpt: `${context.excerpt}${post.excerpt}`,
+      excerptEn: `${context.excerptEn}${post.excerptEn}`,
+      tip: `${context.tip}${post.tip}`,
+      tipEn: `${context.tipEn}${post.tipEn}`,
+    };
+  });
+};
+
+const outboundFlightTransitGuides = verifiedFlightTransitGuides.map((post) => ({
+  ...post,
+  excerpt: `作为 9 月 28 日深圳经吉隆坡飞往奥克兰的出境参考：${post.excerpt}`,
+  excerptEn: `For the 28 September outbound journey from Shenzhen to Auckland via Kuala Lumpur: ${post.excerptEn}`,
+  tip: `本次是马航联程，先在深圳确认两段登机牌、行李直挂和当日登机口。${post.tip}`,
+  tipEn: `For this Malaysia Airlines through journey, confirm both boarding passes, checked-through baggage and the day's gates in Shenzhen. ${post.tipEn}`,
+}));
+
+// There are not yet five verified Xiaohongshu posts specifically about the
+// Walter Peak product in the local research set. Keep the available official
+// product videos in the event, and label these verified Queenstown-region
+// posts honestly as pre/post-sailing context rather than presenting them as
+// Walter Peak reviews.
+const walterPeakQueenstownContextGuides = verifiedQueenstownRegionGuides.map((post) => ({
+  ...post,
+  excerpt: `Walter Peak 专帖目前不足，本条是同日登船前后可用的皇后镇地区参考，并非 Walter Peak 项目实测：${post.excerpt}`,
+  excerptEn: `There are not yet enough verified Walter Peak-specific posts; this is Queenstown-region context for before or after the sailing, not a review of the Walter Peak product. ${post.excerptEn}`,
+  tip: `船期、餐食、农场内容和退改只以 RealNZ 订单为准；本条仅补充皇后镇当地背景。${post.tip}`,
+  tipEn: `Use the RealNZ booking for sailing times, meals, farm inclusions and cancellation terms; this post supplies Queenstown context only. ${post.tipEn}`,
+}));
+
+const wanakaVerifiedPosts = [
+  verifiedXhsPost({
+    title: "不知道有没有觉得瓦纳卡孤独的树要避雷了！",
+    titleEn: "Is Wānaka's lonely tree becoming one to skip?",
+    author: "昵称违规",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-wanaka-tree-overrated.webp",
+    coverAlt: "瓦纳卡孤独的树负面体验复盘封面",
+    excerpt: "作者为孤树专程开了 200 多公里，经历弯坡较多的山路、到达后拥堵和难停车，最终觉得树小、围观者多，手机在坏天气下拍摄效果普通；若瓦纳卡没有其他安排，不建议只为这棵树远途往返。",
+    excerptEn: "The author drove more than 200 km specifically for the lonely tree, encountered a winding hilly road, congestion and difficult parking, then found the tree small, crowded and underwhelming on a phone in poor weather. They do not recommend a long detour solely for the tree if there is nothing else planned in Wānaka.",
+    points: ["景点价值非常受天气、人流和摄影器材影响。", "专程长途往返的机会成本可能高于景点本身。"],
+    pointsEn: ["The experience depends heavily on weather, crowds and camera equipment.", "The cost of a long dedicated detour may outweigh the attraction itself."],
+    tip: "把孤树当作湖边散步中的短停，而不是瓦纳卡唯一目的；天气差或人多时直接转去 Beacon Point 或其他湖岸。",
+    tipEn: "Treat the tree as a short stop during a lakefront walk, not the sole reason to visit Wānaka. In poor weather or heavy crowds, move on to Beacon Point or another lakeside area.",
+    stance: "pitfall",
+    url: "https://www.xiaohongshu.com/explore/6999616e000000001503857a",
+  }),
+  verifiedXhsPost({
+    title: "附最近停车点-瓦纳卡最著名的两棵树🌲",
+    titleEn: "The closest parking for Wānaka's two best-known trees",
+    author: "媛气收藏家",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-wanaka-two-trees-parking.webp",
+    coverAlt: "瓦纳卡两棵树与最近停车点攻略封面",
+    excerpt: "作者推荐免费停车 Wanaka Station Park Parking，穿过小门和秋千后约步行 1 分钟到网红树经典机位，再下坡到孤树；其到访时花已谢，周围排队且嘈杂。",
+    excerptEn: "The author recommends free parking at Wanaka Station Park Parking. Walk through the small gate and past the swing for about one minute to the classic viewpoint of the larger tree, then continue downhill to the lonely tree. During the visit the flowers had faded and the area was noisy with a queue.",
+    points: ["停车点名称可直接用于导航。", "两棵树可以顺路看，不必分别开车找入口。"],
+    pointsEn: ["The parking-area name can be used directly for navigation.", "Both trees can be visited on foot without driving to separate entrances."],
+    tip: "免费和一分钟步行来自作者到访时的经验；到场仍看停车标志，若机位排队就不要长时间占位。",
+    tipEn: "Free parking and the one-minute walk reflect the author's visit. Follow current signs on arrival and avoid monopolising the viewpoint when a queue forms.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/69c3ad0800000000230135cf",
+  }),
+  verifiedXhsPost({
+    title: "1分钟抵达最新路线攻略-Wanaka网红大树",
+    titleEn: "Latest one-minute route to Wānaka's famous tree",
+    author: "半斤七两",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-wanaka-tree-one-minute-route.webp",
+    coverAlt: "瓦纳卡网红大树一分钟路线攻略封面",
+    excerpt: "作者称 Watersports Facility 容易停满且需步行 7–8 分钟，改停 Wanaka Station Park Parking 后约 1 分钟可到树背面，绕到正面经典机位后还能下坡到孤树；评论有人质疑图中树是否标对。",
+    excerptEn: "The author says Watersports Facility fills up and requires a 7–8 minute walk, while Wanaka Station Park Parking reaches the back of the tree in about one minute, followed by the classic front view and a downhill route to the lonely tree. Commenters questioned whether the pictured tree was correctly identified.",
+    points: ["两个停车入口可以作为满位时的互备。", "帖子图片定位存在评论争议，不能只凭照片认路。"],
+    pointsEn: ["The two parking approaches can serve as alternatives when one is full.", "Commenters dispute the photo identification, so do not navigate from the image alone."],
+    tip: "现场用地图地名和湖岸相对位置复核，不要只照帖子照片找树；停车满位就换入口，不临停。",
+    tipEn: "Verify the location using the map name and shoreline position rather than relying only on the post's photo. If parking is full, use the alternative entrance instead of stopping illegally.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/68dfbb71000000000303693b",
+  }),
+  verifiedXhsPost({
+    title: "瓦纳卡🇳🇿南岛秋日天花板🍁保姆级攻略锁定",
+    titleEn: "A practical guide to autumn in Wānaka",
+    author: "花輪看世界🌍",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-wanaka-autumn-guide.webp",
+    coverAlt: "瓦纳卡秋日湖景与拍摄时段攻略封面",
+    excerpt: "作者推荐 3–5 月秋色，清晨风小、倒影较稳，傍晚光线温暖；中午和下午容易逆光，Beacon Point 相对人少。湖边风大、地面可能湿滑，应避免攀树和踩植被。",
+    excerptEn: "The author recommends Wānaka's autumn colours from March to May. Mornings tend to have lighter wind and steadier reflections, evenings bring warmer light, while midday and afternoon can be backlit. Beacon Point is described as quieter. The lakefront can be windy and slippery, and visitors should not climb trees or step on vegetation.",
+    points: ["清晨和傍晚各有不同光线优势。", "Beacon Point 可作为人多时的替代湖岸。"],
+    pointsEn: ["Morning and evening offer different photographic advantages.", "Beacon Point can be an alternative when the main lakefront is crowded."],
+    tip: "九月底不是帖中的 3–5 月秋季，不能照搬秋色预期；只参考风、光线和湖边安全建议。",
+    tipEn: "Late September is not the March–May autumn season described in the post, so do not expect the same colours. Use the advice only for wind, light and lakefront safety.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/6a2bd367000000001603d1da",
+  }),
+  verifiedXhsPost({
+    title: "新西兰｜瓦纳卡一日游攻略（靶场、路途风景）",
+    titleEn: "A Wānaka day trip: scenic drive and shooting range",
+    author: "uu",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-wanaka-day-trip-range.webp",
+    coverAlt: "皇后镇经 Crown Range 到瓦纳卡一日游攻略封面",
+    excerpt: "路线为皇后镇—Crown Range—Cardrona—Wānaka；作者称约 1 小时，但同时提醒道路弯多路窄。Cardrona Real Guns 不接受 walk-in，需提前 1–2 天预约，先买 160 新西兰元基础套餐才可加枪型；沿途还有 Cardrona Hotel、Bra Fence，孤树导航 That Wanaka Tree。",
+    excerptEn: "The route runs Queenstown–Crown Range–Cardrona–Wānaka. The author estimates about one hour but also notes the narrow, winding road. Cardrona Real Guns does not accept walk-ins and should be booked 1–2 days ahead; extra firearm types can be added only after purchasing the NZD 160 base package. Other stops include Cardrona Hotel and Bra Fence, with That Wanaka Tree as the tree navigation term.",
+    points: ["一小时是作者经验，不应作为山路保证时长。", "靶场必须预约且有基础套餐门槛。", "多个沿途点可组合，避免只为孤树往返。"],
+    pointsEn: ["One hour is the author's experience, not a guaranteed mountain-road time.", "The shooting range requires advance booking and a base-package purchase.", "Combining several route stops avoids a long journey solely for the tree."],
+    tip: "本次行程已在瓦纳卡住宿，适合借用地点组合而不是照搬皇后镇一日往返；Crown Range 当天仍查路况。",
+    tipEn: "This trip already stays in Wānaka, so borrow the location grouping rather than copying the Queenstown return day trip. Check Crown Range conditions on the day.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/68823469000000001502205d",
+  }),
+];
+
+const wanakaArrivalPosts = wanakaVerifiedPosts.map((post) => ({
+  ...post,
+  excerpt: `作为抵达瓦纳卡后办理入住、停车和湖边短停的参考：${post.excerpt}`,
+  excerptEn: `For arrival in Wānaka, hotel check-in, parking and a short lakefront stop: ${post.excerptEn}`,
+  tip: `抵达当天先完成入住并把车停在合规车位，再按剩余时间选择湖边短停。${post.tip}`,
+  tipEn: `On arrival day, check in and park legally first, then choose a short lakefront stop only if time remains. ${post.tipEn}`,
+}));
+
+const tekapoChristchurchVerifiedPosts = [
+  verifiedXhsPost({
+    title: "🇳🇿 去Tekapo别直接走高速‼️ 自驾必收藏",
+    titleEn: "Do not rush straight to Tekapo: a scenic self-drive route",
+    author: "轻轻的飘",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-tekapo-scenic-drive.webp",
+    coverAlt: "基督城到蒂卡波景观自驾路线攻略封面",
+    excerpt: "作者从基督城前往 Tekapo 时串联 Rakaia Scenic Lookout、Geraldine Cheese、Fairlie Bakehouse、鲁冰花和湖景，称比直达多约 30–40 分钟；Fairlie 中午可能排队，鲁冰花是 12 月季节限定。",
+    excerptEn: "On the Christchurch-to-Tekapo drive, the author links Rakaia Scenic Lookout, Geraldine Cheese, Fairlie Bakehouse, lupins and lake views, estimating roughly 30–40 minutes beyond a direct route. Fairlie can queue at lunchtime, and the lupins are a December-only seasonal feature.",
+    points: ["沿途停靠可把长途驾驶拆成多个短段。", "热门餐食点中午可能排队。", "本次 10 月行程不应期待 12 月鲁冰花海。"],
+    pointsEn: ["Scenic stops can break a long drive into shorter sections.", "Popular food stops may queue at lunchtime.", "This October trip should not expect the December lupin display."],
+    tip: "只在正规停车位停靠，不能照搬帖子中“看到喜欢就停车”的表达；若上午候补项目延误，就删减停靠点。",
+    tipEn: "Stop only in designated parking areas; do not take 'stop whenever you see something you like' literally. If the morning backup activity runs late, remove stops.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/6a314bf2000000000d00bc01",
+  }),
+  verifiedXhsPost({
+    title: "新西兰南岛自驾，这些坑你必须知道",
+    titleEn: "South Island self-drive pitfalls you should know",
+    author: "新西兰赛博筋肉骑士",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-south-island-passing-lane.webp",
+    coverAlt: "新西兰南岛自驾超车道与弯道速度讨论封面",
+    excerpt: "可访问页面未能读取正文，只能核验评论分歧：有人称道路有超车道且弯道应按黄色建议速度，作者则称 Lindis Pass 和 Tekapo—Geraldine 路段可能近 1 小时或更久缺少超车道。这张卡只保留争议本身，不把任一说法当成实时路况。",
+    excerptEn: "The accessible page did not expose the post body, so only the comment disagreement could be verified. Some commenters say passing lanes exist and yellow signs give advisory corner speeds; the author replies that Lindis Pass and the Tekapo–Geraldine section can have stretches of about an hour or more with few passing lanes. This card preserves the disagreement without treating either claim as live road information.",
+    points: ["不要长时间压车，遇 passing lane 让后车通过。", "黄色弯道数字是建议速度，不是鼓励按限速硬过弯。", "实时规则和路况应查 NZTA。"],
+    pointsEn: ["Do not hold up traffic for long; use passing lanes to let following vehicles pass.", "Yellow corner speeds are advisory and do not justify taking a bend at the general limit.", "Use NZTA for current rules and conditions."],
+    tip: "由于正文不可读，本卡权重低于完整可核验帖子；仅把评论分歧作为提前查路况和主动让行的提醒。",
+    tipEn: "Because the post body was inaccessible, give this card less weight than a fully readable post. Use the comment dispute only as a reminder to check conditions and let traffic pass.",
+    stance: "pitfall",
+    url: "https://www.xiaohongshu.com/explore/69f44045000000001a02c345",
+  }),
+  verifiedXhsPost({
+    title: "7月 1 号 基督城去特卡波湖 含泪提罚单一张",
+    titleEn: "A fine on the Christchurch-to-Tekapo drive",
+    author: "jingjing漫步",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-tekapo-stop-sign-fine.webp",
+    coverAlt: "基督城到蒂卡波 Stop 标志与警车罚单经验封面",
+    excerpt: "作者在 Stop 标志处没有完整停稳约 3 秒，又在警车闪灯后继续行驶十几公里才靠停，两项合计被罚 300 新西兰元。帖子还提到山下付 8 新西兰元上山、咖啡馆 15 点关门，但这些价格和时间需要官方复核。",
+    excerptEn: "The author did not come to a complete stop for roughly three seconds at a Stop sign, then continued for more than ten kilometres after a police vehicle flashed its lights. The two offences resulted in NZD 300 in fines. The post also mentions an NZD 8 uphill fee and a café closing at 3 p.m., but those prices and hours require official verification.",
+    points: ["Stop 必须真正停稳后再观察通行。", "警车示意后应在安全位置尽快靠停。", "个人帖中的费用和营业时间会变化。"],
+    pointsEn: ["At a Stop sign, come to a complete stop before checking and proceeding.", "When signalled by police, pull over safely as soon as possible.", "Fees and opening hours in a personal post can change."],
+    tip: "把罚单教训当成驾驶底线；不要只盯导航或跟车通过路口，任何费用和营业时间出发前再查官方页面。",
+    tipEn: "Treat the fine as a hard driving lesson. Do not follow another vehicle through an intersection or focus only on navigation, and recheck all fees and hours officially before departure.",
+    stance: "pitfall",
+    url: "https://www.xiaohongshu.com/explore/6867a27e000000000b02f033",
+  }),
+  verifiedXhsPost({
+    title: "新西兰自驾停车全攻略🚗✨ 省钱避坑",
+    titleEn: "New Zealand self-drive parking guide: save money and avoid mistakes",
+    author: "梦哥",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-nz-parking-guide.webp",
+    coverAlt: "蒂卡波与基督城停车攻略封面",
+    excerpt: "作者称 Tekapo 的景点、商店和酒店多有免费停车；基督城 Salisbury Street 可免费但标志不清时应问前台，Hagley Park 在 17 点后免费，92 Hereford St Garage 靠近 Riverside、约 6 新西兰元每小时，并提醒部分车场需先付费再停车。",
+    excerptEn: "The author says many Tekapo attractions, shops and hotels offer free parking. In Christchurch, Salisbury Street may be free but unclear signs should be checked with reception, Hagley Park is described as free after 5 p.m., and 92 Hereford St Garage near Riverside as about NZD 6 per hour. Some car parks require payment before parking.",
+    points: ["免费规则可能与时段、区域和住宿身份有关。", "先付费还是后付费必须看入口说明。", "价格与规则会变化。"],
+    pointsEn: ["Free parking may depend on time, zone and guest status.", "Check entry instructions to see whether payment is required before or after parking.", "Prices and rules can change."],
+    tip: "所有金额和免费时段只作线索，现场停车牌和缴费机优先；看不懂就拍照问酒店或停车场工作人员。",
+    tipEn: "Treat all prices and free periods only as leads; on-site signs and payment machines take priority. Photograph unclear signs and ask hotel or car-park staff.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/6997f123000000000a02ca8c",
+  }),
+  verifiedXhsPost({
+    title: "基督城市中心免费停车点",
+    titleEn: "A free parking spot in central Christchurch",
+    author: "IIIIInfinity",
+    mediaType: "image",
+    coverImage: "/new-zealand-slow-trip-2026/images/xhs-christchurch-free-parking.webp",
+    coverAlt: "基督城市中心 88 Chester Street East 免费停车经验封面",
+    excerpt: "退房后没有酒店车位，作者找到 88 Chester Street East 的免费停车点，步行前往纸板教堂较近；评论者称在旁边工地上班并确认其到访时免费。该位置的施工和停车规则可能随时变化。",
+    excerptEn: "After checkout left no hotel parking, the author found free parking at 88 Chester Street East, within a short walk of the Cardboard Cathedral. A commenter working at the adjacent construction site confirmed it was free at the time. Construction and parking rules at this location may change without notice.",
+    points: ["适合纸板教堂周边的短时步行。", "帖中免费状态仅代表发布和评论时。", "施工可能改变出入口或车位。"],
+    pointsEn: ["It can suit a short walk around the Cardboard Cathedral.", "The free status reflects only the time of the post and comment.", "Construction may change access or remove spaces."],
+    tip: "到场先完整阅读停车牌和临时施工标志；只要出现收费、限时或施工封闭，就改用正规付费停车场。",
+    tipEn: "Read all parking and temporary construction signs on arrival. If payment, a time limit or closure is shown, switch to a formal paid car park.",
+    stance: "positive",
+    url: "https://www.xiaohongshu.com/explore/69fc0a310000000038023de1",
+  }),
+];
+
+const tekapoChristchurchPostsFor = (context) => tekapoChristchurchVerifiedPosts.map((post) => ({
+  ...post,
+  excerpt: `${context === "drive" ? "作为蒂卡波到基督城长途日的参考：" : "作为基督城市区半日的参考："}${post.excerpt}`,
+  excerptEn: `${context === "drive" ? "For the Tekapo-to-Christchurch driving day: " : "For the Christchurch city half-day: "}${post.excerptEn}`,
+  tip: `${context === "drive" ? "先保证天黑前安全抵达，沿途停靠随剩余时间删减。" : "市区停留必须服从下午还车和航班时间。"}${post.tip}`,
+  tipEn: `${context === "drive" ? "Prioritise a safe arrival before dark and remove stops as the remaining time shrinks. " : "The city visit must remain subordinate to the afternoon car-return and flight deadlines. "}${post.tipEn}`,
+}));
+
+const contextualizeVerifiedPosts = (posts, { excerpt, excerptEn, tip, tipEn }) => posts.map((post) => ({
+  ...post,
+  excerpt: `${excerpt}${post.excerpt}`,
+  excerptEn: `${excerptEn}${post.excerptEn}`,
+  tip: `${tip}${post.tip}`,
+  tipEn: `${tipEn}${post.tipEn}`,
+}));
+
+const christchurchAirportReturnPosts = contextualizeVerifiedPosts([
+  rentalInsurancePitfallPost,
+  ...tekapoChristchurchVerifiedPosts.slice(1),
+], {
+  excerpt: "作为基督城还车、赶国内航班和抵达奥克兰的通用参考；原帖并非本次 JQ242 航班实测：",
+  excerptEn: "General context for returning the car in Christchurch, catching a domestic flight and arriving in Auckland; the post is not a review of this trip's JQ242 flight: ",
+  tip: "先服从 Omega 还车截止时间、机场指引和 Jetstar 实时通知；",
+  tipEn: "Prioritise Omega's return deadline, airport directions and live Jetstar notices. ",
+});
+
+const northIslandDriveReferencePosts = contextualizeVerifiedPosts([
+  rentalInsurancePitfallPost,
+  verifiedFlightTransitGuides[1],
+  verifiedAucklandShoppingGuides[0],
+  verifiedAucklandShoppingGuides[2],
+  verifiedAucklandShoppingGuides[3],
+], {
+  excerpt: "仓库暂无已逐帖核验的霍比屯原帖；这里只把已核验的奥克兰机场、租车和停车经验作为北岛取车自驾的通用参考：",
+  excerptEn: "No individually verified Hobbiton post is available in the repository. This card reuses a verified Auckland-airport, rental or parking post only as general North Island driving context: ",
+  tip: "该帖不能证明霍比屯现场情况；景区集合、场次、停车和入场要求必须以 Hobbiton 订单及官网为准。",
+  tipEn: "This post does not verify conditions at Hobbiton. Use the Hobbiton booking confirmation and official website for meeting, session, parking and entry requirements. ",
+});
+
+const hobbitonVisitReferencePosts = contextualizeVerifiedPosts(northIslandDriveReferencePosts, {
+  excerpt: "用于霍比屯游览当天的外围交通与停车准备，不是霍比屯体验攻略：",
+  excerptEn: "For transport and parking preparation around the Hobbiton visit; this is not a guide to the attraction itself: ",
+  tip: "目前没有真实核验的霍比屯小红书原帖，不能据此判断景区体验；",
+  tipEn: "There is currently no genuinely verified Hobbiton Xiaohongshu post, so this card cannot be used to judge the attraction experience. ",
+});
+
+// No authenticated Rotorua-specific Xiaohongshu posts are available in the
+// repository yet. These cards deliberately retain their original titles and
+// summaries, and label themselves as general New Zealand driving references
+// so a South Island example is never presented as first-hand evidence for the
+// Hobbiton–Rotorua or Rotorua–Auckland routes.
+const verifiedRoadPostsFor = (context) => {
+  const isRotoruaApproach = context === "rotorua-approach";
+  const prefixZh = isRotoruaApproach
+    ? "作为前往罗托鲁瓦时的新西兰自驾通用参考（非霍比屯—罗托鲁瓦路段实测）："
+    : "作为返回奥克兰机场时的新西兰自驾通用参考（非罗托鲁瓦—奥克兰机场路段实测）：";
+  const prefixEn = isRotoruaApproach
+    ? "As general New Zealand driving guidance for the Rotorua approach—not a first-hand Hobbiton–Rotorua route report: "
+    : "As general New Zealand driving guidance for the return to Auckland Airport—not a first-hand Rotorua–Auckland Airport route report: ";
+  const eventTipZh = isRotoruaApproach
+    ? "只借用驾驶规则、保险和停车教训；具体路况仍以当天 NZTA 与现场标志为准。"
+    : "先保证按时抵达机场并完成还车；只借用通用驾驶教训，具体路况仍以当天 NZTA 与现场标志为准。";
+  const eventTipEn = isRotoruaApproach
+    ? "Use only the driving, insurance and parking lessons; rely on NZTA and on-site signs for the actual route. "
+    : "Prioritise an on-time airport arrival and car return. Use only the general driving lessons and rely on NZTA and on-site signs for the actual route. ";
+  const posts = isRotoruaApproach
+    ? [rentalInsurancePitfallPost, ...tekapoChristchurchVerifiedPosts.slice(0, 4)]
+    : [
+        rentalInsurancePitfallPost,
+        tekapoChristchurchVerifiedPosts[1],
+        tekapoChristchurchVerifiedPosts[2],
+        verifiedAucklandShoppingGuides[0],
+        verifiedFlightTransitGuides[1],
+      ];
+
+  return posts.map((post) => ({
+    ...post,
+    excerpt: `${prefixZh}${post.excerpt}`,
+    excerptEn: `${prefixEn}${post.excerptEn}`,
+    tip: `${eventTipZh}${post.tip}`,
+    tipEn: `${eventTipEn}${post.tipEn}`,
+  }));
+};
+
+export const socialGuidesByEvent = {
+  "乘机前往新西兰": outboundFlightTransitGuides,
+  "飞往皇后镇": verifiedQueenstownRegionGuides,
+  "南岛取车入住": [
+    guide({ platform: "YouTube", title: "New Zealand rental car tips before pickup", source: "YouTube · 自驾准备", url: "https://www.youtube.com/watch?v=BzonKUtP77c", points: ["集中说明车型、保险、取还车和新西兰自驾准备。", "适合在签合同前核对容易忽略的租车问题。"], tip: "保障范围、雪链与异地还车费用必须以 Omega 合同为准。" }),
+    rentalInsurancePitfallPost,
+    ...verifiedQueenstownRegionGuides,
+    verifiedXhsPost({
+      title: "2026新西兰皇后镇停车攻略🔥不花冤枉钱",
+      author: "猫尾巴新西兰旅游",
+      authorAvatar: "https://sns-avatar-qc.xhscdn.com/avatar/6585c90dcf3c8e00011b09b9.jpg?imageView2/2/w/80/format/jpg?imageView2/2/w/60/format/webp%7CimageMogr2/strip",
+      coverImage: "/new-zealand-slow-trip-2026/images/xhs-queenstown-parking-real.webp",
+      coverAlt: "2026 新西兰皇后镇停车攻略封面",
+      excerpt: "黄色区域禁止停车，也不要占用残障车位；皇后镇市中心有摄像头执法，开车进入前应先规划停车。",
+      excerptEn: "Yellow zones are no-parking areas, accessible bays must never be used, and central Queenstown uses camera enforcement—plan parking before driving in.",
+      points: ["黄色区域禁停，残障车位绝不能占用。", "市中心摄像头执法，建议提前规划停车。", "Lakeview 性价比较高；免费车位需要尽早到达。"],
+      tip: "把帖子作为停车规划参考，现场仍以车位标志为准。",
+      stance: "positive",
+      url: "https://www.xiaohongshu.com/explore/695ba511000000000b009cc0",
+    }),
+  ],
+  "皇后镇适应日": verifiedQueenstownRegionGuides,
+  "格林诺奇湖岸公路": verifiedQueenstownRegionGuides,
+  "Walter Peak 湖上巡游": [guide({ platform: "YouTube", title: "TSS Earnslaw & Walter Peak Farm Tour", source: "YouTube · 完整体验", url: "https://www.youtube.com/watch?v=U3F60broAYc", points: ["完整展示蒸汽船、农场参观与现场体验。", "可提前判断穿衣、步行量与项目节奏。"], tip: "餐食和农场环节随票种不同，以订单为准。" }), guide({ platform: "Facebook", title: "Come to Walter Peak", source: "RealNZ 官方", url: "https://www.facebook.com/RealNZ.Aotearoa/videos/come-to-walter-peak/1476099417589136/", points: ["官方短片展示乘蒸汽船过湖、花园和工作农场。", "适合快速确认整个项目的组成。"], tip: "Facebook 可能弹登录；预订仍以 RealNZ 官网为准。" }), ...walterPeakQueenstownContextGuides],
+  "箭镇与 Crown Range": verifiedQueenstownRegionGuides,
+  "抵达瓦纳卡": wanakaArrivalPosts,
+  "瓦纳卡湖边慢游": wanakaVerifiedPosts,
+  "自驾前往库克山": [rentalInsurancePitfallPost, ...mountCookPostsFor("drive", [0, 1, 3, 4])],
+  "冰川直升机": [guide({ platform: "YouTube", title: "Mount Cook Ski Planes and Helicopters · Adventure Awaits", source: "YouTube · 运营方", url: "https://www.youtube.com/watch?v=1jjOrVPxlK4", points: ["展示飞越冰川与雪地着陆的核心场景。", "可快速校准飞行内容和保暖需求。"], tip: "着陆需天气允许，官方短片不代表当天一定起飞。" }), ...mountCookPostsFor("helicopter")],
+  "库克山观星夜": [guide({ platform: "YouTube", title: "Big Sky Stargazing Aoraki / Mount Cook", source: "The Hermitage 官方", url: "https://www.youtube.com/watch?v=XNQmXF6my3E", points: ["展示暗夜保护区观星主题与深空观测定位。", "可提前了解活动形式和夜间保暖需求。"], tip: "云量和月相影响很大，保留可取消备选。" }), ...mountCookPostsFor("stargazing")],
+  "库克山候补安排": [guide({ platform: "YouTube", title: "Is 3 Days at Mt Cook too much?", source: "YouTube · 多项目实测", url: "https://www.youtube.com/watch?v=WS113I5hYqc", points: ["串联步道、直升机和冰川项目。", "适合天气造成改期时评估可替换的活动。"], tip: "步道查 DOC；飞行由运营方当天决定。" }), ...mountCookPostsFor("fallback")],
+  "蒂卡波到基督城": [rentalInsurancePitfallPost, ...tekapoChristchurchPostsFor("drive")],
+  "基督城城市半日": tekapoChristchurchPostsFor("city"),
+  "还车飞奥克兰": christchurchAirportReturnPosts,
+  "奥克兰购物日": verifiedAucklandShoppingGuides,
+  "取车前往霍比屯": northIslandDriveReferencePosts,
+  "霍比屯游览": hobbitonVisitReferencePosts,
+  "前往罗托鲁瓦": verifiedRoadPostsFor("rotorua-approach"),
+  "Te Puia 地热文化": [guide({ platform: "Facebook", title: "Te Puia · Rotorua", source: "Te Puia 官方页面", url: "https://www.facebook.com/tepuia.rotorua.nz/", points: ["官方更新地热活动、毛利文化和雕刻学校动态。", "适合临行确认当期体验内容。"], tip: "Facebook 可能弹登录；票种和场次仍看官网。" }), guide({ platform: "Reddit", title: "North Island trip report · What was worth it", source: "Reddit · 游客复盘", url: "https://www.reddit.com/r/newzealand_travel/comments/1u88jo4/north_island_trip_report_what_was_worth_it_and/", points: ["游客复盘提到间歇泉、毛利文化和 kiwi 体验。", "可补充官方宣传之外的‘值不值’视角。"], tip: "个体体验不能代替票种说明。" })],
+  "返回奥克兰机场": verifiedRoadPostsFor("auckland-airport-return"),
+  "办理返程值机": verifiedFlightTransitGuides,
+  "返程回深圳": verifiedFlightTransitGuides,
+};

@@ -1,0 +1,130 @@
+import { northDays, southDays } from "./tripData";
+
+const eventTranslations = {
+  "深圳机场值机、托运行李": "Check in and drop checked baggage at Shenzhen Airport",
+  "MH0523 深圳 → 吉隆坡": "MH0523 Shenzhen → Kuala Lumpur",
+  "抵达吉隆坡 T1，转机 2小时15分": "Arrive at Kuala Lumpur T1; 2 hr 15 min connection",
+  "MH0133 吉隆坡 T1 → 奥克兰": "MH0133 Kuala Lumpur T1 → Auckland",
+  "抵达奥克兰": "Arrive at Auckland Airport",
+  "完成入境、取行李": "Clear immigration and collect baggage",
+  "步行入住机场酒店": "Walk to Novotel Auckland Airport",
+  "前往国内航站楼": "Go to Auckland Airport Domestic Terminal",
+  "NZ619 起飞": "NZ619 departs",
+  "抵达、机场午餐": "Arrive at Queenstown Airport and have lunch",
+  "Omega 取车": "Pick up the car at Omega Rental Cars",
+  "入住、湖边散步": "Check in at Blue Peaks Lodge and walk by the lake",
+  "皇后镇花园、湖边": "Queenstown Gardens and the lakefront",
+  "市区午餐": "Lunch in central Queenstown",
+  "Skyline 缆车": "Skyline Queenstown gondola",
+  "咖啡、逛街": "Coffee and shopping",
+  晚餐: "Dinner",
+  "皇后镇出发": "Leave Queenstown",
+  "Bob’s Cove": "Bob's Cove Track",
+  "Bennett’s Bluff": "Bennett's Bluff Lookout",
+  "格林诺奇午餐": "Lunch in Glenorchy",
+  "Lagoon 木栈道": "Glenorchy Lagoon Boardwalk",
+  "回到皇后镇": "Return to Queenstown",
+  "慢早餐、湖边散步": "Slow breakfast and a lakefront walk",
+  "皇后镇花园或自由逛街": "Queenstown Gardens or free time in town",
+  "步行到 Steamer Wharf，按预订场次办理登船": "Walk to Steamer Wharf and check in for the booked sailing",
+  "瓦卡蒂普湖往返巡游、Walter Peak 烧烤与农场表演": "Lake Wakatipu cruise, Walter Peak barbecue and farm show",
+  "返回皇后镇，自由喝咖啡或回酒店": "Return to Queenstown; have coffee or go back to the hotel",
+  "简单晚餐": "Light dinner",
+  "退房出发": "Check out and depart",
+  "箭镇、午餐": "Arrowtown and lunch",
+  "前往瓦纳卡": "Drive towards Wānaka",
+  "Crown Range 观景": "Stop at Crown Range Summit",
+  "Cardrona 咖啡": "Coffee at Cardrona Hotel",
+  "抵达瓦纳卡": "Arrive in Wānaka",
+  "湖边、That Wanaka Tree": "Lakefront and That Wānaka Tree",
+  午餐: "Lunch",
+  "Puzzling World 或 Mount Iron": "Puzzling World or Mount Iron Track",
+  "咖啡、看日落": "Coffee and sunset",
+  "Lindis Pass 观景": "Stop at Lindis Pass Viewpoint",
+  "Omarama 午餐、加油": "Lunch and fuel in Omarama",
+  "Lake Pukaki 短停": "Short stop at Lake Pukaki",
+  "先到库克山机场办理直升机报到": "Check in for the helicopter flight at Mount Cook Airport",
+  "Glacier Highlights 直升机，45分钟含约10—15分钟冰川降落": "Glacier Highlights helicopter flight: 45 minutes including a 10–15 minute glacier landing",
+  "入住 The Hermitage、休息": "Check in at The Hermitage Hotel and rest",
+  "酒店晚餐、补充保暖衣物": "Dinner at the hotel; add warm layers",
+  "Big Sky Stargazing 观星，约75—90分钟": "Big Sky Stargazing, approximately 75–90 minutes",
+  "仅在前一日停飞时，候补直升机首班": "First backup helicopter flight only if the previous day was cancelled",
+  "最晚离开库克山": "Leave Aoraki / Mount Cook no later than this time",
+  "抵达蒂卡波，教堂、湖边、午餐": "Arrive at Lake Tekapo: church, lakefront and lunch",
+  "前往基督城": "Drive to Christchurch",
+  "抵达、入住": "Arrive and check in",
+  "市区、Riverside Market": "Central Christchurch and Riverside Market",
+  "植物园或咖啡": "Christchurch Botanic Gardens or coffee",
+  "Omega 还车": "Return the car to Omega Rental Cars",
+  "JQ242 起飞": "JQ242 departs",
+  "抵达奥克兰": "Arrive at Auckland Airport",
+  "机场巴士进城": "Take the airport bus into Auckland city centre",
+  "Queen Street、Britomart": "Queen Street and Britomart",
+  "Commercial Bay 午餐": "Lunch at Commercial Bay",
+  "Westfield Newmarket": "Westfield Newmarket",
+  "返回机场酒店": "Return to Novotel Auckland Airport",
+  "奥克兰机场取车": "Pick up the rental car at Auckland Airport",
+  出发: "Depart",
+  "抵达 The Shire’s Rest": "Arrive at The Shire's Rest",
+  "霍比屯游览": "Hobbiton Movie Set tour",
+  "抵达罗托鲁瓦": "Arrive in Rotorua",
+  "可选 Redwoods 轻松散步": "Optional easy walk in Redwoods Whakarewarewa Forest",
+  "Te Puia 地热与毛利文化": "Te Puia geothermal and Māori cultural experience",
+  "直接前往奥克兰机场": "Drive directly to Auckland Airport",
+  "加油、还车": "Refuel and return the rental car",
+  "机场晚餐": "Dinner at Auckland Airport",
+  "办理国际值机": "Check in for the international flight",
+  "前往登机口": "Proceed to the departure gate",
+  "MH0132 奥克兰 → 吉隆坡，07:55 抵达 T1": "MH0132 Auckland → Kuala Lumpur; arrive at T1 at 07:55",
+  "MH0522 吉隆坡 T1 → 深圳，次日 01:15 抵达": "MH0522 Kuala Lumpur T1 → Shenzhen; arrive at 01:15 the next day",
+};
+
+const dayTranslations = {
+  "9月28日": ["Shenzhen → Kuala Lumpur → Auckland", "Connect in Malaysia; rest immediately after arrival", "Stay · Novotel Auckland Airport, directly outside the international terminal."],
+  "9月29日": ["Auckland → Queenstown", "NZ619 and South Island car pickup", "Stay · Blue Peaks Lodge, Queenstown night 1."],
+  "9月30日": ["Queenstown", "Gardens, lakefront and Skyline", "Stay · Blue Peaks Lodge; mostly on foot."],
+  "10月1日": ["Queenstown ⇄ Glenorchy", "Relaxed half-day lakefront drive", "Stay · Blue Peaks Lodge; about 92 km / 2 hr driving."],
+  "10月2日": ["Walter Peak Lake Cruise", "High-country barbecue and farm show", "Stay · Blue Peaks Lodge; no driving today."],
+  "10月3日": ["Queenstown → Arrowtown → Wānaka", "Crown Range and Cardrona", "Stay · Edgewater Wānaka; use the Cromwell route in bad weather."],
+  "10月4日": ["Wānaka", "A full day without changing hotels", "Stay · Edgewater Wānaka; afternoon plans depend on weather."],
+  "10月5日": ["Wānaka → Aoraki / Mount Cook", "Glacier helicopter landing and Big Sky Stargazing", "Stay · The Hermitage Hotel."],
+  "10月6日": ["Aoraki / Mount Cook → Lake Tekapo → Christchurch", "Backup helicopter flight and the longest South Island drive", "Stay · Rydges Latimer Christchurch."],
+  "10月7日": ["Christchurch → Auckland", "Return the car and take JQ242", "Stay · Novotel Auckland Airport."],
+  "10月8日": ["Auckland", "CBD and Newmarket shopping day", "Stay · Novotel Auckland Airport; no rental car today."],
+  "10月9日": ["Auckland → Hobbiton → Rotorua", "North Island car pickup and midday Hobbiton tour", "Stay · JetPark Hotel Rotorua."],
+  "10月10日": ["Rotorua → Auckland Airport", "Te Puia and international departure", "No hotel tonight; wait at Auckland Airport after returning the car."],
+  "10月11日": ["Auckland → Shenzhen", "International return flights via Kuala Lumpur", "Overnight · On board."],
+};
+
+const weekdayTranslations = {
+  周一: "Monday",
+  周二: "Tuesday",
+  周三: "Wednesday",
+  周四: "Thursday",
+  周五: "Friday",
+  周六: "Saturday",
+  周日: "Sunday",
+};
+
+function dateInEnglish(date) {
+  const match = date.match(/(\d+)月(\d+)日/);
+  return match ? `${match[1]}/${match[2]}` : date;
+}
+
+function translateDay(day) {
+  const [title, subtitle, stay] = dayTranslations[day.date] ?? [day.title, day.subtitle, day.stay];
+  return {
+    ...day,
+    dateKey: day.date,
+    displayDate: dateInEnglish(day.date),
+    events: day.events.map(([time, text]) => [time, eventTranslations[text] ?? text]),
+    stay,
+    subtitle,
+    title,
+    weekday: weekdayTranslations[day.weekday] ?? day.weekday,
+  };
+}
+
+export const southDaysEn = southDays.map(translateDay);
+export const northDaysEn = northDays.map(translateDay);
+export const itineraryDaysEn = [...southDaysEn, ...northDaysEn];

@@ -17,8 +17,19 @@ export function TabIcon({ name, className }) {
   return <Icon className={className} fontSize="small" />;
 }
 
-export function tabLabel(tab, variant = "label") {
-  const text = variant === "short" ? tab.short : tab.label;
+const englishLabels = {
+  overview: { label: "Trip overview", short: "Overview" },
+  south: { label: "South Island", short: "South" },
+  north: { label: "North Island", short: "North" },
+  booking: { label: "Flights & hotels", short: "Bookings" },
+  notes: { label: "Travel notes", short: "Notes" },
+};
+
+export function tabLabel(tab, variant = "label", language = "zh") {
+  const translated = englishLabels[tab.value];
+  const text = language === "en" && translated
+    ? translated[variant === "short" ? "short" : "label"]
+    : (variant === "short" ? tab.short : tab.label);
   return (
     <span className="tab-label">
       <TabIcon name={tab.icon} />

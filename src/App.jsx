@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import { Box, Container, Divider, Paper, Tab, Tabs, useMediaQuery } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { Box, Button, Container, Divider, Paper, Tab, Tabs, useMediaQuery } from "@mui/material";
+import LanguageIcon from "@mui/icons-material/Language";
 import { useTheme } from "@mui/material/styles";
 import { Sidebar } from "./components/Sidebar";
 import { BookingPanel } from "./components/panels/BookingPanel";
@@ -9,8 +10,10 @@ import { OverviewPanel } from "./components/panels/OverviewPanel";
 import { SouthPanel } from "./components/panels/SouthPanel";
 import { tabLabel } from "./components/tabIcons";
 import { bookingItems, tabs } from "./tripData";
+import { LanguageContext } from "./LanguageContext";
 
 const storageKey = "nz-trip-booking-react-v1";
+const languageStorageKey = "nz-trip-language";
 
 function useHashTab() {
   const initial = tabs.some((tab) => tab.value === location.hash.slice(1))
@@ -31,6 +34,7 @@ export default function App() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [tab, setTab] = useHashTab();
+  const [language, setLanguage] = useState(() => localStorage.getItem(languageStorageKey) === "en" ? "en" : "zh");
   const [checked, setChecked] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(storageKey) || "{}");
@@ -47,31 +51,45 @@ export default function App() {
     };
   }, [checked]);
 
-  return (
-    <Box className="page-shell">
-      <Container maxWidth={false} className="layout">
-        {!isMobile && <Sidebar tab={tab} onTabChange={setTab} progress={progress} />}
-        <Box component="main" className="content">
-          {tab === "overview" && <OverviewPanel onJumpNorth={() => setTab("north")} />}
-          {tab === "south" && <SouthPanel />}
-          {tab === "north" && <NorthPanel />}
-          {tab === "booking" && (
-            <BookingPanel checked={checked} setChecked={setChecked} storageKey={storageKey} />
-          )}
-          {tab === "notes" && <NotesPanel />}
-        </Box>
-      </Container>
+  useEffect(() => {
+    localStorage.setItem(languageStorageKey, language);
+    document.documentElement.lang = language === "en" ? "en-NZ" : "zh-CN";
+    document.title = language === "en" ? "2026 New Zealand relaxed travel itinerary" : "2026 新西兰松弛旅行攻略";
+  }, [language]);
 
-      {isMobile && (
-        <>
-          <Divider />
-          <Paper className="mobile-nav" elevation={8}>
-            <Tabs value={tab} onChange={(_, value) => setTab(value)} variant="fullWidth">
-              {tabs.map((item) => <Tab key={item.value} value={item.value} label={tabLabel(item, "short")} />)}
-            </Tabs>
-          </Paper>
-        </>
-      )}
-    </Box>
+  const languageValue = useMemo(() => ({ language, setLanguage }), [language]);
+  const toggleLanguage = () => setLanguage((current) => current === "zh" ? "en" : "zh");
+
+  return (
+    <LanguageContext.Provider value={languageValue}>
+      <Box className="page-shell" data-language={language}>
+        <Container maxWidth={false} className="layout">
+          {!isMobile && <Sidebar tab={tab} onTabChange={setTab} progress={progress} language={language} onLanguageToggle={toggleLanguage} />}
+          <Box component="main" className="content">
+            {tab === "overview" && <OverviewPanel onJumpNorth={() => setTab("north")} />}
+            {tab === "south" && <SouthPanel />}
+            {tab === "north" && <NorthPanel />}
+            {tab === "booking" && (
+              <BookingPanel checked={checked} setChecked={setChecked} storageKey={storageKey} />
+            )}
+            {tab === "notes" && <NotesPanel />}
+          </Box>
+        </Container>
+
+        {isMobile && (
+          <>
+            <Divider />
+            <Button className="mobile-language-switch" onClick={toggleLanguage} startIcon={<LanguageIcon />} variant="contained">
+              {language === "zh" ? "English" : "中文"}
+            </Button>
+            <Paper className="mobile-nav" elevation={8}>
+              <Tabs value={tab} onChange={(_, value) => setTab(value)} variant="fullWidth">
+                {tabs.map((item) => <Tab key={item.value} value={item.value} label={tabLabel(item, "short", language)} />)}
+              </Tabs>
+            </Paper>
+          </>
+        )}
+      </Box>
+    </LanguageContext.Provider>
   );
 }
