@@ -407,7 +407,7 @@ const eventGoogleRoutes = {
     destination: "Queenstown Airport",
   },
   "南岛取车入住": {
-    origin: "Omega Rental Cars Queenstown Airport",
+    origin: "Budget Car Rental Queenstown Airport",
     destination: "Holiday Inn Queenstown Remarkables Park",
     travelmode: "driving",
   },
@@ -440,7 +440,7 @@ const eventGoogleRoutes = {
     travelmode: "driving",
   },
   "还车飞奥克兰": {
-    origin: "Omega Rental Cars Christchurch Airport",
+    origin: "Budget Car Rental Christchurch Airport",
     destination: "Britomart Auckland",
     waypoints: ["Christchurch Airport", "Auckland Airport Domestic Terminal"],
   },

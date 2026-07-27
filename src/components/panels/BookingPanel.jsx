@@ -15,7 +15,7 @@ import "./BookingPanel.css";
 
 const bookingTitleEn = {
   "flight-nz619": "NZ619 Auckland → Queenstown",
-  "south-car": "Omega South Island rental car",
+  "south-car": "Budget South Island rental car · booked",
   "hotel-airport": "Auckland Airport hotel",
   "hotel-auckland-city": "Central Auckland accommodation",
   "hotel-queenstown": "Queenstown accommodation",

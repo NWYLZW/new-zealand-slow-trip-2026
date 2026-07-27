@@ -11,6 +11,17 @@
   -webkit-backdrop-filter: blur(20px) saturate(1.2);
 }
 
+.mobile-nav .MuiTabs-flexContainer,
+.mobile-nav .MuiTabs-list {
+  min-width: max-content;
+}
+
+.mobile-nav .MuiTab-root {
+  min-width: 82px;
+  min-height: 58px;
+  padding: 8px 10px;
+}
+
 .mobile-language-switch {
   position: fixed !important;
   z-index: 101;
