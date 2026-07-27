@@ -1,0 +1,222 @@
+@media (max-width: 1040px) {
+  .layout {
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+}
+
+@media (max-width: 900px) {
+  body {
+    padding-bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+
+  .layout {
+    display: block !important;
+    width: min(100% - 20px, 720px) !important;
+    padding-top: 10px !important;
+  }
+
+  .map-frame,
+  .google-route-map,
+  .leaflet-route-preview,
+  .leaflet-route-map,
+  .map-placeholder {
+    min-height: 300px;
+  }
+
+  .route-day-calendar {
+    overflow-x: auto;
+  }
+
+  .route-dialog-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .route-dialog-hero-grid .route-dialog-title {
+    min-height: 230px;
+  }
+
+  .route-dialog-map {
+    height: 230px;
+    border-top: 1px solid rgba(24, 52, 46, 0.12);
+    border-left: 0;
+  }
+
+  .route-weekdays,
+  .route-month-grid {
+    min-width: 760px;
+  }
+
+  .section-title {
+    align-items: flex-start;
+  }
+
+  .section-title p {
+    text-align: left;
+  }
+
+  .panel-hero {
+    min-height: 340px;
+  }
+
+  .panel-gradient {
+    background: rgba(8, 35, 31, 0.72);
+  }
+
+  .panel-hero .MuiCardContent-root {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 26px !important;
+  }
+
+  .route-dialog-tabs .MuiTabs-flexContainer,
+  .route-dialog-tabs .MuiTabs-list {
+    min-width: max-content;
+  }
+
+}
+
+@media (max-width: 600px) {
+  .route-dialog .MuiDialog-container,
+  .route-dialog .MuiDialog-paper {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    border-radius: 0 !important;
+  }
+
+  .route-dialog .MuiDialog-paper {
+    overflow-x: hidden;
+    background: rgba(255, 253, 248, 0.96);
+  }
+
+  .route-dialog .MuiDialogTitle-root,
+  .route-dialog-hero-grid .route-dialog-title {
+    min-height: 210px;
+  }
+
+  .route-dialog-hero-grid {
+    flex-shrink: 0;
+  }
+
+  .route-dialog .MuiDialogTitle-root {
+    padding: calc(42px + env(safe-area-inset-top)) 18px 18px;
+  }
+
+  .route-dialog-title-copy > .MuiStack-root:first-child {
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .route-dialog-title-copy h3 {
+    overflow: hidden;
+    font-size: clamp(20px, 7vw, 30px) !important;
+    line-height: 1.12 !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .route-dialog-title-icon {
+    padding: 7px;
+    font-size: 36px !important;
+  }
+
+  .route-hero-carousel .route-hero-content {
+    padding-top: 22px;
+  }
+
+  .route-hero-arrow {
+    top: calc(10px + env(safe-area-inset-top));
+    width: 34px;
+    height: 34px;
+  }
+
+  .route-hero-arrow-previous {
+    left: 6px;
+  }
+
+  .route-hero-arrow-next {
+    right: auto;
+    left: 46px;
+  }
+
+  .route-hero-indicators {
+    top: calc(12px + env(safe-area-inset-top));
+    right: auto;
+    bottom: auto;
+    left: 86px;
+    padding: 4px 6px;
+  }
+
+  .route-dialog-map {
+    height: 245px;
+  }
+
+  .route-dialog-map-action {
+    top: 12px;
+    right: 12px;
+    max-width: calc(100% - 76px);
+    overflow: hidden;
+    font-size: 11px !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .route-dialog-tabs {
+    position: sticky;
+    z-index: 600;
+    top: 0;
+    padding: 0 6px;
+    background: rgba(255, 253, 248, 0.96);
+    backdrop-filter: blur(14px);
+  }
+
+  .route-dialog-tabs .MuiTab-root {
+    min-width: auto;
+    padding-right: 12px;
+    padding-left: 12px;
+    font-size: 12px;
+  }
+
+  .route-dialog .MuiDialogContent-root {
+    padding: 14px 16px calc(24px + env(safe-area-inset-bottom));
+  }
+
+  .route-social-guides {
+    columns: 1;
+  }
+
+  .route-social-guide-media {
+    height: 210px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-hero-slide {
+    transform: none;
+    transition: none;
+  }
+}
+
+@media print {
+  .sidebar,
+  .mobile-nav,
+  .MuiButton-root {
+    display: none !important;
+  }
+
+  .layout {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .MuiAccordionDetails-root {
+    display: block !important;
+  }
+}

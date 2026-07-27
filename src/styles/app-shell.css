@@ -1,0 +1,132 @@
+.page-shell {
+  position: relative;
+  min-height: 100dvh;
+}
+
+.layout {
+  display: grid !important;
+  grid-template-columns: 238px minmax(0, 1fr);
+  gap: 24px;
+  width: min(1440px, calc(100% - 32px)) !important;
+  min-height: 100dvh;
+  padding: 18px 0 54px !important;
+}
+
+.page-shell[data-tab="booking"] .layout {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.sidebar {
+  position: sticky;
+  top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  min-height: calc(100dvh - 36px);
+  padding: var(--radius-card);
+  border-radius: var(--radius-card) !important;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--glass-dark) !important;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+}
+
+.brand-mark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--forest);
+  background: var(--sun);
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.brand-kicker {
+  margin: 20px 0 4px !important;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.brand-title {
+  font-family: Georgia, "Songti SC", serif !important;
+  font-size: 27px !important;
+  line-height: 1.18 !important;
+}
+
+.brand-date {
+  margin-top: 8px !important;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px !important;
+}
+
+.side-tabs {
+  margin-top: 0;
+}
+
+.side-tabs .MuiTabs-indicator {
+  display: none;
+}
+
+.side-tabs .MuiTab-root {
+  align-items: stretch;
+  min-height: 54px;
+  margin: 4px 0;
+  padding: 0 12px;
+  border-radius: var(--radius-control);
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 900;
+}
+
+.tab-label {
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+  width: 100%;
+}
+
+.tab-label .MuiSvgIcon-root {
+  font-size: 19px;
+}
+
+.side-tabs .Mui-selected {
+  color: var(--forest) !important;
+  background: var(--cream);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.progress {
+  height: 7px !important;
+  margin: 8px 0 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.progress .MuiLinearProgress-bar {
+  border-radius: inherit;
+  background: var(--sun);
+}
+
+.sidebar .MuiButton-outlined {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.language-switch {
+  margin-top: 10px !important;
+  text-transform: none !important;
+}
+
+.content {
+  min-width: 0;
+}

@@ -1,0 +1,54 @@
+:root {
+  --ink: #18342e;
+  --ink-soft: #58716a;
+  --forest: #123f36;
+  --mint: #dcebdd;
+  --mint-soft: #edf5ec;
+  --lake: #347e90;
+  --sun: #f2b86b;
+  --coral: #df7659;
+  --cream: #f7f2e8;
+  --paper: #fffdf8;
+  --surface: #f4f7f3;
+  --line: #d9e3dc;
+  --glass-bg: rgba(255, 253, 248, 0.58);
+  --glass-bg-strong: rgba(255, 253, 248, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.42);
+  --glass-dark: rgba(18, 63, 54, 0.58);
+  --radius-card: 16px;
+  --radius-inner: 12px;
+  --radius-control: 10px;
+  --shadow-sm: 0 10px 30px rgba(18, 63, 54, 0.07);
+  --shadow-lg: 0 24px 70px rgba(18, 63, 54, 0.13);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+body::before {
+  position: fixed;
+  z-index: -2;
+  inset: 0;
+  background: url("/new-zealand-slow-trip-2026/images/hero-route-render.webp") center / cover no-repeat;
+  content: "";
+}
+
+body::after {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background: rgba(244, 247, 243, 0.68);
+  backdrop-filter: blur(2px) saturate(1.08);
+  content: "";
+}
+
+a {
+  color: inherit;
+}

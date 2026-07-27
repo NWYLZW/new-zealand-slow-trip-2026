@@ -1,9 +1,15 @@
-import { Box, Button, Card, CardContent, Checkbox, Chip, Grid2 as Grid, LinearProgress, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, ButtonBase, Card, CardContent, Checkbox, Chip, Grid2 as Grid, LinearProgress, Stack, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { PanelHero } from "../PanelHero";
-import { assetPath } from "../../assets";
+import HotelIcon from "@mui/icons-material/Hotel";
+import LuggageIcon from "@mui/icons-material/Luggage";
 import { bookingItems, hotelPlans } from "../../tripData";
+import sharedHotelSelections from "../../data/hotel-selections.json";
+import { AUCKLAND_AIRPORT_SELECTION_KEY, aucklandAirportHotels, aucklandAirportStayDates } from "../../data/aucklandAirportHotels";
 import { useLanguage } from "../../LanguageContext";
+import { AccommodationMap } from "../AccommodationMap";
+import { HotelComparisonDialog } from "../HotelComparisonDialog";
+import "./BookingPanel.css";
 
 const bookingTitleEn = {
   "flight-nz619": "NZ619 Auckland → Queenstown",
@@ -22,70 +28,187 @@ const bookingTitleEn = {
   hobbiton: "Hobbiton Movie Set",
 };
 
-const hotelDetailsEn = {
-  "Novotel Auckland Airport": {
-    place: "Auckland Airport",
-    date: "28 Sep; 7–8 Oct",
-    nights: "3 nights total",
-    label: "Preferred",
-    ratingDetail: "Location 9.8 · Cleanliness 9.3 · Comfort 9.4",
-    reason: "Walk straight to the hotel after the late international arrival and the evening domestic flight. This best supports a low-stress itinerary.",
-    facts: ["Outside the international terminal", "Walk to the domestic terminal", "24-hour reception"],
-    backup: "ibis budget Auckland Airport — a lower-cost option about 800 m from the terminal, with airport-bus access.",
-  },
-  "Blue Peaks Lodge": {
-    place: "Queenstown",
-    date: "29 Sep–2 Oct",
-    nights: "4 nights",
-    label: "Preferred",
-    ratingDetail: "Location 9.2 · Cleanliness 9.0 · Comfort 8.9",
-    reason: "Close to the town centre for restaurants and lakefront walks, with free on-site parking. Request a quiet room when booking.",
-    facts: ["Walkable town-centre location", "Free parking", "Near an airport-bus stop"],
-    backup: "Holiday Inn Express & Suites Queenstown — breakfast is included and service is standardised, but parking costs extra.",
-  },
-  "Edgewater Wānaka": {
-    place: "Wānaka",
-    date: "3–4 Oct",
-    nights: "2 nights",
-    label: "Preferred",
-    ratingDetail: "Location 9.4 · Cleanliness 9.1 · Comfort 9.2",
-    reason: "A lakefront stay with easy parking and a relaxed resort feel for two nights. Activities can be adjusted around the weather.",
-    facts: ["Lakefront location", "Free parking", "About a 20-minute walk to town"],
-    backup: "Wānaka Hotel — closer to the town centre and restaurants, with free parking and often more manageable prices.",
-  },
-  "The Hermitage Hotel": {
-    place: "Aoraki / Mount Cook",
-    date: "5 Oct",
-    nights: "1 night",
-    label: "Preferred",
-    ratingDetail: "Location 9.4 · Comfort 8.9 · Value 7.4",
-    reason: "For a one-night stay, keeping the mountain view, restaurants and activities in one place saves the most time. Book this hotel first.",
-    facts: ["Inside the national park", "Free parking", "Dining and activities on site"],
-    backup: "Mt Cook Lodge / Motels — a more casual option with kitchens in some rooms. Confirm whether 2026 renovation work affects the chosen room.",
-  },
-  "Rydges Latimer Christchurch": {
-    place: "Christchurch",
-    date: "6 Oct",
-    nights: "1 night",
-    label: "Preferred",
-    ratingDetail: "Location 9.1 · Cleanliness 9.0 · Comfort 9.0",
-    reason: "On the eastern side of the city centre, convenient for Riverside Market and the Botanic Gardens, with on-site parking.",
-    facts: ["Central-city location", "Paid on-site parking", "About 20 minutes to the airport"],
-    backup: "Novotel Christchurch Cathedral Square — more central for walking, with paid parking.",
-  },
-  "JetPark Hotel Rotorua": {
-    place: "Rotorua",
-    date: "9 Oct",
-    nights: "1 night",
-    label: "Updated preferred option",
-    ratingDetail: "Location 8.9 · Cleanliness 8.8 · Comfort 8.8",
-    reason: "Recently refurbished rooms, reliable guest ratings and a convenient central location for dinner before Te Puia the next morning.",
-    facts: ["Free parking", "Recently refurbished", "About a 5-minute walk to town"],
-    backup: "Rydges Rotorua — closer to Te Puia, but choose it only if the price is clearly lower or proximity matters more.",
-  },
+const hotelOfficialUrls = new Map(hotelPlans.map((hotel) => [hotel.name, hotel.links[0][1]]));
+
+const accommodationCalendar = [
+  { date: "9/28", stayGroup: "airport-arrival", hotel: "Novotel Auckland Airport", place: "奥克兰机场", placeEn: "Auckland Airport", status: "入住", statusEn: "Check in", tone: "airport", position: [-37.0075, 174.7839], mapQuery: "Novotel Auckland Airport" },
+  { date: "9/29", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 1 晚", statusEn: "Night 1", tone: "queenstown", position: [-45.0365, 168.6608], mapQuery: "Blue Peaks Lodge Queenstown" },
+  { date: "9/30", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 2 晚", statusEn: "Night 2", tone: "queenstown" },
+  { date: "10/1", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 3 晚", statusEn: "Night 3", tone: "queenstown" },
+  { date: "10/2", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 4 晚", statusEn: "Night 4", tone: "queenstown" },
+  { date: "10/3", stayGroup: "wanaka", hotel: "Edgewater Wānaka", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7009, 169.1175], mapQuery: "Edgewater Wānaka" },
+  { date: "10/4", stayGroup: "wanaka", hotel: "Edgewater Wānaka", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
+  { date: "10/5", stayGroup: "mount-cook", hotel: "The Hermitage Hotel", place: "库克山", placeEn: "Aoraki / Mount Cook", status: "入住", statusEn: "Check in", tone: "mount-cook", position: [-43.7338, 170.0937], mapQuery: "The Hermitage Hotel Aoraki Mount Cook" },
+  { date: "10/6", stayGroup: "christchurch", hotel: "Rydges Latimer Christchurch", place: "基督城", placeEn: "Christchurch", status: "入住", statusEn: "Check in", tone: "christchurch", position: [-43.5303, 172.6472], mapQuery: "Rydges Latimer Christchurch" },
+  { date: "10/7", stayGroup: "airport-return", hotel: "Novotel Auckland Airport", place: "奥克兰机场", placeEn: "Auckland Airport", status: "返程第 1 晚", statusEn: "Return night 1", tone: "airport" },
+  { date: "10/8", stayGroup: "airport-return", hotel: "Novotel Auckland Airport", place: "奥克兰机场", placeEn: "Auckland Airport", status: "返程第 2 晚", statusEn: "Return night 2", tone: "airport" },
+  { date: "10/9", stayGroup: "rotorua", hotel: "JetPark Hotel Rotorua", place: "罗托鲁瓦", placeEn: "Rotorua", status: "入住", statusEn: "Check in", tone: "rotorua", position: [-38.1435, 176.2495], mapQuery: "JetPark Hotel Rotorua" },
+  { date: "10/10", place: "奥克兰机场", placeEn: "Auckland Airport", status: "夜间返程 · 无住宿", statusEn: "Overnight flight · no hotel", tone: "flight", noStay: true },
+  { date: "10/11", place: "返程途中", placeEn: "In transit", status: "吉隆坡转机", statusEn: "Kuala Lumpur connection", tone: "flight", noStay: true },
+];
+
+function readSavedAirportHotelId() {
+  try {
+    const local = JSON.parse(localStorage.getItem(AUCKLAND_AIRPORT_SELECTION_KEY));
+    return local?.regions?.["auckland-airport"]?.hotelId
+      ?? sharedHotelSelections.regions["auckland-airport"].hotelId;
+  } catch {
+    return sharedHotelSelections.regions["auckland-airport"].hotelId;
+  }
+}
+
+const airportStayByDate = {
+  "9/28": { checkIn: "2026-09-28", checkOut: "2026-09-29", label: "9月28日—29日" },
+  "10/7": { checkIn: "2026-10-07", checkOut: "2026-10-09", label: "10月7日—9日" },
+  "10/8": { checkIn: "2026-10-07", checkOut: "2026-10-09", label: "10月7日—9日" },
 };
 
-const hotelLinkLabelsEn = ["Official website", "Guest reviews", "Alternative website"];
+function AccommodationCalendar({ isEnglish }) {
+  const initialAirportHotel = aucklandAirportHotels.find((hotel) => hotel.id === readSavedAirportHotelId())
+    ?? aucklandAirportHotels[0];
+  const [airportHotelId, setAirportHotelId] = useState(initialAirportHotel.id);
+  const [selectedHotel, setSelectedHotel] = useState(initialAirportHotel.name);
+  const [selectedStayGroup, setSelectedStayGroup] = useState("airport-arrival");
+  const [comparisonStay, setComparisonStay] = useState(null);
+  const weekdays = isEnglish
+    ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    : ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+
+  const airportHotel = aucklandAirportHotels.find((hotel) => hotel.id === airportHotelId) ?? aucklandAirportHotels[0];
+  const displayedCalendar = accommodationCalendar.map((stay) => stay.tone === "airport" && stay.hotel ? {
+    ...stay,
+    hotel: airportHotel.name,
+    position: airportHotel.position,
+    mapQuery: airportHotel.mapQuery,
+  } : stay);
+  const dynamicOfficialUrls = new Map([...hotelOfficialUrls, [airportHotel.name, airportHotel.officialUrl]]);
+  const hotels = [...new Map(
+    displayedCalendar
+      .filter((stay) => stay.hotel && stay.position)
+      .map((stay) => [stay.hotel, { ...stay, onSelect: setSelectedHotel }]),
+  ).values()];
+
+  const chooseAirportHotel = async (hotel) => {
+    const selection = {
+      updatedAt: new Date().toISOString(),
+      regions: {
+        ...sharedHotelSelections.regions,
+        "auckland-airport": {
+          hotelId: hotel.id,
+          hotelName: hotel.name,
+          stayDates: aucklandAirportStayDates,
+        },
+      },
+    };
+    setAirportHotelId(hotel.id);
+    setSelectedHotel(hotel.name);
+    localStorage.setItem(AUCKLAND_AIRPORT_SELECTION_KEY, JSON.stringify(selection));
+    setComparisonStay(null);
+    try {
+      await fetch("/api/hotel-selection", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selection),
+      });
+    } catch {
+      // The static build still retains the choice in localStorage.
+    }
+  };
+
+  return (
+    <Box className="route-day-calendar accommodation-calendar">
+      <Box className="route-month">
+        <AccommodationMap hotels={hotels} isEnglish={isEnglish} selectedHotel={selectedHotel} />
+        <Stack className="accommodation-calendar-title" direction="row" alignItems="center" spacing={1}>
+          <HotelIcon aria-hidden="true" />
+          <Box>
+            <Typography className="route-month-title">
+              {isEnglish ? "Accommodation calendar · 28 Sep—11 Oct" : "住宿日历 · 9月28日—10月11日"}
+            </Typography>
+            <Typography color="text.secondary">
+              {isEnglish ? "12 hotel nights; select a date to view the hotel on the map." : "共 12 个住宿晚；点击日期可在地图查看酒店位置。"}
+            </Typography>
+          </Box>
+        </Stack>
+        <Box className="accommodation-calendar-grid-scroll">
+          <Box className="route-weekdays">
+            {weekdays.map((weekday) => <Typography key={weekday}>{weekday}</Typography>)}
+          </Box>
+          <Box className="route-month-grid">
+            {displayedCalendar.map((stay, index) => {
+            const selectorContent = (
+              <ButtonBase
+                aria-label={`${stay.date} · ${isEnglish ? stay.placeEn : stay.place} · ${isEnglish ? "Show on map" : "在地图查看"}`}
+                aria-pressed={stay.stayGroup === selectedStayGroup}
+                className="accommodation-day-selector"
+                onClick={() => {
+                  setSelectedHotel(stay.hotel);
+                  setSelectedStayGroup(stay.stayGroup);
+                  if (stay.tone === "airport" && stay.hotel) setComparisonStay(airportStayByDate[stay.date]);
+                }}
+              >
+                <Stack className="accommodation-date" direction="row" justifyContent="space-between" alignItems="center">
+                  <Typography>{stay.date}</Typography>
+                  <Chip label={isEnglish ? stay.statusEn : stay.status} size="small" />
+                </Stack>
+                <Box className="accommodation-place">
+                  {stay.noStay ? <LuggageIcon aria-hidden="true" /> : <HotelIcon aria-hidden="true" />}
+                  <Typography>{isEnglish ? stay.placeEn : stay.place}</Typography>
+                </Box>
+              </ButtonBase>
+            );
+
+            return stay.hotel ? (
+              <Box
+                className="route-day-cell accommodation-day-cell"
+                data-tone={stay.tone}
+                data-selected={stay.stayGroup === selectedStayGroup}
+                key={stay.date}
+                style={{ gridColumnStart: index === 0 ? 2 : undefined }}
+              >
+                {selectorContent}
+                <Typography
+                  aria-label={`${stay.hotel} · ${isEnglish ? "official website" : "官方网站"}`}
+                  className="accommodation-hotel-name"
+                  component="a"
+                  href={dynamicOfficialUrls.get(stay.hotel)}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {stay.hotel}<OpenInNewIcon aria-hidden="true" />
+                </Typography>
+              </Box>
+            ) : (
+              <Box
+                className="route-day-cell accommodation-day-cell is-no-stay"
+                data-tone={stay.tone}
+                key={stay.date}
+              >
+                <Stack className="accommodation-date" direction="row" justifyContent="space-between" alignItems="center">
+                  <Typography>{stay.date}</Typography>
+                  <Chip label={isEnglish ? stay.statusEn : stay.status} size="small" />
+                </Stack>
+                <Box className="accommodation-place">
+                  <LuggageIcon aria-hidden="true" />
+                  <Typography>{isEnglish ? stay.placeEn : stay.place}</Typography>
+                </Box>
+              </Box>
+            );
+            })}
+          </Box>
+        </Box>
+      </Box>
+      <HotelComparisonDialog
+        isEnglish={isEnglish}
+        onClose={() => setComparisonStay(null)}
+        onSelect={chooseAirportHotel}
+        open={Boolean(comparisonStay)}
+        selectedHotelId={airportHotelId}
+        stay={comparisonStay}
+      />
+    </Box>
+  );
+}
 
 export function BookingPanel({ checked, setChecked, storageKey }) {
   const { language } = useLanguage();
@@ -102,67 +225,8 @@ export function BookingPanel({ checked, setChecked, storageKey }) {
 
   return (
     <Stack spacing={3}>
-      <PanelHero
-        image={assetPath("images/hero-route-render.webp")}
-        kicker="BOOKING CHECKLIST"
-        title={isEnglish ? "Flights, hotels and key bookings" : "酒店与关键预订"}
-        desc={isEnglish ? "Confirm accommodation first, followed by domestic flights, rental cars and popular activities." : "先把12晚住宿落定，再依次锁定国内航班、租车和热门项目。"}
-      />
       <Box>
-        <Typography variant="h2" className="subsection-title">{isEnglish ? "Accommodation" : "住宿安排"}</Typography>
-        <Typography color="text.secondary" className="subsection-copy">
-          {isEnglish ? "Selections prioritise the route, parking, comfort and guest ratings. Recheck availability and conditions before booking." : "综合动线、停车、住宿条件与住客评分筛选；评分为 Booking.com 于2026年7月核对的快照，预订前请再次确认。"}
-        </Typography>
-        <Grid container spacing={1.5} className="hotel-grid">
-          {hotelPlans.map((hotel) => {
-            const translatedHotel = isEnglish ? { ...hotel, ...hotelDetailsEn[hotel.name] } : hotel;
-            return (
-            <Grid size={{ xs: 12, md: 6 }} key={hotel.place}>
-              <Card className="hotel-card">
-                <CardContent>
-                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1.5}>
-                    <Box>
-                      <Typography variant="h3">{translatedHotel.place}</Typography>
-                      <Typography variant="caption" color="text.secondary">{translatedHotel.date}</Typography>
-                    </Box>
-                    <Chip label={translatedHotel.nights} size="small" />
-                  </Stack>
-                  <Typography className="hotel-label">{translatedHotel.label}</Typography>
-                  <Typography
-                    className="hotel-name"
-                    component="a"
-                    href={hotel.links[0][1]}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${hotel.name} · ${isEnglish ? "official website" : "官方网站"}`}
-                  >
-                    {hotel.name}<OpenInNewIcon aria-hidden="true" />
-                  </Typography>
-                  <Box className="hotel-rating">
-                    <strong>{hotel.rating}</strong>
-                    <span>{translatedHotel.ratingDetail}</span>
-                  </Box>
-                  <Typography color="text.secondary" className="hotel-reason">{translatedHotel.reason}</Typography>
-                  <Stack direction="row" className="hotel-facts">
-                    {translatedHotel.facts.map((fact) => <Chip key={fact} label={fact} size="small" />)}
-                  </Stack>
-                  <Typography className="hotel-backup"><strong>{isEnglish ? "Alternative: " : "备选："}</strong>{translatedHotel.backup}</Typography>
-                  <Stack direction="row" className="hotel-links">
-                    {hotel.links.map(([label, href], index) => (
-                      <Button key={label} component="a" href={href} target="_blank" rel="noreferrer" size="small">
-                        {isEnglish ? hotelLinkLabelsEn[index] : label}
-                      </Button>
-                    ))}
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-          );})}
-        </Grid>
-        <Typography className="hotel-booking-note">
-          <strong>{isEnglish ? "Booking order: " : "预订顺序："}</strong>
-          {isEnglish ? "Book Aoraki / Mount Cook first, followed by Queenstown and Auckland Airport. Use free-cancellation rates elsewhere until the route is final." : "先订库克山，其次是皇后镇与奥克兰机场；其他城市优先选择“可免费取消”的房价，待路线完全确认后再换成更优惠的不可退价格。"}
-        </Typography>
+        <AccommodationCalendar isEnglish={isEnglish} />
       </Box>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 8 }}>

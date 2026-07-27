@@ -62,11 +62,11 @@ export default function App() {
 
   return (
     <LanguageContext.Provider value={languageValue}>
-      <Box className="page-shell" data-language={language}>
+      <Box className="page-shell" data-language={language} data-tab={tab}>
         <Container maxWidth={false} className="layout">
           {!isMobile && <Sidebar tab={tab} onTabChange={setTab} progress={progress} language={language} onLanguageToggle={toggleLanguage} />}
           <Box component="main" className="content">
-            {tab === "overview" && <OverviewPanel onJumpNorth={() => setTab("north")} />}
+            {tab === "overview" && <OverviewPanel />}
             {tab === "south" && <SouthPanel />}
             {tab === "north" && <NorthPanel />}
             {tab === "booking" && (

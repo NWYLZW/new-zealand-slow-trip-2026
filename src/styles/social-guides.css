@@ -1,0 +1,157 @@
+.route-social-guides {
+  columns: 2 300px;
+  column-gap: 16px;
+}
+
+.route-social-guides > .route-social-guide-card {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 16px;
+  vertical-align: top;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+.route-social-guide-card {
+  overflow: hidden;
+  border-color: rgba(24, 52, 46, 0.1) !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.route-social-guide-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  color: white;
+  background: var(--forest);
+  text-decoration: none;
+}
+
+.route-social-guide-media > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 180ms ease;
+}
+
+.route-social-guide-media:hover > img {
+  transform: scale(1.018);
+}
+
+.route-social-guide-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 4px;
+  background: rgba(12, 34, 31, 0.18);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+}
+
+.route-social-guide-play svg {
+  width: 54px;
+  height: 54px;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.3));
+}
+
+.route-social-guide-play p {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.route-social-guide-card .MuiCardContent-root {
+  padding: 16px !important;
+}
+
+.route-social-guide-source {
+  color: var(--ink-soft);
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  text-align: right;
+}
+
+.route-social-guide-badges {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.route-social-guide-verified {
+  color: var(--lake) !important;
+  background: rgba(68, 143, 157, 0.12) !important;
+}
+
+.route-social-guide-stance.is-positive {
+  color: #246c50 !important;
+  background: rgba(36, 108, 80, 0.12) !important;
+}
+
+.route-social-guide-stance.is-pitfall {
+  color: #a04534 !important;
+  background: rgba(160, 69, 52, 0.12) !important;
+}
+
+.route-social-guide-video-type {
+  color: #9f352d !important;
+  background: rgba(159, 53, 45, 0.1) !important;
+}
+
+.route-social-guide-author {
+  margin-top: 12px;
+}
+
+.route-social-guide-author .MuiAvatar-root {
+  width: 34px;
+  height: 34px;
+}
+
+.route-social-guide-author-name {
+  color: var(--ink);
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+.route-social-guide-author-handle {
+  color: var(--ink-soft);
+  font-size: 11px !important;
+}
+
+.route-social-guide-title {
+  margin-top: 12px !important;
+  font-size: 18px !important;
+}
+
+.route-social-guide-excerpt {
+  margin-top: 7px !important;
+  color: var(--ink-soft);
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  white-space: pre-line;
+}
+
+.route-social-guide-points {
+  margin: 10px 0 12px !important;
+  padding-left: 20px;
+  color: var(--ink-soft);
+}
+
+.route-social-guide-points li {
+  padding-left: 2px;
+  font-size: 13px !important;
+  line-height: 1.6;
+}
+
+.route-social-guide-tip {
+  margin-bottom: 12px !important;
+  padding: 9px 11px;
+  border-radius: var(--radius-control);
+  color: var(--ink);
+  background: rgba(242, 184, 107, 0.18);
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}

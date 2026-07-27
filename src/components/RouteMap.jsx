@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Card, CardContent, Chip, Dialog, DialogContent, DialogTitle, IconButton, Stack, Tab, Tabs, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Stack, Tab, Tabs, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CloseIcon from "@mui/icons-material/Close";
@@ -1373,38 +1373,36 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
   }, [language]);
 
   return (
-    <Card className="map-card">
-      <CardContent>
-        <Box className="map-frame map-frame-full">
-          <Stack direction="row" className="map-actions">
-            <Button
-              aria-label={routeText(routeLabel, language)}
-              startIcon={<MapIcon />}
-              variant="contained"
-              component="a"
-              href={routeUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {routeText(routeLabel, language)}
-            </Button>
-          </Stack>
-          {googleMapsApiKey ? (
-            <GoogleRouteMap language={language} mode={mapMode} />
-          ) : (
-            <LeafletRouteMap language={language} mode={mapMode} />
-          )}
-        </Box>
-        <RouteDayCalendar
-          days={localizedDays}
-          language={language}
-          onDayRegionSelect={selectRegion}
-          onEventSelect={setSelectedEvent}
-          selectedEvent={selectedEvent}
-          selectedRegion={selectedRegion}
-          title={config.calendarTitle}
-        />
-      </CardContent>
-    </Card>
+    <Box className="route-map-section">
+      <Box className="map-frame map-frame-full">
+        <Stack direction="row" className="map-actions">
+          <Button
+            aria-label={routeText(routeLabel, language)}
+            startIcon={<MapIcon />}
+            variant="contained"
+            component="a"
+            href={routeUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {routeText(routeLabel, language)}
+          </Button>
+        </Stack>
+        {googleMapsApiKey ? (
+          <GoogleRouteMap language={language} mode={mapMode} />
+        ) : (
+          <LeafletRouteMap language={language} mode={mapMode} />
+        )}
+      </Box>
+      <RouteDayCalendar
+        days={localizedDays}
+        language={language}
+        onDayRegionSelect={selectRegion}
+        onEventSelect={setSelectedEvent}
+        selectedEvent={selectedEvent}
+        selectedRegion={selectedRegion}
+        title={config.calendarTitle}
+      />
+    </Box>
   );
 }

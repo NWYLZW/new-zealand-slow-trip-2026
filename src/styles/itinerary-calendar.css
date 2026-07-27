@@ -1,0 +1,124 @@
+.route-day-calendar {
+  margin-top: 18px;
+}
+
+.route-month {
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-inner);
+  background: rgba(255, 255, 255, 0.36);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
+.route-month + .route-month {
+  margin-top: 16px;
+}
+
+.route-month-title {
+  padding: 14px 16px 10px;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+}
+
+.route-weekdays,
+.route-month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.route-weekdays {
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.26);
+  border-bottom: 1px solid rgba(24, 52, 46, 0.12);
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.route-weekdays p {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.route-month-grid {
+  gap: 1px;
+  background: rgba(24, 52, 46, 0.12);
+}
+
+.route-day-cell {
+  min-height: 148px;
+  padding: 10px;
+  background: rgba(255, 253, 248, 0.34);
+}
+
+.route-day-cell[data-muted="true"] {
+  color: rgba(24, 52, 46, 0.32);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.route-day-cell.has-day {
+  background: var(--day-color, #fffdf8);
+}
+
+.route-day-cell.has-day[data-region-selectable="true"] {
+  cursor: pointer;
+}
+
+.route-day-cell.has-day[data-region-selectable="true"]:hover {
+  box-shadow: inset 0 0 0 2px rgba(18, 63, 54, 0.28);
+}
+
+.route-day-cell.has-day[data-region-state="selected"] {
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 0 0 3px rgba(18, 63, 54, 0.52);
+}
+
+.route-day-cell.has-day[data-region-state="muted"] {
+  opacity: 0.46;
+}
+
+.route-day-date {
+  margin-bottom: 7px;
+}
+
+.route-day-date > p {
+  font-weight: 900;
+}
+
+.route-event-tags {
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.route-event-tags .MuiChip-root {
+  max-width: 100%;
+  height: 26px;
+  border: 1px solid transparent;
+  color: #fff;
+  background: var(--event-color);
+  font-size: 11.5px;
+  font-weight: 900;
+  cursor: pointer;
+  backdrop-filter: blur(12px) saturate(1.15);
+  -webkit-backdrop-filter: blur(12px) saturate(1.15);
+}
+
+.route-event-tags .MuiChip-label {
+  padding-right: 9px;
+  padding-left: 6px;
+}
+
+.route-event-tags .MuiSvgIcon-root {
+  color: inherit !important;
+  font-size: 16px !important;
+  margin-left: 7px !important;
+  margin-right: -2px !important;
+}
+
+.route-event-tags .MuiChip-root:hover {
+  color: #fff;
+  background: color-mix(in srgb, var(--event-color), #000 12%);
+}

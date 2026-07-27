@@ -1,0 +1,127 @@
+.section-title {
+  align-items: end;
+  margin: 6px 4px 14px;
+}
+
+.section-title h2 {
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.15;
+}
+
+.section-title p {
+  max-width: 500px;
+  text-align: right;
+}
+
+.photo-card {
+  position: relative;
+  isolation: isolate;
+  min-height: 250px;
+  overflow: hidden;
+  border-radius: var(--radius-card) !important;
+  background: var(--forest) !important;
+}
+
+.photo-card img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-card:hover img {
+  transform: scale(1.035);
+}
+
+.photo-gradient {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: rgba(6, 28, 24, 0.42);
+}
+
+.photo-caption {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  left: 20px;
+  color: #fff;
+}
+
+.photo-caption .MuiTypography-caption {
+  color: rgba(255, 255, 255, 0.67);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.photo-caption h3 {
+  font-size: 25px;
+}
+
+.panel-hero {
+  position: relative;
+  min-height: 290px;
+  overflow: hidden;
+  color: #fff !important;
+  background: var(--forest) !important;
+}
+
+.panel-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.panel-gradient {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 35, 31, 0.64);
+}
+
+.panel-hero .MuiCardContent-root {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  padding: 42px !important;
+}
+
+.panel-hero h2 {
+  margin-bottom: 12px;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.08;
+}
+
+.panel-hero p:not(.eyebrow) {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.subsection-title {
+  margin: 4px 4px 6px !important;
+  font-size: clamp(28px, 3.4vw, 38px) !important;
+}
+
+.subsection-copy {
+  max-width: 780px;
+  margin: 0 4px 16px !important;
+}
+
+.shopping-plan-card {
+  height: 100%;
+}
+
+.shopping-plan-card .MuiListItem-root {
+  align-items: flex-start;
+}
+
+.shopping-stop .MuiListItemText-root {
+  margin-left: 12px;
+}
+
+.credits-copy {
+  margin-top: 8px !important;
+}

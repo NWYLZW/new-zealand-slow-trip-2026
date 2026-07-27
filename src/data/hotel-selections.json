@@ -1,0 +1,14 @@
+{
+  "updatedAt": null,
+  "regions": {
+    "auckland-airport": {
+      "hotelId": "novotel-auckland-airport",
+      "hotelName": "Novotel Auckland Airport",
+      "stayDates": [
+        "2026-09-28",
+        "2026-10-07",
+        "2026-10-08"
+      ]
+    }
+  }
+}

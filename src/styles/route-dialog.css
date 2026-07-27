@@ -1,0 +1,440 @@
+.route-dialog .MuiDialog-paper {
+  position: relative;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  background: rgba(255, 253, 248, 0.82);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+}
+
+.route-dialog-close {
+  position: absolute !important;
+  z-index: 1000;
+  top: calc(10px + env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  color: #fff !important;
+  background: rgba(18, 63, 54, 0.82) !important;
+  box-shadow: 0 8px 22px rgba(18, 63, 54, 0.22) !important;
+  backdrop-filter: blur(14px);
+}
+
+.route-dialog .MuiDialogTitle-root {
+  position: relative;
+  isolation: isolate;
+  min-height: 180px;
+  overflow: hidden;
+  padding: 24px;
+}
+
+.route-dialog-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(330px, 0.88fr);
+  min-height: 260px;
+  background: var(--mint-soft);
+}
+
+.route-dialog-hero-grid .route-dialog-title {
+  min-height: 260px;
+  border-radius: 0;
+}
+
+.route-dialog .MuiDialogContent-root {
+  padding: 16px 24px 24px;
+}
+
+.route-dialog-map {
+  position: relative;
+  height: 260px;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  border-left: 1px solid rgba(24, 52, 46, 0.12);
+  border-radius: 0;
+  background: var(--mint-soft);
+}
+
+.route-dialog-leaflet-map {
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+}
+
+.route-dialog-leaflet-map .leaflet-control-zoom {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: var(--radius-control);
+  box-shadow: 0 6px 18px rgba(18, 63, 54, 0.14);
+}
+
+.route-dialog-leaflet-map .leaflet-control-zoom a {
+  color: var(--forest);
+  background: rgba(255, 253, 248, 0.94);
+}
+
+.route-dialog-map-action {
+  position: absolute !important;
+  z-index: 500;
+  top: 12px;
+  right: 12px;
+  border-radius: 999px !important;
+  color: #fff !important;
+  background: rgba(18, 63, 54, 0.84) !important;
+  box-shadow: 0 8px 22px rgba(18, 63, 54, 0.22) !important;
+  backdrop-filter: blur(14px);
+}
+
+.route-dialog-title.has-media {
+  display: flex;
+  align-items: flex-end;
+  min-height: 240px;
+  color: #fff;
+  background: #153f38;
+}
+
+.route-dialog-title.has-media::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background: rgba(8, 35, 31, 0.52);
+  pointer-events: none;
+}
+
+.route-hero-slide {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.015);
+  transition: opacity 500ms ease, transform 6.5s ease;
+}
+
+.route-hero-slide[data-active="true"] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.route-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.route-hero-carousel .route-hero-content {
+  padding-top: 40px;
+}
+
+.route-hero-arrow {
+  position: absolute !important;
+  z-index: 4;
+  top: 14px;
+  color: #fff !important;
+  background: rgba(8, 35, 31, 0.54) !important;
+  box-shadow: 0 4px 16px rgba(8, 35, 31, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.route-hero-arrow:hover,
+.route-hero-arrow:focus-visible {
+  background: rgba(8, 35, 31, 0.82) !important;
+}
+
+.route-hero-arrow-previous {
+  left: 10px;
+}
+
+.route-hero-arrow-next {
+  right: auto;
+  left: 50px;
+}
+
+.route-hero-indicators {
+  position: absolute;
+  z-index: 4;
+  top: 16px;
+  right: auto;
+  bottom: auto;
+  left: 92px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(8, 35, 31, 0.52);
+  backdrop-filter: blur(10px);
+}
+
+.route-hero-indicator {
+  width: 20px !important;
+  height: 20px !important;
+  padding: 6px !important;
+}
+
+.route-hero-indicator::after {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  content: "";
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.route-hero-indicator[data-active="true"]::after {
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+}
+
+.route-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+.route-dialog-title-copy {
+  min-width: 0;
+  width: 100%;
+}
+
+.route-dialog-title-copy > .MuiStack-root:first-child {
+  min-width: 0;
+}
+
+.route-dialog-title-copy h3 {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.route-dialog-title.has-media .MuiTypography-root,
+.route-dialog-title.has-media .route-dialog-place {
+  color: inherit;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.48);
+}
+
+.route-dialog-place {
+  margin-top: 8px !important;
+  color: var(--ink-soft);
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.route-dialog-link-heading {
+  margin-bottom: 8px !important;
+  color: var(--ink-soft);
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.06em;
+}
+
+.route-dialog-tabs {
+  min-height: 42px !important;
+  padding: 0 16px;
+  border-top: 1px solid rgba(24, 52, 46, 0.08);
+  border-bottom: 1px solid rgba(24, 52, 46, 0.12);
+}
+
+.route-dialog-tabs .MuiTab-root {
+  min-height: 42px;
+  text-transform: none;
+  font-weight: 900;
+}
+
+.route-dialog-range {
+  display: inline-flex;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--event-color);
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.route-dialog-metrics {
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.route-dialog-drive {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.44);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(8, 35, 31, 0.5);
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  backdrop-filter: blur(10px);
+}
+
+.route-dialog-drive .MuiSvgIcon-root {
+  font-size: 16px;
+}
+
+.route-dialog-title-icon {
+  flex: 0 0 auto;
+  padding: 9px;
+  border-radius: var(--radius-inner);
+  color: #fff;
+  background: var(--event-color);
+  font-size: 42px !important;
+}
+
+.route-dialog-events {
+  margin-top: 4px;
+}
+
+.route-dialog-event {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  padding: 12px 14px;
+  border: 1px solid rgba(24, 52, 46, 0.1);
+  border-radius: var(--radius-inner);
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.route-dialog-inline-link,
+.route-flight-number-link {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  width: fit-content;
+  color: var(--lake);
+  font-weight: 850 !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(52, 126, 144, 0.34);
+  text-underline-offset: 3px;
+}
+
+.route-dialog-event-copy {
+  min-width: 0;
+  line-height: 1.65 !important;
+}
+
+.route-dialog-event-copy .route-dialog-inline-link {
+  vertical-align: baseline;
+}
+
+.route-dialog-inline-link .MuiSvgIcon-root,
+.route-flight-number-link .MuiSvgIcon-root {
+  font-size: 15px;
+}
+
+.route-dialog-time {
+  color: var(--coral);
+  font-weight: 950 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.route-dialog-stay,
+.route-dialog-highlight {
+  margin-top: 14px !important;
+  padding: 12px 14px;
+  border-radius: var(--radius-inner);
+  background: rgba(237, 245, 236, 0.72);
+  color: var(--ink-soft);
+  font-weight: 800 !important;
+}
+
+.route-dialog-highlight {
+  background: rgba(242, 184, 107, 0.18);
+  color: var(--ink);
+}
+
+.route-flight-summary,
+.route-flight-card {
+  padding: 14px;
+  border: 1px solid rgba(24, 52, 46, 0.1);
+  border-radius: var(--radius-inner);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.route-flight-summary p + p {
+  margin-top: 5px;
+  color: var(--ink-soft);
+}
+
+.route-flight-card .MuiChip-root {
+  color: #fff;
+  background: var(--event-color);
+}
+
+.route-flight-date {
+  margin-top: 3px !important;
+  color: var(--ink-soft);
+  font-size: 12px !important;
+}
+
+.route-flight-route {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.route-flight-time {
+  font-size: 22px !important;
+  font-weight: 950 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.route-flight-arrow {
+  color: var(--ink-soft);
+  font-size: 22px !important;
+}
+
+.route-local-names-note {
+  margin-bottom: 12px !important;
+  color: var(--ink-soft);
+}
+
+.route-local-name {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 8px 10px 8px 14px;
+  border: 1px solid rgba(24, 52, 46, 0.1);
+  border-radius: var(--radius-inner);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.route-local-name-copy {
+  min-width: 0;
+}
+
+.route-local-name-zh {
+  color: var(--ink);
+  font-weight: 900 !important;
+}
+
+.route-local-name-local {
+  margin-top: 2px !important;
+  color: var(--ink-soft);
+  font-size: 12px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.01em;
+}
+
+.route-local-name-copied {
+  margin-top: 12px !important;
+  color: var(--lake);
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.route-dialog-links .MuiButton-root {
+  justify-content: flex-start;
+}

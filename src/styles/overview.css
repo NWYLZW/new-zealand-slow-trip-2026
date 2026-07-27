@@ -1,0 +1,48 @@
+.eyebrow {
+  margin-bottom: 14px !important;
+  color: var(--sun);
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.hero-text {
+  max-width: 530px;
+  margin-top: 16px !important;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 16px !important;
+}
+
+.map-chip-row,
+.day-heading {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stat-card,
+.shopping-plan-card,
+.calendar-card,
+.booking-card,
+.progress-card,
+.MuiCard-root {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card) !important;
+  background: var(--glass-bg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  backdrop-filter: blur(20px) saturate(1.25);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+}
+
+.stat-value {
+  display: block;
+  margin-top: 4px !important;
+  font-family: Georgia, serif !important;
+  font-size: 30px !important;
+  font-weight: 900 !important;
+}
+
+
+.experience-link {
+  margin-top: 12px !important;
+  padding-left: 0 !important;
+}

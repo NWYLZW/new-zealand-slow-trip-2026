@@ -1,0 +1,81 @@
+.accommodation-map-wrap {
+  position: relative;
+  height: 360px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(24, 52, 46, 0.12);
+  background: #dce8e2;
+}
+
+.accommodation-map {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.accommodation-map .leaflet-control-zoom {
+  margin-top: 14px;
+  margin-left: 14px;
+}
+
+.accommodation-map .leaflet-tooltip {
+  border: 0;
+  border-radius: var(--radius-control);
+  color: var(--ink);
+  font-family: inherit;
+  font-weight: 900;
+  box-shadow: 0 8px 20px rgba(18, 63, 54, 0.18);
+}
+
+.accommodation-map-navigation {
+  position: absolute !important;
+  z-index: 500;
+  top: 14px;
+  right: 14px;
+  color: #fff !important;
+  background: #123f36 !important;
+  box-shadow: 0 8px 20px rgba(18, 63, 54, 0.24) !important;
+}
+
+.accommodation-map-navigation:hover {
+  background: #0b3029 !important;
+}
+
+.accommodation-map-selected {
+  position: absolute;
+  z-index: 500;
+  bottom: 14px;
+  left: 14px;
+  max-width: min(340px, calc(100% - 28px));
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  border-radius: var(--radius-control);
+  color: #fff;
+  background: #123f36;
+  box-shadow: 0 8px 20px rgba(18, 63, 54, 0.22);
+}
+
+.accommodation-map-selected .MuiTypography-root {
+  color: inherit;
+}
+
+.accommodation-map-selected p:nth-child(2) {
+  font-weight: 900;
+}
+
+@media (max-width: 600px) {
+  .accommodation-map-wrap {
+    height: 300px;
+  }
+
+  .accommodation-map-navigation {
+    top: 10px;
+    right: 10px;
+  }
+
+  .accommodation-map-selected {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}
