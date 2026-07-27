@@ -68,8 +68,8 @@ export const accommodationResearch = {
       "10月6日若直升机取消，需要方便参加08:30候补首班并尽快退房上路",
       "仅住一晚，位置与天气备选价值高于厨房；必须确认2026年施工影响",
     ],
-    accommodationQuestion: "优先比较 The Hermitage 各类大床房与 Mt Cook Lodge / Motels；Airbnb 供应稀少且会增加驾驶，不作为默认推荐。",
-    status: "pending-iab-verification",
+    accommodationQuestion: "同时比较库克山村、普卡基湖、Braemar Station、Ben Ohau 与 Twizel 的真实可订大床酒店/旅馆/民宿；把 Big Sky 后夜间驾驶和次晨候补直升机时间作为核心代价。",
+    status: "verified-mixed-platform-sample",
   },
   christchurch: {
     place: "基督城",

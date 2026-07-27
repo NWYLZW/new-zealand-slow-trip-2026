@@ -9,6 +9,7 @@ import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import NightShelterIcon from "@mui/icons-material/NightShelter";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import PlaceIcon from "@mui/icons-material/Place";
 import { divIcon, latLngBounds } from "leaflet";
 import { MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -45,6 +46,15 @@ function platformUrl(hotel, platform) {
   if (platform === "Airbnb") return hotel.stayUrl;
   if (platform === "Google") return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.mapQuery)}`;
   return null;
+}
+
+function directionsUrl(hotel, attraction) {
+  const url = new URL("https://www.google.com/maps/dir/");
+  url.searchParams.set("api", "1");
+  url.searchParams.set("origin", attraction.originQuery ?? hotel.mapQuery);
+  url.searchParams.set("destination", attraction.destinationQuery ?? attraction.name);
+  url.searchParams.set("travelmode", attraction.travelMode ?? "driving");
+  return url.toString();
 }
 
 function FitHotelMap({ anchorPosition, hotels }) {
@@ -141,6 +151,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
     currentRate: hotel.rateSnapshots?.[`${dates.checkIn}/${dates.checkOut}`] ?? null,
   })), [dates.checkIn, dates.checkOut, visibleHotels]);
   const activeHotel = cards.find((hotel) => hotel.id === activeHotelId) ?? cards[0];
+  const destinationResearch = cards.find((hotel) => hotel.research)?.research;
   const galleryImages = gallery?.images ?? [];
   const galleryIndex = gallery?.index ?? 0;
   const galleryImage = galleryImages[galleryIndex] ?? null;
@@ -196,6 +207,15 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
           isEnglish={isEnglish}
           onHotelChange={setActiveHotelId}
         />
+        {destinationResearch && (
+          <Box className="hotel-social-research hotel-destination-research">
+            <Typography fontWeight={900}>{isEnglish ? "Destination stay research" : "目的地酒店 / 民宿调研结论"}</Typography>
+            <Typography color="text.secondary">{destinationResearch.verdict}</Typography>
+            <Typography component="a" href={destinationResearch.url} rel="noreferrer" target="_blank">
+              {isEnglish ? "Open verified Xiaohongshu search" : "打开已验证的小红书住宿搜索"}<OpenInNewIcon aria-hidden="true" />
+            </Typography>
+          </Box>
+        )}
         <Box className="hotel-comparison-tabs-panel">
           <Tabs
             aria-label={isEnglish ? "Choose accommodation to compare" : "选择住宿进行比选"}
@@ -266,6 +286,23 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                   <Stack direction="row" spacing={0.8}><DirectionsWalkIcon /><Typography>{isEnglish ? hotel.accessEn : hotel.access}</Typography></Stack>
                   <Stack direction="row" spacing={0.8}><LocalParkingIcon /><Typography>{isEnglish ? hotel.parkingEn : hotel.parking}</Typography></Stack>
                 </Stack>
+                {hotel.nearbyAttractions?.length > 0 && (
+                  <Box className="hotel-nearby-attractions">
+                    <Stack direction="row" alignItems="center" spacing={0.7}>
+                      <PlaceIcon aria-hidden="true" />
+                      <Typography fontWeight={900}>{isEnglish ? "Distance to this trip's sights" : "到本次行程景点"}</Typography>
+                    </Stack>
+                    {hotel.distanceNote && <Typography className="hotel-distance-note" color="text.secondary">{isEnglish ? hotel.distanceNoteEn : hotel.distanceNote}</Typography>}
+                    <Box className="hotel-nearby-attractions-grid">
+                      {hotel.nearbyAttractions.map((attraction) => (
+                        <Box component="a" href={directionsUrl(hotel, attraction)} key={attraction.name} rel="noreferrer" target="_blank">
+                          <Typography fontWeight={900}>{isEnglish ? (attraction.nameEn ?? attraction.name) : attraction.name}<OpenInNewIcon aria-hidden="true" /></Typography>
+                          <Typography color="text.secondary">{isEnglish ? (attraction.distanceEn ?? attraction.distance) : attraction.distance} · {isEnglish ? (attraction.travelTimeEn ?? attraction.travelTime) : attraction.travelTime}</Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                )}
                 <Box className="hotel-platform-ratings">
                   {hotel.ratings.map((rating) => {
                     const href = platformUrl(hotel, rating.platform);
@@ -289,19 +326,30 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                     <Typography fontWeight={900}>{isEnglish ? "Available room types" : "可选房型与设施"}</Typography>
                     {hotel.roomTypes.map((room, roomIndex) => {
                       const bookingQuotedRoom = hotel.currentRate && (
-                        room.rateKey
-                          ? room.rateKey === hotel.currentRate.roomKey
-                          : room.name === hotel.currentRate.room.split(" · ")[0]
+                        !["Airbnb", "Agoda"].includes(hotel.currentRate.source) && (
+                          room.rateKey
+                            ? room.rateKey === hotel.currentRate.roomKey
+                            : room.name === hotel.currentRate.room.split(" · ")[0]
+                        )
                       );
                       const agodaQuotedRoom = hotel.currentRate?.agoda && (
                         room.rateKey
                           ? room.rateKey === hotel.currentRate.agoda.roomKey
                           : room.name === hotel.currentRate.agoda.room.split(" · ")[0]
                       );
-                      const roomImages = room.images ?? (hotel.roomImages?.[roomIndex] ? [hotel.roomImages[roomIndex]] : []);
+                      // A hotel/common gallery or a visually similar room is not evidence for
+                      // this exact category. Only expose photos after the platform room-detail
+                      // gallery has been checked and the data entry is explicitly verified.
+                      const roomImages = room.photosVerified === true ? (room.images ?? []) : [];
                       const explicitRates = hotel.currentRate?.roomRates?.[room.rateKey];
                       const bookingRate = explicitRates?.booking ?? (bookingQuotedRoom ? hotel.currentRate : null);
                       const agodaRate = explicitRates?.agoda ?? (agodaQuotedRoom ? hotel.currentRate.agoda : null);
+                      const airbnbQuotedRoom = hotel.currentRate?.source === "Airbnb" && (
+                        room.rateKey
+                          ? room.rateKey === hotel.currentRate.roomKey
+                          : room.name === hotel.currentRate.room.split(" · ")[0]
+                      );
+                      const airbnbRate = explicitRates?.airbnb ?? (airbnbQuotedRoom ? hotel.currentRate : null);
                       return (
                       <Box className="hotel-room-type" key={room.name}>
                         <Box className="hotel-room-type-layout">
@@ -318,10 +366,15 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                             <Typography fontWeight={900}>{room.name}</Typography>
                             <Typography color="text.secondary">{room.size} · {room.bed}</Typography>
                             <Typography>{room.facilities.join(" · ")}</Typography>
-                            {roomImages.length > 1 && <Typography className="hotel-room-photo-count">{isEnglish ? `${roomImages.length} room photos · tap to view` : `${roomImages.length} 张客房图 · 点击查看`}</Typography>}
+                            {roomImages.length === 0 && <Typography className="hotel-room-photo-unavailable">{isEnglish ? (room.photoNoteEn ?? "Room-specific photos are still being verified") : (room.photoNote ?? "对应房型图片尚在核验整理中")}</Typography>}
+                            {roomImages.length > 1 && <Typography className="hotel-room-photo-count">{
+                              isEnglish
+                                ? `${roomImages.length} room photos${room.photosVerified ? " · matched to this platform room type" : ""} · tap to view`
+                                : `${roomImages.length} 张客房图${room.photosVerified ? " · 已按平台房型核对" : ""} · 点击查看`
+                            }</Typography>}
                           </Box>
                         </Box>
-                        {(bookingRate || agodaRate) && (
+                        {(bookingRate || agodaRate || airbnbRate) && (
                           <Box className="hotel-room-platform-prices">
                             {bookingRate && <Box>
                               <Typography className="hotel-room-platform-name" component="a" href={bookingRate.useOfficialUrl || hotel.currentRate.useOfficialUrl ? hotel.officialStayUrl : hotel.bookingStayUrl} rel="noreferrer" target="_blank">
@@ -361,10 +414,25 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                               </>}
                               {agodaRate.conversionNote && <Typography color="text.secondary">{agodaRate.conversionNote}</Typography>}
                               {(agodaRate.payment || agodaRate.breakfast) && <Typography color="text.secondary">{[agodaRate.payment, agodaRate.breakfast].filter(Boolean).join(" · ")}</Typography>}
-                            </Box> : bookingRate && <Box className="hotel-room-platform-pending">
+                            </Box> : bookingRate && hotel.agodaStayUrl && <Box className="hotel-room-platform-pending">
                               <Typography className="hotel-room-platform-name" component="a" href={hotel.agodaStayUrl} rel="noreferrer" target="_blank">Agoda<OpenInNewIcon /></Typography>
-                              <Typography fontWeight={900}>{isEnglish ? "No verifiable rate for these dates" : "当前日期暂无可核验报价"}</Typography>
-                              <Typography color="text.secondary">{isEnglish ? "Open Agoda with the same dates to re-check availability." : `已带入${dates.label}、2 人 1 间；可进入 Agoda 再次确认库存。`}</Typography>
+                              <Typography fontWeight={900}>{hotel.agodaSoldOut
+                                ? (isEnglish ? "Sold out on Agoda for these exact dates" : `当前酒店 ${hotel.name} 在 Agoda 所选日期已售罄`)
+                                : (isEnglish ? "No verified Agoda rate for this room type" : "本房型暂无已核验 Agoda 报价")}
+                              </Typography>
+                              <Typography color="text.secondary">{hotel.agodaSoldOut
+                                ? hotel.agodaStatusDetail
+                                : (isEnglish ? "The hotel page may have been checked, but no matching bookable price has been recorded for this exact room type." : `当前酒店：${hotel.name}。尚未记录与“${room.name}”对应的 Agoda 可订结算总价；不会借用其他酒店、其他房型或“低至”价格。`)}</Typography>
+                            </Box>}
+                            {airbnbRate && <Box>
+                              <Typography className="hotel-room-platform-name" component="a" href={hotel.stayUrl} rel="noreferrer" target="_blank">
+                                Airbnb<OpenInNewIcon />
+                              </Typography>
+                              <Typography color="text.secondary">{isEnglish ? "Listing type" : "房源类型"}：{airbnbRate.room.split(" · ")[0]}</Typography>
+                              <Typography fontWeight={900}>{currencyLabel(airbnbRate.refundableNzd)}</Typography>
+                              <Typography color="text.secondary">{isEnglish ? `Total · free cancellation before ${airbnbRate.cancelUntil}` : `${dates.label}含税费总价 · ${airbnbRate.cancelUntil} 前免费取消`}</Typography>
+                              {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(airbnbRate.refundableNzd / nights)}</Typography>}
+                              {(airbnbRate.payment || airbnbRate.breakfast) && <Typography color="text.secondary">{[airbnbRate.payment, airbnbRate.breakfast].filter(Boolean).join(" · ")}</Typography>}
                             </Box>}
                           </Box>
                         )}
@@ -382,15 +450,6 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                     {hotel.cautions.map((item) => <Typography key={item}>− {item}</Typography>)}
                   </Box>
                 </Box>
-                {hotel.research && (
-                  <Box className="hotel-social-research">
-                    <Typography fontWeight={900}>{isEnglish ? "Hotel vs. homestay research" : "酒店 / 民宿调研结论"}</Typography>
-                    <Typography color="text.secondary">{hotel.research.verdict}</Typography>
-                    <Typography component="a" href={hotel.research.url} rel="noreferrer" target="_blank">
-                      {isEnglish ? "Open verified social-media search" : "打开小红书原始搜索结果"}<OpenInNewIcon aria-hidden="true" />
-                    </Typography>
-                  </Box>
-                )}
                 {hotel.id === "novotel-auckland-airport" && (
                   <Box className="airport-overnight-alternative">
                     <Stack direction="row" alignItems="center" spacing={1}>

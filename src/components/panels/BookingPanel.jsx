@@ -35,17 +35,17 @@ const hotelOfficialUrls = new Map(hotelPlans.map((hotel) => [hotel.name, hotel.l
 
 const accommodationCalendar = [
   { date: "9/28", stayGroup: "airport-arrival", hotel: "Novotel Auckland Airport", place: "奥克兰机场", placeEn: "Auckland Airport", status: "入住", statusEn: "Check in", tone: "airport", position: [-37.0075, 174.7839], mapQuery: "Novotel Auckland Airport" },
-  { date: "9/29", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 1 晚", statusEn: "Night 1", tone: "queenstown", position: [-45.0372, 168.6653], mapQuery: "Ramada by Wyndham Queenstown Central" },
-  { date: "9/30", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 2 晚", statusEn: "Night 2", tone: "queenstown" },
-  { date: "10/1", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 3 晚", statusEn: "Night 3", tone: "queenstown" },
-  { date: "10/2", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 4 晚", statusEn: "Night 4", tone: "queenstown" },
+  { date: "9/29", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 1 晚", statusEn: "Night 1", tone: "queenstown", position: [-45.0154, 168.7366], mapQuery: "Holiday Inn Queenstown Remarkables Park" },
+  { date: "9/30", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 2 晚", statusEn: "Night 2", tone: "queenstown" },
+  { date: "10/1", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 3 晚", statusEn: "Night 3", tone: "queenstown" },
+  { date: "10/2", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 4 晚", statusEn: "Night 4", tone: "queenstown" },
   { date: "10/3", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
   { date: "10/4", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
-  { date: "10/5", stayGroup: "mount-cook", hotel: "The Hermitage Hotel", place: "库克山", placeEn: "Aoraki / Mount Cook", status: "入住", statusEn: "Check in", tone: "mount-cook", position: [-43.7338, 170.0937], mapQuery: "The Hermitage Hotel Aoraki Mount Cook" },
+  { date: "10/5", stayGroup: "mount-cook", hotel: "Cosy Accommodation · Airbnb", place: "库克山周边", placeEn: "Aoraki / Mount Cook area", status: "入住", statusEn: "Check in", tone: "mount-cook", position: [-44.257, 170.101], mapQuery: "Twizel New Zealand" },
   { date: "10/6", stayGroup: "christchurch", hotel: "Rydges Latimer Christchurch", place: "基督城", placeEn: "Christchurch", status: "入住", statusEn: "Check in", tone: "christchurch", position: [-43.5303, 172.6472], mapQuery: "Rydges Latimer Christchurch" },
   { date: "10/7", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 1 晚", statusEn: "City night 1", tone: "auckland-city", position: [-36.8462, 174.7761], mapQuery: "Adina Apartment Hotel Auckland Britomart" },
   { date: "10/8", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 2 晚", statusEn: "City night 2", tone: "auckland-city" },
-  { date: "10/9", stayGroup: "rotorua", hotel: "JetPark Hotel Rotorua", place: "罗托鲁瓦", placeEn: "Rotorua", status: "入住", statusEn: "Check in", tone: "rotorua", position: [-38.1435, 176.2495], mapQuery: "JetPark Hotel Rotorua" },
+  { date: "10/9", stayGroup: "rotorua", hotel: "Millennium Hotel Rotorua", place: "罗托鲁瓦", placeEn: "Rotorua", status: "入住", statusEn: "Check in", tone: "rotorua", position: [-38.1385, 176.2574], mapQuery: "Millennium Hotel Rotorua" },
   { date: "10/10", place: "奥克兰机场", placeEn: "Auckland Airport", status: "夜间返程 · 无住宿", statusEn: "Overnight flight · no hotel", tone: "flight", noStay: true },
   { date: "10/11", place: "返程途中", placeEn: "In transit", status: "吉隆坡转机", statusEn: "Kuala Lumpur connection", tone: "flight", noStay: true },
 ];

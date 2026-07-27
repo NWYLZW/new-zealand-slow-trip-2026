@@ -230,6 +230,11 @@
   background: #eef7fa;
 }
 
+.hotel-destination-research {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
 .hotel-social-research > a {
   display: inline-flex;
   gap: 4px;
@@ -427,6 +432,12 @@
   font-weight: 800;
 }
 
+.hotel-room-photo-unavailable {
+  margin-top: 6px !important;
+  color: #7d6a55;
+  font-size: 12px !important;
+}
+
 .hotel-photo-lightbox .MuiDialog-paper {
   background: rgba(4, 14, 12, 0.98);
 }
@@ -541,6 +552,10 @@
   background: #fff;
 }
 
+.hotel-room-platform-prices > div:only-child {
+  grid-column: 1 / -1;
+}
+
 .hotel-room-platform-prices p {
   margin-top: 3px;
 }
@@ -561,6 +576,50 @@
 .hotel-room-platform-pending {
   border: 1px dashed rgba(52, 126, 144, 0.36);
   background: #eef7fa !important;
+}
+
+.hotel-nearby-attractions {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid rgba(18, 63, 54, 0.1);
+  border-radius: 12px;
+  background: rgba(239, 246, 242, 0.68);
+}
+
+.hotel-nearby-attractions > .MuiStack-root .MuiSvgIcon-root {
+  color: var(--forest);
+  font-size: 19px;
+}
+
+.hotel-distance-note {
+  margin-top: 4px !important;
+}
+
+.hotel-nearby-attractions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.hotel-nearby-attractions-grid > a {
+  display: block;
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: 9px;
+  color: inherit;
+  text-decoration: none;
+  background: #fff;
+}
+
+.hotel-nearby-attractions-grid > a:hover {
+  background: #f7fbf9;
+}
+
+.hotel-nearby-attractions-grid .MuiSvgIcon-root {
+  margin-left: 4px;
+  vertical-align: -2px;
+  font-size: 13px;
 }
 
 .hotel-option-pros-cons {
@@ -662,6 +721,9 @@
 }
 
 @media (max-width: 600px) {
+  .hotel-nearby-attractions-grid {
+    grid-template-columns: 1fr;
+  }
   .hotel-comparison-dialog .MuiDialog-paper {
     border-radius: 0;
   }

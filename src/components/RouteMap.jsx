@@ -408,7 +408,7 @@ const eventGoogleRoutes = {
   },
   "南岛取车入住": {
     origin: "Omega Rental Cars Queenstown Airport",
-    destination: "Ramada by Wyndham Queenstown Central",
+    destination: "Holiday Inn Queenstown Remarkables Park",
     travelmode: "driving",
   },
   "格林诺奇湖岸公路": {
@@ -434,7 +434,7 @@ const eventGoogleRoutes = {
     travelmode: "driving",
   },
   "蒂卡波到基督城": {
-    origin: "The Hermitage Hotel Aoraki Mount Cook",
+    origin: "Cosy Accommodation Twizel",
     destination: "Rydges Latimer Christchurch",
     waypoints: ["Church of the Good Shepherd Lake Tekapo"],
     travelmode: "driving",
@@ -452,12 +452,12 @@ const eventGoogleRoutes = {
   },
   "前往罗托鲁瓦": {
     origin: "The Shire's Rest Hobbiton Movie Set",
-    destination: "JetPark Hotel Rotorua",
+    destination: "Millennium Hotel Rotorua",
     waypoints: ["Redwoods Whakarewarewa Forest Rotorua"],
     travelmode: "driving",
   },
   "返回奥克兰机场": {
-    origin: "JetPark Hotel Rotorua",
+    origin: "Millennium Hotel Rotorua",
     destination: "Auckland Airport International Terminal",
     travelmode: "driving",
   },

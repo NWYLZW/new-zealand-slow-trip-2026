@@ -17,8 +17,8 @@
       ]
     },
     "queenstown": {
-      "hotelId": "ramada-queenstown-central",
-      "hotelName": "Ramada by Wyndham Queenstown Central",
+      "hotelId": "holiday-inn-remarkables",
+      "hotelName": "Holiday Inn Queenstown Remarkables Park",
       "stayDates": ["2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02"]
     },
     "wanaka": {
@@ -27,8 +27,8 @@
       "stayDates": ["2026-10-03", "2026-10-04"]
     },
     "mount-cook": {
-      "hotelId": "hermitage-mount-cook",
-      "hotelName": "The Hermitage Hotel Aoraki Mount Cook",
+      "hotelId": "airbnb-cosy-accommodation-twizel",
+      "hotelName": "Cosy Accommodation · Airbnb",
       "stayDates": ["2026-10-05"]
     },
     "christchurch": {
@@ -37,8 +37,8 @@
       "stayDates": ["2026-10-06"]
     },
     "rotorua": {
-      "hotelId": "jetpark-rotorua",
-      "hotelName": "JetPark Hotel Rotorua",
+      "hotelId": "millennium-rotorua",
+      "hotelName": "Millennium Hotel Rotorua",
       "stayDates": ["2026-10-09"]
     }
   }
