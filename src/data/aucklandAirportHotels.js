@@ -396,7 +396,7 @@ export const aucklandAirportHotels = [
   },
 ];
 
-export const aucklandAirportStayDates = ["2026-09-28", "2026-10-07", "2026-10-08"];
+export const aucklandAirportStayDates = ["2026-09-28"];
 
 export function bookingUrlForStay(hotel, checkIn, checkOut) {
   const url = new URL(hotel.bookingUrl);

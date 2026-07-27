@@ -1,0 +1,98 @@
+export const accommodationResearchMethod = {
+  priorityOrder: [
+    "当日及次日行程动线",
+    "到达、退房与取还车时间的可执行性",
+    "房型是否为大床及实际空间与设施",
+    "对应日期含税总价、退订条件与停车总成本",
+    "平台评分、照片与社交媒体口碑",
+  ],
+  scoring: {
+    itineraryFit: 40,
+    arrivalAndTransport: 20,
+    roomAndFacilities: 15,
+    datedTotalCost: 15,
+    reviewsAndSocialEvidence: 10,
+  },
+  rules: [
+    "先淘汰会显著增加当天折返、搬行李或误机风险的住宿，再比较价格与评分。",
+    "多晚住宿同时展示总价和单晚价；单晚住宿只展示总价。",
+    "酒店与民宿统一按住宿费、税费、清洁费、停车费后的实际总成本比较。",
+    "仅保留大床房；平台房型名称不同但面积、床型和设施一致时合并展示。",
+    "没有核验到具体且适合本段行程的 Airbnb 房源时，不显示 Airbnb 入口。",
+  ],
+};
+
+export const accommodationResearch = {
+  "auckland-city": {
+    place: "奥克兰市中心",
+    dates: "2026-10-07/2026-10-09",
+    nights: 2,
+    itineraryFit: [
+      "10月7日21:50国内航班落地后能顺利进城并办理晚到入住",
+      "10月8日步行覆盖 Queen Street、Britomart 与 Commercial Bay，去 Newmarket 交通直接",
+      "10月9日退房后能在08:30前后抵达奥克兰机场取车",
+    ],
+    accommodationQuestion: "优先比较 Britomart / Commercial Bay 与 Newmarket 的酒店；只有核验到具体、可取消且含总价优势的整套 Airbnb 才加入。",
+    status: "pending-iab-verification",
+  },
+  queenstown: {
+    place: "皇后镇",
+    dates: "2026-09-29/2026-10-03",
+    nights: 4,
+    itineraryFit: [
+      "连续四晚不换住宿，能步行到镇中心、湖边、Queenstown Gardens 与 Steamer Wharf",
+      "9月29日机场取车后和10月1日格林诺奇、10月3日离城自驾都需要可靠停车",
+      "Walter Peak 当天不用开车，住宿到码头的步行动线优先于单纯湖景",
+    ],
+    accommodationQuestion: "比较带免费停车的 motel / lodge、标准酒店与具体整套 Airbnb；四晚总价必须包含停车和清洁费。",
+    status: "pending-iab-verification",
+  },
+  wanaka: {
+    place: "瓦纳卡",
+    dates: "2026-10-03/2026-10-05",
+    nights: 2,
+    itineraryFit: [
+      "连续两晚，10月4日主要在湖边与镇中心活动",
+      "10月3日经 Crown Range 抵达、10月5日早上去库克山，免费停车和出城便利重要",
+      "湖畔度假感与步行吃饭之间需要平衡，不为只看景牺牲两天动线",
+    ],
+    accommodationQuestion: "比较湖畔 resort、镇中心酒店/motel 与带厨房的具体整套 Airbnb；把清洁费与停车计入两晚总价。",
+    status: "pending-iab-verification",
+  },
+  "mount-cook": {
+    place: "奥拉基 / 库克山",
+    dates: "2026-10-05/2026-10-06",
+    nights: 1,
+    itineraryFit: [
+      "10月5日先到 Mount Cook Airport 报到直升机，傍晚入住后还要晚餐与 Big Sky Stargazing",
+      "10月6日若直升机取消，需要方便参加08:30候补首班并尽快退房上路",
+      "仅住一晚，位置与天气备选价值高于厨房；必须确认2026年施工影响",
+    ],
+    accommodationQuestion: "优先比较 The Hermitage 各类大床房与 Mt Cook Lodge / Motels；Airbnb 供应稀少且会增加驾驶，不作为默认推荐。",
+    status: "pending-iab-verification",
+  },
+  christchurch: {
+    place: "基督城",
+    dates: "2026-10-06/2026-10-07",
+    nights: 1,
+    itineraryFit: [
+      "10月6日长途自驾后约17:30入住，需要停车和晚到便利",
+      "10月7日上午安排 Riverside Market、植物园或咖啡，市区步行效率重要",
+      "15:30前往 Omega 还车并准备20:30航班，离城路线不能太绕",
+    ],
+    accommodationQuestion: "比较市中心有停车的酒店与 aparthotel；单晚 Airbnb 清洁费通常不利，只有具体房源总价明显更低才纳入。",
+    status: "pending-iab-verification",
+  },
+  rotorua: {
+    place: "罗托鲁瓦",
+    dates: "2026-10-09/2026-10-10",
+    nights: 1,
+    itineraryFit: [
+      "10月9日霍比屯后约16:30抵达，方便停车、晚餐和可选 Redwoods 短停",
+      "10月10日09:00前往 Te Puia，退房与南侧出城动线重要",
+      "单晚不为厨房支付额外清洁费，房间翻新、隔音与免费停车更实用",
+    ],
+    accommodationQuestion: "比较镇中心酒店/motel 与 Te Puia 周边酒店；具体 Airbnb 仅在停车、晚到入住和单晚含费总价均有优势时加入。",
+    status: "pending-iab-verification",
+  },
+};

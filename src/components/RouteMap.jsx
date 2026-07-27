@@ -88,6 +88,7 @@ const routeColorScale = [
   "#143e60",
   "#113451",
   "#0d2b43",
+  "#0a2438",
 ];
 
 const routeSegments = [
@@ -200,32 +201,45 @@ const routeSegments = [
     modes: ["overview", "south"],
   },
   {
-    id: "auckland-shopping",
+    id: "akl-cbd-transfer",
     sequence: 10,
-    date: "10/8",
-    label: "机场 ⇄ 奥克兰市区",
+    date: "10/7",
+    label: "奥克兰机场 → 市中心",
     transport: "road",
     from: "AKL",
     to: "AKL",
     fromPosition: placePositions.aucklandAirport,
-    toPosition: placePositions.aucklandAirport,
+    toPosition: placePositions.aucklandCbd,
+    modes: ["overview", "south", "north"],
+  },
+  {
+    id: "auckland-shopping",
+    sequence: 11,
+    date: "10/8",
+    label: "奥克兰市区购物动线",
+    transport: "road",
+    from: "AKL",
+    to: "AKL",
+    fromPosition: placePositions.aucklandCbd,
+    toPosition: placePositions.aucklandCbd,
     waypoints: [placePositions.aucklandCbd],
     modes: ["overview", "north"],
   },
   {
     id: "akl-hobbiton",
-    sequence: 11,
+    sequence: 12,
     date: "10/9",
-    label: "奥克兰 → 霍比屯",
+    label: "奥克兰市中心 → 机场取车 → 霍比屯",
     transport: "road",
     from: "AKL",
     to: "HBT",
-    fromPosition: placePositions.aucklandAirport,
+    fromPosition: placePositions.aucklandCbd,
+    waypoints: [placePositions.aucklandAirport],
     modes: ["overview", "north"],
   },
   {
     id: "hobbiton-rotorua",
-    sequence: 12,
+    sequence: 13,
     date: "10/9",
     label: "霍比屯 → 罗托鲁瓦",
     transport: "road",
@@ -235,7 +249,7 @@ const routeSegments = [
   },
   {
     id: "rotorua-akl",
-    sequence: 13,
+    sequence: 14,
     date: "10/10",
     label: "罗托鲁瓦 → 奥克兰机场",
     transport: "road",
@@ -246,7 +260,7 @@ const routeSegments = [
   },
   {
     id: "akl-kul",
-    sequence: 14,
+    sequence: 15,
     date: "10/11",
     label: "奥克兰 → 吉隆坡",
     transport: "flight",
@@ -257,7 +271,7 @@ const routeSegments = [
   },
   {
     id: "kul-szx",
-    sequence: 15,
+    sequence: 16,
     date: "10/11",
     label: "吉隆坡 → 深圳",
     transport: "flight",
@@ -394,7 +408,7 @@ const eventGoogleRoutes = {
   },
   "南岛取车入住": {
     origin: "Omega Rental Cars Queenstown Airport",
-    destination: "Blue Peaks Lodge Queenstown",
+    destination: "Ramada by Wyndham Queenstown Central",
     travelmode: "driving",
   },
   "格林诺奇湖岸公路": {
@@ -409,12 +423,12 @@ const eventGoogleRoutes = {
   },
   "箭镇与 Crown Range": {
     origin: "Queenstown New Zealand",
-    destination: "Edgewater Wānaka",
+    destination: "Wanaka Luxury Apartments",
     waypoints: ["Arrowtown New Zealand", "Crown Range Summit", "Cardrona Hotel"],
     travelmode: "driving",
   },
   "自驾前往库克山": {
-    origin: "Edgewater Wānaka",
+    origin: "Wanaka Luxury Apartments",
     destination: "Mount Cook Airport",
     waypoints: ["Lindis Pass Viewpoint", "Omarama New Zealand", "Lake Pukaki Viewpoint"],
     travelmode: "driving",
@@ -427,12 +441,13 @@ const eventGoogleRoutes = {
   },
   "还车飞奥克兰": {
     origin: "Omega Rental Cars Christchurch Airport",
-    destination: "Auckland Airport Domestic Terminal",
-    waypoints: ["Christchurch Airport"],
+    destination: "Britomart Auckland",
+    waypoints: ["Christchurch Airport", "Auckland Airport Domestic Terminal"],
   },
   "取车前往霍比屯": {
-    origin: "Auckland International Airport",
+    origin: "Britomart Auckland",
     destination: "The Shire's Rest Hobbiton Movie Set",
+    waypoints: ["Auckland International Airport"],
     travelmode: "driving",
   },
   "前往罗托鲁瓦": {
@@ -505,15 +520,15 @@ const calendarEventGroupsByDate = {
   ],
   "10月7日": [
     { title: "基督城城市半日", time: "10:00—13:00", color: eventColors.christchurch, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["CHC"] },
-    { title: "还车飞奥克兰", time: "15:30—21:50", color: eventColors.domesticFlight, icon: "domesticFlight", items: [3, 4, 5], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl"], stopTags: ["CHC", "AKL"] },
+    { title: "还车飞奥克兰", time: "15:30—22:30", color: eventColors.domesticFlight, icon: "domesticFlight", items: [3, 4, 5, 6], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
   ],
   "10月8日": [
     { title: "奥克兰购物日", time: "09:00—19:30", color: eventColors.auckland, icon: "shopping", items: [0, 1, 2, 3, 4, 5], segmentIds: ["auckland-shopping"], stopTags: ["AKL"] },
   ],
   "10月9日": [
-    { title: "取车前往霍比屯", time: "08:30—11:20", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 165, durationZh: "约 2 小时 15 分钟", durationEn: "about 2 hr 15 min" }, items: [0, 1, 2], segmentIds: ["akl-hobbiton"], stopTags: ["AKL", "HBT"] },
-    { title: "霍比屯游览", time: "12:00—14:30", color: eventColors.hobbiton, icon: "movie", items: [3, 4], segmentIds: [], stopTags: ["HBT"] },
-    { title: "前往罗托鲁瓦", time: "16:30—17:30", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 75, durationZh: "约 1 小时", durationEn: "about 1 hr" }, items: [5, 6], segmentIds: ["hobbiton-rotorua"], stopTags: ["HBT", "ROT"] },
+    { title: "取车前往霍比屯", time: "07:30—11:20", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 186, durationZh: "纯驾驶约 2 小时 45 分钟，另留取车时间", durationEn: "about 2 hr 45 min driving, plus car pickup" }, items: [0, 1, 2, 3], segmentIds: ["akl-hobbiton"], stopTags: ["AKL", "HBT"] },
+    { title: "霍比屯游览", time: "12:00—14:30", color: eventColors.hobbiton, icon: "movie", items: [4, 5], segmentIds: [], stopTags: ["HBT"] },
+    { title: "前往罗托鲁瓦", time: "16:30—17:30", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 75, durationZh: "约 1 小时", durationEn: "about 1 hr" }, items: [6, 7], segmentIds: ["hobbiton-rotorua"], stopTags: ["HBT", "ROT"] },
   ],
   "10月10日": [
     { title: "Te Puia 地热文化", time: "09:00—12:00", color: eventColors.rotorua, icon: "volcano", items: [0, 1], segmentIds: [], stopTags: ["ROT"] },

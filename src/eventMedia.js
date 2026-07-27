@@ -158,7 +158,7 @@ export const localNameTranslations = {
   "Auckland International Airport (AKL)": "奥克兰国际机场",
   "Auckland Airport Domestic Terminal (AKL)": "奥克兰机场国内航站楼",
   "Queenstown Airport (ZQN)": "皇后镇机场",
-  "Blue Peaks Lodge": "蓝峰旅馆",
+  "Ramada by Wyndham Queenstown Central": "皇后镇华美达中央酒店",
   "Omega Rental Cars Queenstown Airport": "Omega 皇后镇机场租车点",
   "Queenstown / Tāhuna": "皇后镇",
   "Queenstown Gardens": "皇后镇花园",
@@ -173,7 +173,7 @@ export const localNameTranslations = {
   "Crown Range Summit": "皇冠山脉山口",
   "Cardrona Hotel": "卡德罗纳酒店",
   Wānaka: "瓦纳卡",
-  "Edgewater Wānaka": "Edgewater 瓦纳卡酒店",
+  "Wanaka Luxury Apartments": "瓦纳卡豪华公寓",
   "Lake Wānaka": "瓦纳卡湖",
   "That Wānaka Tree": "瓦纳卡孤独的树",
   "Puzzling World": "迷惑世界",
@@ -222,15 +222,15 @@ export const eventMediaByTitle = {
   },
   "飞往皇后镇": {
     route: "奥克兰 → 皇后镇",
-    localNames: ["Auckland Airport Domestic Terminal (AKL)", "Queenstown Airport (ZQN)", "Blue Peaks Lodge"],
+    localNames: ["Auckland Airport Domestic Terminal (AKL)", "Queenstown Airport (ZQN)", "Ramada by Wyndham Queenstown Central"],
     ...mediaGallery(queenstownImage, aucklandAirportImage),
     links: [official("新西兰航空管理预订", "https://flightbookings.airnewzealand.co.nz/vmanage/actions/managebookingstart"), official("皇后镇机场", "https://www.queenstownairport.co.nz/"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), googleMaps("Queenstown Airport", "皇后镇机场地图"), redbook("奥克兰 转机 皇后镇 新西兰航空")],
   },
   "南岛取车入住": {
     location: "皇后镇",
-    localNames: ["Omega Rental Cars Queenstown Airport", "Blue Peaks Lodge", "Queenstown / Tāhuna"],
+    localNames: ["Omega Rental Cars Queenstown Airport", "Ramada by Wyndham Queenstown Central", "Queenstown / Tāhuna"],
     ...mediaGallery(queenstownImage, walterPeakImage, crownRangeImage),
-    links: [official("Omega 皇后镇机场取车", "https://www.omegarentalcars.com/queenstown-airport-car-rental/"), official("Blue Peaks Lodge 官网", "https://www.bluepeaks.co.nz/"), googleMaps("Omega Rental Cars Queenstown Airport", "取车点地图"), googleMaps("Blue Peaks Lodge Queenstown", "酒店地图"), redbook("皇后镇 机场租车 Blue Peaks 住宿")],
+    links: [official("Omega 皇后镇机场取车", "https://www.omegarentalcars.com/queenstown-airport-car-rental/"), official("Ramada Queenstown Central 官网", "https://www.wyndhamhotels.com/ramada/queenstown-new-zealand/ramada-queenstown-central/overview"), googleMaps("Omega Rental Cars Queenstown Airport", "取车点地图"), googleMaps("Ramada by Wyndham Queenstown Central", "酒店地图"), redbook("皇后镇 镇中心 住宿")],
   },
   "皇后镇适应日": {
     location: "皇后镇",
@@ -258,9 +258,9 @@ export const eventMediaByTitle = {
   },
   "抵达瓦纳卡": {
     location: "瓦纳卡",
-    localNames: ["Wānaka", "Edgewater Wānaka"],
+    localNames: ["Wānaka", "Wanaka Luxury Apartments"],
     ...wanakaImage,
-    links: [official("Lake Wānaka 官方旅游信息", "https://www.lakewanaka.co.nz/"), official("Edgewater Wānaka 官网", "https://www.edgewater.co.nz/"), googleMaps("Edgewater Wānaka", "酒店地图"), redbook("瓦纳卡 Edgewater 住宿")],
+    links: [official("Lake Wānaka 官方旅游信息", "https://www.lakewanaka.co.nz/"), official("Wanaka Luxury Apartments 官网", "https://www.wanakaluxuryapartments.co.nz/"), googleMaps("Wanaka Luxury Apartments", "酒店地图"), redbook("瓦纳卡 住宿 公寓")],
   },
   "瓦纳卡湖边慢游": {
     location: "瓦纳卡湖畔",
@@ -272,7 +272,7 @@ export const eventMediaByTitle = {
     route: "瓦纳卡 → Lindis Pass → 普卡基湖 → 库克山",
     localNames: ["Wānaka", "Lindis Pass Viewpoint", "Omarama", "Lake Pukaki", "Aoraki / Mount Cook National Park", "Mount Cook Airport"],
     ...mediaGallery(aorakiImage, crownRangeImage, aorakiHelicopterImage),
-    links: [official("库克山国家公园 DOC", "https://www.doc.govt.nz/parks-and-recreation/places-to-go/canterbury/places/aoraki-mount-cook-national-park/"), googleDirections("瓦纳卡—库克山自驾路线", "Edgewater Wānaka", "Mount Cook Airport", ["Lindis Pass Viewpoint", "Omarama New Zealand", "Lake Pukaki Viewpoint"]), redbook("库克山 自驾 普卡基湖 攻略")],
+    links: [official("库克山国家公园 DOC", "https://www.doc.govt.nz/parks-and-recreation/places-to-go/canterbury/places/aoraki-mount-cook-national-park/"), googleDirections("瓦纳卡—库克山自驾路线", "Wanaka Luxury Apartments", "Mount Cook Airport", ["Lindis Pass Viewpoint", "Omarama New Zealand", "Lake Pukaki Viewpoint"]), redbook("库克山 自驾 普卡基湖 攻略")],
   },
   "冰川直升机": {
     location: "奥拉基 / 库克山",

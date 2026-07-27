@@ -6,6 +6,8 @@ import LuggageIcon from "@mui/icons-material/Luggage";
 import { bookingItems, hotelPlans } from "../../tripData";
 import sharedHotelSelections from "../../data/hotel-selections.json";
 import { AUCKLAND_AIRPORT_SELECTION_KEY, aucklandAirportHotels, aucklandAirportStayDates } from "../../data/aucklandAirportHotels";
+import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHotels";
+import { regionalHotels, regionalStays } from "../../data/regionalHotels";
 import { useLanguage } from "../../LanguageContext";
 import { AccommodationMap } from "../AccommodationMap";
 import { HotelComparisonDialog } from "../HotelComparisonDialog";
@@ -15,6 +17,7 @@ const bookingTitleEn = {
   "flight-nz619": "NZ619 Auckland → Queenstown",
   "south-car": "Omega South Island rental car",
   "hotel-airport": "Auckland Airport hotel",
+  "hotel-auckland-city": "Central Auckland accommodation",
   "hotel-queenstown": "Queenstown accommodation",
   "hotel-wanaka": "Wānaka accommodation",
   "mount-cook": "Aoraki / Mount Cook accommodation",
@@ -32,78 +35,95 @@ const hotelOfficialUrls = new Map(hotelPlans.map((hotel) => [hotel.name, hotel.l
 
 const accommodationCalendar = [
   { date: "9/28", stayGroup: "airport-arrival", hotel: "Novotel Auckland Airport", place: "奥克兰机场", placeEn: "Auckland Airport", status: "入住", statusEn: "Check in", tone: "airport", position: [-37.0075, 174.7839], mapQuery: "Novotel Auckland Airport" },
-  { date: "9/29", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 1 晚", statusEn: "Night 1", tone: "queenstown", position: [-45.0365, 168.6608], mapQuery: "Blue Peaks Lodge Queenstown" },
-  { date: "9/30", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 2 晚", statusEn: "Night 2", tone: "queenstown" },
-  { date: "10/1", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 3 晚", statusEn: "Night 3", tone: "queenstown" },
-  { date: "10/2", stayGroup: "queenstown", hotel: "Blue Peaks Lodge", place: "皇后镇", placeEn: "Queenstown", status: "第 4 晚", statusEn: "Night 4", tone: "queenstown" },
-  { date: "10/3", stayGroup: "wanaka", hotel: "Edgewater Wānaka", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7009, 169.1175], mapQuery: "Edgewater Wānaka" },
-  { date: "10/4", stayGroup: "wanaka", hotel: "Edgewater Wānaka", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
+  { date: "9/29", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 1 晚", statusEn: "Night 1", tone: "queenstown", position: [-45.0372, 168.6653], mapQuery: "Ramada by Wyndham Queenstown Central" },
+  { date: "9/30", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 2 晚", statusEn: "Night 2", tone: "queenstown" },
+  { date: "10/1", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 3 晚", statusEn: "Night 3", tone: "queenstown" },
+  { date: "10/2", stayGroup: "queenstown", hotel: "Ramada by Wyndham Queenstown Central", place: "皇后镇", placeEn: "Queenstown", status: "第 4 晚", statusEn: "Night 4", tone: "queenstown" },
+  { date: "10/3", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
+  { date: "10/4", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
   { date: "10/5", stayGroup: "mount-cook", hotel: "The Hermitage Hotel", place: "库克山", placeEn: "Aoraki / Mount Cook", status: "入住", statusEn: "Check in", tone: "mount-cook", position: [-43.7338, 170.0937], mapQuery: "The Hermitage Hotel Aoraki Mount Cook" },
   { date: "10/6", stayGroup: "christchurch", hotel: "Rydges Latimer Christchurch", place: "基督城", placeEn: "Christchurch", status: "入住", statusEn: "Check in", tone: "christchurch", position: [-43.5303, 172.6472], mapQuery: "Rydges Latimer Christchurch" },
-  { date: "10/7", stayGroup: "airport-return", hotel: "Novotel Auckland Airport", place: "奥克兰机场", placeEn: "Auckland Airport", status: "返程第 1 晚", statusEn: "Return night 1", tone: "airport" },
-  { date: "10/8", stayGroup: "airport-return", hotel: "Novotel Auckland Airport", place: "奥克兰机场", placeEn: "Auckland Airport", status: "返程第 2 晚", statusEn: "Return night 2", tone: "airport" },
+  { date: "10/7", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 1 晚", statusEn: "City night 1", tone: "auckland-city", position: [-36.8462, 174.7761], mapQuery: "Adina Apartment Hotel Auckland Britomart" },
+  { date: "10/8", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 2 晚", statusEn: "City night 2", tone: "auckland-city" },
   { date: "10/9", stayGroup: "rotorua", hotel: "JetPark Hotel Rotorua", place: "罗托鲁瓦", placeEn: "Rotorua", status: "入住", statusEn: "Check in", tone: "rotorua", position: [-38.1435, 176.2495], mapQuery: "JetPark Hotel Rotorua" },
   { date: "10/10", place: "奥克兰机场", placeEn: "Auckland Airport", status: "夜间返程 · 无住宿", statusEn: "Overnight flight · no hotel", tone: "flight", noStay: true },
   { date: "10/11", place: "返程途中", placeEn: "In transit", status: "吉隆坡转机", statusEn: "Kuala Lumpur connection", tone: "flight", noStay: true },
 ];
 
-function readSavedAirportHotelId() {
+function readSavedHotelId(region, fallbackId) {
   try {
     const local = JSON.parse(localStorage.getItem(AUCKLAND_AIRPORT_SELECTION_KEY));
-    return local?.regions?.["auckland-airport"]?.hotelId
-      ?? sharedHotelSelections.regions["auckland-airport"].hotelId;
+    return local?.regions?.[region]?.hotelId
+      ?? sharedHotelSelections.regions[region]?.hotelId
+      ?? fallbackId;
   } catch {
-    return sharedHotelSelections.regions["auckland-airport"].hotelId;
+    return sharedHotelSelections.regions[region]?.hotelId ?? fallbackId;
+  }
+}
+
+function readSavedSelections() {
+  try {
+    return JSON.parse(localStorage.getItem(AUCKLAND_AIRPORT_SELECTION_KEY)) ?? sharedHotelSelections;
+  } catch {
+    return sharedHotelSelections;
   }
 }
 
 const airportStayByDate = {
   "9/28": { checkIn: "2026-09-28", checkOut: "2026-09-29", label: "9月28日—29日" },
-  "10/7": { checkIn: "2026-10-07", checkOut: "2026-10-09", label: "10月7日—9日" },
-  "10/8": { checkIn: "2026-10-07", checkOut: "2026-10-09", label: "10月7日—9日" },
 };
 
 function AccommodationCalendar({ isEnglish }) {
-  const initialAirportHotel = aucklandAirportHotels.find((hotel) => hotel.id === readSavedAirportHotelId())
+  const initialAirportHotel = aucklandAirportHotels.find((hotel) => hotel.id === readSavedHotelId("auckland-airport", aucklandAirportHotels[0].id))
     ?? aucklandAirportHotels[0];
+  const initialCityHotel = aucklandCityHotels.find((hotel) => hotel.id === readSavedHotelId("auckland-city", aucklandCityStay.selectedHotelId))
+    ?? aucklandCityHotels[0];
+  const initialRegionalIds = Object.fromEntries(Object.entries(regionalStays).map(([region, comparison]) => [region, readSavedHotelId(region, comparison.selectedHotelId)]));
   const [airportHotelId, setAirportHotelId] = useState(initialAirportHotel.id);
+  const [cityHotelId, setCityHotelId] = useState(initialCityHotel.id);
+  const [regionalHotelIds, setRegionalHotelIds] = useState(initialRegionalIds);
   const [selectedHotel, setSelectedHotel] = useState(initialAirportHotel.name);
   const [selectedStayGroup, setSelectedStayGroup] = useState("airport-arrival");
-  const [comparisonStay, setComparisonStay] = useState(null);
+  const [comparisonRegion, setComparisonRegion] = useState(null);
   const weekdays = isEnglish
     ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     : ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 
   const airportHotel = aucklandAirportHotels.find((hotel) => hotel.id === airportHotelId) ?? aucklandAirportHotels[0];
-  const displayedCalendar = accommodationCalendar.map((stay) => stay.tone === "airport" && stay.hotel ? {
-    ...stay,
-    hotel: airportHotel.name,
-    position: airportHotel.position,
-    mapQuery: airportHotel.mapQuery,
-  } : stay);
-  const dynamicOfficialUrls = new Map([...hotelOfficialUrls, [airportHotel.name, airportHotel.officialUrl]]);
+  const cityHotel = aucklandCityHotels.find((hotel) => hotel.id === cityHotelId) ?? aucklandCityHotels[0];
+  const displayedCalendar = accommodationCalendar.map((stay) => {
+    if (stay.stayGroup === "airport-arrival" && stay.hotel) return { ...stay, hotel: airportHotel.name, position: airportHotel.position, mapQuery: airportHotel.mapQuery };
+    if (stay.stayGroup === "auckland-city" && stay.hotel) return { ...stay, hotel: cityHotel.name, position: stay.position ? cityHotel.position : undefined, mapQuery: cityHotel.mapQuery };
+    if (regionalHotels[stay.stayGroup] && stay.hotel) {
+      const selected = regionalHotels[stay.stayGroup].find((hotel) => hotel.id === regionalHotelIds[stay.stayGroup]) ?? regionalHotels[stay.stayGroup][0];
+      return { ...stay, hotel: selected.name, position: stay.position ? selected.position : undefined, mapQuery: selected.mapQuery };
+    }
+    return stay;
+  });
+  const regionalSelectedHotels = Object.entries(regionalHotels).map(([region, hotelsForRegion]) => hotelsForRegion.find((hotel) => hotel.id === regionalHotelIds[region]) ?? hotelsForRegion[0]);
+  const dynamicOfficialUrls = new Map([...hotelOfficialUrls, [airportHotel.name, airportHotel.officialUrl], [cityHotel.name, cityHotel.officialUrl], ...regionalSelectedHotels.map((hotel) => [hotel.name, hotel.officialUrl])]);
   const hotels = [...new Map(
     displayedCalendar
       .filter((stay) => stay.hotel && stay.position)
       .map((stay) => [stay.hotel, { ...stay, onSelect: setSelectedHotel }]),
   ).values()];
 
-  const chooseAirportHotel = async (hotel) => {
+  const chooseHotel = async (region, hotel) => {
+    const savedSelections = readSavedSelections();
     const selection = {
       updatedAt: new Date().toISOString(),
       regions: {
         ...sharedHotelSelections.regions,
-        "auckland-airport": {
-          hotelId: hotel.id,
-          hotelName: hotel.name,
-          stayDates: aucklandAirportStayDates,
-        },
+        ...savedSelections.regions,
+        [region]: { hotelId: hotel.id, hotelName: hotel.name, stayDates: region === "auckland-airport" ? aucklandAirportStayDates : (regionalStays[region] ? [regionalStays[region].dates.checkIn] : ["2026-10-07", "2026-10-08"]) },
       },
     };
-    setAirportHotelId(hotel.id);
+    if (region === "auckland-airport") setAirportHotelId(hotel.id);
+    if (region === "auckland-city") setCityHotelId(hotel.id);
+    if (regionalHotels[region]) setRegionalHotelIds((current) => ({ ...current, [region]: hotel.id }));
     setSelectedHotel(hotel.name);
     localStorage.setItem(AUCKLAND_AIRPORT_SELECTION_KEY, JSON.stringify(selection));
-    setComparisonStay(null);
+    setComparisonRegion(null);
     try {
       await fetch("/api/hotel-selection", {
         method: "POST",
@@ -144,7 +164,9 @@ function AccommodationCalendar({ isEnglish }) {
                 onClick={() => {
                   setSelectedHotel(stay.hotel);
                   setSelectedStayGroup(stay.stayGroup);
-                  if (stay.tone === "airport" && stay.hotel) setComparisonStay(airportStayByDate[stay.date]);
+                  if (stay.stayGroup === "airport-arrival" && stay.hotel) setComparisonRegion("auckland-airport");
+                  if (stay.stayGroup === "auckland-city" && stay.hotel) setComparisonRegion("auckland-city");
+                  if (regionalHotels[stay.stayGroup] && stay.hotel) setComparisonRegion(stay.stayGroup);
                 }}
               >
                 <Stack className="accommodation-date" direction="row" justifyContent="space-between" alignItems="center">
@@ -199,12 +221,14 @@ function AccommodationCalendar({ isEnglish }) {
         </Box>
       </Box>
       <HotelComparisonDialog
+        comparison={comparisonRegion === "auckland-city" ? aucklandCityStay : (regionalStays[comparisonRegion] ?? undefined)}
+        hotels={comparisonRegion === "auckland-city" ? aucklandCityHotels : (regionalHotels[comparisonRegion] ?? aucklandAirportHotels)}
         isEnglish={isEnglish}
-        onClose={() => setComparisonStay(null)}
-        onSelect={chooseAirportHotel}
-        open={Boolean(comparisonStay)}
-        selectedHotelId={airportHotelId}
-        stay={comparisonStay}
+        onClose={() => setComparisonRegion(null)}
+        onSelect={(hotel) => chooseHotel(comparisonRegion, hotel)}
+        open={Boolean(comparisonRegion)}
+        selectedHotelId={comparisonRegion === "auckland-city" ? cityHotelId : (regionalHotelIds[comparisonRegion] ?? airportHotelId)}
+        stay={comparisonRegion === "auckland-city" ? aucklandCityStay.dates : (regionalStays[comparisonRegion]?.dates ?? airportStayByDate["9/28"])}
       />
     </Box>
   );

@@ -52,6 +52,7 @@
 }
 
 .accommodation-day-cell[data-tone="airport"] { background: #e7f2f3; }
+.accommodation-day-cell[data-tone="auckland-city"] { background: #e8f0e7; }
 .accommodation-day-cell[data-tone="queenstown"] { background: #e9f1e5; }
 .accommodation-day-cell[data-tone="wanaka"] { background: #e5eff6; }
 .accommodation-day-cell[data-tone="mount-cook"] { background: #eee9f5; }

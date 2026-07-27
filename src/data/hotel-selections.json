@@ -5,10 +5,41 @@
       "hotelId": "novotel-auckland-airport",
       "hotelName": "Novotel Auckland Airport",
       "stayDates": [
-        "2026-09-28",
+        "2026-09-28"
+      ]
+    },
+    "auckland-city": {
+      "hotelId": "adina-auckland-britomart",
+      "hotelName": "Adina Apartment Hotel Auckland Britomart",
+      "stayDates": [
         "2026-10-07",
         "2026-10-08"
       ]
+    },
+    "queenstown": {
+      "hotelId": "ramada-queenstown-central",
+      "hotelName": "Ramada by Wyndham Queenstown Central",
+      "stayDates": ["2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02"]
+    },
+    "wanaka": {
+      "hotelId": "wanaka-luxury-apartments",
+      "hotelName": "Wanaka Luxury Apartments",
+      "stayDates": ["2026-10-03", "2026-10-04"]
+    },
+    "mount-cook": {
+      "hotelId": "hermitage-mount-cook",
+      "hotelName": "The Hermitage Hotel Aoraki Mount Cook",
+      "stayDates": ["2026-10-05"]
+    },
+    "christchurch": {
+      "hotelId": "rydges-latimer-christchurch",
+      "hotelName": "Rydges Latimer Christchurch",
+      "stayDates": ["2026-10-06"]
+    },
+    "rotorua": {
+      "hotelId": "jetpark-rotorua",
+      "hotelName": "JetPark Hotel Rotorua",
+      "stayDates": ["2026-10-09"]
     }
   }
 }

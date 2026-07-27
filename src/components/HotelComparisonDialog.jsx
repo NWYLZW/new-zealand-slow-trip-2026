@@ -16,6 +16,16 @@ import { agodaUrlForStay, aucklandAirportHotels, aucklandAirportOvernightGuides,
 import "./HotelComparisonDialog.css";
 
 const airportPosition = [-37.0082, 174.785];
+const defaultComparison = {
+  title: "奥克兰机场住宿比选",
+  titleEn: "Auckland Airport stay comparison",
+  mapLabel: "奥克兰机场住宿位置地图",
+  mapLabelEn: "Auckland Airport stay locations",
+  anchorPosition: airportPosition,
+  anchorLabel: "奥克兰机场",
+  anchorLabelEn: "Auckland Airport",
+  anchorIcon: "✈",
+};
 const nzdToCny = 3.9198;
 
 function currencyLabel(nzd) {
@@ -37,21 +47,21 @@ function platformUrl(hotel, platform) {
   return null;
 }
 
-function FitHotelMap({ hotels }) {
+function FitHotelMap({ anchorPosition, hotels }) {
   const map = useMap();
   const signature = hotels.map((hotel) => hotel.position.join(",")).join("|");
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
       map.invalidateSize({ pan: false });
-      map.fitBounds(latLngBounds([airportPosition, ...hotels.map((hotel) => hotel.position)]), {
+      map.fitBounds(latLngBounds([anchorPosition, ...hotels.map((hotel) => hotel.position)]), {
         padding: [42, 42],
         maxZoom: 15,
       });
     });
 
     return () => cancelAnimationFrame(frame);
-  }, [map, signature]);
+  }, [anchorPosition, map, signature]);
 
   return null;
 }
@@ -65,12 +75,13 @@ function comparisonMapIcon(label, type, selected = false) {
   });
 }
 
-function HotelComparisonMap({ activeHotelId, hotels, isEnglish, onHotelChange }) {
+function HotelComparisonMap({ activeHotelId, comparison, hotels, isEnglish, onHotelChange }) {
+  const anchorPosition = comparison.anchorPosition ?? airportPosition;
   return (
     <Box className="hotel-comparison-map-wrap">
       <MapContainer
-        aria-label={isEnglish ? "Auckland Airport stay locations" : "奥克兰机场住宿位置地图"}
-        center={airportPosition}
+        aria-label={isEnglish ? comparison.mapLabelEn : comparison.mapLabel}
+        center={anchorPosition}
         className="hotel-comparison-map"
         scrollWheelZoom
         zoom={14}
@@ -80,9 +91,9 @@ function HotelComparisonMap({ activeHotelId, hotels, isEnglish, onHotelChange })
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker icon={comparisonMapIcon("✈", "airport")} position={airportPosition}>
+        <Marker icon={comparisonMapIcon(comparison.anchorIcon ?? "◎", "airport")} position={anchorPosition}>
           <Tooltip direction="top" offset={[0, -18]} permanent>
-            {isEnglish ? "Auckland Airport" : "奥克兰机场"}
+            {isEnglish ? comparison.anchorLabelEn : comparison.anchorLabel}
           </Tooltip>
         </Marker>
         {hotels.map((hotel, index) => {
@@ -101,7 +112,7 @@ function HotelComparisonMap({ activeHotelId, hotels, isEnglish, onHotelChange })
             </Marker>
           );
         })}
-        <FitHotelMap hotels={hotels} />
+        <FitHotelMap anchorPosition={anchorPosition} hotels={hotels} />
       </MapContainer>
       <Box className="hotel-comparison-map-caption">
         <Typography fontWeight={900}>{isEnglish ? "Location overview" : "位置总览"}</Typography>
@@ -113,21 +124,22 @@ function HotelComparisonMap({ activeHotelId, hotels, isEnglish, onHotelChange })
   );
 }
 
-export function HotelComparisonDialog({ isEnglish, onClose, onSelect, open, selectedHotelId, stay }) {
+export function HotelComparisonDialog({ comparison = defaultComparison, hotels = aucklandAirportHotels, isEnglish, onClose, onSelect, open, selectedHotelId, stay }) {
   const fullScreen = useMediaQuery("(max-width:600px)");
-  const [activeHotelId, setActiveHotelId] = useState(selectedHotelId || aucklandAirportHotels[0].id);
+  const visibleHotels = useMemo(() => hotels.filter((hotel) => !hotel.isAirbnb || hotel.isVerifiedListing), [hotels]);
+  const [activeHotelId, setActiveHotelId] = useState(selectedHotelId || visibleHotels[0].id);
   const [gallery, setGallery] = useState(null);
   const [hotelSlideIndex, setHotelSlideIndex] = useState(0);
-  const dates = stay ?? { checkIn: "2026-09-28", checkOut: "2026-09-29", label: "9月28日—29日" };
+  const dates = stay ?? comparison.dates ?? { checkIn: "2026-09-28", checkOut: "2026-09-29", label: "9月28日—29日" };
   const nights = stayNightCount(dates.checkIn, dates.checkOut);
-  const cards = useMemo(() => aucklandAirportHotels.filter((hotel) => !hotel.isAirbnb).map((hotel) => ({
+  const cards = useMemo(() => visibleHotels.map((hotel) => ({
     ...hotel,
     bookingStayUrl: hotel.bookingUrl ? bookingUrlForStay(hotel, dates.checkIn, dates.checkOut) : null,
     agodaStayUrl: hotel.agodaUrl ? agodaUrlForStay(hotel, dates.checkIn, dates.checkOut) : null,
     officialStayUrl: officialUrlForStay(hotel, dates.checkIn, dates.checkOut),
     stayUrl: officialUrlForStay(hotel, dates.checkIn, dates.checkOut),
     currentRate: hotel.rateSnapshots?.[`${dates.checkIn}/${dates.checkOut}`] ?? null,
-  })), [dates.checkIn, dates.checkOut]);
+  })), [dates.checkIn, dates.checkOut, visibleHotels]);
   const activeHotel = cards.find((hotel) => hotel.id === activeHotelId) ?? cards[0];
   const galleryImages = gallery?.images ?? [];
   const galleryIndex = gallery?.index ?? 0;
@@ -165,7 +177,7 @@ export function HotelComparisonDialog({ isEnglish, onClose, onSelect, open, sele
           <Stack direction="row" alignItems="center" spacing={1}>
             <CompareArrowsIcon aria-hidden="true" />
             <Typography component="h2" variant="h3">
-              {isEnglish ? "Auckland Airport stay comparison" : "奥克兰机场住宿比选"}
+              {isEnglish ? comparison.titleEn : comparison.title}
             </Typography>
           </Stack>
           <Typography color="text.secondary">
@@ -179,6 +191,7 @@ export function HotelComparisonDialog({ isEnglish, onClose, onSelect, open, sele
       <DialogContent className="hotel-comparison-content">
         <HotelComparisonMap
           activeHotelId={activeHotel.id}
+          comparison={comparison}
           hotels={cards}
           isEnglish={isEnglish}
           onHotelChange={setActiveHotelId}
@@ -243,6 +256,12 @@ export function HotelComparisonDialog({ isEnglish, onClose, onSelect, open, sele
                 <Typography className="hotel-option-summary" color="text.secondary">
                   {isEnglish ? hotel.summaryEn : hotel.summary}
                 </Typography>
+                {hotel.availabilityNote && (
+                  <Box className="hotel-availability-note">
+                    <Typography fontWeight={900}>{isEnglish ? "Exact-date availability" : "精确日期库存"}</Typography>
+                    <Typography>{hotel.availabilityNote}</Typography>
+                  </Box>
+                )}
                 <Stack className="hotel-option-facts" spacing={0.7}>
                   <Stack direction="row" spacing={0.8}><DirectionsWalkIcon /><Typography>{isEnglish ? hotel.accessEn : hotel.access}</Typography></Stack>
                   <Stack direction="row" spacing={0.8}><LocalParkingIcon /><Typography>{isEnglish ? hotel.parkingEn : hotel.parking}</Typography></Stack>
@@ -310,9 +329,11 @@ export function HotelComparisonDialog({ isEnglish, onClose, onSelect, open, sele
                               </Typography>
                               <Typography color="text.secondary">{isEnglish ? "Platform room" : "平台房型"}：{bookingRate.room.split(" · ")[0]}</Typography>
                               {bookingRate.originalCurrency && <Typography color="text.secondary">{isEnglish ? "Platform original price" : "平台原始价"}：{bookingRate.originalCurrency} {bookingRate.originalAmount}</Typography>}
-                              <Typography fontWeight={900}>{currencyLabel(bookingRate.nonRefundableNzd)}</Typography>
-                              <Typography color="text.secondary">{bookingRate.rateLabel ?? (isEnglish ? "Total · non-refundable" : `${dates.label}总价 · 不可退款`)}</Typography>
-                              {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(bookingRate.nonRefundableNzd / nights)}</Typography>}
+                              {bookingRate.nonRefundableNzd != null && <>
+                                <Typography fontWeight={900}>{currencyLabel(bookingRate.nonRefundableNzd)}</Typography>
+                                <Typography color="text.secondary">{bookingRate.rateLabel ?? (isEnglish ? "Total · non-refundable" : `${dates.label}总价 · 不可退款`)}</Typography>
+                                {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(bookingRate.nonRefundableNzd / nights)}</Typography>}
+                              </>}
                               {bookingRate.refundableNzd != null && (
                                 <>
                                   <Typography fontWeight={900}>{currencyLabel(bookingRate.refundableNzd)}</Typography>
@@ -328,13 +349,18 @@ export function HotelComparisonDialog({ isEnglish, onClose, onSelect, open, sele
                                 Agoda<OpenInNewIcon />
                               </Typography>
                               <Typography color="text.secondary">{isEnglish ? "Platform room" : "平台房型"}：{agodaRate.room.split(" · ")[0]}</Typography>
-                              <Typography fontWeight={900}>{currencyLabel(agodaRate.nonRefundableNzd)}</Typography>
-                              <Typography color="text.secondary">{dates.label}总价 · 会员含税不可退款</Typography>
-                              {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(agodaRate.nonRefundableNzd / nights)}</Typography>}
-                              <Typography fontWeight={900}>{currencyLabel(agodaRate.refundableNzd)}</Typography>
-                              <Typography color="text.secondary">{agodaRate.cancelUntil ? `${dates.label}总价 · ${agodaRate.cancelUntil} 前免费取消` : `${dates.label}总价 · 免费取消，截止时间需结算页确认`}</Typography>
-                              {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(agodaRate.refundableNzd / nights)}</Typography>}
-                              <Typography color="text.secondary">{agodaRate.payment} · {agodaRate.breakfast}</Typography>
+                              {agodaRate.nonRefundableNzd != null && <>
+                                <Typography fontWeight={900}>{currencyLabel(agodaRate.nonRefundableNzd)}</Typography>
+                                <Typography color="text.secondary">{agodaRate.rateLabel ?? `${dates.label}总价 · 会员含税不可退款`}</Typography>
+                                {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(agodaRate.nonRefundableNzd / nights)}</Typography>}
+                              </>}
+                              {agodaRate.refundableNzd != null && <>
+                                <Typography fontWeight={900}>{currencyLabel(agodaRate.refundableNzd)}</Typography>
+                                <Typography color="text.secondary">{agodaRate.cancelUntil ? `${dates.label}总价 · ${agodaRate.cancelUntil} 前免费取消` : `${dates.label}总价 · 免费取消，截止时间需结算页确认`}</Typography>
+                                {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(agodaRate.refundableNzd / nights)}</Typography>}
+                              </>}
+                              {agodaRate.conversionNote && <Typography color="text.secondary">{agodaRate.conversionNote}</Typography>}
+                              {(agodaRate.payment || agodaRate.breakfast) && <Typography color="text.secondary">{[agodaRate.payment, agodaRate.breakfast].filter(Boolean).join(" · ")}</Typography>}
                             </Box> : bookingRate && <Box className="hotel-room-platform-pending">
                               <Typography className="hotel-room-platform-name" component="a" href={hotel.agodaStayUrl} rel="noreferrer" target="_blank">Agoda<OpenInNewIcon /></Typography>
                               <Typography fontWeight={900}>{isEnglish ? "No verifiable rate for these dates" : "当前日期暂无可核验报价"}</Typography>
@@ -356,6 +382,15 @@ export function HotelComparisonDialog({ isEnglish, onClose, onSelect, open, sele
                     {hotel.cautions.map((item) => <Typography key={item}>− {item}</Typography>)}
                   </Box>
                 </Box>
+                {hotel.research && (
+                  <Box className="hotel-social-research">
+                    <Typography fontWeight={900}>{isEnglish ? "Hotel vs. homestay research" : "酒店 / 民宿调研结论"}</Typography>
+                    <Typography color="text.secondary">{hotel.research.verdict}</Typography>
+                    <Typography component="a" href={hotel.research.url} rel="noreferrer" target="_blank">
+                      {isEnglish ? "Open verified social-media search" : "打开小红书原始搜索结果"}<OpenInNewIcon aria-hidden="true" />
+                    </Typography>
+                  </Box>
+                )}
                 {hotel.id === "novotel-auckland-airport" && (
                   <Box className="airport-overnight-alternative">
                     <Stack direction="row" alignItems="center" spacing={1}>

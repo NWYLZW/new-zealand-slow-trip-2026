@@ -20,9 +20,9 @@ function hotelSelectionPersistence() {
         request.on("end", async () => {
           try {
             const selection = JSON.parse(body);
-            const region = selection?.regions?.["auckland-airport"];
-            if (!region?.hotelId || !region?.hotelName || !Array.isArray(region?.stayDates)) {
-              throw new Error("Invalid Auckland Airport hotel selection");
+            const regions = selection?.regions;
+            if (!regions || Object.values(regions).some((region) => !region?.hotelId || !region?.hotelName || !Array.isArray(region?.stayDates))) {
+              throw new Error("Invalid hotel selection");
             }
             await writeFile(hotelSelectionsPath, `${JSON.stringify(selection, null, 2)}\n`, "utf8");
             response.statusCode = 204;

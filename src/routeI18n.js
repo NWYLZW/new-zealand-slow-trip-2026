@@ -26,6 +26,8 @@ export const eventTitleEn = {
 };
 
 export const routeSegmentEn = {
+  "奥克兰机场 → 市中心": "Auckland Airport → city centre",
+  "奥克兰市中心 → 机场取车 → 霍比屯": "Central Auckland → airport car pickup → Hobbiton",
   "深圳 → 吉隆坡": "Shenzhen → Kuala Lumpur",
   "吉隆坡 → 奥克兰": "Kuala Lumpur → Auckland",
   "奥克兰 → 皇后镇": "Auckland → Queenstown",
@@ -36,6 +38,7 @@ export const routeSegmentEn = {
   "库克山 → 基督城": "Aoraki / Mount Cook → Christchurch",
   "基督城 → 奥克兰": "Christchurch → Auckland",
   "机场 ⇄ 奥克兰市区": "Auckland Airport ⇄ City Centre",
+  "奥克兰市区购物动线": "Central Auckland shopping route",
   "奥克兰 → 霍比屯": "Auckland → Hobbiton",
   "霍比屯 → 罗托鲁瓦": "Hobbiton → Rotorua",
   "罗托鲁瓦 → 奥克兰机场": "Rotorua → Auckland Airport",

@@ -213,6 +213,36 @@
   min-height: 42px;
 }
 
+.hotel-availability-note,
+.hotel-social-research {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-control);
+}
+
+.hotel-availability-note {
+  border: 1px solid rgba(202, 125, 39, 0.28);
+  background: #fff4df;
+}
+
+.hotel-social-research {
+  border: 1px solid rgba(52, 126, 144, 0.18);
+  background: #eef7fa;
+}
+
+.hotel-social-research > a {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 7px;
+  color: var(--lake);
+  font-weight: 900;
+}
+
+.hotel-social-research > a .MuiSvgIcon-root {
+  font-size: 15px;
+}
+
 .hotel-option-facts {
   margin-top: 12px;
   padding: 10px 12px;
