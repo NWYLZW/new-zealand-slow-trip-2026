@@ -28,7 +28,7 @@ export const aucklandCityHotels = [
     access: "距 Britomart 站约 650 米；位置评分 9.5，距机场约 18 公里",
     accessEn: "About 650 m from Britomart Station; location score 9.5",
     parking:
-      "设院内私人停车位，但数量有限、需视供应情况；本段入住期间不租车，因此不构成额外成本。",
+      "官网显示 NZD 50/晚、抵达视供应分配；本段入住期间不租车，因此不构成额外成本。",
     parkingEn:
       "Limited on-site private parking; no car is needed during this stay.",
     nearbyAttractions: [
@@ -66,6 +66,7 @@ export const aucklandCityHotels = [
     cautions: [
       "距离 Newmarket 仍需乘公交或打车",
       "停车位有限且平台未显示具体收费",
+      "一室公寓只能请求 King，平台明确写床型视供应；若要锁定大床应选尊贵一室 Queen",
       "最便宜档不可退款",
     ],
     ratings: [
@@ -75,9 +76,9 @@ export const aucklandCityHotels = [
     roomTypes: [
       {
         rateKey: "studio-king-25",
-        name: "一室公寓 · 超大床",
+        name: "一室公寓 · King 请求项",
         size: "25 m²",
-        bed: "1 张超大号双人床（需在平台选床）",
+        bed: "1 张超大号双人床或 2 张单人床（选择床型，需视供应情况）",
         photosVerified: true,
         facilities: [
           "私人小厨房",
@@ -161,10 +162,22 @@ export const aucklandCityHotels = [
               cancelUntil: "2026-10-06",
               payment: "免费取消档在 10 月 4 日前（不含当日）零付款",
               breakfast: "早餐另加 NZD 30/人",
-              quotedAt: "2026-07-27",
+              quotedAt: "2026-07-28",
             },
           },
           "premier-studio-queen-36": {
+            official: {
+              source: "Adina 官网",
+              roomKey: "premier-studio-queen-36",
+              room: "Premier Studio Room · Queen · 36 m²",
+              nonRefundableNzd: null,
+              refundableNzd: 313.88,
+              cancelUntil: "2026-10-06",
+              payment: "eClub 专享价；无需预付",
+              breakfast: "含 2 人每日自助早餐、1 个停车位和 12:00 延迟退房",
+              memberNote: "官网显示含税平均 NZD 156.94/晚；两晚合计 NZD 313.88",
+              quotedAt: "2026-07-28",
+            },
             booking: {
               source: "Booking.com",
               roomKey: "premier-studio-queen-36",
@@ -174,14 +187,22 @@ export const aucklandCityHotels = [
               cancelUntil: "2026-10-06",
               payment: "免费取消档在 10 月 4 日前（不含当日）零付款",
               breakfast: "早餐另加 NZD 30/人",
-              quotedAt: "2026-07-27",
+              quotedAt: "2026-07-28",
             },
           },
         },
       },
     },
+    officialStatus: "exact-rate-verified",
+    officialStatusDetail:
+      "2026-07-28 已在 Adina 官网实际操作日期控件，带入 10 月 7—9 日、2 人 1 间；Premier Studio Room 明确为 Queen，eClub 冬季套餐含税两晚 NZD 313.88，含双早、1 个停车位、12:00 延迟退房，10 月 6 日前免费取消且无需预付。",
+    officialStatusEn:
+      "Verified direct for 7–9 Oct 2026, two adults and one room. The Premier Studio has a queen bed; the eClub winter package totals NZD 313.88 tax-inclusive with breakfast for two, one parking space, noon checkout and free cancellation until 6 Oct.",
+    officialVerifiedAt: "2026-07-28",
     officialUrl:
-      "https://www.adinahotels.com/en/apartments/auckland/britomart/",
+      "https://adinahotels.com/en/apartments/auckland-britomart/",
+    officialBookingUrl:
+      "https://reservations.adinahotels.com/?adult=2&arrive=2026-10-07&chain=14687&child=0&config=SBE&currency=NZD&depart=2026-10-09&hotel=66054&level=hotel&locale=en-US&productcurrency=NZD&room=SPR&rooms=1&theme=ADISBE",
     bookingUrl:
       "https://www.booking.com/hotel/nz/adina-apartment-auckland-britomart.html",
     agodaUrl:

@@ -1,5 +1,5 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-07-28T00:00:00+08:00",
   "regions": {
     "auckland-airport": {
       "hotelId": "novotel-auckland-airport",
@@ -27,13 +27,13 @@
       "stayDates": ["2026-10-03", "2026-10-04"]
     },
     "mount-cook": {
-      "hotelId": "airbnb-cosy-accommodation-twizel",
-      "hotelName": "Cosy Accommodation · Airbnb",
+      "hotelId": "hermitage-mt-cook-motel-studio-queen",
+      "hotelName": "The Hermitage · Mt Cook Motel Studio Queen",
       "stayDates": ["2026-10-05"]
     },
     "christchurch": {
-      "hotelId": "rydges-latimer-christchurch",
-      "hotelName": "Rydges Latimer Christchurch",
+      "hotelId": "novotel-christchurch-cathedral-square",
+      "hotelName": "Novotel Christchurch Cathedral Square",
       "stayDates": ["2026-10-06"]
     },
     "rotorua": {

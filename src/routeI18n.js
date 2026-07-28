@@ -55,6 +55,7 @@ export const mapStopEn = {
   MFN: ["Milford Sound", "Optional high-intensity 12–13 hour coach and cruise day"],
   WKA: ["Wānaka", "Two-night stay, lakefront and easy walks"],
   AOR: ["Aoraki / Mount Cook", "Glacier helicopter landing and Big Sky Stargazing"],
+  TEK: ["Lake Tekapo / Takapō", "About 100 km southeast of Aoraki; possible overnight base for Mount John or Crater stargazing"],
   CHC: ["Christchurch Airport", "Return the South Island car and fly to Auckland"],
   HBT: ["Hobbiton Movie Set", "Midday tour recommended"],
   ROT: ["Rotorua", "Te Puia geothermal and Māori cultural experience"],

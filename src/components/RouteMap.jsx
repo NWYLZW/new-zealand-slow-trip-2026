@@ -303,7 +303,7 @@ const routeConfigs = {
   south: {
     center: { lat: -44.35, lng: 169.7 },
     zoom: 6,
-    stopTags: ["AKL", "ZQN", "WTP", "WKA", "AOR", "CHC"],
+    stopTags: ["AKL", "ZQN", "WTP", "WKA", "AOR", "TEK", "CHC"],
     calendarTitle: "南岛行程 · 9月28日—10月7日",
   },
   north: {
@@ -434,8 +434,8 @@ const eventGoogleRoutes = {
     travelmode: "driving",
   },
   "蒂卡波到基督城": {
-    origin: "Cosy Accommodation Twizel",
-    destination: "Rydges Latimer Christchurch",
+    origin: "Mt Cook Lodge & Motels",
+    destination: "Novotel Christchurch Cathedral Square",
     waypoints: ["Church of the Good Shepherd Lake Tekapo"],
     travelmode: "driving",
   },
@@ -516,7 +516,7 @@ const calendarEventGroupsByDate = {
   ],
   "10月6日": [
     { title: "库克山候补安排", time: "08:30—10:00", color: eventColors.mountCook, icon: "nature", items: [0, 1], segmentIds: [], stopTags: ["AOR"] },
-    { title: "蒂卡波到基督城", time: "11:30—17:30", color: eventColors.christchurchRoad, icon: "car", drive: { distanceKm: 330, durationZh: "约 4 小时 15 分钟", durationEn: "about 4 hr 15 min" }, items: [2, 3, 4], segmentIds: ["aoraki-christchurch"], stopTags: ["AOR", "CHC"] },
+    { title: "蒂卡波到基督城", time: "11:30—17:30", color: eventColors.christchurchRoad, icon: "car", drive: { distanceKm: 330, durationZh: "约 4 小时 15 分钟", durationEn: "about 4 hr 15 min" }, items: [2, 3, 4], segmentIds: ["aoraki-christchurch"], stopTags: ["AOR", "TEK", "CHC"] },
   ],
   "10月7日": [
     { title: "基督城城市半日", time: "10:00—13:00", color: eventColors.christchurch, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["CHC"] },
@@ -1294,7 +1294,11 @@ function LeafletRouteMap({ language = "zh", mode }) {
             position={toLatLng(stop.tag)}
             zIndexOffset={600}
           >
-            <LeafletTooltip direction="top" offset={[0, -8]}>
+            <LeafletTooltip
+              direction={stop.tag === "TEK" ? "right" : "top"}
+              offset={stop.tag === "TEK" ? [12, 0] : [0, -8]}
+              permanent={stop.tag === "TEK"}
+            >
               <strong>{language === "en" ? (mapStopEn[stop.tag]?.[0] ?? stop.name) : stop.name}</strong><br />
               {stop.tag} · {stop.date}<br />
               {language === "en" ? (mapStopEn[stop.tag]?.[1] ?? stop.desc) : stop.desc}

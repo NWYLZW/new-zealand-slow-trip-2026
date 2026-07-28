@@ -136,7 +136,7 @@ function HotelComparisonMap({ activeHotelId, comparison, hotels, isEnglish, onHo
 
 export function HotelComparisonDialog({ comparison = defaultComparison, hotels = aucklandAirportHotels, isEnglish, onClose, onSelect, open, selectedHotelId, stay }) {
   const fullScreen = useMediaQuery("(max-width:600px)");
-  const visibleHotels = useMemo(() => hotels.filter((hotel) => !hotel.isAirbnb || hotel.isVerifiedListing), [hotels]);
+  const visibleHotels = useMemo(() => hotels.filter((hotel) => !hotel.excludedByPreference && (!hotel.isAirbnb || hotel.isVerifiedListing)), [hotels]);
   const [activeHotelId, setActiveHotelId] = useState(selectedHotelId || visibleHotels[0].id);
   const [gallery, setGallery] = useState(null);
   const [hotelSlideIndex, setHotelSlideIndex] = useState(0);
@@ -282,6 +282,27 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                     <Typography>{hotel.availabilityNote}</Typography>
                   </Box>
                 )}
+                <Box className={`hotel-official-verification ${hotel.officialStatus === "exact-rate-verified" || (hotel.isAirbnb && hotel.isVerifiedListing) ? "is-verified" : ""}`}>
+                  <Typography fontWeight={900}>
+                    {isEnglish ? "Official-site verification" : "官网优先核验"}
+                  </Typography>
+                  <Typography>
+                    {isEnglish
+                      ? (hotel.officialStatusEn ?? (hotel.isAirbnb && hotel.isVerifiedListing
+                        ? hotel.availabilityNote
+                        : hotel.officialStayUrl
+                          ? "Official website recorded; exact-date checkout price still needs verification."
+                          : "No verifiable independent official website is recorded; availability and rates rely on the labelled platform checks."))
+                      : (hotel.officialStatusDetail ?? (hotel.isAirbnb && hotel.isVerifiedListing
+                        ? `Airbnb 房东官方发布页已实际打开核验。${hotel.availabilityNote}`
+                        : hotel.officialStayUrl
+                          ? "已记录官网入口；精确日期、2 人 1 间的可订房型、含税总价及退改仍待官网核验。"
+                          : "未记录可核验的独立官网；库存与价格以卡片中明确标注的平台实查结果为准。"))}
+                  </Typography>
+                  {hotel.officialStayUrl && <Typography component="a" href={hotel.officialStayUrl} rel="noreferrer" target="_blank">
+                    {isEnglish ? (hotel.isAirbnb ? "Open official Airbnb listing" : "Open official website") : (hotel.isAirbnb ? "打开 Airbnb 官方房源页" : "打开官网")}<OpenInNewIcon aria-hidden="true" />
+                  </Typography>}
+                </Box>
                 <Stack className="hotel-option-facts" spacing={0.7}>
                   <Stack direction="row" spacing={0.8}><DirectionsWalkIcon /><Typography>{isEnglish ? hotel.accessEn : hotel.access}</Typography></Stack>
                   <Stack direction="row" spacing={0.8}><LocalParkingIcon /><Typography>{isEnglish ? hotel.parkingEn : hotel.parking}</Typography></Stack>
@@ -342,6 +363,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                       // gallery has been checked and the data entry is explicitly verified.
                       const roomImages = room.photosVerified === true ? (room.images ?? []) : [];
                       const explicitRates = hotel.currentRate?.roomRates?.[room.rateKey];
+                      const officialRate = explicitRates?.official;
                       const bookingRate = explicitRates?.booking ?? (bookingQuotedRoom ? hotel.currentRate : null);
                       const agodaRate = explicitRates?.agoda ?? (agodaQuotedRoom ? hotel.currentRate.agoda : null);
                       const airbnbQuotedRoom = hotel.currentRate?.source === "Airbnb" && (
@@ -374,8 +396,26 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                             }</Typography>}
                           </Box>
                         </Box>
-                        {(bookingRate || agodaRate || airbnbRate) && (
+                        {(officialRate || bookingRate || agodaRate || airbnbRate) && (
                           <Box className="hotel-room-platform-prices">
+                            {officialRate && <Box className="hotel-room-platform-official">
+                              <Typography className="hotel-room-platform-name" component="a" href={hotel.officialStayUrl} rel="noreferrer" target="_blank">
+                                {isEnglish ? "Official website" : "官网 · 优先核验"}<OpenInNewIcon />
+                              </Typography>
+                              <Typography color="text.secondary">{isEnglish ? "Official room" : "官网房型"}：{officialRate.room.split(" · ")[0]}</Typography>
+                              {officialRate.nonRefundableNzd != null && <>
+                                <Typography fontWeight={900}>{currencyLabel(officialRate.nonRefundableNzd)}</Typography>
+                                <Typography color="text.secondary">{officialRate.rateLabel ?? (isEnglish ? "Tax-inclusive total · non-refundable" : `${dates.label}含税总价 · 不可退款`)}</Typography>
+                                {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(officialRate.nonRefundableNzd / nights)}</Typography>}
+                              </>}
+                              {officialRate.refundableNzd != null && <>
+                                <Typography fontWeight={900}>{currencyLabel(officialRate.refundableNzd)}</Typography>
+                                <Typography color="text.secondary">{isEnglish ? `Tax-inclusive total · free cancellation before ${officialRate.cancelUntil}` : `${dates.label}含税总价 · ${officialRate.cancelUntil} 前免费取消`}</Typography>
+                                {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(officialRate.refundableNzd / nights)}</Typography>}
+                              </>}
+                              {officialRate.memberNote && <Typography color="text.secondary">{officialRate.memberNote}</Typography>}
+                              {(officialRate.payment || officialRate.breakfast) && <Typography color="text.secondary">{[officialRate.payment, officialRate.breakfast].filter(Boolean).join(" · ")}</Typography>}
+                            </Box>}
                             {bookingRate && <Box>
                               <Typography className="hotel-room-platform-name" component="a" href={bookingRate.useOfficialUrl || hotel.currentRate.useOfficialUrl ? hotel.officialStayUrl : hotel.bookingStayUrl} rel="noreferrer" target="_blank">
                                 {bookingRate.source}<OpenInNewIcon />
@@ -399,7 +439,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                             </Box>}
                             {agodaRate ? <Box>
                               <Typography className="hotel-room-platform-name" component="a" href={hotel.agodaStayUrl} rel="noreferrer" target="_blank">
-                                Agoda<OpenInNewIcon />
+                                {isEnglish ? "Agoda · secondary comparison" : "Agoda · 补充比价"}<OpenInNewIcon />
                               </Typography>
                               <Typography color="text.secondary">{isEnglish ? "Platform room" : "平台房型"}：{agodaRate.room.split(" · ")[0]}</Typography>
                               {agodaRate.nonRefundableNzd != null && <>
@@ -415,7 +455,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                               {agodaRate.conversionNote && <Typography color="text.secondary">{agodaRate.conversionNote}</Typography>}
                               {(agodaRate.payment || agodaRate.breakfast) && <Typography color="text.secondary">{[agodaRate.payment, agodaRate.breakfast].filter(Boolean).join(" · ")}</Typography>}
                             </Box> : bookingRate && hotel.agodaStayUrl && <Box className="hotel-room-platform-pending">
-                              <Typography className="hotel-room-platform-name" component="a" href={hotel.agodaStayUrl} rel="noreferrer" target="_blank">Agoda<OpenInNewIcon /></Typography>
+                              <Typography className="hotel-room-platform-name" component="a" href={hotel.agodaStayUrl} rel="noreferrer" target="_blank">{isEnglish ? "Agoda · secondary comparison" : "Agoda · 补充比价"}<OpenInNewIcon /></Typography>
                               <Typography fontWeight={900}>{hotel.agodaSoldOut
                                 ? (isEnglish ? "Sold out on Agoda for these exact dates" : `当前酒店 ${hotel.name} 在 Agoda 所选日期已售罄`)
                                 : (isEnglish ? "No verified Agoda rate for this room type" : "本房型暂无已核验 Agoda 报价")}

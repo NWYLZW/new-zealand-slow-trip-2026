@@ -188,9 +188,11 @@ export const localNameTranslations = {
   "The Hermitage Hotel": "赫米蒂奇酒店",
   "Aoraki Mackenzie International Dark Sky Reserve": "奥拉基麦肯齐国际暗夜保护区",
   "Aoraki / Mount Cook Visitor Centre": "奥拉基 / 库克山游客中心",
+  "Mt Cook Lodge & Motels": "库克山旅舍及汽车旅馆",
   "Lake Tekapo / Takapō": "蒂卡波湖",
   "Church of the Good Shepherd": "好牧羊人教堂",
   "Christchurch / Ōtautahi": "基督城",
+  "Novotel Christchurch Cathedral Square": "诺富特基督城大教堂广场酒店",
   "Rydges Latimer Christchurch": "Rydges Latimer 基督城酒店",
   "Riverside Market": "河畔市场",
   "Christchurch Botanic Gardens": "基督城植物园",
@@ -294,9 +296,9 @@ export const eventMediaByTitle = {
   },
   "蒂卡波到基督城": {
     route: "库克山 → 蒂卡波 → 基督城",
-    localNames: ["Aoraki / Mount Cook", "Lake Tekapo / Takapō", "Church of the Good Shepherd", "Christchurch / Ōtautahi", "Rydges Latimer Christchurch"],
+    localNames: ["Mt Cook Lodge & Motels", "Lake Tekapo / Takapō", "Church of the Good Shepherd", "Christchurch / Ōtautahi", "Novotel Christchurch Cathedral Square"],
     ...mediaGallery(tekapoImage, aorakiImage, christchurchImage),
-    links: [official("Lake Tekapo 官方旅游信息", "https://www.mackenzienz.com/visit-lake-tekapo/"), googleDirections("库克山—蒂卡波—基督城路线", "The Hermitage Hotel Mount Cook", "Rydges Latimer Christchurch", ["Church of the Good Shepherd Lake Tekapo"]), redbook("蒂卡波 基督城 自驾")],
+    links: [official("Lake Tekapo 官方旅游信息", "https://www.mackenzienz.com/visit-lake-tekapo/"), googleDirections("库克山—蒂卡波—基督城路线", "Mt Cook Lodge & Motels", "Novotel Christchurch Cathedral Square", ["Church of the Good Shepherd Lake Tekapo"]), redbook("蒂卡波 基督城 自驾")],
   },
   "基督城城市半日": {
     location: "基督城市中心",

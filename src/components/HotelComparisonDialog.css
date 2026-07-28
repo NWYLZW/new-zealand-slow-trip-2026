@@ -214,10 +214,39 @@
 }
 
 .hotel-availability-note,
+.hotel-official-verification,
 .hotel-social-research {
   margin-top: 12px;
   padding: 12px 14px;
   border-radius: var(--radius-control);
+}
+
+.hotel-official-verification {
+  border: 1px solid rgba(18, 63, 54, 0.18);
+  background: #f4f6f1;
+}
+
+.hotel-official-verification.is-verified {
+  border-color: rgba(47, 138, 69, 0.3);
+  background: #edf8ef;
+}
+
+.hotel-official-verification > a {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 6px;
+  color: var(--forest);
+  font-weight: 900;
+}
+
+.hotel-official-verification > a .MuiSvgIcon-root {
+  font-size: 15px;
+}
+
+.hotel-room-platform-official {
+  border-color: rgba(47, 138, 69, 0.32) !important;
+  background: #edf8ef !important;
 }
 
 .hotel-availability-note {

@@ -57,7 +57,7 @@ export const regionalStays = {
       checkOut: "2026-10-06",
       label: "10月5日—6日",
     },
-    selectedHotelId: "airbnb-cosy-accommodation-twizel",
+    selectedHotelId: "hermitage-mt-cook-motel-studio-queen",
   },
   christchurch: {
     id: "christchurch",
@@ -74,7 +74,7 @@ export const regionalStays = {
       checkOut: "2026-10-07",
       label: "10月6日—7日",
     },
-    selectedHotelId: "rydges-latimer-christchurch",
+    selectedHotelId: "novotel-christchurch-cathedral-square",
   },
   rotorua: {
     id: "rotorua",
@@ -98,27 +98,27 @@ export const regionalStays = {
 const sharedSocial = {
   queenstown: {
     verdict:
-      "小红书高赞内容偏爱 Sunshine Bay 一带面湖、安静、带壁炉或热水浴缸的 Airbnb；已据此反查并核验 Summit Serenity 具体房源。它的景观和居住体验强，但 Walter Peak 当天仍需约 8—10 分钟车程到码头，因此镇中心酒店继续作为行程优先方案。",
+      "小红书反复推荐两条路线：一是 Highview / 镇中心湖景公寓，强调步行去湖边和码头；二是 Sunshine Bay、Lake Hayes 一带安静、带厨房或热水浴缸的民宿。Highview 已核验精确四晚没有连续库存，因此不伪装成可订卡片；当前补充了真实可订的镇中心 QT3 与 Lake Hayes 农场单间公寓。结合 Walter Peak、镇中心与 Queenstown Gardens 动线，能步行的市中心住宿优先，郊外民宿作为景观和价格备选。",
     url: xiaohongshuSearch("皇后镇 住宿 推荐 酒店 民宿"),
   },
   wanaka: {
     verdict:
-      "小红书更偏好森林木屋、湖畔民宿和带厨房公寓；两晚自驾确实适合公寓，但应控制在湖边和镇中心步行范围内。",
+      "小红书常见推荐包括 Edgewater 湖畔草坪、湖边或镇中心带厨房公寓，以及离镇约 30 分钟、带热水池和星空体验的森林木屋。后者更适合把住宿本身当作行程；本次两晚仍要逛湖边、镇中心并次日去库克山，因此优先 Edgewater / 步行湖边的私人单间公寓，安静但需开车的 Alpine Lodge 作为性价比备选。Edgewater 当前可订基础 Hotel Room 不能保证特大床，也不能保证湖景，页面会明确提示。",
     url: xiaohongshuSearch("瓦纳卡 住宿 推荐 酒店 民宿"),
   },
   mountCook: {
     verdict:
-      "讨论集中在 Hermitage 山景、Haka House、Braemar Station 与 Ben Ohau / Twizel 民宿。山外民宿景观、私密性和性价比更好；本次同时纳入 Agoda 的 Ben Ohau Vista 和已核验的 Airbnb Queen 大床独立客房。两人优先考虑 Airbnb，但都要接受 Big Sky 后夜间回程和次晨候补近一小时车程。",
+      "小红书实住对比显示：The Hermitage 主楼卖点主要是窗景，Mt Cook Motel 则与主楼同属一套官方预订体系，房间更朴素但带完整厨房，部分住客反而认为性价比和无遮挡山景更好；具体景观仍取决于分房，不能保证。Google Maps 实测 Motel 到冬宫主楼约 1.0 公里、平路步行约 16 分钟，不是远在 Twizel 的另一家住宿，但早晚餐要到主楼会有一段户外步行。官方小红书提醒 Booking 无房不等于官网无房，并建议谨慎使用 Agoda；本次已在官网按 10 月 5—6 日、2 人核验到 Motel Studio Queen 仅剩 2 间。其余选择仍包括 Pukaki 东岸的 Braemar Station，以及 Twizel / Ben Ohau 的酒店和整租民宿。",
     url: xiaohongshuSearch("库克山 住宿 推荐 酒店 民宿"),
   },
   christchurch: {
     verdict:
-      "酒店与自助民宿推荐并存；但你们只住一晚、次日上午逛市中心再还车，清洁费和自助入住让民宿优势变小，带停车的市中心酒店更稳。",
+      "社交媒体上常见市中心公寓、设计酒店和自驾 motel 三类选择；但本次只住一晚，次日上午还要步行逛 New Regent Street、Riverside Market 与植物园，再去机场还车，Cathedral Square 周边酒店比收清洁费、需要自助入住的民宿更省时间。Booking 精确日期复核后，Novotel 与 Distinction 都有纯 King 房；Rydges 停车更清楚但步行 Riverside Market 更远。",
     url: xiaohongshuSearch("基督城 住宿 推荐 酒店 民宿"),
   },
   rotorua: {
     verdict:
-      "湖景民宿和农场民宿热度高，但单晚且次日 09:00 要到 Te Puia；镇中心免费停车酒店更符合晚到、早退房的节奏。",
+      "社交媒体更偏爱湖景、温泉与农场体验型民宿，但本次霍比屯后才进城、只住一晚，次日 09:00 又要到 Te Puia；清洁费、自助入住和绕路会吞掉民宿优势。实际精确日期比较里，Sudima 免费停车且价格最低，Millennium 更靠近 Polynesian Spa，Pullman 房间更新但停车与早餐成本更高。",
     url: xiaohongshuSearch("罗托鲁瓦 住宿 推荐 酒店 民宿"),
   },
 };
@@ -338,7 +338,8 @@ export const regionalHotels = {
       cautions: [
         "不适合 Walter Peak 步行日",
         "四天往返镇中心",
-        "Agoda 所选日期 4 种房型售罄",
+        "停车 NZD 20/晚，四晚需另加 NZD 80",
+        "Agoda 本次只显示酒店介绍、未加载可预订房型卡；旧报价不再当作当前可订价",
       ],
       ratings: [
         { platform: "Booking.com", score: "8.8 / 10", reviews: "2,000+ 条" },
@@ -411,19 +412,8 @@ export const regionalHotels = {
                 refundableNzd: 1356,
                 cancelUntil: "2026-08-30",
                 payment: "无需预付、到店付款",
-                breakfast: "早餐另加 NZD 30/人",
-                quotedAt: "2026-07-27",
-              },
-              agoda: {
-                source: "Agoda",
-                roomKey: "mountain-king",
-                room: "山景标准房(大床) (1 King Standard Mountain View) · 28 m²",
-                nonRefundableNzd: null,
-                refundableNzd: 1067.18,
-                cancelUntil: "2026-08-30",
-                payment: "含税四晚总价；2026-08-28 自动付款，今日无需付款",
-                breakfast: "不含早餐；早餐另加 NZD 30/人",
-                quotedAt: "2026-07-27",
+                breakfast: "早餐另加 NZD 30/人/天；停车 NZD 20/天，含停车实际总价 NZD 1,436",
+                quotedAt: "2026-07-28",
               },
             },
             "mountain-balcony-king": {
@@ -436,7 +426,7 @@ export const regionalHotels = {
                 cancelUntil: "2026-08-30",
                 payment: "无需预付、到店付款",
                 breakfast: "早餐另加 NZD 30/人",
-                quotedAt: "2026-07-27",
+                quotedAt: "2026-07-28",
               },
             },
             "california-king-suite": {
@@ -449,7 +439,7 @@ export const regionalHotels = {
                 cancelUntil: "2026-08-30",
                 payment: "无需预付、到店付款",
                 breakfast: "早餐另加 NZD 30/人",
-                quotedAt: "2026-07-27",
+                quotedAt: "2026-07-28",
               },
             },
             "one-bedroom-king-suite": {
@@ -462,16 +452,22 @@ export const regionalHotels = {
                 cancelUntil: "2026-08-30",
                 payment: "无需预付、到店付款",
                 breakfast: "早餐另加 NZD 30/人",
-                quotedAt: "2026-07-27",
+                quotedAt: "2026-07-28",
               },
             },
           },
         },
       },
       research: sharedSocial.queenstown,
-      agodaStatus: "基础山景大床房含税总价已核验",
+      agodaStatus: "精确日期详情已打开，但房型卡未加载",
       agodaStatusDetail:
-        "Agoda 已实际进入结算页核验同一酒店、9 月 29 日—10 月 3 日、2 人 1 间：山景标准房(大床)含税四晚总价 NZD 1,067.18，8 月 30 日前免费取消、8 月 28 日付款。页面 NZD 266 是含税单价，不是四晚总价；“4 种房型已售罄”也不代表所有房型售罄。",
+        "2026-07-28 已实际打开 Agoda 同一酒店并确认 9 月 29 日—10 月 3 日、2 人 1 间；本次页面只加载酒店介绍，没有出现可订房型卡或结算总价，因此撤下旧 Agoda 报价。",
+      officialStatus: "hotel-info-only",
+      officialStatusDetail:
+        "2026-07-28 已实际打开 IHG 官网并尝试带入 9 月 29 日—10 月 3 日、2 人 1 间，但页面重定向至 IHG Explore，未取得可复现的房型与含税结算价；当前 Booking 精确日期价仍作为报价依据。",
+      officialStatusEn:
+        "IHG was opened with the exact stay parameters on 28 Jul 2026, but redirected to IHG Explore, so no reproducible official checkout price was obtained.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl:
         "https://www.ihg.com/holidayinn/hotels/us/en/queenstown/zqnrm/hoteldetail",
       bookingUrl:
@@ -592,6 +588,295 @@ export const regionalHotels = {
       position: [-45.0465, 168.6205],
       mapQuery: "Sunshine Bay Queenstown New Zealand",
     },
+    {
+      id: "queenstown-central-qt3-airbnb",
+      name: "Central QT3 · Airbnb",
+      recommendation: "码头步行最优民宿",
+      recommendationEn: "Best walkable Airbnb",
+      summary:
+        "镇中心一卧室整套公寓，Airbnb 精确四晚已核验。价格不低，但可步行覆盖 Steamer Wharf、湖边、餐厅与 Queenstown Gardens，最贴合 Walter Peak 当天不用开车的安排。",
+      summaryEn:
+        "A verified central one-bedroom Airbnb with the strongest walkability for Steamer Wharf and town activities.",
+      access: "镇中心；房源标题明确标注可步行到各处",
+      accessEn: "Central Queenstown with walk-everywhere positioning",
+      parking: "页面未显示免费停车；预订前需向房东确认车位",
+      parkingEn: "No free parking shown; confirm parking with the host",
+      distanceNote:
+        "Airbnb 预订前只公开大致位置；步行距离按房源中央 Queenstown 地图范围估算，订后应以准确地址复核。",
+      nearbyAttractions: [
+        {
+          name: "Steamer Wharf · Walter Peak 码头",
+          distance: "约 600—900 米",
+          travelTime: "步行约 8—12 分钟",
+          destinationQuery: "Steamer Wharf Queenstown",
+        },
+        {
+          name: "Queenstown Gardens",
+          distance: "约 800 米—1.2 公里",
+          travelTime: "步行约 10—15 分钟",
+          destinationQuery: "Queenstown Gardens",
+        },
+        {
+          name: "Glenorchy 公路起点",
+          distance: "约 1—2 公里",
+          travelTime: "驾车约 5 分钟",
+          destinationQuery: "Glenorchy Queenstown Road",
+        },
+        {
+          name: "Queenstown Airport",
+          distance: "约 8 公里",
+          travelTime: "驾车约 15—20 分钟",
+          destinationQuery: "Queenstown Airport",
+        },
+      ],
+      strengths: [
+        "精确日期与 2 人已核验",
+        "Walter Peak 和镇中心步行最方便",
+        "整套一卧室公寓",
+        "完整厨房与自助入住",
+        "4.93 分、164 条评价",
+        "8 月 30 日前免费取消",
+      ],
+      cautions: [
+        "四晚总价明显高于机场区酒店",
+        "页面未显示免费停车",
+        "Airbnb 精确地址订后才公开",
+      ],
+      ratings: [
+        { platform: "Airbnb", score: "4.93 / 5", reviews: "164 条 · Guest Favourite · Superhost" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "central-one-bedroom-apartment",
+          name: "镇中心一卧室整套公寓",
+          size: "平台未标",
+          bed: "2 张床（民宿不按床型筛选）",
+          photosVerified: true,
+          facilities: ["完整厨房", "阳台", "自助入住", "独立浴室", "免费 Wi-Fi"],
+          images: [
+            image("queenstown-central-qt3-1.jpg", "公寓客厅", "Airbnb"),
+            image("queenstown-central-qt3-2.jpg", "公寓卧室", "Airbnb"),
+            image("queenstown-central-qt3-3.jpg", "公寓厨房", "Airbnb"),
+            image("queenstown-central-qt3-4.jpg", "公寓用餐区", "Airbnb"),
+            image("queenstown-central-qt3-5.jpg", "公寓浴室", "Airbnb"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Airbnb IAB 已按 2026 年 9 月 29 日—10 月 3 日、2 人核验：含全部费用总价 NZD 2,046；8 月 30 日前免费取消。",
+      rateSnapshots: {
+        "2026-09-29/2026-10-03": {
+          source: "Airbnb",
+          roomKey: "central-one-bedroom-apartment",
+          room: "镇中心一卧室整套公寓",
+          nonRefundableNzd: null,
+          refundableNzd: 2046,
+          cancelUntil: "2026-08-30",
+          payment: "付款时间以 Airbnb 结算页为准",
+          breakfast: "带完整厨房，不含早餐",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.queenstown,
+      officialUrl:
+        "https://zh.airbnb.com/rooms/938494715127054681?adults=2&check_in=2026-09-29&check_out=2026-10-03&currency=NZD",
+      isAirbnb: true,
+      isVerifiedListing: true,
+      position: [-45.0322, 168.661],
+      mapQuery: "Central Queenstown New Zealand",
+    },
+    {
+      id: "queenstown-hayes-farmstay-airbnb",
+      name: "Lake Hayes Farmstay Studio · Airbnb",
+      recommendation: "安静低价民宿",
+      recommendationEn: "Quiet lower-cost Airbnb",
+      summary:
+        "Lake Hayes 农场单间公寓，精确四晚总价只略高于 Holiday Inn，并有山谷景观、厨房、洗衣机和免费停车；代价是每天都要开车进镇，Walter Peak 当天也无法步行到码头。",
+      summaryEn:
+        "A verified quiet Lake Hayes farmstay with good value, kitchen and parking, but daily driving is required.",
+      access: "Lake Hayes 乡间；进皇后镇需驾车",
+      accessEn: "Rural Lake Hayes; driving required for Queenstown",
+      parking: "房源内免费停车",
+      parkingEn: "Free on-site parking",
+      distanceNote:
+        "Airbnb 预订前只公开大致位置；距离按 Lake Hayes 房源地图范围估算，订后应以准确地址复核。",
+      nearbyAttractions: [
+        {
+          name: "Steamer Wharf · Walter Peak 码头",
+          distance: "约 17—20 公里",
+          travelTime: "驾车约 25—30 分钟",
+          destinationQuery: "Steamer Wharf Queenstown",
+        },
+        {
+          name: "Queenstown Gardens",
+          distance: "约 17—20 公里",
+          travelTime: "驾车约 25—30 分钟",
+          destinationQuery: "Queenstown Gardens",
+        },
+        {
+          name: "Glenorchy 公路起点",
+          distance: "约 18—21 公里",
+          travelTime: "驾车约 25—35 分钟",
+          destinationQuery: "Glenorchy Queenstown Road",
+        },
+        {
+          name: "Queenstown Airport",
+          distance: "约 10—13 公里",
+          travelTime: "驾车约 15—20 分钟",
+          destinationQuery: "Queenstown Airport",
+        },
+      ],
+      strengths: [
+        "精确日期与 2 人已核验",
+        "NZD 172 / 晚左右",
+        "山谷与农场环境安静",
+        "完整厨房、洗衣机和免费停车",
+        "4.90 分、187 条评价",
+        "9 月 24 日前免费取消",
+      ],
+      cautions: [
+        "所有皇后镇活动都需开车",
+        "Walter Peak 当天要处理市区停车",
+        "Airbnb 精确地址订后才公开",
+      ],
+      ratings: [
+        { platform: "Airbnb", score: "4.90 / 5", reviews: "187 条 · Guest Favourite · Superhost" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "lake-hayes-farmstay-studio",
+          name: "农场整套单间公寓",
+          size: "平台未标",
+          bed: "特大床及其他床位（民宿不按床型筛选）",
+          photosVerified: true,
+          facilities: ["完整厨房", "洗衣机", "山谷景观", "独立浴室", "免费停车", "免费 Wi-Fi"],
+          images: [
+            image("queenstown-hayes-farmstay-1.jpg", "单间公寓卧室", "Airbnb"),
+            image("queenstown-hayes-farmstay-2.jpg", "单间公寓起居区", "Airbnb"),
+            image("queenstown-hayes-farmstay-3.jpg", "单间公寓厨房", "Airbnb"),
+            image("queenstown-hayes-farmstay-4.jpg", "房源户外环境", "Airbnb"),
+            image("queenstown-hayes-farmstay-5.jpg", "房源山谷景观", "Airbnb"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Airbnb IAB 已按 2026 年 9 月 29 日—10 月 3 日、2 人核验：含全部费用总价 NZD 688；9 月 24 日前免费取消，当前显示今日先付 NZD 0。",
+      rateSnapshots: {
+        "2026-09-29/2026-10-03": {
+          source: "Airbnb",
+          roomKey: "lake-hayes-farmstay-studio",
+          room: "Lake Hayes 农场整套单间公寓",
+          nonRefundableNzd: null,
+          refundableNzd: 688,
+          cancelUntil: "2026-09-24",
+          payment: "当前显示今日先付 NZD 0；后续付款以 Airbnb 结算页为准",
+          breakfast: "带完整厨房，不含早餐",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.queenstown,
+      officialUrl:
+        "https://zh.airbnb.com/rooms/41320451?adults=2&check_in=2026-09-29&check_out=2026-10-03&currency=NZD",
+      isAirbnb: true,
+      isVerifiedListing: true,
+      position: [-44.987, 168.808],
+      mapQuery: "Lake Hayes Queenstown New Zealand",
+    },
+    {
+      id: "crowne-plaza-queenstown",
+      name: "Crowne Plaza Queenstown by IHG",
+      recommendation: "码头步行标杆 · 高价",
+      recommendationEn: "Premium wharf walkability",
+      summary:
+        "就在 Beach Street 湖边，位置评分 9.8，去 Steamer Wharf 与镇中心最直接；已核验湖景阳台特大床房的 15 张平台画廊并精选展示 5 张，但四晚总价 NZD 5,249，适合作为便利性的价格上限参考。",
+      summaryEn:
+        "The strongest hotel for wharf walkability, but the verified four-night king-room total is extremely high.",
+      access: "Beach Street 湖边；Steamer Wharf 对面一带",
+      accessEn: "Lakefront Beach Street, next to the wharf precinct",
+      parking: "私人停车额外收费；Booking 含 1 个车位套餐总价 NZD 5,253",
+      parkingEn: "Paid private parking; parking-inclusive Booking plan totals NZD 5,253",
+      nearbyAttractions: [
+        {
+          name: "Steamer Wharf · Walter Peak 码头",
+          distance: "约 100—250 米",
+          travelTime: "步行约 2—4 分钟",
+          destinationQuery: "Steamer Wharf Queenstown",
+        },
+        {
+          name: "Queenstown Gardens",
+          distance: "约 700—900 米",
+          travelTime: "步行约 10—12 分钟",
+          destinationQuery: "Queenstown Gardens",
+        },
+        {
+          name: "Glenorchy 公路起点",
+          distance: "约 1 公里",
+          travelTime: "驾车约 3—5 分钟",
+          destinationQuery: "Glenorchy Queenstown Road",
+        },
+        {
+          name: "Queenstown Airport",
+          distance: "约 8 公里",
+          travelTime: "驾车约 15—20 分钟",
+          destinationQuery: "Queenstown Airport",
+        },
+      ],
+      strengths: [
+        "Walter Peak 当天几乎不用交通",
+        "湖景阳台纯特大床房",
+        "平台房型画廊 15 张已核验，精选展示 5 张",
+        "含早餐",
+        "9 月 28 日前免费取消",
+        "位置评分 9.8",
+      ],
+      cautions: [
+        "四晚总价 NZD 5,249",
+        "普通方案停车另收费",
+        "性价比评分仅 7.6",
+      ],
+      ratings: [
+        { platform: "Booking.com", score: "8.3 / 10", reviews: "1,524 条 · 位置 9.8" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "lake-view-balcony-king",
+          name: "湖景阳台特大床房",
+          size: "32 m²",
+          bed: "1 张超大号双人床",
+          photosVerified: true,
+          facilities: ["湖景", "阳台", "浴缸", "空调", "咖啡机", "迷你吧", "免费 Wi-Fi"],
+          images: [
+            image("crowne-plaza-lake-king-1.jpg", "湖景阳台特大床房", "Booking.com"),
+            image("crowne-plaza-lake-king-2.jpg", "特大床房休息区", "Booking.com"),
+            image("crowne-plaza-lake-king-3.jpg", "特大床房浴室", "Booking.com"),
+            image("crowne-plaza-lake-king-4.jpg", "特大床房阳台", "Booking.com"),
+            image("crowne-plaza-lake-king-5.jpg", "特大床房湖景", "Booking.com"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      rateSnapshots: {
+        "2026-09-29/2026-10-03": {
+          source: "Booking.com",
+          roomKey: "lake-view-balcony-king",
+          room: "Lake View King with Balcony · 32 m²",
+          nonRefundableNzd: null,
+          refundableNzd: 5249,
+          cancelUntil: "2026-09-28",
+          payment: "无需预付、到店付款；含停车套餐总价 NZD 5,253",
+          breakfast: "含早餐",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.queenstown,
+      officialUrl: "https://www.ihg.com/crowneplaza/hotels/us/en/queenstown/zqnbs/hoteldetail",
+      bookingUrl:
+        "https://www.booking.com/hotel/nz/crowne-plaza-queenstown.zh-cn.html",
+      position: [-45.0311, 168.6583],
+      mapQuery: "Crowne Plaza Queenstown",
+    },
   ],
   wanaka: [
     {
@@ -643,7 +928,7 @@ export const regionalHotels = {
       cautions: [
         "不是正湖畔第一排",
         "只剩 1 间时库存风险高",
-        "Edgewater 精确日期无房",
+        "Agoda 当前没有本公寓的可订房型",
       ],
       ratings: [
         { platform: "Booking.com", score: "9.0 / 10", reviews: "800+ 条" },
@@ -691,6 +976,12 @@ export const regionalHotels = {
       agodaStatusDetail:
         "已用 IAB 复核 10 月 3—5 日、2 人 1 间：Agoda 房型区没有任何可预订卡片，只显示 3 种房型已售罄。因此“低至 NZD 330”不能作为本次两晚价格。",
       research: sharedSocial.wanaka,
+      officialStatus: "official-unreachable",
+      officialStatusDetail:
+        "2026-07-28 已在 IAB 实际打开官网，但网站拒绝连接，无法查询 10 月 3—5 日的官网库存与结算价；不把 Agoda 起价代替官网价，当前仅保留 Booking 精确日期报价。",
+      officialStatusEn:
+        "The official website was opened in the in-app browser on 28 Jul 2026 but refused the connection; no official exact-date inventory or checkout price was obtained.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.wanakaluxuryapartments.co.nz/",
       bookingUrl:
         "https://www.booking.com/hotel/nz/wanaka-luxury-apartments.html",
@@ -852,8 +1143,414 @@ export const regionalHotels = {
       position: [-44.7134, 169.1406],
       mapQuery: "West Meadows of Wanaka",
     },
+    {
+      id: "edgewater-wanaka",
+      name: "Edgewater Hotel",
+      recommendation: "不纳入大床 shortlist",
+      recommendationEn: "Lakefront, bed type unconfirmed",
+      summary:
+        "小红书反复出现的湖畔草坪酒店，距 That Wānaka Tree 约 560 米。Agoda 精确两晚只剩基础 Hotel Room，价格与图片已核验，但房型是“1 张特大床或 2 张单人床”，不能保证大床；也不能把基础房当成社交媒体常见的一楼湖景套房。",
+      summaryEn:
+        "A repeatedly recommended lakefront hotel, but the only verified room cannot guarantee a king bed or lake view.",
+      access: "湖畔步道旁；距 That Wānaka Tree 约 560 米",
+      accessEn: "On the lakefront trail, about 560 m from That Wānaka Tree",
+      parking: "免费停车",
+      parkingEn: "Free parking",
+      nearbyAttractions: [
+        {
+          name: "That Wānaka Tree",
+          distance: "约 560 米",
+          travelTime: "沿湖步行约 7—10 分钟",
+          destinationQuery: "That Wanaka Tree",
+        },
+        {
+          name: "Wānaka 湖滨与镇中心",
+          distance: "约 2—2.6 公里",
+          travelTime: "沿湖步行约 25—35 分钟；驾车约 5 分钟",
+          destinationQuery: "Wanaka Lakefront",
+        },
+        {
+          name: "Roy's Peak 停车场",
+          distance: "约 5—6 公里",
+          travelTime: "驾车约 8—10 分钟",
+          destinationQuery: "Roys Peak Track Parking",
+        },
+        {
+          name: "库克山机场",
+          distance: "约 205 公里",
+          travelTime: "驾车约 2 小时 35—50 分钟",
+          destinationQuery: "Mount Cook Airport",
+        },
+      ],
+      strengths: [
+        "小红书反复推荐的湖畔位置",
+        "That Wānaka Tree 步行约 560 米",
+        "Agoda 精确日期真实可订",
+        "平台房型画廊 8 张已核验，精选展示 5 张",
+        "免费停车与 Wi-Fi",
+        "Agoda 8.9 分、3,649 条评价",
+      ],
+      cautions: [
+        "特大床或双床由酒店分配，不能保证大床",
+        "当前基础房不能保证湖景",
+        "不可退款、立即付款",
+        "小红书常见的一楼湖景套房并非本次可订房型",
+      ],
+      excludedByPreference: true,
+      ratings: [
+        { platform: "Agoda", score: "8.9 / 10", reviews: "3,649 条 · 位置 9.3" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "hotel-room-flexible-bed",
+          name: "Hotel Room · 床型由酒店分配",
+          size: "28 m²",
+          bed: "1 张特大床或 2 张单人床（不保证）",
+          photosVerified: true,
+          facilities: ["独立浴室", "暖气", "冰箱", "免费 Wi-Fi", "免费停车"],
+          images: [
+            image("edgewater-hotel-room-1.jpg", "Hotel Room 客房", "Agoda"),
+            image("edgewater-hotel-room-2.jpg", "Hotel Room 床铺", "Agoda"),
+            image("edgewater-hotel-room-3.jpg", "Hotel Room 休息区", "Agoda"),
+            image("edgewater-hotel-room-4.jpg", "Hotel Room 浴室", "Agoda"),
+            image("edgewater-hotel-room-5.jpg", "Hotel Room 入口", "Agoda"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Agoda IAB 已按 2026 年 10 月 3—5 日、2 人 1 间核验：仅剩 1 间基础 Hotel Room；不含早餐总价 NZD 687，不可退款且立即付款。含早餐方案总价 NZD 989。",
+      rateSnapshots: {
+        "2026-10-03/2026-10-05": {
+          roomRates: {
+            "hotel-room-flexible-bed": {
+              agoda: {
+                source: "Agoda",
+                roomKey: "hotel-room-flexible-bed",
+                room: "Hotel Room · 28 m² · 特大床或双床",
+                nonRefundableNzd: 687,
+                refundableNzd: null,
+                cancelUntil: null,
+                payment: "不可退款、马上预订并付款；页面显示仅剩 1 间",
+                breakfast: "不含早餐；含早餐方案总价 NZD 989",
+                quotedAt: "2026-07-27",
+              },
+            },
+          },
+        },
+      },
+      research: sharedSocial.wanaka,
+      officialUrl: "https://www.edgewater.co.nz/",
+      agodaUrl:
+        "https://www.agoda.com/zh-cn/edgewater-hotel/hotel/wanaka-nz.html",
+      position: [-44.6976, 169.1105],
+      mapQuery: "Edgewater Hotel Wanaka",
+    },
+    {
+      id: "wanaka-private-studio-airbnb",
+      name: "Private Quiet Studio · Airbnb",
+      recommendation: "瓦纳卡民宿首选",
+      recommendationEn: "Best Wānaka Airbnb fit",
+      summary:
+        "精确两晚可订的整套私人单间公寓，步行约 5 分钟到湖边，也可步行进镇；配完整厨房、室内洗衣机、私人热水浴缸和免费停车，兼顾湖边活动与次日开车去库克山。",
+      summaryEn:
+        "A verified private studio about five minutes from the lake, with a kitchen, hot tub and free parking.",
+      access: "步行约 5 分钟到 Lake Wānaka；可步行到镇中心",
+      accessEn: "About a five-minute walk to Lake Wānaka and walkable to town",
+      parking: "房源内免费停车",
+      parkingEn: "Free on-site parking",
+      distanceNote:
+        "Airbnb 预订前只公开大致位置；步行时间来自房源说明与住客反馈，精确地址订后再复核。",
+      nearbyAttractions: [
+        {
+          name: "Wānaka 湖滨",
+          distance: "约 400—600 米",
+          travelTime: "步行约 5 分钟",
+          destinationQuery: "Wanaka Lakefront",
+        },
+        {
+          name: "That Wānaka Tree",
+          distance: "约 1.5—2.5 公里",
+          travelTime: "沿湖步行约 20—30 分钟；驾车约 5 分钟",
+          destinationQuery: "That Wanaka Tree",
+        },
+        {
+          name: "Roy's Peak 停车场",
+          distance: "约 7—9 公里",
+          travelTime: "驾车约 10—15 分钟",
+          destinationQuery: "Roys Peak Track Parking",
+        },
+        {
+          name: "库克山机场",
+          distance: "约 200—205 公里",
+          travelTime: "驾车约 2 小时 30—45 分钟",
+          destinationQuery: "Mount Cook Airport",
+        },
+      ],
+      strengths: [
+        "精确日期与 2 人已核验",
+        "湖边步行约 5 分钟",
+        "完整厨房、室内洗衣机",
+        "私人热水浴缸和免费停车",
+        "4.96 分、482 条评价",
+        "9 月 28 日前免费取消",
+      ],
+      cautions: [
+        "Airbnb 精确地址订后才公开",
+        "不是湖畔第一排",
+        "早晨去库克山仍需约 2.5 小时驾驶",
+      ],
+      ratings: [
+        { platform: "Airbnb", score: "4.96 / 5", reviews: "482 条 · Guest Favourite · Superhost" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "private-quiet-studio",
+          name: "整套私人单间公寓",
+          size: "平台未标",
+          bed: "1 张床（民宿不按床型筛选）",
+          photosVerified: true,
+          facilities: ["完整厨房", "私人热水浴缸", "室内洗衣机", "空调", "免费停车", "80 Mbps Wi-Fi"],
+          images: [
+            image("wanaka-private-studio-1.jpg", "私人单间公寓卧室", "Airbnb"),
+            image("wanaka-private-studio-2.jpg", "私人单间公寓厨房", "Airbnb"),
+            image("wanaka-private-studio-3.jpg", "私人单间公寓起居区", "Airbnb"),
+            image("wanaka-private-studio-4.jpg", "私人热水浴缸", "Airbnb"),
+            image("wanaka-private-studio-5.jpg", "房源户外空间", "Airbnb"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Airbnb IAB 已按 2026 年 10 月 3—5 日、2 人核验：含全部费用总价 NZD 529；9 月 28 日前免费取消，当前显示今日先付 NZD 0。",
+      rateSnapshots: {
+        "2026-10-03/2026-10-05": {
+          source: "Airbnb",
+          roomKey: "private-quiet-studio",
+          room: "整套私人单间公寓",
+          nonRefundableNzd: null,
+          refundableNzd: 529,
+          cancelUntil: "2026-09-28",
+          payment: "当前显示今日先付 NZD 0；后续付款以 Airbnb 结算页为准",
+          breakfast: "带完整厨房，不含早餐",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.wanaka,
+      officialUrl:
+        "https://zh.airbnb.com/rooms/20667620?adults=2&check_in=2026-10-03&check_out=2026-10-05",
+      isAirbnb: true,
+      isVerifiedListing: true,
+      position: [-44.696, 169.135],
+      mapQuery: "Wanaka New Zealand",
+    },
+    {
+      id: "wanaka-alpine-apartment-airbnb",
+      name: "Alpine Lodge Apartment · Airbnb",
+      recommendation: "安静高分民宿",
+      recommendationEn: "Quiet high-rated Airbnb",
+      summary:
+        "安静社区的独立阁楼公寓，精确两晚已核验，带厨房、洗衣机、空调和免费停车；比湖边私人单间公寓略便宜，但去镇中心约 5 分钟车程。",
+      summaryEn:
+        "A verified quiet loft apartment with strong value and parking, about five minutes by car from town.",
+      access: "安静住宅区；驾车约 5 分钟到镇中心",
+      accessEn: "Quiet residential area, about five minutes by car to town",
+      parking: "房源内免费停车",
+      parkingEn: "Free on-site parking",
+      distanceNote:
+        "Airbnb 预订前只公开大致位置；距离按房源说明和住客反馈估算，精确地址订后再复核。",
+      nearbyAttractions: [
+        {
+          name: "Wānaka 湖滨与镇中心",
+          distance: "约 3—4 公里",
+          travelTime: "驾车约 5 分钟",
+          destinationQuery: "Wanaka Lakefront",
+        },
+        {
+          name: "That Wānaka Tree",
+          distance: "约 4—5 公里",
+          travelTime: "驾车约 8—10 分钟",
+          destinationQuery: "That Wanaka Tree",
+        },
+        {
+          name: "Roy's Peak 停车场",
+          distance: "约 10—12 公里",
+          travelTime: "驾车约 15 分钟",
+          destinationQuery: "Roys Peak Track Parking",
+        },
+        {
+          name: "库克山机场",
+          distance: "约 200 公里",
+          travelTime: "驾车约 2 小时 30—45 分钟",
+          destinationQuery: "Mount Cook Airport",
+        },
+      ],
+      strengths: [
+        "精确日期与 2 人已核验",
+        "两晚总价略低于湖边私人单间公寓",
+        "完整厨房、洗衣机和空调",
+        "免费停车与密码盒入住",
+        "5.00 分、116 条评价",
+        "9 月 28 日前免费取消",
+      ],
+      cautions: [
+        "湖边和镇中心都需开车",
+        "Airbnb 精确地址订后才公开",
+        "网页提示未配备一氧化碳报警器",
+      ],
+      ratings: [
+        { platform: "Airbnb", score: "5.00 / 5", reviews: "116 条 · Guest Favourite" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "alpine-lodge-apartment",
+          name: "独立阁楼公寓",
+          size: "平台未标",
+          bed: "1 张 Queen 床（民宿不按床型筛选）",
+          photosVerified: true,
+          facilities: ["完整厨房", "洗衣机", "空调", "自助入住", "免费停车", "免费 Wi-Fi"],
+          images: [
+            image("wanaka-alpine-apartment-1.jpg", "阁楼公寓卧室", "Airbnb"),
+            image("wanaka-alpine-apartment-2.jpg", "阁楼公寓客厅", "Airbnb"),
+            image("wanaka-alpine-apartment-3.jpg", "阁楼公寓厨房", "Airbnb"),
+            image("wanaka-alpine-apartment-4.jpg", "阁楼公寓浴室", "Airbnb"),
+            image("wanaka-alpine-apartment-5.jpg", "房源外观", "Airbnb"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Airbnb IAB 已按 2026 年 10 月 3—5 日、2 人核验：含全部费用总价 NZD 520；9 月 28 日前免费取消，当前显示今日先付 NZD 0。",
+      rateSnapshots: {
+        "2026-10-03/2026-10-05": {
+          source: "Airbnb",
+          roomKey: "alpine-lodge-apartment",
+          room: "独立阁楼公寓",
+          nonRefundableNzd: null,
+          refundableNzd: 520,
+          cancelUntil: "2026-09-28",
+          payment: "当前显示今日先付 NZD 0；后续付款以 Airbnb 结算页为准",
+          breakfast: "带完整厨房，不含早餐",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.wanaka,
+      officialUrl:
+        "https://zh.airbnb.com/rooms/927666929515134916?adults=2&check_in=2026-10-03&check_out=2026-10-05",
+      isAirbnb: true,
+      isVerifiedListing: true,
+      position: [-44.705, 169.155],
+      mapQuery: "Wanaka New Zealand",
+    },
   ],
   "mount-cook": [
+    {
+      id: "hermitage-mt-cook-motel-studio-queen",
+      name: "The Hermitage · Mt Cook Motel Studio Queen",
+      recommendation: "已预订 · 含双人早餐",
+      recommendationEn: "Booked · breakfast for two included",
+      summary:
+        "冬宫官网精确日期唯一可订房型。客房不在 The Hermitage 主楼，而在同一官方体系的 Mt Cook Motel 独立汽车旅馆楼；优势是留在库克山村、带完整厨房，代价是无保证库克山景，去主楼餐厅需步行约 16 分钟。",
+      summaryEn:
+        "The only room type available direct for the exact night, in the separate Mt Cook Motel building rather than the Hermitage main hotel.",
+      access: "Mt Cook Motel 独立楼；距 The Hermitage 主楼约 1.0 公里，平路步行约 16 分钟",
+      accessEn: "Separate Mt Cook Motel building; about 1.0 km or a 16-minute level walk from the Hermitage main hotel",
+      parking: "房型设施列有免费停车；自驾可直接停在 Motel",
+      parkingEn: "Free parking is listed for the room; drive directly to the motel building",
+      nearbyAttractions: [
+        {
+          name: "The Hermitage 主楼 · 餐厅 / Big Sky",
+          distance: "约 1.0 公里",
+          travelTime: "平路步行约 16 分钟；驾车约 3 分钟",
+          destinationQuery: "The Hermitage Hotel Mount Cook",
+        },
+        {
+          name: "Mount Cook Airport · 直升机集合",
+          distance: "约 6 公里",
+          travelTime: "驾车约 7—10 分钟",
+          destinationQuery: "Mount Cook Airport",
+        },
+        {
+          name: "Hooker Valley Track 停车场",
+          distance: "约 4—5 公里",
+          travelTime: "驾车约 7—10 分钟",
+          destinationQuery: "White Horse Hill Campground",
+        },
+      ],
+      strengths: [
+        "冬宫官网订单已确认，确认号 R2009C",
+        "住在库克山村内，比住 Twizel 少约 50 分钟夜间驾驶",
+        "Queen 床、完整厨房、独立浴室和免费停车",
+        "入住前 48 小时以外取消可全额退款",
+        "小红书实住者认为 Motel 空间和性价比优于主楼基础体验",
+      ],
+      cautions: [
+        "不是 The Hermitage 主楼客房；去主楼餐厅步行约 16 分钟",
+        "官网明确写明不提供 Aoraki / Mount Cook 景观保证",
+        "景观取决于具体分房，小红书的前排山景不能视为保证",
+        "已全额支付 NZD 504；10 月 3 日后取消收全额",
+        "10 月入住需先到 Mt Cook Lodge 办理入住",
+      ],
+      ratings: [
+        { platform: "冬宫官网", score: "预订已确认", reviews: "确认号 R2009C · 2026-07-28" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "mt-cook-motel-studio-queen",
+          name: "Mt Cook Motel Studio Queen",
+          size: "20 m²",
+          bed: "1 张 Queen 床",
+          photosVerified: false,
+          photoNote: "官网房型详情仅展示 1 张图；尚未作为可复用本地客房图保存，避免混入主楼景观房图片",
+          facilities: [
+            "完整厨房",
+            "私人浴室 · 淋浴",
+            "用餐区",
+            "电视",
+            "微波炉",
+            "烤面包机",
+            "茶 / 咖啡设施",
+            "免费停车",
+            "有限免费 Wi-Fi",
+          ],
+          images: [],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "已在冬宫官网预订成功：确认号 R2009C；2026 年 10 月 5 日入住、10 月 6 日退房，2 位成人；Special Bed and Breakfast Save $10 套餐，总价 NZD 504（含税），早餐在 The Hermitage 主楼 Alpine Restaurant。",
+      rateSnapshots: {
+        "2026-10-05/2026-10-06": {
+          roomRates: {
+            "mt-cook-motel-studio-queen": {
+              booking: {
+                source: "冬宫官网",
+                roomKey: "mt-cook-motel-studio-queen",
+                room: "Mt Cook Motel Studio Queen · 20 m²",
+                refundableNzd: 504,
+                nonRefundableNzd: null,
+                cancelUntil: "2026-10-03（入住前 48 小时）",
+                payment: "已全额支付；确认号 R2009C；10 月 3 日后取消收 NZD 504",
+                breakfast: "含 2 位成人自助早餐；在 The Hermitage 主楼 Alpine Restaurant 用餐",
+                quotedAt: "2026-07-28",
+                useOfficialUrl: true,
+              },
+            },
+          },
+        },
+      },
+      research: sharedSocial.mountCook,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "冬宫官网订单已完成：2026 年 10 月 5—6 日、2 位成人、Mt Cook Motel Studio Queen、含双人早餐，含税总价 NZD 504；确认号 R2009C。",
+      officialStatusEn:
+        "Booked direct for 5–6 Oct 2026, two adults, Mt Cook Motel Studio Queen with breakfast for two, NZD 504 tax-inclusive; confirmation R2009C.",
+      officialVerifiedAt: "2026-07-28",
+      officialUrl:
+        "https://book.hermitage.co.nz/onecart/wbe/room/20104/hermitage/2026-10-05/2026-10-06/BBSAVE10/2",
+      position: [-43.7363846, 170.0987676],
+      mapQuery: "Mt Cook Lodge & Motels New Zealand",
+    },
     {
       id: "omahau-down",
       name: "Omahau Down",
@@ -1244,7 +1941,7 @@ export const regionalHotels = {
       recommendation: "Agoda 民宿 · 已核验可订",
       recommendationEn: "Verified Agoda holiday home",
       summary:
-        "Twizel 镇内的整栋三卧室度假屋，10 月 5 日 Agoda 只剩 1 套。景观、厨房和私密性优于普通酒店，但两人入住空间偏大，且当天直升机与 Big Sky 结束后都要额外开车。",
+        "Twizel 镇内的整栋三卧室度假屋，10 月 5 日 Agoda 只剩 1 套。景观、厨房和私密性优于普通酒店；民宿不限制床位数量，是否选择主要看总价、取钥匙安排和往返库克山的夜间驾驶。",
       summaryEn:
         "A verified three-bedroom Twizel holiday home with strong privacy and self-catering facilities, but it adds driving after the helicopter flight and stargazing.",
       access:
@@ -1287,7 +1984,6 @@ export const regionalHotels = {
         "免费停车与 Wi-Fi",
       ],
       cautions: [
-        "三卧室对两人明显偏大",
         "看完 Big Sky 后需夜间驾驶约 50—55 分钟",
         "次晨直升机候补需提前近 1 小时出发",
         "15:00—17:30 到 Twizel Holiday Homes 取钥匙，与下午直升机冲突；下单前必须确认延迟取钥匙",
@@ -1339,12 +2035,318 @@ export const regionalHotels = {
       mapQuery: "Ben Ohau Vista 16 Ostler Road Twizel",
     },
     {
+      id: "airbnb-aoraki-aurora-holiday-home",
+      name: "Aoraki Aurora Holiday Home · Airbnb",
+      recommendation: "Airbnb 整栋舒适度 · 已核验",
+      recommendationEn: "Verified whole-home Airbnb comfort",
+      summary:
+        "Twizel 镇中心门口的整栋三卧室民居；民宿不限制床位数量，因此两张 King 床和额外双层床不构成排除条件。两人可享完整厨房、洗衣烘干、两间浴室和更大公共空间，代价是价格高于独立客房，且 Big Sky 后仍需夜间开回 Twizel。",
+      summaryEn:
+        "A verified three-bedroom whole home near central Twizel; extra bedrooms and beds are acceptable for a homestay and provide more comfort for two guests.",
+      access: "Twizel 近镇中心；房源描述为镇中心门口的私密住宅",
+      accessEn: "Near central Twizel in a private whole home",
+      parking: "房源内免费停车",
+      parkingEn: "Free on-site parking",
+      distanceNote:
+        "Airbnb 预订前仅公开大致位置；以下距离按 Twizel 镇中心估算，确认预订后应以准确地址复核。",
+      nearbyAttractions: [
+        {
+          name: "Big Sky Stargazing",
+          distance: "约 65 公里",
+          travelTime: "驾车约 50—55 分钟",
+          destinationQuery: "Big Sky Stargazing Aoraki Mount Cook",
+        },
+        {
+          name: "Mount Cook Airport · 直升机集合",
+          distance: "约 60 公里",
+          travelTime: "驾车约 45—50 分钟",
+          destinationQuery: "Mount Cook Airport",
+        },
+        {
+          name: "Lake Pukaki Viewpoint",
+          distance: "约 12 公里",
+          travelTime: "驾车约 10 分钟",
+          destinationQuery: "Lake Pukaki Viewpoint",
+        },
+      ],
+      strengths: [
+        "10 月 5 日精确日期、2 人已核验可订",
+        "整栋三卧室；两间 King 卧室",
+        "4.98 分、82 条评价、房客推荐、超赞房东",
+        "完整厨房、洗衣机、烘干机和两间浴室",
+        "密码钥匙盒自助入住",
+        "9 月 30 日前免费取消、现在付 NZD 0",
+      ],
+      cautions: [
+        "含全部费用一晚 NZD 362，高于低价独立客房",
+        "Big Sky 后需夜间驾驶约 50—55 分钟",
+        "次晨直升机候补需提前近 1 小时出发",
+        "房源未报告一氧化碳报警器",
+      ],
+      ratings: [
+        { platform: "Airbnb", score: "4.98 / 5", reviews: "82 条 · Guest favourite · Superhost" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "whole-three-bedroom-home",
+          name: "整栋三卧室民居",
+          size: "平台未标",
+          bed: "2 张 King 床 + 2 组双层床（民宿不限制床位数）",
+          photosVerified: true,
+          facilities: [
+            "完整厨房",
+            "2 间浴室",
+            "洗衣机",
+            "烘干机",
+            "空调",
+            "露台或阳台",
+            "密码盒自助入住",
+            "免费停车",
+          ],
+          images: [
+            image("aurora-holiday-home-1.jpg", "整栋民居外观与露台", "Airbnb"),
+            image("aurora-holiday-home-2.jpg", "客厅与厨房", "Airbnb"),
+            image("aurora-holiday-home-3.jpg", "King 床卧室", "Airbnb"),
+            image("aurora-holiday-home-4.jpg", "第二间 King 床卧室", "Airbnb"),
+            image("aurora-holiday-home-5.jpg", "浴室", "Airbnb"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：含全部费用总价 NZD 362；现在付 NZD 0，9 月 30 日前免费取消。",
+      rateSnapshots: {
+        "2026-10-05/2026-10-06": {
+          source: "Airbnb",
+          roomKey: "whole-three-bedroom-home",
+          room: "整栋三卧室民居 · 2 张 King 床 + 双层床",
+          nonRefundableNzd: null,
+          refundableNzd: 362,
+          cancelUntil: "2026-09-30",
+          payment: "现在付 NZD 0；Airbnb 页面提示暂不会扣款",
+          breakfast: "带完整厨房，不含早餐",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.mountCook,
+      officialUrl:
+        "https://zh.airbnb.com/rooms/1509743820199528739?adults=2&check_in=2026-10-05&check_out=2026-10-06",
+      isAirbnb: true,
+      isVerifiedListing: true,
+      position: [-44.258, 170.098],
+      mapQuery: "Twizel New Zealand",
+    },
+    {
+      id: "airbnb-pukaki-air-lodge",
+      name: "Pukaki Air Lodge 高级客房 · Airbnb",
+      recommendation: "Pukaki 景观与取消政策 · 已核验",
+      recommendationEn: "Verified Pukaki stay with flexible cancellation",
+      summary:
+        "Airbnb 精确日期搜索中真实可订的 Pukaki 独立客房。位置比 Twizel 更靠近进山公路，4.93 分且 10 月 4 日前仍可免费取消，适合把天气风险留到最后；但它仍不在库克山村，Big Sky 后需要夜间驾驶。",
+      summaryEn:
+        "A verified private room in Pukaki with a strong rating and unusually late free cancellation, but still outside Mount Cook Village.",
+      access: "Pukaki；Airbnb 预订前只公开大致位置",
+      accessEn: "Pukaki; Airbnb shows only an approximate location before booking",
+      parking: "房源内免费停车；下单前复核准确入口",
+      parkingEn: "Free on-site parking; reconfirm the exact entrance before booking",
+      distanceNote:
+        "Airbnb 预订前不公开准确地址；以下时间按 Pukaki / Twizel 北侧区域保守估算，确认预订后必须复核。",
+      nearbyAttractions: [
+        {
+          name: "Mount Cook Airport · 直升机集合",
+          distance: "约 50—60 公里",
+          travelTime: "驾车约 40—50 分钟",
+          destinationQuery: "Mount Cook Airport",
+        },
+        {
+          name: "Big Sky Stargazing",
+          distance: "约 55—65 公里",
+          travelTime: "驾车约 45—55 分钟",
+          destinationQuery: "Big Sky Stargazing Aoraki Mount Cook",
+        },
+        {
+          name: "Lake Pukaki Viewpoint",
+          distance: "区域内",
+          travelTime: "准确时间待预订地址确认",
+          destinationQuery: "Lake Pukaki Viewpoint",
+        },
+      ],
+      strengths: [
+        "10 月 5—6 日、2 人精确日期已核验可订",
+        "4.93 分、58 条评价、房客推荐、超赞房东",
+        "含全部费用 NZD 386",
+        "10 月 4 日前免费取消、现在付 NZD 0",
+        "Pukaki 区域比 Twizel 更靠近库克山进山方向",
+        "Mount Cook 山景、完整共用厨房、客用洗衣房和自助早餐",
+      ],
+      cautions: [
+        "独立房间，不是整栋民宿",
+        "Big Sky 后仍需夜间驾驶",
+        "准确地址和真实车程要在预订后复核",
+      ],
+      ratings: [
+        { platform: "Airbnb", score: "4.93 / 5", reviews: "58 条 · Guest favourite · Superhost" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "pukaki-air-lodge-private-room",
+          name: "Pukaki Air Lodge 高级独立客房",
+          size: "平台未标",
+          bed: "2 张约 1.8 米宽双人床（民宿不限制床位数）",
+          photosVerified: true,
+          facilities: [
+            "独立卫浴",
+            "Mount Cook 山景",
+            "完整共用厨房",
+            "客用洗衣房（限时）",
+            "自助早餐",
+            "中央空调",
+            "无线网络",
+            "免费停车",
+          ],
+          images: [
+            image("pukaki-air-lodge-1.jpg", "Pukaki Air Lodge 高级客房", "Airbnb"),
+            image("pukaki-air-lodge-2.jpg", "高级客房休息区", "Airbnb"),
+            image("pukaki-air-lodge-3.jpg", "高级客房设施", "Airbnb"),
+            image("pukaki-air-lodge-4.jpg", "房源公共空间", "Airbnb"),
+            image("pukaki-air-lodge-5.jpg", "房源景观", "Airbnb"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：含全部费用总价 NZD 386；现在付 NZD 0，10 月 4 日前免费取消。",
+      rateSnapshots: {
+        "2026-10-05/2026-10-06": {
+          source: "Airbnb",
+          roomKey: "pukaki-air-lodge-private-room",
+          room: "Pukaki Air Lodge 高级独立客房",
+          nonRefundableNzd: null,
+          refundableNzd: 386,
+          cancelUntil: "2026-10-04",
+          payment: "现在付 NZD 0",
+          breakfast: "含自助早餐；住客反馈有鸡蛋、酸奶、麦片与面包等，具体供应下单前复核",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.mountCook,
+      officialUrl:
+        "https://zh.airbnb.com/rooms/49906407?adults=2&check_in=2026-10-05&check_out=2026-10-06",
+      isAirbnb: true,
+      isVerifiedListing: true,
+      position: [-44.16, 170.12],
+      mapQuery: "Pukaki New Zealand",
+    },
+    {
+      id: "airbnb-ben-ohau-rural-retreat",
+      name: "Ben Ohau 现代乡村度假屋 · Airbnb",
+      recommendation: "山景乡村民宿 · 已核验",
+      recommendationEn: "Verified Ben Ohau rural retreat",
+      summary:
+        "小红书偏爱的 Ben Ohau / Twizel 山景乡村型民宿中，一套已在 Airbnb 真实详情页核验当日可订的整套客房。评价量明显高于一般景观新房源，额外卧室不作为排除条件；代价是本次 Big Sky 与次晨直升机都要长距离往返。",
+      summaryEn:
+        "A verified whole guesthouse in rural Ben Ohau with strong reviews and mountain-country appeal, but a long drive for the evening and next-morning plans.",
+      access: "Ben Ohau 乡村区域；Airbnb 预订前只公开大致位置",
+      accessEn: "Rural Ben Ohau; Airbnb shows only an approximate location before booking",
+      parking: "房源内免费停车；下单前复核入口与夜间照明",
+      parkingEn: "Free on-site parking; reconfirm the entrance and night lighting",
+      distanceNote:
+        "以下距离按 Ben Ohau 区域估算；Airbnb 确认预订后才提供准确地址。",
+      nearbyAttractions: [
+        {
+          name: "Mount Cook Airport · 直升机集合",
+          distance: "约 60—70 公里",
+          travelTime: "驾车约 50—60 分钟",
+          destinationQuery: "Mount Cook Airport",
+        },
+        {
+          name: "Big Sky Stargazing",
+          distance: "约 65—75 公里",
+          travelTime: "驾车约 55—65 分钟",
+          destinationQuery: "Big Sky Stargazing Aoraki Mount Cook",
+        },
+        {
+          name: "Lake Pukaki Viewpoint",
+          distance: "约 15—25 公里",
+          travelTime: "驾车约 15—25 分钟",
+          destinationQuery: "Lake Pukaki Viewpoint",
+        },
+      ],
+      strengths: [
+        "10 月 5—6 日、2 人精确日期已核验可订",
+        "整套两卧室客房；民宿不限制床位数量",
+        "4.86 分、236 条评价、房客推荐、超赞房东",
+        "含全部费用 NZD 528",
+        "9 月 30 日前免费取消、现在付 NZD 0",
+        "Ben Ohau 乡村景观和私密性强",
+        "完整厨房、洗衣机、热泵供暖、空调和密码盒自助入住",
+      ],
+      cautions: [
+        "比 Twizel 低价独立客房贵 NZD 346",
+        "Big Sky 后夜间驾驶约 55—65 分钟",
+        "次晨直升机候补也要预留近 1 小时",
+      ],
+      ratings: [
+        { platform: "Airbnb", score: "4.86 / 5", reviews: "236 条 · Guest favourite · Superhost" },
+      ],
+      roomTypes: [
+        {
+          rateKey: "ben-ohau-two-bedroom-guesthouse",
+          name: "整套两卧室乡村客房",
+          size: "平台未标",
+          bed: "2 张床（民宿不限制床型或床位数）",
+          photosVerified: true,
+          facilities: [
+            "独立卫浴",
+            "完整厨房",
+            "洗衣机",
+            "山景与乡村农场景观",
+            "热泵供暖",
+            "空调",
+            "密码盒自助入住",
+            "无线网络",
+            "免费停车",
+          ],
+          images: [
+            image("ben-ohau-rural-1.jpg", "Ben Ohau 乡村度假屋外观", "Airbnb"),
+            image("ben-ohau-rural-2.jpg", "乡村度假屋客厅", "Airbnb"),
+            image("ben-ohau-rural-3.jpg", "客房内部", "Airbnb"),
+            image("ben-ohau-rural-4.jpg", "客房设施", "Airbnb"),
+            image("ben-ohau-rural-5.jpg", "房源山地景观", "Airbnb"),
+          ],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：含全部费用总价 NZD 528；现在付 NZD 0，9 月 30 日前免费取消。",
+      rateSnapshots: {
+        "2026-10-05/2026-10-06": {
+          source: "Airbnb",
+          roomKey: "ben-ohau-two-bedroom-guesthouse",
+          room: "整套两卧室乡村客房",
+          nonRefundableNzd: null,
+          refundableNzd: 528,
+          cancelUntil: "2026-09-30",
+          payment: "现在付 NZD 0",
+          breakfast: "不含早餐",
+          quotedAt: "2026-07-27",
+        },
+      },
+      research: sharedSocial.mountCook,
+      officialUrl:
+        "https://zh.airbnb.com/rooms/35975390?adults=2&check_in=2026-10-05&check_out=2026-10-06",
+      isAirbnb: true,
+      isVerifiedListing: true,
+      position: [-44.22, 170.03],
+      mapQuery: "Ben Ohau New Zealand",
+    },
+    {
       id: "airbnb-cosy-accommodation-twizel",
       name: "Cosy Accommodation · Airbnb",
       recommendation: "Airbnb 两人性价比 · 已核验",
       recommendationEn: "Verified two-person Airbnb value",
       summary:
-        "Twizel 的整套独立客房，1 张 Queen 床，适合只考虑大床的两人。价格远低于三卧室 Agoda 度假屋，密码盒自助入住也不会和下午直升机冲突；代价仍是 Big Sky 后夜间开回 Twizel。",
+        "Twizel 的整套独立客房，价格远低于整栋多卧室民宿；密码盒自助入住也不会和下午直升机冲突。民宿不限制床位数量，这套的优势是低价和高评价，而不是单床本身；代价仍是 Big Sky 后夜间开回 Twizel。",
       summaryEn:
         "A verified private queen guesthouse in Twizel with lockbox check-in and strong value, but it still requires a late drive after Big Sky.",
       access: "Twizel 近镇中心；步行约 10 分钟到镇中心或河边",
@@ -1462,8 +2464,8 @@ export const regionalHotels = {
         "长途驾驶后可直接停车入住；真实房型页显示从高级特大床到 46 m² 尊贵套房均可订。",
       summaryEn:
         "Easy parking after the long drive, with verified king rooms from the superior room to a 46 m² suite.",
-      access: "Riverside Market 步行约 5 分钟；位置评分 9.1",
-      accessEn: "About a 5-minute walk to Riverside Market; location score 9.1",
+      access: "Riverside Market 约 1.2 公里、步行约 15 分钟；位置评分 9.1",
+      accessEn: "About 1.2 km or a 15-minute walk to Riverside Market; location score 9.1",
       parking: "私人停车约 NZD 20/天；预订前确认",
       parkingEn: "Private parking about NZD 20/day; reconfirm before booking",
       nearbyAttractions: [
@@ -1498,7 +2500,7 @@ export const regionalHotels = {
         "10 月 5 日前免费取消",
         "无需预付、到店付款",
       ],
-      cautions: ["停车收费", "早餐另加 NZD 42/人", "单晚升级套房意义有限"],
+      cautions: ["停车约 NZD 20/晚，基础房含停车实际预算 NZD 346 起", "早餐另加 NZD 42/人", "单晚升级套房意义有限"],
       ratings: [
         { platform: "Booking.com", score: "8.5 / 10", reviews: "2,000+ 条" },
       ],
@@ -1676,7 +2678,7 @@ export const regionalHotels = {
         "完整厨房与洗烘一体机",
       ],
       cautions: [
-        "停车位不保证",
+        "停车约 NZD 25/晚且车位不保证；一室公寓含停车实际预算 NZD 259 起",
         "单晚厨房价值有限",
         "两种房型当前都只有不可退款档",
         "一室公寓双人床需视供应情况",
@@ -1706,7 +2708,8 @@ export const regionalHotels = {
           name: "一卧室公寓",
           size: "50 m²",
           bed: "1 张双人床",
-          photosVerified: true,
+          photosVerified: false,
+          photoNote: "此前误用了 JetPark Auckland Airport 的图片，已撤下；Christchurch 对应房型图片需重新核验",
           facilities: [
             "私人厨房",
             "洗衣机/烘干机",
@@ -1767,6 +2770,122 @@ export const regionalHotels = {
       position: [-43.5387, 172.6388],
       mapQuery: "Quest on Manchester Christchurch",
     },
+    {
+      id: "novotel-christchurch-cathedral-square",
+      name: "Novotel Christchurch Cathedral Square",
+      recommendation: "市中心步行最优",
+      recommendationEn: "Best central walkability",
+      summary:
+        "位于 Cathedral Square，次日上午可直接步行串联 New Regent Street、Riverside Market 与植物园；精确日期有两种纯特大床房型。",
+      summaryEn:
+        "A Cathedral Square base with verified king rooms and the best walking route for the next morning's central sights.",
+      access: "位置评分 9.6；New Regent Street 约 350 米，Riverside Market 约 700 米",
+      accessEn: "Location score 9.6; about 350 m to New Regent Street and 700 m to Riverside Market",
+      parking: "酒店内有私人停车；Booking 页面未公开费用，预订前需向酒店确认",
+      parkingEn: "Private on-site parking; the Booking page does not publish the fee, so confirm before booking",
+      nearbyAttractions: [
+        { name: "New Regent Street", distance: "约 350 米", travelTime: "步行约 5 分钟", destinationQuery: "New Regent Street Christchurch" },
+        { name: "Riverside Market", distance: "约 700 米", travelTime: "步行约 9—10 分钟", destinationQuery: "Riverside Market Christchurch" },
+        { name: "Christchurch Botanic Gardens", distance: "约 1.5 公里", travelTime: "步行约 20 分钟或驾车约 6 分钟", destinationQuery: "Christchurch Botanic Gardens" },
+        { name: "Christchurch Airport", distance: "约 10 公里", travelTime: "驾车约 20—25 分钟", destinationQuery: "Christchurch Airport" },
+      ],
+      strengths: ["市中心步行动线最强", "两种纯特大床房型", "24 小时前台", "10 月 5 日前免费取消", "无需预付、到店付款"],
+      cautions: ["停车有车位但页面未公开费用", "早餐另加 NZD 37/人", "单晚不必为套房升级"],
+      ratings: [{ platform: "Booking.com", score: "8.2 / 10", reviews: "984 条；位置 9.6" }],
+      roomTypes: [
+        {
+          rateKey: "superior-king",
+          name: "高级特大号床间",
+          size: "31 m²",
+          bed: "1 张超大号双人床",
+          photosVerified: false,
+          photoNote: "Booking 房型详情确认有 11 张对应客房图；本地高清图片尚在整理，暂不显示缩略图",
+          facilities: ["浴缸", "空调", "独立浴室", "隔音", "免费 Wi-Fi"],
+          images: [],
+        },
+        {
+          rateKey: "executive-king",
+          name: "行政特大号床间",
+          size: "31 m²",
+          bed: "1 张超大号双人床",
+          photosVerified: false,
+          photoNote: "房型库存与价格已核验；对应房型图库尚未单独整理",
+          facilities: ["景观", "咖啡机", "空调", "独立浴室", "隔音", "免费 Wi-Fi"],
+          images: [],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Novotel 官网已按 2026 年 10 月 6—7 日、2 人 1 间核验：5 种房型可订；高级特大床与行政特大床均有含税官网价，以下同时保留 Booking 精确日期价供比较。",
+      rateSnapshots: {
+        "2026-10-06/2026-10-07": {
+          roomRates: {
+            "superior-king": {
+              official: { source: "Novotel 官网", roomKey: "superior-king", room: "Superior Room with a King bed · 30 m²", nonRefundableNzd: 379, refundableNzd: 399, cancelUntil: "2026-10-05 18:00", payment: "不可退档在线付款；灵活价无需预付", breakfast: "不可退含双早官网价 NZD 453；灵活含双早 NZD 473", memberNote: "ALL 会员价：不可退 NZD 360.05；灵活价 NZD 379.05", quotedAt: "2026-07-28" },
+              booking: { source: "Booking.com", roomKey: "superior-king", room: "高级特大号床间 · 31 m²", nonRefundableNzd: 379, refundableNzd: 399, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档无需预付、到店付款", breakfast: "早餐另加 NZD 37/人；可取消含双早总价 NZD 473", quotedAt: "2026-07-28" },
+            },
+            "executive-king": { booking: { source: "Booking.com", roomKey: "executive-king", room: "行政特大号床间 · 31 m²", nonRefundableNzd: 425, refundableNzd: 449, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档无需预付、到店付款", breakfast: "早餐另加 NZD 37/人；可取消含双早总价 NZD 523", quotedAt: "2026-07-28" } },
+          },
+        },
+      },
+      agodaStatus: "尚未取得对应房型的含税结算总价",
+      agodaStatusDetail: "本轮只记录 Booking 真实详情页的精确日期价格；Agoda 在取得同房型含税结算总价前不显示报价。",
+      research: sharedSocial.christchurch,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail: "2026-07-28 已在 Novotel 官网实际带入 10 月 6—7 日、2 人 1 间：5 种房型可订；Superior King 含税公开不可退 NZD 379、灵活价 NZD 399，退改和早餐方案已展开核验。",
+      officialStatusEn: "Verified on the Novotel website for 6–7 Oct 2026, two adults and one room; five room categories were available and the Superior King rates and terms were opened.",
+      officialVerifiedAt: "2026-07-28",
+      officialUrl: "https://all.accor.com/hotel/6592/index.en.shtml",
+      officialHotelCode: "6592",
+      bookingUrl: "https://www.booking.com/hotel/nz/novotel-christchurch-cathedral-square.zh-cn.html",
+      agodaUrl: "https://www.agoda.com/novotel-christchurch-cathedral-square/hotel/christchurch-nz.html",
+      position: [-43.5309, 172.6372],
+      mapQuery: "Novotel Christchurch Cathedral Square",
+    },
+    {
+      id: "distinction-christchurch",
+      name: "Distinction Christchurch Hotel",
+      recommendation: "评分与位置兼顾",
+      recommendationEn: "Best balance of rating and location",
+      summary:
+        "同样位于 Cathedral Square，位置评分 9.7；经典 King 的可取消价低于同区 Novotel 行政房，适合想住得更居中又保留退改的人。",
+      summaryEn:
+        "A highly rated Cathedral Square option with verified king inventory and flexible rates.",
+      access: "位置评分 9.7；Riverside Market 约 700 米，New Regent Street 约 400 米",
+      accessEn: "Location score 9.7; about 700 m to Riverside Market and 400 m to New Regent Street",
+      parking: "有顶棚代客停车，费用另计；Booking 页面未公开金额",
+      parkingEn: "Covered valet parking is available for an extra charge; the amount is not published on Booking",
+      nearbyAttractions: [
+        { name: "New Regent Street", distance: "约 400 米", travelTime: "步行约 5—6 分钟", destinationQuery: "New Regent Street Christchurch" },
+        { name: "Riverside Market", distance: "约 700 米", travelTime: "步行约 9—10 分钟", destinationQuery: "Riverside Market Christchurch" },
+        { name: "Christchurch Botanic Gardens", distance: "约 1.4 公里", travelTime: "步行约 18—20 分钟", destinationQuery: "Christchurch Botanic Gardens" },
+        { name: "Christchurch Airport", distance: "约 10 公里", travelTime: "驾车约 20—25 分钟", destinationQuery: "Christchurch Airport" },
+      ],
+      strengths: ["位置评分 9.7", "多种纯特大床房型", "经典 King 可取消价 NZD 435", "10 月 5 日前免费取消", "10 月 3 日前零付款"],
+      cautions: ["代客停车费用未在 Booking 页面公开", "早餐另加 NZD 38/人", "信用卡付款加收 2.5%"],
+      ratings: [{ platform: "Booking.com", score: "8.9 / 10", reviews: "577 条；位置 9.7" }],
+      roomTypes: [
+        { rateKey: "classic-king", name: "经典特大号床", size: "24 m²", bed: "1 张超大号双人床", photosVerified: false, photoNote: "价格与床型已核验；对应房型图库尚未单独整理", facilities: ["空调", "独立浴室", "迷你吧", "免费 Wi-Fi"], images: [] },
+        { rateKey: "classic-super-king", name: "典雅超级特大号床间", size: "31 m²", bed: "1 张超大号双人床", photosVerified: false, photoNote: "价格与床型已核验；对应房型图库尚未单独整理", facilities: ["空调", "独立浴室", "迷你吧", "免费 Wi-Fi"], images: [] },
+        { rateKey: "classic-junior-suite", name: "经典小型套房", size: "55 m²", bed: "1 张超大号双人床", photosVerified: false, photoNote: "价格与床型已核验；对应房型图库尚未单独整理", facilities: ["城市景", "私人套房", "空调", "独立浴室", "免费 Wi-Fi"], images: [] },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Booking IAB 已按 2026 年 10 月 6—7 日、2 人 1 间核验；页面明确显示 King 床、含税费总价、取消与付款条款。",
+      rateSnapshots: {
+        "2026-10-06/2026-10-07": { roomRates: {
+          "classic-king": { booking: { source: "Booking.com", roomKey: "classic-king", room: "经典特大号床 · 24 m²", nonRefundableNzd: 410, refundableNzd: 435, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 524", quotedAt: "2026-07-28" } },
+          "classic-super-king": { booking: { source: "Booking.com", roomKey: "classic-super-king", room: "典雅超级特大号床间 · 31 m²", nonRefundableNzd: 435, refundableNzd: 460, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 549", quotedAt: "2026-07-28" } },
+          "classic-junior-suite": { booking: { source: "Booking.com", roomKey: "classic-junior-suite", room: "经典小型套房 · 55 m²", nonRefundableNzd: 490, refundableNzd: 515, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款；当前剩 1 间", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 579", quotedAt: "2026-07-28" } },
+        } },
+      },
+      research: sharedSocial.christchurch,
+      officialUrl: "https://www.distinctionhotelschristchurch.co.nz/",
+      bookingUrl: "https://www.booking.com/hotel/nz/distinction-christchurch.zh-cn.html",
+      agodaUrl: "https://www.agoda.com/distinction-christchurch-hotel/hotel/christchurch-nz.html",
+      position: [-43.5306, 172.6367],
+      mapQuery: "Distinction Christchurch Hotel",
+    },
   ],
   rotorua: [
     {
@@ -1823,7 +2942,8 @@ export const regionalHotels = {
           name: "高级大床房",
           size: "26 m²",
           bed: "1 张大床（平台标注 queen/king，结算时确认）",
-          photosVerified: true,
+          photosVerified: false,
+          photoNote: "Rotorua 真实详情页仍返回错误页；此前误用的机场店图片已撤下",
           facilities: [
             "空调",
             "独立浴室",
@@ -1831,38 +2951,12 @@ export const regionalHotels = {
             "高速 Wi-Fi",
             "免费停车",
           ],
-          images: [
-            image("jetpark-booking-superior-king-room-1.jpg", "高级大床房卧室"),
-            image(
-              "jetpark-booking-superior-king-room-2.jpg",
-              "高级大床房床尾视角",
-            ),
-            image(
-              "jetpark-booking-superior-king-room-3.jpg",
-              "高级大床房休息区",
-            ),
-            image("jetpark-booking-superior-king-room-4.jpg", "高级大床房浴室"),
-          ],
+          images: [],
         },
       ],
-      hotelImages: [
-        image("jetpark-agoda-exterior.webp", "酒店外观", "Agoda"),
-        image("jetpark-agoda-pool.webp", "酒店泳池", "Agoda"),
-        image("jetpark-agoda-restaurant.webp", "酒店餐厅", "Agoda"),
-      ],
-      rateSnapshots: {
-        "2026-10-09/2026-10-10": {
-          source: "Booking.com · Genius",
-          roomKey: "superior-queen-king",
-          room: "高级大床房 · 26 m²",
-          nonRefundableNzd: null,
-          refundableNzd: 296,
-          cancelUntil: "2026-10-08",
-          payment: "无需预付、到店付款",
-          breakfast: "早餐另加 NZD 25/人；含早总价 NZD 341",
-          quotedAt: "2026-07-27",
-        },
-      },
+      hotelImages: [],
+      availabilityNote:
+        "旧 Booking 链接当前返回错误页，且此前保存的客房图属于 JetPark Auckland Airport；价格与图片均已撤下，重新打开 Rotorua 真实详情页前不作为已核验报价。",
       agodaStatus: "真实详情页已打开，结算总价待核验",
       agodaStatusDetail:
         "Agoda 已正确带入 10 月 9—10 日并列出高级大床房；当前采集尚未完成含税结算总价、取消和付款条款核验，不能用酒店介绍页的历史起价代替。",
@@ -1970,7 +3064,7 @@ export const regionalHotels = {
             "花园景",
             "城市景",
             "Club 酒廊",
-            "含早餐",
+            "Club 酒廊礼遇（早餐是否包含以具体价格档为准）",
             "空调",
             "独立浴室",
           ],
@@ -2043,7 +3137,7 @@ export const regionalHotels = {
                 refundableNzd: 389,
                 cancelUntil: "2026-10-08",
                 payment: "可取消档无需预付、到店付款；当前剩 4 间",
-                breakfast: "早餐另加 NZD 40/人；含早总价 NZD 459",
+                breakfast: "早餐另加 NZD 40/人；可取消房价加双早合计 NZD 469",
                 quotedAt: "2026-07-27",
               },
             },
@@ -2148,6 +3242,103 @@ export const regionalHotels = {
         "https://www.agoda.com/millennium-hotel-rotorua_2/hotel/rotorua-nz.html",
       position: [-38.1385, 176.2574],
       mapQuery: "Millennium Hotel Rotorua",
+    },
+    {
+      id: "sudima-lake-rotorua",
+      name: "Sudima Hotel Lake Rotorua",
+      recommendation: "免费停车性价比",
+      recommendationEn: "Best free-parking value",
+      summary:
+        "紧邻 Polynesian Spa、免费停车且可订纯大床；单晚可取消价明显低于 Millennium 和 Pullman，最适合霍比屯后晚到、次晨去 Te Puia。",
+      summaryEn:
+        "A lower-cost lakefront stay with free parking, a verified king room and an easy drive to Te Puia.",
+      access: "Polynesian Spa 步行约 2—4 分钟；到 Te Puia 约 8—10 分钟车程",
+      accessEn: "About a 2–4 minute walk to Polynesian Spa and an 8–10 minute drive to Te Puia",
+      parking: "住店期间免费内部停车",
+      parkingEn: "Free on-site parking during the stay",
+      nearbyAttractions: [
+        { name: "Polynesian Spa", distance: "约 150—300 米", travelTime: "步行约 2—4 分钟", destinationQuery: "Polynesian Spa Rotorua" },
+        { name: "Rotorua Lakefront", distance: "约 1.2 公里", travelTime: "步行约 15 分钟或驾车约 4 分钟", destinationQuery: "Rotorua Lakefront" },
+        { name: "Te Puia", distance: "约 3.5 公里", travelTime: "驾车约 8—10 分钟", destinationQuery: "Te Puia Rotorua" },
+      ],
+      strengths: ["免费停车", "紧邻 Polynesian Spa", "纯大床房", "可取消总价 NZD 296", "24 小时前台", "10 月 8 日前免费取消"],
+      cautions: ["整体评分 7.7，设施较旧", "早餐另加 NZD 38/人", "信用卡付款加收 2.5%"],
+      ratings: [{ platform: "Booking.com", score: "7.7 / 10", reviews: "1,568 条；位置 8.9" }],
+      roomTypes: [
+        {
+          rateKey: "superior-king",
+          name: "高级大号床",
+          size: "27 m²",
+          bed: "1 张超大号双人床",
+          photosVerified: false,
+          photoNote: "Booking 房型详情已确认有 3 张对应客房图；本地高清图片尚在整理",
+          facilities: ["空调", "暖气", "免费 Wi-Fi", "24 小时前台"],
+          images: [],
+        },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Booking IAB 已按 2026 年 10 月 9—10 日、2 人 1 间核验；高级大床显示为 1 张超大号双人床，以下为 Genius 折后含税费总价。",
+      rateSnapshots: {
+        "2026-10-09/2026-10-10": { roomRates: {
+          "superior-king": { booking: { source: "Booking.com · Genius", roomKey: "superior-king", room: "高级大号床 · 27 m²", nonRefundableNzd: 266, refundableNzd: 296, cancelUntil: "2026-10-08", payment: "不可退档在线付款；可取消档无需预付、到店付款", breakfast: "早餐另加 NZD 38/人；可取消含双早总价 NZD 359", quotedAt: "2026-07-28" } },
+        } },
+      },
+      research: sharedSocial.rotorua,
+      officialUrl: "https://www.sudimahotels.com/en/our-hotels/rotorua/",
+      bookingUrl: "https://www.booking.com/hotel/nz/sudima-lake-rotorua.zh-cn.html",
+      agodaUrl: "https://www.agoda.com/sudima-hotel-lake-rotorua/hotel/rotorua-nz.html",
+      position: [-38.1389, 176.2588],
+      mapQuery: "Sudima Hotel Lake Rotorua",
+    },
+    {
+      id: "pullman-rotorua",
+      name: "Pullman Rotorua",
+      recommendation: "新酒店舒适度",
+      recommendationEn: "Best modern comfort",
+      summary:
+        "镇中心较新的高档酒店，33 m² King 房空间和床品更好；但停车收费且早餐贵，单晚总成本明显高于 Sudima。",
+      summaryEn:
+        "A newer, more comfortable central hotel with spacious verified king rooms, but higher breakfast and parking costs.",
+      access: "位置评分 9.2；湖边与 Eat Streat 步行范围，到 Te Puia 约 9—12 分钟车程",
+      accessEn: "Location score 9.2; walkable to the lakefront and Eat Streat, about 9–12 minutes by car to Te Puia",
+      parking: "私人停车收费；Booking 页面未公开金额，周末路边车位不能视为酒店保障",
+      parkingEn: "Paid private parking; Booking does not publish the fee, and street parking is not guaranteed",
+      nearbyAttractions: [
+        { name: "Rotorua Lakefront", distance: "约 600 米", travelTime: "步行约 8 分钟", destinationQuery: "Rotorua Lakefront" },
+        { name: "Polynesian Spa", distance: "约 1 公里", travelTime: "步行约 12—15 分钟或驾车约 4 分钟", destinationQuery: "Polynesian Spa Rotorua" },
+        { name: "Te Puia", distance: "约 4 公里", travelTime: "驾车约 9—12 分钟", destinationQuery: "Te Puia Rotorua" },
+      ],
+      strengths: ["33 m² 纯特大床房", "24 小时前台", "较新的房间与设施", "10 月 8 日前免费取消", "无需预付、到店付款"],
+      cautions: ["停车收费但页面未公开金额", "早餐另加 NZD 49/人", "入住需 NZD 100 可退押金", "信用卡付款加收 1.4%"],
+      ratings: [{ platform: "Booking.com", score: "8.3 / 10", reviews: "1,355 条；位置 9.2" }],
+      roomTypes: [
+        { rateKey: "deluxe-city-king", name: "市景豪华特大号床间", size: "33 m²", bed: "1 张超大号双人床", photosVerified: false, photoNote: "Booking 房型详情已确认有 9 张对应客房图；本地高清图片尚在整理", facilities: ["城市景", "咖啡机", "空调", "私人浴室", "免费 Wi-Fi"], images: [] },
+        { rateKey: "deluxe-lake-king", name: "湖景豪华特大号床间", size: "33 m²", bed: "1 张超大号双人床", photosVerified: false, photoNote: "价格与床型已核验；对应房型图库尚未单独整理", facilities: ["湖景", "咖啡机", "空调", "私人浴室", "免费 Wi-Fi"], images: [] },
+      ],
+      hotelImages: [],
+      availabilityNote:
+        "Pullman 官网已按 2026 年 10 月 9—10 日、2 人 1 间核验；4 种 King 房型可订，市景和湖景豪华房均明确为 1 张 King。",
+      rateSnapshots: {
+        "2026-10-09/2026-10-10": { roomRates: {
+          "deluxe-city-king": {
+            official: { source: "Pullman 官网", roomKey: "deluxe-city-king", room: "Deluxe City View Room with 1 kingsize bed · 33 m²", nonRefundableNzd: 435, refundableNzd: 459, cancelUntil: "2026-10-08 18:00", payment: "不可退档在线付款；灵活价无需预付", breakfast: "不可退含双早官网价 NZD 509；灵活含双早 NZD 533", memberNote: "ALL 会员价：不可退 NZD 413.25；灵活价 NZD 436.05", quotedAt: "2026-07-28" },
+            booking: { source: "Booking.com", roomKey: "deluxe-city-king", room: "市景豪华特大号床间 · 33 m²", nonRefundableNzd: 435, refundableNzd: 459, cancelUntil: "2026-10-08", payment: "不可退档在线付款；可取消档无需预付、到店付款", breakfast: "早餐另加 NZD 49/人；可取消含早总价 NZD 533", quotedAt: "2026-07-28" },
+          },
+          "deluxe-lake-king": { booking: { source: "Booking.com", roomKey: "deluxe-lake-king", room: "湖景豪华特大号床间 · 33 m²", nonRefundableNzd: 455, refundableNzd: 479, cancelUntil: "2026-10-08", payment: "不可退档在线付款；可取消档无需预付、到店付款", breakfast: "早餐另加 NZD 49/人；可取消含早总价 NZD 553", quotedAt: "2026-07-28" } },
+        } },
+      },
+      research: sharedSocial.rotorua,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail: "2026-07-28 已在 Pullman 官网实际带入 10 月 9—10 日、2 人 1 间：4 种 King 房型可订；市景 King 含税公开不可退 NZD 435、灵活价 NZD 459，退改和早餐方案已展开核验。",
+      officialStatusEn: "Verified on the Pullman website for 9–10 Oct 2026, two adults and one room; four king categories were available and the city-view king rates and terms were opened.",
+      officialVerifiedAt: "2026-07-28",
+      officialUrl: "https://all.accor.com/hotel/A7W3/index.en.shtml",
+      officialHotelCode: "A7W3",
+      bookingUrl: "https://www.booking.com/hotel/nz/pullman-rotorua.zh-cn.html",
+      agodaUrl: "https://www.agoda.com/pullman-rotorua/hotel/rotorua-nz.html",
+      position: [-38.1349, 176.2519],
+      mapQuery: "Pullman Rotorua",
     },
   ],
 };

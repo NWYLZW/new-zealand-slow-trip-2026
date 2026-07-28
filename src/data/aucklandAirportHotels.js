@@ -153,6 +153,18 @@ export const aucklandAirportHotels = [
       "2026-09-28/2026-09-29": {
         roomRates: {
           "superior-king-26": {
+            official: {
+              source: "Novotel 官网",
+              roomKey: "superior-king-26",
+              room: "Superior Room King-size Bed · 26 m²",
+              nonRefundableNzd: 335.2,
+              refundableNzd: 419,
+              cancelUntil: "2026-09-27 23:59",
+              payment: "不可退档在线付款；灵活价无需预付",
+              breakfast: "不可退含双早官网价 NZD 388；灵活含双早 NZD 485",
+              memberNote: "ALL 会员价：不可退 NZD 318.44；灵活价 NZD 398.05",
+              quotedAt: "2026-07-28",
+            },
             booking: {
               source: "Booking.com",
               roomKey: "superior-king-26",
@@ -206,7 +218,14 @@ export const aucklandAirportHotels = [
         },
       },
     },
+    officialStatus: "exact-rate-verified",
+    officialStatusDetail:
+      "2026-07-28 已在 Novotel 官网实际带入 2026 年 9 月 28—29 日、2 人 1 间：5 种房型可订；Superior King 的含税公开价、早餐和退改条款均已展开核验。",
+    officialStatusEn:
+      "Verified on 28 Jul 2026 for 28–29 Sep 2026, two adults and one room; five room categories were available and the Superior King tax-inclusive rates and terms were opened.",
+    officialVerifiedAt: "2026-07-28",
     officialUrl: "https://all.accor.com/hotel/7485/index.en.shtml",
+    officialHotelCode: "7485",
     bookingUrl:
       "https://www.booking.com/hotel/nz/novotel-auckland-airport.html",
     agodaUrl:
@@ -711,6 +730,7 @@ export function bookingUrlForStay(hotel, checkIn, checkOut) {
 }
 
 export function officialUrlForStay(hotel, checkIn, checkOut) {
+  if (hotel.officialBookingUrl) return hotel.officialBookingUrl;
   if (!hotel.officialHotelCode) return hotel.officialUrl;
   const url = new URL(
     `https://all.accor.com/booking/en/accor/hotel/${hotel.officialHotelCode}`,
