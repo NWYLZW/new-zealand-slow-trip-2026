@@ -345,6 +345,7 @@ const calendarRegionColors = {
 const eventColors = {
   internationalFlight: "#4f79a8",
   domesticFlight: "#6f7db8",
+  flightTransfer: "#a52a22",
   queenstownRoad: "#9d7052",
   wanakaRoad: "#8a6a45",
   mountCookRoad: "#6f8fb5",
@@ -487,10 +488,10 @@ function keyForDate(date) {
 
 const calendarEventGroupsByDate = {
   "9月28日": [
-    { title: "乘机前往新西兰", time: "02:45—23:50", color: eventColors.internationalFlight, icon: "flight", items: [0, 1, 2, 3, 4, 5, 6], flights: internationalFlights.outbound, flightSummary, segmentIds: ["szx-kul", "kul-akl"], stopTags: ["SZX", "KUL", "AKL"] },
+    { title: "乘机前往新西兰", calendarLabel: "MH0523 / MH0133", calendarLabelEn: "MH0523 / MH0133", isFlightTransfer: true, time: "02:45—23:50", color: eventColors.flightTransfer, icon: "flight", items: [0, 1, 2, 3, 4, 5, 6], flights: internationalFlights.outbound, flightSummary, segmentIds: ["szx-kul", "kul-akl"], stopTags: ["SZX", "KUL", "AKL"] },
   ],
   "9月29日": [
-    { title: "飞往皇后镇", time: "09:45—13:30", color: eventColors.domesticFlight, icon: "domesticFlight", items: [0, 1, 2], flights: [{ flightNumber: "NZ619", date: "2026-09-29", from: "奥克兰 AKL", to: "皇后镇 ZQN", departure: "11:35", arrival: "13:30", departureTerminal: "国内航站楼", arrivalTerminal: "以出票信息为准", cabin: "以出票信息为准", status: "待确认行李" }], segmentIds: ["akl-zqn"], stopTags: ["AKL", "ZQN"] },
+    { title: "飞往皇后镇", calendarLabel: "NZ619", calendarLabelEn: "NZ619", isFlightTransfer: true, time: "09:45—13:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [0, 1, 2], flights: [{ flightNumber: "NZ619", date: "2026-09-29", from: "奥克兰 AKL", to: "皇后镇 ZQN", departure: "11:35", arrival: "13:30", departureTerminal: "国内航站楼", arrivalTerminal: "以出票信息为准", cabin: "以出票信息为准", status: "待确认行李" }], segmentIds: ["akl-zqn"], stopTags: ["AKL", "ZQN"] },
     { title: "南岛取车入住", time: "15:30—16:15", color: eventColors.queenstownRoad, icon: "car", drive: { distanceKm: 8, durationZh: "约 15 分钟", durationEn: "about 15 min" }, items: [3, 4], segmentIds: [], stopTags: ["ZQN"] },
   ],
   "9月30日": [
@@ -520,7 +521,7 @@ const calendarEventGroupsByDate = {
   ],
   "10月7日": [
     { title: "基督城城市半日", time: "10:00—13:00", color: eventColors.christchurch, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["CHC"] },
-    { title: "还车飞奥克兰", time: "15:30—22:30", color: eventColors.domesticFlight, icon: "domesticFlight", items: [3, 4, 5, 6], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
+    { title: "还车飞奥克兰", calendarLabel: "JQ242", calendarLabelEn: "JQ242", isFlightTransfer: true, time: "15:30—22:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [3, 4, 5, 6], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
   ],
   "10月8日": [
     { title: "奥克兰购物日", time: "09:00—19:30", color: eventColors.auckland, icon: "shopping", items: [0, 1, 2, 3, 4, 5], segmentIds: ["auckland-shopping"], stopTags: ["AKL"] },
@@ -536,7 +537,7 @@ const calendarEventGroupsByDate = {
     { title: "办理返程值机", time: "21:45", color: eventColors.internationalFlight, icon: "flight", items: [5], flights: internationalFlights.inbound, flightSummary, segmentIds: [], stopTags: ["AKL"] },
   ],
   "10月11日": [
-    { title: "返程回深圳", time: "00:30—次日 01:15", color: eventColors.internationalFlight, icon: "flight", items: [0, 1, 2], flights: internationalFlights.inbound, flightSummary, segmentIds: ["akl-kul", "kul-szx"], stopTags: ["AKL", "KUL", "SZX"] },
+    { title: "返程回深圳", calendarLabel: "MH0132 / MH0522", calendarLabelEn: "MH0132 / MH0522", isFlightTransfer: true, time: "00:30—次日 01:15", color: eventColors.flightTransfer, icon: "flight", items: [0, 1, 2], flights: internationalFlights.inbound, flightSummary, segmentIds: ["akl-kul", "kul-szx"], stopTags: ["AKL", "KUL", "SZX"] },
   ],
 };
 
@@ -812,6 +813,8 @@ function RouteDayCalendar({ days = itineraryDays, language = "zh", onDayRegionSe
           <Box className="route-month-grid">
             {getTripCalendarCells(days).map((date, index) => {
               const day = daysByKey.get(keyForDate(date));
+              const calendarEvents = day ? getCalendarEvents(day) : [];
+              const hasFlightTransfer = calendarEvents.some((event) => event.isFlightTransfer);
               const cellStyle = {
                 gridColumnStart: index === 0 ? date.getDay() + 1 : undefined,
                 "--day-color": day ? calendarRegionColors[day.calendarRegion] : undefined,
@@ -831,6 +834,7 @@ function RouteDayCalendar({ days = itineraryDays, language = "zh", onDayRegionSe
                   key={date.toISOString()}
                   className={day ? "route-day-cell has-day" : "route-day-cell"}
                   data-day-region={day?.calendarRegion}
+                  data-has-flight-transfer={hasFlightTransfer || undefined}
                   data-region-selectable={isSelectableRegion || undefined}
                   data-region-state={regionState}
                   onClick={selectDayRegion}
@@ -850,13 +854,18 @@ function RouteDayCalendar({ days = itineraryDays, language = "zh", onDayRegionSe
                   {day && (
                     <Box>
                       <Stack direction="row" className="route-event-tags">
-                        {getCalendarEvents(day).map((event) => {
+                        {calendarEvents.map((event) => {
                           const EventIcon = eventIconMap[event.icon] ?? CalendarTodayIcon;
+                          const eventLabel = language === "en"
+                            ? (event.calendarLabelEn ?? eventTitleEn[event.title] ?? event.title)
+                            : (event.calendarLabel ?? event.title);
                           return (
                             <Chip
+                              aria-label={`${eventLabel} · ${event.time}`}
+                              data-flight-transfer={event.isFlightTransfer || undefined}
                               key={[day.date, event.title].join("-")}
                               icon={<EventIcon />}
-                              label={language === "en" ? (eventTitleEn[event.title] ?? event.title) : event.title}
+                              label={eventLabel}
                               size="small"
                               title={event.time}
                               onClick={(clickEvent) => {

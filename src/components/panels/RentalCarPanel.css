@@ -3,8 +3,7 @@
   border-radius: var(--radius-inner);
 }
 
-.rental-segment-card,
-.provider-card,
+.rental-booking-confirmed,
 .rental-guide-card {
   height: 100%;
 }
@@ -18,139 +17,24 @@
 }
 
 .rental-booking-confirmed .MuiCardContent-root {
-  padding: clamp(22px, 3vw, 34px);
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  padding: clamp(22px, 3vw, 30px);
+  flex-direction: column;
 }
 
-.rental-booking-confirmed h2 {
+.rental-booking-header h2 {
   margin-bottom: 8px;
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.25;
 }
 
-.rental-booking-confirmed > .MuiCardContent-root > .MuiStack-root > .MuiChip-root {
-  padding-inline: 6px;
+.rental-booking-header > .MuiChip-root {
+  flex: 0 0 auto;
+  padding-inline: 4px;
   font-weight: 900;
   letter-spacing: 0.04em;
-}
-
-.rental-booking-facts {
-  margin-top: 24px;
-}
-
-.rental-booking-facts .MuiGrid2-root > .MuiBox-root {
-  display: flex;
-  height: 100%;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid rgba(52, 126, 144, 0.16);
-  border-radius: var(--radius-control);
-  background: rgba(255, 255, 255, 0.72);
-}
-
-.rental-booking-facts svg {
-  flex: 0 0 auto;
-  margin-top: 2px;
-  color: var(--forest);
-}
-
-.rental-booking-facts span {
-  display: grid;
-  gap: 4px;
-  line-height: 1.55;
-}
-
-.rental-booking-facts strong,
-.rental-booking-facts small {
-  display: block;
-}
-
-.rental-booking-facts strong {
-  color: var(--forest);
-  font-size: 13px;
-  letter-spacing: 0.04em;
-}
-
-.rental-booking-facts small {
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.rental-cover-limit {
-  margin-top: 18px;
-}
-
-.rental-email-details {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.4fr);
-  gap: 18px;
-  margin-top: 18px;
-}
-
-.rental-cost-summary,
-.rental-confirmation-grid > div {
-  border: 1px solid rgba(52, 126, 144, 0.16);
-  border-radius: var(--radius-control);
-  background: rgba(255, 255, 255, 0.74);
-}
-
-.rental-cost-summary {
-  padding: 18px;
-}
-
-.rental-cost-summary h3 {
-  margin-bottom: 12px;
-}
-
-.rental-cost-lines > div {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(52, 126, 144, 0.1);
-  font-variant-numeric: tabular-nums;
-}
-
-.rental-cost-lines > div:last-child {
-  border-bottom: 0;
-}
-
-.rental-cost-total {
-  margin-top: 4px;
-  color: var(--forest);
-  font-size: 17px;
-}
-
-.rental-cost-caption {
-  margin-top: 12px !important;
-  font-size: 12px !important;
-  line-height: 1.6 !important;
-}
-
-.rental-confirmation-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.rental-confirmation-grid > div {
-  display: grid;
-  align-content: start;
-  gap: 5px;
-  padding: 14px 16px;
-}
-
-.rental-confirmation-grid strong {
-  color: var(--forest);
-  font-size: 13px;
-  letter-spacing: 0.03em;
-}
-
-.rental-confirmation-grid span {
-  color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.65;
-}
-
-.rental-booking-actions {
-  margin-top: 18px;
 }
 
 .rental-kicker {
@@ -162,132 +46,142 @@
   text-transform: uppercase;
 }
 
-.rental-segment-card h3 {
-  max-width: 560px;
-}
-
-.rental-segment-card .MuiChip-root {
-  flex-shrink: 0;
-  font-variant-numeric: tabular-nums;
-  font-weight: 800;
-}
-
-.rental-timeline {
-  margin: 20px 0;
-  padding: 14px 16px;
-  border-left: 3px solid var(--sage);
-  border-radius: 0 var(--radius-control) var(--radius-control) 0;
-  background: rgba(138, 181, 155, 0.1);
+.rental-reservation {
   font-variant-numeric: tabular-nums;
 }
 
-.rental-choice-list > div {
-  display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
+.rental-reservation strong {
+  color: var(--forest);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.04em;
+}
+
+.rental-booking-facts {
+  margin-top: 22px;
+}
+
+.rental-booking-fact {
+  display: flex;
+  min-width: 0;
+  height: 100%;
   gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid rgba(52, 126, 144, 0.16);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.76);
 }
 
-.rental-choice-list strong {
+.rental-booking-fact > svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
   color: var(--forest);
 }
 
-.rental-note {
-  margin-top: 18px !important;
-  line-height: 1.7 !important;
+.rental-booking-fact > span {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  line-height: 1.55;
 }
 
-.rental-quote-table {
-  overflow-x: auto;
-  border: 1px solid rgba(52, 126, 144, 0.18);
+.rental-booking-fact strong,
+.rental-booking-fact small {
+  display: block;
 }
 
-.rental-quote-table .MuiTable-root {
-  min-width: 820px;
+.rental-booking-fact strong {
+  color: var(--forest);
+  font-size: 13px;
+  letter-spacing: 0.04em;
 }
 
-.rental-quote-table .MuiTableCell-root {
-  padding: 14px 16px;
+.rental-booking-fact b {
+  font-size: 17px;
   font-variant-numeric: tabular-nums;
 }
 
-.rental-quote-table .MuiTableCell-head {
-  color: var(--forest);
-  background: rgba(138, 181, 155, 0.12);
-  font-weight: 900;
-}
-
-.rental-quote-table .quote-best {
-  background: rgba(52, 126, 144, 0.07);
-}
-
-.rental-quote-table span {
+.rental-booking-fact small {
   color: var(--text-muted);
+  font-size: 12px;
+}
+
+.rental-operational-details {
+  display: grid;
+  margin-top: 18px;
+}
+
+.rental-operational-details > div {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(52, 126, 144, 0.14);
+}
+
+.rental-operational-details strong {
+  color: var(--forest);
   font-size: 13px;
 }
 
-.north-quote-strip {
-  margin-top: 16px;
-  align-items: center;
-}
-
-.north-quote-strip .MuiChip-root {
-  font-variant-numeric: tabular-nums;
-}
-
-.rental-recommendation {
-  margin-top: 16px;
-}
-
-.provider-card .MuiList-root {
-  min-height: 250px;
-  margin: 16px 0;
-}
-
-.provider-card .MuiListItemIcon-root,
-.rental-guide-card .MuiListItemIcon-root {
-  min-width: 38px;
-  color: var(--forest);
-}
-
-.provider-card .MuiListItemText-primary,
-.rental-guide-card .MuiListItemText-primary {
+.rental-operational-details span {
+  color: var(--text-muted);
+  font-size: 14px;
   line-height: 1.65;
 }
 
-.rental-step-number {
+.rental-cover-limit {
+  margin-top: 4px;
+}
+
+.rental-manage-button {
+  align-self: flex-start;
+  min-height: 44px;
+  margin-top: 16px !important;
+}
+
+.rental-guide-card .MuiCardContent-root {
+  padding: clamp(22px, 3vw, 30px);
+}
+
+.rental-guide-card svg {
+  color: var(--forest);
+}
+
+.rental-guide-card h2 {
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.25;
+}
+
+.rental-checklist {
   display: grid;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  color: #fff;
-  background: var(--forest);
-  font-size: 13px;
-  font-weight: 800;
-  place-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 28px;
+  margin-top: 10px !important;
+}
+
+.rental-checklist .MuiListItemIcon-root {
+  min-width: 38px;
+}
+
+.rental-checklist .MuiListItemText-primary {
+  line-height: 1.65;
 }
 
 @media (max-width: 600px) {
-  .rental-email-details,
-  .rental-confirmation-grid {
+  .rental-booking-header {
+    flex-direction: column !important;
+  }
+
+  .rental-operational-details > div {
     grid-template-columns: 1fr;
+    gap: 4px;
   }
 
-  .rental-segment-card .MuiCardContent-root,
-  .provider-card .MuiCardContent-root,
-  .rental-guide-card .MuiCardContent-root {
-    padding: 20px !important;
+  .rental-manage-button {
+    width: 100%;
   }
 
-  .rental-segment-card h3 {
-    font-size: 22px;
-  }
-
-  .rental-choice-list > div {
-    grid-template-columns: 52px minmax(0, 1fr);
-    gap: 8px;
-  }
-
-  .provider-card .MuiList-root {
-    min-height: 0;
+  .rental-checklist {
+    grid-template-columns: 1fr;
   }
 }
