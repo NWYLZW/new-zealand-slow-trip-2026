@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Paper, Stack, Tab, Tabs, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Paper, Snackbar, Stack, Tab, Tabs, Typography, useMediaQuery } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import NightShelterIcon from "@mui/icons-material/NightShelter";
@@ -28,6 +29,8 @@ const defaultComparison = {
   anchorIcon: "✈",
 };
 const nzdToCny = 3.9198;
+const galleryPhotoParam = "photo";
+const galleryIndexParam = "photoIndex";
 
 function currencyLabel(nzd) {
   if (nzd == null) return null;
@@ -55,6 +58,39 @@ function directionsUrl(hotel, attraction) {
   url.searchParams.set("destination", attraction.destinationQuery ?? attraction.name);
   url.searchParams.set("travelmode", attraction.travelMode ?? "driving");
   return url.toString();
+}
+
+function gallerySourceForHotel(hotel, identity, isEnglish) {
+  if (!hotel || !identity) return null;
+  if (identity === "hotel") {
+    return hotel.hotelImages?.length > 0
+      ? { images: hotel.hotelImages, title: isEnglish ? "Hotel photos" : "酒店图片" }
+      : null;
+  }
+  if (!identity.startsWith("room:")) return null;
+
+  const roomIdentity = identity.slice("room:".length);
+  const room = hotel.roomTypes?.find((candidate, index) => String(candidate.rateKey ?? index) === roomIdentity);
+  const images = room?.photosVerified === true ? (room.images ?? []) : [];
+  return room && images.length > 0 ? { images, title: room.name } : null;
+}
+
+function normalizedGalleryIndex(rawIndex, imageCount) {
+  if (!/^\d+$/.test(rawIndex ?? "")) return 0;
+  const index = Number(rawIndex);
+  return Number.isSafeInteger(index) && index < imageCount ? index : 0;
+}
+
+function writeGalleryUrl(identity, index = 0, method = "replaceState", state = history.state) {
+  const url = new URL(window.location.href);
+  if (identity) {
+    url.searchParams.set(galleryPhotoParam, identity);
+    url.searchParams.set(galleryIndexParam, String(index));
+  } else {
+    url.searchParams.delete(galleryPhotoParam);
+    url.searchParams.delete(galleryIndexParam);
+  }
+  history[method](state, "", url);
 }
 
 function FitHotelMap({ anchorPosition, hotels }) {
@@ -134,12 +170,12 @@ function HotelComparisonMap({ activeHotelId, comparison, hotels, isEnglish, onHo
   );
 }
 
-export function HotelComparisonDialog({ comparison = defaultComparison, hotels = aucklandAirportHotels, isEnglish, onClose, onSelect, open, selectedHotelId, stay }) {
+export function HotelComparisonDialog({ activeHotelId, comparison = defaultComparison, hotels = aucklandAirportHotels, isEnglish, onActiveHotelChange, onClose, onSelect, open, selectedHotelId, stay }) {
   const fullScreen = useMediaQuery("(max-width:600px)");
   const visibleHotels = useMemo(() => hotels.filter((hotel) => !hotel.excludedByPreference && (!hotel.isAirbnb || hotel.isVerifiedListing)), [hotels]);
-  const [activeHotelId, setActiveHotelId] = useState(selectedHotelId || visibleHotels[0].id);
   const [gallery, setGallery] = useState(null);
   const [hotelSlideIndex, setHotelSlideIndex] = useState(0);
+  const [copyResult, setCopyResult] = useState(null);
   const dates = stay ?? comparison.dates ?? { checkIn: "2026-09-28", checkOut: "2026-09-29", label: "9月28日—29日" };
   const nights = stayNightCount(dates.checkIn, dates.checkOut);
   const cards = useMemo(() => visibleHotels.map((hotel) => ({
@@ -150,28 +186,92 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
     stayUrl: officialUrlForStay(hotel, dates.checkIn, dates.checkOut),
     currentRate: hotel.rateSnapshots?.[`${dates.checkIn}/${dates.checkOut}`] ?? null,
   })), [dates.checkIn, dates.checkOut, visibleHotels]);
-  const activeHotel = cards.find((hotel) => hotel.id === activeHotelId) ?? cards[0];
+  const activeHotel = cards.find((hotel) => hotel.id === activeHotelId)
+    ?? cards.find((hotel) => hotel.id === selectedHotelId)
+    ?? cards[0];
   const destinationResearch = cards.find((hotel) => hotel.research)?.research;
   const galleryImages = gallery?.images ?? [];
   const galleryIndex = gallery?.index ?? 0;
   const galleryImage = galleryImages[galleryIndex] ?? null;
 
-  const openGallery = (images, index, title) => setGallery({ images, index, title });
-  const closeGallery = () => setGallery(null);
-  const showPreviousImage = () => setGallery((current) => ({ ...current, index: (current.index - 1 + current.images.length) % current.images.length }));
-  const showNextImage = () => setGallery((current) => ({ ...current, index: (current.index + 1) % current.images.length }));
+  const selectGalleryImage = (index) => {
+    if (!gallery || index < 0 || index >= gallery.images.length) return;
+    setGallery({ ...gallery, index });
+    if (gallery.identity === "hotel") setHotelSlideIndex(index);
+    writeGalleryUrl(gallery.identity, index);
+  };
+  const openGallery = (identity, images, index, title) => {
+    const normalizedIndex = normalizedGalleryIndex(String(index), images.length);
+    const currentState = history.state && typeof history.state === "object" ? history.state : {};
+    setGallery({ identity, images, index: normalizedIndex, title });
+    writeGalleryUrl(identity, normalizedIndex, "pushState", { ...currentState, hotelPhoto: true });
+  };
+  const closeGallery = () => {
+    setGallery(null);
+    if (history.state?.hotelPhoto) {
+      history.back();
+      return;
+    }
+    writeGalleryUrl(null);
+  };
+  const showPreviousImage = () => selectGalleryImage((galleryIndex - 1 + galleryImages.length) % galleryImages.length);
+  const showNextImage = () => selectGalleryImage((galleryIndex + 1) % galleryImages.length);
+  const copyHotelName = async (hotelName) => {
+    try {
+      await navigator.clipboard.writeText(hotelName);
+      setCopyResult({ name: hotelName, ok: true });
+    } catch {
+      setCopyResult({ name: hotelName, ok: false });
+    }
+  };
 
   useEffect(() => {
     if (open) {
-      setActiveHotelId(selectedHotelId || cards[0].id);
-      setGallery(null);
       setHotelSlideIndex(0);
+      setCopyResult(null);
+    } else {
+      setGallery(null);
     }
-  }, [cards, open, selectedHotelId]);
+  }, [open]);
 
   useEffect(() => {
     setHotelSlideIndex(0);
-  }, [activeHotelId]);
+  }, [activeHotel?.id]);
+
+  useEffect(() => {
+    const syncGalleryFromUrl = () => {
+      const url = new URL(window.location.href);
+      const hasGalleryParams = url.searchParams.has(galleryPhotoParam) || url.searchParams.has(galleryIndexParam);
+      if (!hasGalleryParams) {
+        setGallery(null);
+        return;
+      }
+      if (!open || !activeHotel) {
+        setGallery(null);
+        writeGalleryUrl(null);
+        return;
+      }
+
+      const identity = url.searchParams.get(galleryPhotoParam);
+      const source = gallerySourceForHotel(activeHotel, identity, isEnglish);
+      if (!source) {
+        setGallery(null);
+        writeGalleryUrl(null);
+        return;
+      }
+
+      const index = normalizedGalleryIndex(url.searchParams.get(galleryIndexParam), source.images.length);
+      setGallery({ identity, images: source.images, index, title: source.title });
+      if (identity === "hotel") setHotelSlideIndex(index);
+      if (url.searchParams.get(galleryIndexParam) !== String(index)) {
+        writeGalleryUrl(identity, index);
+      }
+    };
+
+    syncGalleryFromUrl();
+    window.addEventListener("popstate", syncGalleryFromUrl);
+    return () => window.removeEventListener("popstate", syncGalleryFromUrl);
+  }, [activeHotel, isEnglish, open]);
 
   return (
     <Dialog
@@ -205,7 +305,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
           comparison={comparison}
           hotels={cards}
           isEnglish={isEnglish}
-          onHotelChange={setActiveHotelId}
+          onHotelChange={onActiveHotelChange}
         />
         {destinationResearch && (
           <Box className="hotel-social-research hotel-destination-research">
@@ -219,8 +319,9 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
         <Box className="hotel-comparison-tabs-panel">
           <Tabs
             aria-label={isEnglish ? "Choose accommodation to compare" : "选择住宿进行比选"}
+            allowScrollButtonsMobile
             className="hotel-comparison-tabs"
-            onChange={(_, value) => setActiveHotelId(value)}
+            onChange={(_, value) => onActiveHotelChange(value)}
             scrollButtons="auto"
             value={activeHotel.id}
             variant="scrollable"
@@ -255,12 +356,21 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                     >
                       {hotel.name}<OpenInNewIcon aria-hidden="true" />
                     </Typography>
+                    <IconButton
+                      aria-label={isEnglish ? `Copy hotel name: ${hotel.name}` : `复制酒店名称：${hotel.name}`}
+                      className="hotel-copy-name-button"
+                      onClick={() => copyHotelName(hotel.name)}
+                      size="small"
+                      title={isEnglish ? "Copy hotel name" : "复制酒店名称"}
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
                   </Stack>
                   {selected && <Chip color="success" icon={<CheckCircleIcon />} label={isEnglish ? "Selected" : "已选择"} size="small" />}
                 </Stack>
                 {hotel.hotelImages?.length > 0 && (
                   <Box className="hotel-photo-carousel">
-                    <Box component="figure" onClick={() => openGallery(hotel.hotelImages, hotelSlideIndex, isEnglish ? "Hotel photos" : "酒店图片")}>
+                    <Box component="figure" onClick={() => openGallery("hotel", hotel.hotelImages, hotelSlideIndex, isEnglish ? "Hotel photos" : "酒店图片")}>
                       <Box alt={hotel.hotelImages[hotelSlideIndex].label} component="img" src={hotel.hotelImages[hotelSlideIndex].src} />
                       <Typography component="figcaption">{hotelSlideIndex + 1} / {hotel.hotelImages.length} · {hotel.hotelImages[hotelSlideIndex].label} · {hotel.hotelImages[hotelSlideIndex].source}</Typography>
                     </Box>
@@ -363,8 +473,9 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                       // gallery has been checked and the data entry is explicitly verified.
                       const roomImages = room.photosVerified === true ? (room.images ?? []) : [];
                       const explicitRates = hotel.currentRate?.roomRates?.[room.rateKey];
-                      const officialRate = explicitRates?.official;
-                      const bookingRate = explicitRates?.booking ?? (bookingQuotedRoom ? hotel.currentRate : null);
+                      const bookingRateCandidate = explicitRates?.booking ?? (bookingQuotedRoom ? hotel.currentRate : null);
+                      const officialRate = explicitRates?.official ?? (bookingRateCandidate?.useOfficialUrl ? bookingRateCandidate : null);
+                      const bookingRate = bookingRateCandidate?.useOfficialUrl ? null : bookingRateCandidate;
                       const agodaRate = explicitRates?.agoda ?? (agodaQuotedRoom ? hotel.currentRate.agoda : null);
                       const airbnbQuotedRoom = hotel.currentRate?.source === "Airbnb" && (
                         room.rateKey
@@ -372,6 +483,8 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                           : room.name === hotel.currentRate.room.split(" · ")[0]
                       );
                       const airbnbRate = explicitRates?.airbnb ?? (airbnbQuotedRoom ? hotel.currentRate : null);
+                      const officialRatePending = !hotel.isAirbnb && Boolean(hotel.officialStayUrl) && !officialRate && Boolean(bookingRate || agodaRate);
+                      const officialSiteChecked = Boolean(hotel.officialStatus || hotel.officialVerifiedAt);
                       return (
                       <Box className="hotel-room-type" key={room.name}>
                         <Box className="hotel-room-type-layout">
@@ -380,7 +493,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                               alt={`${image.label} · 来源：${image.source}`}
                               component="img"
                               key={image.src}
-                              onClick={() => openGallery(roomImages, imageIndex, room.name)}
+                              onClick={() => openGallery(`room:${room.rateKey ?? roomIndex}`, roomImages, imageIndex, room.name)}
                               src={image.src}
                             />)}
                           </Box>}
@@ -396,7 +509,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                             }</Typography>}
                           </Box>
                         </Box>
-                        {(officialRate || bookingRate || agodaRate || airbnbRate) && (
+                        {(officialRate || officialRatePending || bookingRate || agodaRate || airbnbRate) && (
                           <Box className="hotel-room-platform-prices">
                             {officialRate && <Box className="hotel-room-platform-official">
                               <Typography className="hotel-room-platform-name" component="a" href={hotel.officialStayUrl} rel="noreferrer" target="_blank">
@@ -416,8 +529,23 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
                               {officialRate.memberNote && <Typography color="text.secondary">{officialRate.memberNote}</Typography>}
                               {(officialRate.payment || officialRate.breakfast) && <Typography color="text.secondary">{[officialRate.payment, officialRate.breakfast].filter(Boolean).join(" · ")}</Typography>}
                             </Box>}
+                            {officialRatePending && <Box className="hotel-room-platform-official-pending">
+                              <Typography className="hotel-room-platform-name" component="a" href={hotel.officialStayUrl} rel="noreferrer" target="_blank">
+                                {isEnglish
+                                  ? (officialSiteChecked ? "Official website · checked" : "Official website · verification pending")
+                                  : (officialSiteChecked ? "官网 · 已访问" : "官网入口 · 待核验")}<OpenInNewIcon />
+                              </Typography>
+                              <Typography fontWeight={900}>
+                                {isEnglish ? "No reproducible exact-date total for this room" : "该房型暂无可复现的官网精确日期含税价"}
+                              </Typography>
+                              <Typography color="text.secondary">
+                                {isEnglish
+                                  ? (hotel.officialStatusEn ?? `The official link is recorded, but ${dates.checkIn}–${dates.checkOut}, two guests and one room have not yet been verified through checkout. The platform price beside it is not treated as an official rate.`)
+                                  : (hotel.officialStatusDetail ?? `已记录官网入口，但尚未实际核验 ${dates.label}、2 人 1 间的对应房型含税结算总价；旁边的平台价格不会被当作官网价。`)}
+                              </Typography>
+                            </Box>}
                             {bookingRate && <Box>
-                              <Typography className="hotel-room-platform-name" component="a" href={bookingRate.useOfficialUrl || hotel.currentRate.useOfficialUrl ? hotel.officialStayUrl : hotel.bookingStayUrl} rel="noreferrer" target="_blank">
+                              <Typography className="hotel-room-platform-name" component="a" href={hotel.bookingStayUrl} rel="noreferrer" target="_blank">
                                 {bookingRate.source}<OpenInNewIcon />
                               </Typography>
                               <Typography color="text.secondary">{isEnglish ? "Platform room" : "平台房型"}：{bookingRate.room.split(" · ")[0]}</Typography>
@@ -531,6 +659,14 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
           </Box>
         </Box>
       </DialogContent>
+      <Snackbar
+        autoHideDuration={2400}
+        message={copyResult?.ok
+          ? (isEnglish ? `Copied: ${copyResult.name}` : `已复制：${copyResult.name}`)
+          : (isEnglish ? "Copy failed — select the hotel name and copy it manually" : "复制失败，请选中酒店名称手动复制")}
+        onClose={() => setCopyResult(null)}
+        open={Boolean(copyResult)}
+      />
       <Dialog className="hotel-photo-lightbox" fullScreen onClose={closeGallery} open={Boolean(galleryImage)}>
         {galleryImage && (
           <Box className="hotel-photo-lightbox-stage">
@@ -554,7 +690,7 @@ export function HotelComparisonDialog({ comparison = defaultComparison, hotels =
               <Typography>{isEnglish ? "Source" : "图片来源"}：{galleryImage.source}</Typography>
             </Box>
             {galleryImages.length > 1 && <Box className="hotel-photo-lightbox-gallery" aria-label={isEnglish ? "Photo gallery" : "图片画廊"}>
-              {galleryImages.map((image, index) => <button aria-label={`${isEnglish ? "Show photo" : "查看图片"} ${index + 1}：${image.label}`} className={index === galleryIndex ? "is-active" : ""} key={image.src} onClick={() => setGallery((current) => ({ ...current, index }))}>
+              {galleryImages.map((image, index) => <button aria-label={`${isEnglish ? "Show photo" : "查看图片"} ${index + 1}：${image.label}`} className={index === galleryIndex ? "is-active" : ""} key={image.src} onClick={() => selectGalleryImage(index)}>
                 <img alt="" src={image.src} />
               </button>)}
             </Box>}

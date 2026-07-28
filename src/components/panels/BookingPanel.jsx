@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, ButtonBase, Card, CardContent, Checkbox, Chip, Grid2 as Grid, LinearProgress, Stack, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import HotelIcon from "@mui/icons-material/Hotel";
@@ -73,18 +73,73 @@ const airportStayByDate = {
   "9/28": { checkIn: "2026-09-28", checkOut: "2026-09-29", label: "9月28日—29日" },
 };
 
+function comparisonHotelsForRegion(region) {
+  if (region === "auckland-airport") return aucklandAirportHotels;
+  if (region === "auckland-city") return aucklandCityHotels;
+  return regionalHotels[region] ?? [];
+}
+
+function visibleComparisonHotels(region) {
+  return comparisonHotelsForRegion(region).filter(
+    (hotel) => !hotel.excludedByPreference && (!hotel.isAirbnb || hotel.isVerifiedListing),
+  );
+}
+
+function fallbackComparisonHotelId(region, hotels = visibleComparisonHotels(region)) {
+  const configuredId = region === "auckland-city"
+    ? aucklandCityStay.selectedHotelId
+    : regionalStays[region]?.selectedHotelId;
+  const savedId = readSavedHotelId(region, configuredId ?? hotels[0]?.id);
+  return hotels.some((hotel) => hotel.id === savedId) ? savedId : hotels[0]?.id;
+}
+
+function readComparisonUrl() {
+  const url = new URL(window.location.href);
+  if (url.hash !== "#booking") return null;
+  const region = url.searchParams.get("compare");
+  const hotels = visibleComparisonHotels(region);
+  if (!region || hotels.length === 0) return null;
+  const requestedHotelId = url.searchParams.get("hotel");
+  const hotelId = hotels.some((hotel) => hotel.id === requestedHotelId)
+    ? requestedHotelId
+    : fallbackComparisonHotelId(region, hotels);
+  return hotelId ? { region, hotelId } : null;
+}
+
+function writeComparisonUrl(view, method = "replaceState", state = history.state) {
+  const url = new URL(window.location.href);
+  if (view) {
+    url.searchParams.set("compare", view.region);
+    url.searchParams.set("hotel", view.hotelId);
+    url.hash = "booking";
+  } else {
+    url.searchParams.delete("compare");
+    url.searchParams.delete("hotel");
+    url.searchParams.delete("photo");
+    url.searchParams.delete("photoIndex");
+  }
+  history[method](state, "", url);
+}
+
+function calendarGroupForRegion(region) {
+  return region === "auckland-airport" ? "airport-arrival" : region;
+}
+
 function AccommodationCalendar({ isEnglish }) {
   const initialAirportHotel = aucklandAirportHotels.find((hotel) => hotel.id === readSavedHotelId("auckland-airport", aucklandAirportHotels[0].id))
     ?? aucklandAirportHotels[0];
   const initialCityHotel = aucklandCityHotels.find((hotel) => hotel.id === readSavedHotelId("auckland-city", aucklandCityStay.selectedHotelId))
     ?? aucklandCityHotels[0];
-  const initialRegionalIds = Object.fromEntries(Object.entries(regionalStays).map(([region, comparison]) => [region, readSavedHotelId(region, comparison.selectedHotelId)]));
+  const initialRegionalIds = Object.fromEntries(
+    Object.keys(regionalStays).map((region) => [region, fallbackComparisonHotelId(region)]),
+  );
   const [airportHotelId, setAirportHotelId] = useState(initialAirportHotel.id);
   const [cityHotelId, setCityHotelId] = useState(initialCityHotel.id);
   const [regionalHotelIds, setRegionalHotelIds] = useState(initialRegionalIds);
   const [selectedHotel, setSelectedHotel] = useState(initialAirportHotel.name);
   const [selectedStayGroup, setSelectedStayGroup] = useState("airport-arrival");
-  const [comparisonRegion, setComparisonRegion] = useState(null);
+  const [comparisonView, setComparisonView] = useState(() => readComparisonUrl());
+  const comparisonRegion = comparisonView?.region ?? null;
   const weekdays = isEnglish
     ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     : ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
@@ -108,6 +163,73 @@ function AccommodationCalendar({ isEnglish }) {
       .map((stay) => [stay.hotel, { ...stay, onSelect: setSelectedHotel }]),
   ).values()];
 
+  const selectedHotelIdForRegion = (region) => {
+    if (region === "auckland-airport") return airportHotelId;
+    if (region === "auckland-city") return cityHotelId;
+    const visibleHotels = visibleComparisonHotels(region);
+    const candidateId = regionalHotelIds[region];
+    return visibleHotels.some((hotel) => hotel.id === candidateId)
+      ? candidateId
+      : fallbackComparisonHotelId(region, visibleHotels);
+  };
+
+  const replaceComparison = (view) => {
+    setComparisonView(view);
+    writeComparisonUrl(view);
+  };
+
+  const openComparison = (region) => {
+    const hotelId = selectedHotelIdForRegion(region);
+    if (!hotelId) return;
+    const view = { region, hotelId };
+    const currentState = history.state && typeof history.state === "object" ? history.state : {};
+    setComparisonView(view);
+    writeComparisonUrl(view, "pushState", { ...currentState, hotelComparison: true });
+  };
+
+  const closeComparison = () => {
+    setComparisonView(null);
+    if (history.state?.hotelComparison) {
+      history.back();
+      return;
+    }
+    writeComparisonUrl(null);
+  };
+
+  const changeComparisonHotel = (hotelId) => {
+    if (!comparisonRegion || !visibleComparisonHotels(comparisonRegion).some((hotel) => hotel.id === hotelId)) return;
+    replaceComparison({ region: comparisonRegion, hotelId });
+  };
+
+  useEffect(() => {
+    const syncComparisonFromUrl = () => {
+      const next = readComparisonUrl();
+      setComparisonView(next);
+      if (next) {
+        setSelectedStayGroup(calendarGroupForRegion(next.region));
+        const selected = comparisonHotelsForRegion(next.region).find((hotel) => hotel.id === next.hotelId);
+        if (selected) setSelectedHotel(selected.name);
+        const url = new URL(window.location.href);
+        if (url.searchParams.get("compare") !== next.region || url.searchParams.get("hotel") !== next.hotelId) {
+          writeComparisonUrl(next);
+        }
+      } else {
+        const url = new URL(window.location.href);
+        if (url.hash === "#booking" && ["compare", "hotel", "photo", "photoIndex"].some((param) => url.searchParams.has(param))) {
+          writeComparisonUrl(null);
+        }
+      }
+    };
+
+    syncComparisonFromUrl();
+    window.addEventListener("hashchange", syncComparisonFromUrl);
+    window.addEventListener("popstate", syncComparisonFromUrl);
+    return () => {
+      window.removeEventListener("hashchange", syncComparisonFromUrl);
+      window.removeEventListener("popstate", syncComparisonFromUrl);
+    };
+  }, []);
+
   const chooseHotel = async (region, hotel) => {
     const savedSelections = readSavedSelections();
     const selection = {
@@ -123,7 +245,7 @@ function AccommodationCalendar({ isEnglish }) {
     if (regionalHotels[region]) setRegionalHotelIds((current) => ({ ...current, [region]: hotel.id }));
     setSelectedHotel(hotel.name);
     localStorage.setItem(AUCKLAND_AIRPORT_SELECTION_KEY, JSON.stringify(selection));
-    setComparisonRegion(null);
+    closeComparison();
     try {
       await fetch("/api/hotel-selection", {
         method: "POST",
@@ -164,9 +286,9 @@ function AccommodationCalendar({ isEnglish }) {
                 onClick={() => {
                   setSelectedHotel(stay.hotel);
                   setSelectedStayGroup(stay.stayGroup);
-                  if (stay.stayGroup === "airport-arrival" && stay.hotel) setComparisonRegion("auckland-airport");
-                  if (stay.stayGroup === "auckland-city" && stay.hotel) setComparisonRegion("auckland-city");
-                  if (regionalHotels[stay.stayGroup] && stay.hotel) setComparisonRegion(stay.stayGroup);
+                  if (stay.stayGroup === "airport-arrival" && stay.hotel) openComparison("auckland-airport");
+                  if (stay.stayGroup === "auckland-city" && stay.hotel) openComparison("auckland-city");
+                  if (regionalHotels[stay.stayGroup] && stay.hotel) openComparison(stay.stayGroup);
                 }}
               >
                 <Stack className="accommodation-date" direction="row" justifyContent="space-between" alignItems="center">
@@ -221,10 +343,12 @@ function AccommodationCalendar({ isEnglish }) {
         </Box>
       </Box>
       <HotelComparisonDialog
+        activeHotelId={comparisonView?.hotelId}
         comparison={comparisonRegion === "auckland-city" ? aucklandCityStay : (regionalStays[comparisonRegion] ?? undefined)}
         hotels={comparisonRegion === "auckland-city" ? aucklandCityHotels : (regionalHotels[comparisonRegion] ?? aucklandAirportHotels)}
         isEnglish={isEnglish}
-        onClose={() => setComparisonRegion(null)}
+        onActiveHotelChange={changeComparisonHotel}
+        onClose={closeComparison}
         onSelect={(hotel) => chooseHotel(comparisonRegion, hotel)}
         open={Boolean(comparisonRegion)}
         selectedHotelId={comparisonRegion === "auckland-city" ? cityHotelId : (regionalHotelIds[comparisonRegion] ?? airportHotelId)}

@@ -15,18 +15,60 @@ import { LanguageContext } from "./LanguageContext";
 
 const storageKey = "nz-trip-booking-react-v1";
 const languageStorageKey = "nz-trip-language";
+const popupSearchParams = ["compare", "hotel", "photo", "photoIndex", "event", "eventTab"];
+const hotelPopupSearchParams = ["compare", "hotel", "photo", "photoIndex"];
+const eventPopupSearchParams = ["event", "eventTab"];
+
+function canonicalizePopupParams(tab) {
+  const url = new URL(window.location.href);
+  const originalUrl = url.toString();
+
+  if (tab === "booking") {
+    eventPopupSearchParams.forEach((param) => url.searchParams.delete(param));
+    if (!url.searchParams.has("compare")) {
+      ["hotel", "photo", "photoIndex"].forEach((param) => url.searchParams.delete(param));
+    }
+  } else if (["overview", "south", "north"].includes(tab)) {
+    hotelPopupSearchParams.forEach((param) => url.searchParams.delete(param));
+    if (!url.searchParams.has("event")) url.searchParams.delete("eventTab");
+  } else {
+    popupSearchParams.forEach((param) => url.searchParams.delete(param));
+  }
+
+  url.hash = tab;
+  if (url.toString() !== originalUrl) history.replaceState(history.state, "", url);
+}
 
 function useHashTab() {
-  const initial = tabs.some((tab) => tab.value === location.hash.slice(1))
+  const readTab = () => tabs.some((tab) => tab.value === location.hash.slice(1))
     ? location.hash.slice(1)
     : "overview";
+  const initial = readTab();
   const [tab, setTab] = useState(initial);
 
   const changeTab = (value) => {
+    const url = new URL(window.location.href);
+    popupSearchParams.forEach((param) => url.searchParams.delete(param));
+    url.hash = value;
     setTab(value);
-    history.pushState(null, "", `#${value}`);
+    history.pushState(null, "", url);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const syncTabFromUrl = () => {
+      const nextTab = readTab();
+      setTab(nextTab);
+      canonicalizePopupParams(nextTab);
+    };
+    syncTabFromUrl();
+    window.addEventListener("hashchange", syncTabFromUrl);
+    window.addEventListener("popstate", syncTabFromUrl);
+    return () => {
+      window.removeEventListener("hashchange", syncTabFromUrl);
+      window.removeEventListener("popstate", syncTabFromUrl);
+    };
+  }, []);
 
   return [tab, changeTab];
 }

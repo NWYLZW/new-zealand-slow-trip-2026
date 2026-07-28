@@ -138,11 +138,28 @@
 }
 
 .hotel-comparison-tabs .MuiTab-root {
+  flex: 0 0 auto;
+  max-width: none;
+  min-width: max-content;
   min-height: 46px;
   padding: 8px 16px;
   color: var(--ink-soft);
   font-weight: 900;
   text-transform: none;
+  white-space: nowrap;
+}
+
+.hotel-comparison-tabs .MuiTab-root > .MuiStack-root,
+.hotel-comparison-tabs .MuiTab-root span {
+  white-space: nowrap;
+}
+
+.hotel-comparison-tabs > .MuiTabScrollButton-horizontal.Mui-disabled {
+  overflow: hidden;
+  flex-basis: 0;
+  width: 0;
+  min-width: 0;
+  padding: 0;
 }
 
 .hotel-comparison-tabs .MuiTab-root.Mui-selected {
@@ -177,6 +194,15 @@
 .hotel-option-heading-title > .MuiChip-root,
 .hotel-option-heading > .MuiChip-root {
   flex: 0 0 auto;
+}
+
+.hotel-copy-name-button {
+  flex: 0 0 auto;
+  color: var(--forest) !important;
+}
+
+.hotel-copy-name-button .MuiSvgIcon-root {
+  font-size: 17px;
 }
 
 .hotel-option-name {
@@ -247,6 +273,11 @@
 .hotel-room-platform-official {
   border-color: rgba(47, 138, 69, 0.32) !important;
   background: #edf8ef !important;
+}
+
+.hotel-room-platform-official-pending {
+  border: 1px dashed rgba(47, 138, 69, 0.36);
+  background: #f2f8f1 !important;
 }
 
 .hotel-availability-note {

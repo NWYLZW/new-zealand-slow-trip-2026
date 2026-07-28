@@ -569,6 +569,60 @@ function getCalendarEvents(day) {
   }));
 }
 
+const eventUrlParam = "event";
+const eventTabUrlParam = "eventTab";
+
+function eventDateId(event) {
+  const date = event.day.dateKey ?? event.day.date;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+  const match = date.match(/(\d+)月(\d+)日/);
+  return match
+    ? `${year}-${String(match[1]).padStart(2, "0")}-${String(match[2]).padStart(2, "0")}`
+    : date;
+}
+
+function eventUrlId(event) {
+  return `${eventDateId(event)}|${event.title}`;
+}
+
+function eventDialogTabs(event) {
+  if (!event) return ["schedule"];
+  return [
+    "schedule",
+    event.flights?.length > 0 && "flight",
+    event.media?.localNames?.length > 0 && "names",
+    (socialGuidesByEvent[event.title] ?? []).length > 0 && "social",
+    event.media?.links?.length > 0 && "links",
+  ].filter(Boolean);
+}
+
+function readEventUrl(eventById, mode) {
+  const url = new URL(window.location.href);
+  const routeHash = url.hash.slice(1);
+  const isDefaultOverviewRoute = mode === "overview"
+    && !["south", "north", "car", "booking", "notes"].includes(routeHash);
+  if (routeHash !== mode && !isDefaultOverviewRoute) return null;
+  const requestedEventId = url.searchParams.get(eventUrlParam);
+  const event = eventById.get(requestedEventId);
+  if (!event) return null;
+  const requestedTab = url.searchParams.get(eventTabUrlParam);
+  const tab = eventDialogTabs(event).includes(requestedTab) ? requestedTab : "schedule";
+  return { eventId: requestedEventId, tab };
+}
+
+function writeEventUrl(view, method = "replaceState", state = history.state, mode) {
+  const url = new URL(window.location.href);
+  if (view) {
+    url.searchParams.set(eventUrlParam, view.eventId);
+    url.searchParams.set(eventTabUrlParam, view.tab);
+    if (mode) url.hash = mode;
+  } else {
+    url.searchParams.delete(eventUrlParam);
+    url.searchParams.delete(eventTabUrlParam);
+  }
+  history[method](state, "", url);
+}
+
 function eventMapData(event) {
   const segmentIds = new Set(event.segmentIds ?? []);
   const stopTags = new Set(event.stopTags ?? []);
@@ -781,9 +835,8 @@ function EventHeroCarousel({ children, eventKey, language, media }) {
   );
 }
 
-function RouteDayCalendar({ days = itineraryDays, language = "zh", onDayRegionSelect, onEventSelect, selectedEvent, selectedRegion, title = "2026 新西兰行程 · 9月28日—10月11日" }) {
+function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", language = "zh", onDayRegionSelect, onDialogTabChange, onEventSelect, selectedEvent, selectedRegion, title = "2026 新西兰行程 · 9月28日—10月11日" }) {
   const isSmallDialog = useMediaQuery("(max-width:600px)");
-  const [dialogTab, setDialogTab] = useState("schedule");
   const [copyResult, setCopyResult] = useState(null);
   const daysByKey = new Map();
   days.forEach((day) => {
@@ -791,13 +844,12 @@ function RouteDayCalendar({ days = itineraryDays, language = "zh", onDayRegionSe
     if (date) daysByKey.set(keyForDate(date), day);
   });
   const selectedEventKey = selectedEvent ? `${selectedEvent.day.dateKey ?? selectedEvent.day.date}|${selectedEvent.title}` : "";
-  const activeDialogTab = dialogTab === "flight" && !selectedEvent?.flights?.length ? "schedule" : dialogTab;
+  const activeDialogTab = eventDialogTabs(selectedEvent).includes(dialogTab) ? dialogTab : "schedule";
   const selectedEventMap = selectedEvent ? eventMapData(selectedEvent) : null;
   const selectedEventGoogleMaps = selectedEvent ? eventGoogleMapsAction(selectedEvent, language) : null;
   const selectedSocialGuides = selectedEvent ? (socialGuidesByEvent[selectedEvent.title] ?? []) : [];
 
   useEffect(() => {
-    setDialogTab("schedule");
     setCopyResult(null);
   }, [selectedEventKey]);
 
@@ -946,7 +998,7 @@ function RouteDayCalendar({ days = itineraryDays, language = "zh", onDayRegionSe
             <Tabs
               aria-label="行程详情分类"
               className="route-dialog-tabs"
-              onChange={(_, value) => setDialogTab(value)}
+              onChange={(_, value) => onDialogTabChange?.(value)}
               scrollButtons="auto"
               value={activeDialogTab}
               variant="scrollable"
@@ -1375,21 +1427,70 @@ function GoogleRouteMap({ language = "zh", mode = "overview" }) {
 
 export function RouteMap({ mode = "overview", days = itineraryDays }) {
   const { language } = useLanguage();
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const config = routeConfigs[mode] ?? routeConfigs.overview;
   const mapMode = mode === "overview" ? (selectedRegion ?? "overview") : mode;
   const { routeLabel, routeUrl } = buildGoogleMapsUrls(mapMode);
-  const localizedDays = language === "en"
+  const localizedDays = useMemo(() => language === "en"
     ? days.map((day) => englishDayByDate.get(day.dateKey ?? day.date) ?? day)
-    : days;
+    : days, [days, language]);
+  const eventById = useMemo(() => new Map(
+    localizedDays.flatMap((day) => getCalendarEvents(day).map((event) => [eventUrlId(event), event])),
+  ), [localizedDays]);
+  const [eventView, setEventView] = useState(() => readEventUrl(eventById, mode));
+  const selectedEvent = eventView ? eventById.get(eventView.eventId) ?? null : null;
   const selectRegion = mode === "overview"
     ? (region) => setSelectedRegion((current) => current === region ? null : region)
     : undefined;
 
+  const selectEvent = (event) => {
+    if (!event) {
+      setEventView(null);
+      if (history.state?.routeEventDialog) {
+        history.back();
+        return;
+      }
+      writeEventUrl(null);
+      return;
+    }
+
+    const view = { eventId: eventUrlId(event), tab: "schedule" };
+    const currentState = history.state && typeof history.state === "object" ? history.state : {};
+    setEventView(view);
+    writeEventUrl(view, "pushState", { ...currentState, routeEventDialog: true }, mode);
+  };
+
+  const changeDialogTab = (tab) => {
+    if (!selectedEvent || !eventDialogTabs(selectedEvent).includes(tab)) return;
+    const view = { eventId: eventUrlId(selectedEvent), tab };
+    setEventView(view);
+    writeEventUrl(view, "replaceState", history.state, mode);
+  };
+
   useEffect(() => {
-    setSelectedEvent(null);
-  }, [language]);
+    const syncEventFromUrl = () => {
+      const next = readEventUrl(eventById, mode);
+      setEventView(next);
+
+      const url = new URL(window.location.href);
+      const ownsCurrentRoute = url.hash === `#${mode}`;
+      if (next) {
+        if (url.searchParams.get(eventUrlParam) !== next.eventId || url.searchParams.get(eventTabUrlParam) !== next.tab) {
+          writeEventUrl(next, "replaceState", history.state, mode);
+        }
+      } else if (ownsCurrentRoute && (url.searchParams.has(eventUrlParam) || url.searchParams.has(eventTabUrlParam))) {
+        writeEventUrl(null);
+      }
+    };
+
+    syncEventFromUrl();
+    window.addEventListener("hashchange", syncEventFromUrl);
+    window.addEventListener("popstate", syncEventFromUrl);
+    return () => {
+      window.removeEventListener("hashchange", syncEventFromUrl);
+      window.removeEventListener("popstate", syncEventFromUrl);
+    };
+  }, [eventById, mode]);
 
   return (
     <Box className="route-map-section">
@@ -1415,9 +1516,11 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
       </Box>
       <RouteDayCalendar
         days={localizedDays}
+        dialogTab={eventView?.tab}
         language={language}
         onDayRegionSelect={selectRegion}
-        onEventSelect={setSelectedEvent}
+        onDialogTabChange={changeDialogTab}
+        onEventSelect={selectEvent}
         selectedEvent={selectedEvent}
         selectedRegion={selectedRegion}
         title={config.calendarTitle}
