@@ -1,0 +1,293 @@
+.rental-panel .MuiAlert-root {
+  border: 1px solid rgba(52, 126, 144, 0.2);
+  border-radius: var(--radius-inner);
+}
+
+.rental-segment-card,
+.provider-card,
+.rental-guide-card {
+  height: 100%;
+}
+
+.rental-booking-confirmed {
+  overflow: hidden;
+  border: 1px solid rgba(46, 125, 50, 0.28);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(138, 181, 155, 0.2), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(244, 249, 245, 0.96));
+}
+
+.rental-booking-confirmed .MuiCardContent-root {
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.rental-booking-confirmed h2 {
+  margin-bottom: 8px;
+}
+
+.rental-booking-confirmed > .MuiCardContent-root > .MuiStack-root > .MuiChip-root {
+  padding-inline: 6px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.rental-booking-facts {
+  margin-top: 24px;
+}
+
+.rental-booking-facts .MuiGrid2-root > .MuiBox-root {
+  display: flex;
+  height: 100%;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(52, 126, 144, 0.16);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.rental-booking-facts svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--forest);
+}
+
+.rental-booking-facts span {
+  display: grid;
+  gap: 4px;
+  line-height: 1.55;
+}
+
+.rental-booking-facts strong,
+.rental-booking-facts small {
+  display: block;
+}
+
+.rental-booking-facts strong {
+  color: var(--forest);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.rental-booking-facts small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.rental-cover-limit {
+  margin-top: 18px;
+}
+
+.rental-email-details {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.4fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.rental-cost-summary,
+.rental-confirmation-grid > div {
+  border: 1px solid rgba(52, 126, 144, 0.16);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.rental-cost-summary {
+  padding: 18px;
+}
+
+.rental-cost-summary h3 {
+  margin-bottom: 12px;
+}
+
+.rental-cost-lines > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(52, 126, 144, 0.1);
+  font-variant-numeric: tabular-nums;
+}
+
+.rental-cost-lines > div:last-child {
+  border-bottom: 0;
+}
+
+.rental-cost-total {
+  margin-top: 4px;
+  color: var(--forest);
+  font-size: 17px;
+}
+
+.rental-cost-caption {
+  margin-top: 12px !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+}
+
+.rental-confirmation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rental-confirmation-grid > div {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  padding: 14px 16px;
+}
+
+.rental-confirmation-grid strong {
+  color: var(--forest);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+.rental-confirmation-grid span {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.rental-booking-actions {
+  margin-top: 18px;
+}
+
+.rental-kicker {
+  margin-bottom: 6px !important;
+  color: var(--rust);
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase;
+}
+
+.rental-segment-card h3 {
+  max-width: 560px;
+}
+
+.rental-segment-card .MuiChip-root {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.rental-timeline {
+  margin: 20px 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--sage);
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+  background: rgba(138, 181, 155, 0.1);
+  font-variant-numeric: tabular-nums;
+}
+
+.rental-choice-list > div {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.rental-choice-list strong {
+  color: var(--forest);
+}
+
+.rental-note {
+  margin-top: 18px !important;
+  line-height: 1.7 !important;
+}
+
+.rental-quote-table {
+  overflow-x: auto;
+  border: 1px solid rgba(52, 126, 144, 0.18);
+}
+
+.rental-quote-table .MuiTable-root {
+  min-width: 820px;
+}
+
+.rental-quote-table .MuiTableCell-root {
+  padding: 14px 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rental-quote-table .MuiTableCell-head {
+  color: var(--forest);
+  background: rgba(138, 181, 155, 0.12);
+  font-weight: 900;
+}
+
+.rental-quote-table .quote-best {
+  background: rgba(52, 126, 144, 0.07);
+}
+
+.rental-quote-table span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.north-quote-strip {
+  margin-top: 16px;
+  align-items: center;
+}
+
+.north-quote-strip .MuiChip-root {
+  font-variant-numeric: tabular-nums;
+}
+
+.rental-recommendation {
+  margin-top: 16px;
+}
+
+.provider-card .MuiList-root {
+  min-height: 250px;
+  margin: 16px 0;
+}
+
+.provider-card .MuiListItemIcon-root,
+.rental-guide-card .MuiListItemIcon-root {
+  min-width: 38px;
+  color: var(--forest);
+}
+
+.provider-card .MuiListItemText-primary,
+.rental-guide-card .MuiListItemText-primary {
+  line-height: 1.65;
+}
+
+.rental-step-number {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--forest);
+  font-size: 13px;
+  font-weight: 800;
+  place-items: center;
+}
+
+@media (max-width: 600px) {
+  .rental-email-details,
+  .rental-confirmation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rental-segment-card .MuiCardContent-root,
+  .provider-card .MuiCardContent-root,
+  .rental-guide-card .MuiCardContent-root {
+    padding: 20px !important;
+  }
+
+  .rental-segment-card h3 {
+    font-size: 22px;
+  }
+
+  .rental-choice-list > div {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .provider-card .MuiList-root {
+    min-height: 0;
+  }
+}

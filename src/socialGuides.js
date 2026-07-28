@@ -75,7 +75,7 @@ const englishCopyByTitle = {
   },
   "New Zealand rental car tips before pickup": {
     points: ["The guide covers vehicle choice, insurance, collection, return and local driving preparation.", "Use it as a checklist before signing the rental agreement."],
-    tip: "Insurance cover, snow chains and one-way fees are governed by the Omega contract.",
+    tip: "Insurance cover, snow chains and one-way fees are governed by the Budget contract.",
   },
   "Ultimate Queenstown Travel Guide: Glenorchy and Wānaka": {
     points: ["The footage covers Queenstown, Glenorchy and Wānaka and helps judge a realistic day density.", "Road and viewpoint footage makes the distances easier to understand than a map alone."],
@@ -686,8 +686,8 @@ const christchurchAirportReturnPosts = contextualizeVerifiedPosts([
 ], {
   excerpt: "作为基督城还车、赶国内航班和抵达奥克兰的通用参考；原帖并非本次 JQ242 航班实测：",
   excerptEn: "General context for returning the car in Christchurch, catching a domestic flight and arriving in Auckland; the post is not a review of this trip's JQ242 flight: ",
-  tip: "先服从 Omega 还车截止时间、机场指引和 Jetstar 实时通知；",
-  tipEn: "Prioritise Omega's return deadline, airport directions and live Jetstar notices. ",
+  tip: "先服从 Budget 还车截止时间、机场指引和 Jetstar 实时通知；",
+  tipEn: "Prioritise Budget's return deadline, airport directions and live Jetstar notices. ",
 });
 
 const northIslandDriveReferencePosts = contextualizeVerifiedPosts([
@@ -855,7 +855,7 @@ export const socialGuidesByEvent = {
   "乘机前往新西兰": outboundFlightTransitGuides,
   "飞往皇后镇": verifiedQueenstownRegionGuides,
   "南岛取车入住": [
-    guide({ platform: "YouTube", title: "New Zealand rental car tips before pickup", source: "YouTube · 自驾准备", url: "https://www.youtube.com/watch?v=BzonKUtP77c", points: ["集中说明车型、保险、取还车和新西兰自驾准备。", "适合在签合同前核对容易忽略的租车问题。"], tip: "保障范围、雪链与异地还车费用必须以 Omega 合同为准。" }),
+    guide({ platform: "YouTube", title: "New Zealand rental car tips before pickup", source: "YouTube · 自驾准备", url: "https://www.youtube.com/watch?v=BzonKUtP77c", points: ["集中说明车型、保险、取还车和新西兰自驾准备。", "适合在签合同前核对容易忽略的租车问题。"], tip: "保障范围、雪链与异地还车费用必须以 Budget 合同为准。" }),
     rentalInsurancePitfallPost,
     ...verifiedQueenstownRegionGuides,
     verifiedXhsPost({

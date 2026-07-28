@@ -8,6 +8,7 @@ import { NorthPanel } from "./components/panels/NorthPanel";
 import { NotesPanel } from "./components/panels/NotesPanel";
 import { OverviewPanel } from "./components/panels/OverviewPanel";
 import { SouthPanel } from "./components/panels/SouthPanel";
+import { RentalCarPanel } from "./components/panels/RentalCarPanel";
 import { tabLabel } from "./components/tabIcons";
 import { bookingItems, tabs } from "./tripData";
 import { LanguageContext } from "./LanguageContext";
@@ -37,9 +38,12 @@ export default function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem(languageStorageKey) === "en" ? "en" : "zh");
   const [checked, setChecked] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem(storageKey) || "{}");
+      return {
+        ...JSON.parse(localStorage.getItem(storageKey) || "{}"),
+        "south-car": true,
+      };
     } catch {
-      return {};
+      return { "south-car": true };
     }
   });
   const progress = useMemo(() => {
@@ -69,6 +73,7 @@ export default function App() {
             {tab === "overview" && <OverviewPanel />}
             {tab === "south" && <SouthPanel />}
             {tab === "north" && <NorthPanel />}
+            {tab === "car" && <RentalCarPanel />}
             {tab === "booking" && (
               <BookingPanel checked={checked} setChecked={setChecked} storageKey={storageKey} />
             )}
@@ -83,7 +88,7 @@ export default function App() {
               {language === "zh" ? "English" : "中文"}
             </Button>
             <Paper className="mobile-nav" elevation={8}>
-              <Tabs value={tab} onChange={(_, value) => setTab(value)} variant="fullWidth">
+              <Tabs value={tab} onChange={(_, value) => setTab(value)} variant="scrollable" scrollButtons={false}>
                 {tabs.map((item) => <Tab key={item.value} value={item.value} label={tabLabel(item, "short", language)} />)}
               </Tabs>
             </Paper>

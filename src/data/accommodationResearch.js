@@ -88,7 +88,7 @@ export const accommodationResearch = {
     itineraryFit: [
       "10月6日长途自驾后约17:30入住，需要停车和晚到便利",
       "10月7日上午安排 Riverside Market、植物园或咖啡，市区步行效率重要",
-      "15:30前往 Omega 还车并准备20:30航班，离城路线不能太绕",
+      "15:30前往 Budget 基督城机场网点还车并准备20:30航班，离城路线不能太绕",
     ],
     accommodationQuestion: "比较市中心有停车的酒店与 aparthotel；单晚 Airbnb 清洁费通常不利，只有具体房源总价明显更低才纳入。",
     status: "pending-iab-verification",
