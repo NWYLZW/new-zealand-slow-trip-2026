@@ -159,7 +159,7 @@ export const localNameTranslations = {
   "Auckland Airport Domestic Terminal (AKL)": "奥克兰机场国内航站楼",
   "Queenstown Airport (ZQN)": "皇后镇机场",
   "Ramada by Wyndham Queenstown Central": "皇后镇华美达中央酒店",
-  "Omega Rental Cars Queenstown Airport": "Omega 皇后镇机场租车点",
+  "Budget Car Rental Queenstown Airport": "Budget 皇后镇机场租车点",
   "Queenstown / Tāhuna": "皇后镇",
   "Queenstown Gardens": "皇后镇花园",
   "Skyline Queenstown": "Skyline 皇后镇",
@@ -195,7 +195,7 @@ export const localNameTranslations = {
   "Riverside Market": "河畔市场",
   "Christchurch Botanic Gardens": "基督城植物园",
   "Christchurch Town Hall": "基督城市政厅",
-  "Omega Rental Cars Christchurch Airport": "Omega 基督城机场还车点",
+  "Budget Car Rental Christchurch Airport": "Budget 基督城机场还车点",
   "Christchurch Airport (CHC)": "基督城机场",
   "Auckland / Tāmaki Makaurau": "奥克兰",
   "Queen Street": "皇后街",
@@ -228,9 +228,9 @@ export const eventMediaByTitle = {
   },
   "南岛取车入住": {
     location: "皇后镇",
-    localNames: ["Omega Rental Cars Queenstown Airport", "Ramada by Wyndham Queenstown Central", "Queenstown / Tāhuna"],
+    localNames: ["Budget Car Rental Queenstown Airport", "Ramada by Wyndham Queenstown Central", "Queenstown / Tāhuna"],
     ...mediaGallery(queenstownImage, walterPeakImage, crownRangeImage),
-    links: [official("Omega 皇后镇机场取车", "https://www.omegarentalcars.com/queenstown-airport-car-rental/"), official("Ramada Queenstown Central 官网", "https://www.wyndhamhotels.com/ramada/queenstown-new-zealand/ramada-queenstown-central/overview"), googleMaps("Omega Rental Cars Queenstown Airport", "取车点地图"), googleMaps("Ramada by Wyndham Queenstown Central", "酒店地图"), redbook("皇后镇 镇中心 住宿")],
+    links: [official("Budget 皇后镇机场网点", "https://www.budget.co.nz/en/locations/nz/queenstown-si/zqn"), official("管理 Budget 订单", "https://www.budget.co.nz/en/reservation/view-modify-cancel"), googleMaps("Budget Car Rental Queenstown Airport", "取车点地图"), googleMaps("Ramada by Wyndham Queenstown Central", "酒店地图"), redbook("皇后镇 镇中心 住宿")],
   },
   "皇后镇适应日": {
     location: "皇后镇",
@@ -306,9 +306,9 @@ export const eventMediaByTitle = {
   },
   "还车飞奥克兰": {
     route: "基督城 → 奥克兰",
-    localNames: ["Omega Rental Cars Christchurch Airport", "Christchurch Airport (CHC)", "Auckland Airport Domestic Terminal (AKL)"],
+    localNames: ["Budget Car Rental Christchurch Airport", "Christchurch Airport (CHC)", "Auckland Airport Domestic Terminal (AKL)"],
     ...christchurchImage,
-    links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("基督城机场", "https://www.christchurchairport.co.nz/"), official("Omega 基督城机场还车", "https://www.omegarentalcars.com/car-rental-christchurch-airport/"), googleMaps("Christchurch Airport", "基督城机场地图"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), redbook("基督城机场 还车 飞奥克兰")],
+    links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("基督城机场", "https://www.christchurchairport.co.nz/"), official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"), googleMaps("Budget Car Rental Christchurch Airport", "还车点地图"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), redbook("基督城机场 还车 飞奥克兰")],
   },
   "奥克兰购物日": {
     location: "奥克兰 CBD 与 Newmarket",

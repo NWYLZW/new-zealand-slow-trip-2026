@@ -4,6 +4,7 @@ export const tabs = [
   { value: "overview", label: "行程总览", short: "总览", icon: "route" },
   { value: "south", label: "南岛行程", short: "南岛", icon: "terrain" },
   { value: "north", label: "北岛行程", short: "北岛", icon: "shopping" },
+  { value: "car", label: "租车规划", short: "租车", icon: "car" },
   { value: "booking", label: "机票酒店", short: "预订", icon: "hotel" },
   { value: "notes", label: "注意事项", short: "提醒", icon: "notes" },
 ];
@@ -95,7 +96,7 @@ export const southDays = [
       ["09:45", "前往国内航站楼"],
       ["11:35", "NZ619 起飞"],
       ["13:30", "抵达、机场午餐"],
-      ["15:30", "Omega 取车"],
+      ["15:30", "Budget 取车（已预订）"],
       ["16:15", "入住、湖边散步"],
     ],
   },
@@ -257,7 +258,7 @@ export const southDays = [
       ["10:00", "市区、Riverside Market"],
       ["12:00", "午餐"],
       ["13:00", "植物园或咖啡"],
-      ["15:30", "Omega 还车"],
+      ["15:30", "Budget 还车"],
       ["20:30", "JQ242 起飞"],
       ["21:50", "抵达奥克兰"],
       ["22:30", "前往奥克兰市中心酒店"],
@@ -455,7 +456,7 @@ export const hotelPlans = [
 
 export const bookingItems = [
   ["flight-nz619", "NZ619 奥克兰→皇后镇", "9月29日11:35—13:30；确认托运行李。"],
-  ["south-car", "Omega 南岛租车", "9月29日15:30取、10月7日15:30还；零自付额 + 雪链。"],
+  ["south-car", "Budget 南岛租车 · 已预订", "预订代码 00725083NZ2；RAV4 Hybrid 或同级；9月29日15:30皇后镇机场取、10月7日15:30基督城机场还；柜台付款，含 LDW、Zero Excess 与道路救援；确认总价 NZ$2,052.96。"],
   ["hotel-airport", "奥克兰机场酒店", "仅9月28日1晚；首选 Novotel Auckland Airport。"],
   ["hotel-auckland-city", "奥克兰市中心住宿", "10月7日入住2晚；优先比较 Britomart / Commercial Bay 与 Newmarket。"],
   ["hotel-queenstown", "皇后镇住宿", "9月29日入住4晚；当前首选已核验纯特大床的 Holiday Inn Remarkables Park。"],
@@ -492,9 +493,10 @@ export const notes = [
   {
     title: "租车关键点",
     items: [
-      "南岛取还车时间都填 15:30，控制在 8 个 24 小时内。",
-      "10月7日营业时间内还车，避开非营业时间费用。",
-      "不走 Skippers Road；碎石路先看租车条款。",
+      "南岛 Budget RAV4 Hybrid 或同级已预订：预订代码 00725083NZ2；柜台付款，含 LDW、Zero Excess 与道路救援，确认总价 NZ$2,052.96。",
+      "9月29日15:30皇后镇机场取车，10月7日15:30基督城机场营业时间内还车。",
+      "本单确认邮件写明取消或未到店均不收费；若行程变化，仍应在取车前主动在线取消。",
+      "不走 Skippers Road；车顶、底盘、涉水及其他条款除外损失仍可能需要全额自付。",
     ],
   },
 ];

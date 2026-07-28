@@ -3,9 +3,11 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import RouteIcon from "@mui/icons-material/Route";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import TerrainIcon from "@mui/icons-material/Terrain";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 
 const iconMap = {
   hotel: HotelIcon,
+  car: DirectionsCarIcon,
   notes: ListAltIcon,
   route: RouteIcon,
   shopping: ShoppingBagIcon,
@@ -21,6 +23,7 @@ const englishLabels = {
   overview: { label: "Trip overview", short: "Overview" },
   south: { label: "South Island", short: "South" },
   north: { label: "North Island", short: "North" },
+  car: { label: "Car rental plan", short: "Car" },
   booking: { label: "Flights & hotels", short: "Bookings" },
   notes: { label: "Travel notes", short: "Notes" },
 };
