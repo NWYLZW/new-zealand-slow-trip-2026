@@ -1,5 +1,5 @@
 import { RouteMap } from "../RouteMap";
 
-export function OverviewPanel() {
-  return <RouteMap />;
+export function OverviewPanel({ onDetailChange }) {
+  return <RouteMap onDetailChange={onDetailChange} />;
 }

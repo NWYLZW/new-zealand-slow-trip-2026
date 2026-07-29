@@ -50,7 +50,7 @@ export function NotesPanel() {
   const isEnglish = language === "en";
   const visibleNotes = isEnglish ? notesEn : notesZh;
   return (
-    <Stack spacing={3}>
+    <Stack className="notes-panel" spacing={3}>
       <PanelHero
         image={assetPath("images/aoraki.webp")}
         kicker="BEFORE YOU GO"

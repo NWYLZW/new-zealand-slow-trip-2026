@@ -1,37 +1,35 @@
 .page-shell {
   position: relative;
-  min-height: 100dvh;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .layout {
   display: grid !important;
   grid-template-columns: 238px minmax(0, 1fr);
-  gap: 24px;
-  width: min(1440px, calc(100% - 32px)) !important;
-  min-height: 100dvh;
-  padding: 18px 0 54px !important;
-}
-
-.page-shell[data-tab="booking"] .layout {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  width: 100% !important;
+  height: 100%;
+  min-height: 0;
+  padding: 0 !important;
 }
 
 .sidebar {
-  position: sticky;
-  top: 18px;
   display: flex;
+  width: 238px;
+  height: 100dvh;
+  min-height: 0;
   flex-direction: column;
-  align-self: start;
-  min-height: calc(100dvh - 36px);
-  padding: var(--radius-card);
-  border-radius: var(--radius-card) !important;
+  align-self: stretch;
+  overflow-y: auto;
+  padding: 14px;
+  border: 0 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 0 !important;
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: var(--glass-dark) !important;
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(22px) saturate(1.25);
-  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  background: #123f36 !important;
+  box-shadow: none !important;
 }
 
 .brand-mark {
@@ -68,6 +66,7 @@
 }
 
 .side-tabs {
+  min-height: 0;
   margin-top: 0;
 }
 
@@ -77,11 +76,11 @@
 
 .side-tabs .MuiTab-root {
   align-items: stretch;
-  min-height: 54px;
-  margin: 4px 0;
+  min-height: 50px;
+  margin: 2px 0;
   padding: 0 12px;
   border-radius: var(--radius-control);
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.68);
   font-weight: 900;
 }
 
@@ -103,11 +102,12 @@
 
 .sidebar-bottom {
   margin-top: auto;
+  padding-top: 14px;
 }
 
 .progress {
   height: 7px !important;
-  margin: 8px 0 16px;
+  margin: 8px 0 14px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.15) !important;
 }
@@ -128,5 +128,128 @@
 }
 
 .content {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: rgba(244, 247, 243, 0.88);
+}
+
+.page-header {
+  z-index: 20;
+  display: flex;
+  min-width: 0;
+  min-height: 56px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(24, 52, 46, 0.14);
+  background: rgba(255, 253, 248, 0.94);
+  backdrop-filter: blur(16px) saturate(1.12);
+  -webkit-backdrop-filter: blur(16px) saturate(1.12);
+}
+
+.page-header .MuiIconButton-root {
+  flex: 0 0 auto;
+  color: var(--forest);
+}
+
+.page-header .MuiIconButton-root.page-header-back {
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  border-radius: 6px;
+}
+
+.page-header-section-icon {
+  flex: 0 0 auto;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 2px;
+  color: var(--forest);
+  font-size: 20px !important;
+}
+
+.page-header-copy,
+.page-header-breadcrumb {
+  min-width: 0;
+}
+
+.page-header-copy {
+  flex: 1;
+  overflow: hidden;
+}
+
+.page-header-copy > h1,
+.page-header-breadcrumb h1,
+.page-header-breadcrumb button {
+  overflow: hidden;
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-header-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.page-header-breadcrumb button {
+  flex: 0 1 auto;
+  padding: 0;
+  border: 0;
+  color: var(--ink-soft);
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.page-header-breadcrumb h1 {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 900px) {
+  .page-header-breadcrumb button {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-header-breadcrumb button {
+    font-size: 16px;
+  }
+}
+
+.page-body {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 901px) {
+  .page-shell[data-tab="booking"]:not([data-detail]) .page-body,
+  .page-shell[data-tab="activities"]:not([data-detail]) .page-body {
+    overflow: hidden;
+  }
+}
+
+#mobile-navigation-drawer .MuiDrawer-paper {
+  width: min(86vw, 280px);
+  overflow: hidden;
+  border: 0;
+  background: #123f36;
+}
+
+#mobile-navigation-drawer .sidebar {
+  width: 100%;
+  padding-top: calc(14px + env(safe-area-inset-top));
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
 }

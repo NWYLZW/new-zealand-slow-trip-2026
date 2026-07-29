@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Paper, Snackbar, Stack, Tab, Tabs, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Chip, Dialog, IconButton, Paper, Snackbar, Stack, Tab, Tabs, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
@@ -256,8 +255,7 @@ function HotelComparisonMap({ activeHotelId, comparison, hotels, isEnglish, onHo
   );
 }
 
-export function HotelComparisonDialog({ activeHotelId, comparison = defaultComparison, hotels = aucklandAirportHotels, isEnglish, onActiveHotelChange, onClose, onSelect, open, selectedHotelId, stay }) {
-  const fullScreen = useMediaQuery("(max-width:600px)");
+export function HotelComparisonView({ activeHotelId, comparison = defaultComparison, hotels = aucklandAirportHotels, isEnglish, onActiveHotelChange, onSelect, selectedHotelId, stay }) {
   const visibleHotels = useMemo(() => hotels.filter((hotel) => !hotel.excludedByPreference && (!hotel.isAirbnb || hotel.isVerifiedListing)), [hotels]);
   const [gallery, setGallery] = useState(null);
   const [hotelSlideIndex, setHotelSlideIndex] = useState(0);
@@ -312,16 +310,8 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
   };
 
   useEffect(() => {
-    if (open) {
-      setHotelSlideIndex(0);
-      setCopyResult(null);
-    } else {
-      setGallery(null);
-    }
-  }, [open]);
-
-  useEffect(() => {
     setHotelSlideIndex(0);
+    setCopyResult(null);
   }, [activeHotel?.id]);
 
   useEffect(() => {
@@ -332,7 +322,7 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
         setGallery(null);
         return;
       }
-      if (!open || !activeHotel) {
+      if (!activeHotel) {
         setGallery(null);
         writeGalleryUrl(null);
         return;
@@ -357,35 +347,18 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
     syncGalleryFromUrl();
     window.addEventListener("popstate", syncGalleryFromUrl);
     return () => window.removeEventListener("popstate", syncGalleryFromUrl);
-  }, [activeHotel, isEnglish, open]);
+  }, [activeHotel, isEnglish]);
 
   return (
-    <Dialog
-      aria-labelledby="hotel-comparison-title"
-      className="hotel-comparison-dialog"
-      fullScreen={fullScreen}
-      fullWidth
-      maxWidth="lg"
-      onClose={onClose}
-      open={open}
+    <Box
+      aria-label={isEnglish ? comparison.titleEn : comparison.title}
+      className="hotel-comparison-page"
+      role="region"
     >
-      <DialogTitle id="hotel-comparison-title" className="hotel-comparison-title">
-        <Box>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <CompareArrowsIcon aria-hidden="true" />
-            <Typography component="h2" variant="h3">
-              {isEnglish ? comparison.titleEn : comparison.title}
-            </Typography>
-          </Stack>
-          <Typography color="text.secondary">
-            {isEnglish ? `${dates.checkIn}—${dates.checkOut} · 2 guests · 1 room` : `${dates.label} · 2人 · 1间`}
-          </Typography>
-        </Box>
-        <IconButton aria-label={isEnglish ? "Close" : "关闭"} onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent className="hotel-comparison-content">
+      <Typography className="hotel-comparison-stay-meta" color="text.secondary">
+        {isEnglish ? `${dates.checkIn}—${dates.checkOut} · 2 guests · 1 room` : `${dates.label} · 2人 · 1间`}
+      </Typography>
+      <Box className="hotel-comparison-content">
         <HotelComparisonMap
           activeHotelId={activeHotel.id}
           comparison={comparison}
@@ -766,7 +739,7 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
           })}
           </Box>
         </Box>
-      </DialogContent>
+      </Box>
       <Snackbar
         autoHideDuration={2400}
         message={copyResult?.ok
@@ -805,6 +778,6 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
           </Box>
         )}
       </Dialog>
-    </Dialog>
+    </Box>
   );
 }

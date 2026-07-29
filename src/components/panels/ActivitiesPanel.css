@@ -1,0 +1,427 @@
+.activities-panel,
+.activity-calendar {
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.activity-calendar {
+  margin: 0;
+}
+
+.route-day-calendar.activity-calendar {
+  margin-top: 0;
+}
+
+.activity-calendar-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  height: 100%;
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.56) !important;
+  background: rgba(255, 253, 248, 0.72) !important;
+  box-shadow: var(--shadow-lg) !important;
+  backdrop-filter: blur(18px) saturate(1.16);
+  -webkit-backdrop-filter: blur(18px) saturate(1.16);
+}
+
+.activity-booking-operator {
+  color: var(--lake);
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase;
+}
+
+.activity-progress-strip {
+  padding: 10px 16px 9px;
+  border-bottom: 1px solid rgba(24, 52, 46, 0.12);
+  background: linear-gradient(90deg, rgba(237, 245, 236, 0.98), rgba(255, 253, 248, 0.92));
+}
+
+.activity-progress-title {
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.activity-progress-strip .MuiTypography-colorTextSecondary {
+  font-size: 12px;
+}
+
+.activity-progress-percent {
+  flex: 0 0 auto;
+  color: var(--forest);
+  font-family: Georgia, serif !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.activity-progress-strip .MuiLinearProgress-root {
+  height: 6px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: rgba(18, 63, 54, 0.12);
+}
+
+.activity-progress-strip .MuiLinearProgress-bar {
+  border-radius: inherit;
+  background: var(--forest);
+}
+
+.activity-calendar-heading {
+  min-height: 0;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(24, 52, 46, 0.08);
+  background: #edf5ec;
+}
+
+.activity-calendar-heading > .MuiSvgIcon-root {
+  flex: 0 0 auto;
+  color: var(--forest);
+  font-size: 24px;
+}
+
+.activity-calendar-heading .route-month-title {
+  padding: 0;
+  font-size: 17px !important;
+}
+
+.activity-calendar-heading > div > p:last-child {
+  margin-top: 1px;
+  font-size: 11.5px;
+}
+
+.activity-calendar-grid-scroll {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  outline: none;
+}
+
+.activity-calendar-grid-scroll:focus-visible {
+  box-shadow: inset 0 0 0 3px rgba(18, 63, 54, 0.45);
+}
+
+.activity-calendar-grid-scroll .route-weekdays {
+  min-height: 29px;
+  padding: 5px 10px;
+}
+
+.activity-calendar-grid-scroll .route-month-grid {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  height: 100%;
+  min-height: 0;
+}
+
+.activity-calendar-day {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 8px;
+  background: rgba(255, 253, 248, 0.66) !important;
+}
+
+.activity-calendar-day[data-region="south"] {
+  background: rgba(240, 225, 215, 0.74) !important;
+}
+
+.activity-calendar-day[data-region="north"] {
+  background: rgba(223, 235, 228, 0.82) !important;
+}
+
+.activity-calendar-day[data-has-activities="true"] {
+  box-shadow: inset 0 4px 0 var(--coral);
+}
+
+.activity-calendar-day .route-day-date .MuiChip-root {
+  height: 21px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.activity-calendar-place {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 34px;
+  margin-top: 5px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1.45 !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.activity-calendar-subtitle {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 31px;
+  margin-top: 2px !important;
+  font-size: 10px !important;
+  line-height: 1.45 !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.activity-calendar-tickets {
+  margin-top: 7px;
+}
+
+.activity-calendar-ticket {
+  justify-content: flex-start !important;
+  width: 100%;
+  min-height: 28px !important;
+  padding: 3px 7px !important;
+  color: #fff !important;
+  background: #347e90 !important;
+  font-size: 10px !important;
+  line-height: 1.25 !important;
+  text-align: left;
+}
+
+.activity-calendar-ticket .MuiButton-startIcon {
+  margin-right: 4px;
+  margin-left: 0;
+}
+
+.activity-calendar-ticket .MuiSvgIcon-root {
+  font-size: 15px;
+}
+
+.activity-calendar-ticket[data-checked="true"] {
+  background: #2f7d55 !important;
+}
+
+.activity-calendar-empty {
+  padding-top: 4px;
+  color: rgba(24, 52, 46, 0.5);
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+}
+
+.activity-booking-card {
+  height: 100%;
+  overflow: auto;
+  border: 1px solid rgba(52, 126, 144, 0.22);
+  background: rgba(255, 253, 248, 0.93);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.activity-detail-page {
+  padding: 12px;
+}
+
+.activity-booking-card.checked {
+  border-color: rgba(46, 125, 50, 0.38);
+  background: rgba(237, 245, 236, 0.94);
+}
+
+.activity-booking-card .MuiCardContent-root {
+  padding: clamp(22px, 3vw, 32px);
+}
+
+.activity-booking-card h2 {
+  margin-top: 5px;
+  font-size: clamp(24px, 3vw, 36px);
+}
+
+.activity-booking-status {
+  height: auto !important;
+  min-height: 26px;
+  font-weight: 800;
+}
+
+.activity-booking-status .MuiChip-label {
+  overflow: visible;
+  padding-block: 5px;
+  white-space: normal;
+}
+
+.activity-booking-status[data-tone="selected"] { color: #225a4f; background: #dcebdd; }
+.activity-booking-status[data-tone="available"] { color: #245f39; background: #e5f3df; }
+.activity-booking-status[data-tone="attention"] { color: #7a4b12; background: #f8e7c8; }
+.activity-booking-status[data-tone="blocked"] { color: #8b3528; background: #f7ddd6; }
+
+.activity-booking-operator {
+  margin: 12px 0 0 !important;
+}
+
+.activity-booking-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0 16px;
+}
+
+.activity-booking-facts > div {
+  display: flex;
+  min-width: 0;
+  min-height: 72px;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 13px 14px;
+  border: 1px solid rgba(52, 126, 144, 0.14);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.activity-booking-facts svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--forest);
+}
+
+.activity-booking-facts span,
+.activity-booking-facts strong,
+.activity-booking-facts small {
+  display: block;
+}
+
+.activity-booking-facts span { min-width: 0; font-size: 14px; line-height: 1.5; }
+.activity-booking-facts strong { color: var(--forest); font-size: 19px; font-variant-numeric: tabular-nums; }
+.activity-booking-facts small { color: var(--ink-soft); font-size: 12px; }
+.activity-booking-detail, .activity-booking-policy { line-height: 1.7 !important; }
+.activity-booking-policy { margin-top: 7px !important; }
+.activity-booking-link { min-height: 44px; margin-top: 20px !important; }
+.activity-booking-checked-at {
+  margin: 0 !important;
+  padding: 7px 14px 8px;
+  border-top: 1px solid rgba(24, 52, 46, 0.1);
+  font-size: 10.5px !important;
+}
+
+@media (max-width: 900px) {
+  .activities-panel,
+  .activity-calendar {
+    height: auto;
+  }
+
+  .activity-calendar-card {
+    height: auto;
+  }
+
+  .route-day-calendar.activity-calendar {
+    overflow: hidden;
+  }
+
+  .activity-calendar-grid-scroll {
+    overflow: hidden;
+  }
+
+  .activity-calendar-grid-scroll > .route-weekdays,
+  .activity-calendar-grid-scroll > .route-month-grid {
+    min-width: 0;
+  }
+
+  .activity-calendar-grid-scroll .route-month-grid {
+    grid-template-rows: repeat(2, minmax(160px, auto));
+    height: auto;
+  }
+
+  .activity-calendar-day {
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 600px) {
+  .activity-progress-strip {
+    padding: 10px 12px 9px;
+  }
+
+  .activity-calendar-heading {
+    padding: 10px 12px;
+  }
+
+  .activity-calendar-heading > div > p:last-child {
+    font-size: 11px;
+  }
+
+  .activity-detail-page {
+    padding: 8px;
+  }
+
+  .activity-booking-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-booking-link {
+    width: 100%;
+  }
+
+  .activity-booking-card .MuiCardContent-root > .MuiStack-root:first-child > .MuiButton-root {
+    width: 100%;
+  }
+
+  .activity-calendar-day {
+    min-height: 112px;
+    padding: 6px 4px;
+  }
+
+  .activity-calendar-place {
+    min-height: 0;
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+    -webkit-line-clamp: 1;
+  }
+
+  .activity-calendar-subtitle,
+  .activity-calendar-empty,
+  .activity-calendar-ticket .MuiButton-startIcon + span {
+    display: none;
+  }
+
+  .activity-calendar-day .route-day-date .MuiChip-root {
+    width: 20px;
+    min-width: 20px;
+    overflow: hidden;
+  }
+
+  .activity-calendar-day .route-day-date .MuiChip-label {
+    display: none;
+  }
+
+  .activity-calendar-ticket {
+    position: relative;
+    width: 40px;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    padding: 4px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 0 !important;
+  }
+
+  .activity-calendar-ticket[data-checked="true"] {
+    background: transparent !important;
+  }
+
+  .activity-calendar-ticket .MuiButton-startIcon {
+    margin: 0;
+  }
+
+  .activity-calendar-ticket .MuiSvgIcon-root {
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: var(--radius-control);
+    background: #347e90;
+    box-sizing: border-box;
+  }
+
+  .activity-calendar-ticket[data-checked="true"] .MuiSvgIcon-root {
+    background: #2f7d55;
+  }
+
+  .activity-calendar-tickets {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-booking-card {
+    transition: none;
+  }
+}

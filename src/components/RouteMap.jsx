@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Stack, Tab, Tabs, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, Button, Chip, IconButton, Stack, Tab, Tabs, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
@@ -11,13 +10,16 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import ExploreIcon from "@mui/icons-material/Explore";
 import FlightIcon from "@mui/icons-material/Flight";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import ForumIcon from "@mui/icons-material/Forum";
 import HotelIcon from "@mui/icons-material/Hotel";
+import LinkIcon from "@mui/icons-material/Link";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
 import MapIcon from "@mui/icons-material/Map";
 import NightlightIcon from "@mui/icons-material/Nightlight";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ParkIcon from "@mui/icons-material/Park";
+import PlaceIcon from "@mui/icons-material/Place";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import TerrainIcon from "@mui/icons-material/Terrain";
 import { DirectionsRenderer, GoogleMap, InfoWindowF, MarkerF, PolylineF, useJsApiLoader } from "@react-google-maps/api";
@@ -33,6 +35,7 @@ import { eventTitleEn, mapStopEn, routeSegmentEn, routeText } from "../routeI18n
 import { socialGuidesByEvent } from "../socialGuides";
 import { EventRouteMap } from "./EventRouteMap";
 import { SocialGuideCard } from "./SocialGuideCard";
+import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "./calendar/CalendarPrimitives";
 
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -342,7 +345,11 @@ const mapOptions = {
 };
 
 const year = 2026;
-const weekdays = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+const weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+
+function mondayFirstColumn(date) {
+  return ((date.getDay() + 6) % 7) + 1;
+}
 const itineraryDays = [...southDays, ...northDays];
 const englishDayByDate = new Map(itineraryDaysEn.map((day) => [day.date, day]));
 const calendarRegionColors = {
@@ -628,7 +635,7 @@ function readEventUrl(eventById, mode) {
   const url = new URL(window.location.href);
   const routeHash = url.hash.slice(1);
   const isDefaultOverviewRoute = mode === "overview"
-    && !["south", "north", "car", "booking", "notes"].includes(routeHash);
+    && !["south", "north", "car", "booking", "activities", "notes"].includes(routeHash);
   if (routeHash !== mode && !isDefaultOverviewRoute) return null;
   const requestedEventId = url.searchParams.get(eventUrlParam);
   const event = eventById.get(requestedEventId);
@@ -794,7 +801,7 @@ function EventHeroCarousel({ children, eventKey, language, media }) {
       aria-label={language === "en" ? "Event photos" : "行程图片"}
       aria-roledescription="carousel"
       className={images.length ? "route-dialog-title has-media route-hero-carousel" : "route-dialog-title"}
-      component={DialogTitle}
+      component="section"
       role="region"
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setIsPaused(false);
@@ -878,7 +885,6 @@ function EventHeroCarousel({ children, eventKey, language, media }) {
 }
 
 function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", language = "zh", onDayRegionSelect, onDialogTabChange, onEventSelect, selectedEvent, selectedRegion, title = "2026 新西兰行程 · 9月28日—10月11日" }) {
-  const isSmallDialog = useMediaQuery("(max-width:600px)");
   const [copyResult, setCopyResult] = useState(null);
   const daysByKey = new Map();
   days.forEach((day) => {
@@ -895,21 +901,19 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
     setCopyResult(null);
   }, [selectedEventKey]);
 
-  return (
-    <>
+  if (!selectedEvent) {
+    return (
       <Box className="route-day-calendar">
         <Box className="route-month route-trip-calendar">
           <Typography className="route-month-title">{routeText(title, language)}</Typography>
-          <Box className="route-weekdays">
-            {weekdays.map((weekday, index) => <Typography key={weekday}>{language === "en" ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][index] : weekday}</Typography>)}
-          </Box>
-          <Box className="route-month-grid">
+          <CalendarWeekdays labels={language === "en" ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] : weekdays} />
+          <CalendarGrid>
             {getTripCalendarCells(days).map((date, index) => {
               const day = daysByKey.get(keyForDate(date));
               const calendarEvents = day ? getCalendarEvents(day) : [];
               const hasFlightTransfer = calendarEvents.some((event) => event.isFlightTransfer);
               const cellStyle = {
-                gridColumnStart: index === 0 ? date.getDay() + 1 : undefined,
+                gridColumnStart: index === 0 ? mondayFirstColumn(date) : undefined,
                 "--day-color": day ? calendarRegionColors[day.calendarRegion] : undefined,
               };
               const isSelectableRegion = Boolean(day && onDayRegionSelect && (day.calendarRegion === "south" || day.calendarRegion === "north"));
@@ -921,11 +925,11 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
               };
 
               return (
-                <Box
+                <CalendarDayCell
                   aria-label={isSelectableRegion ? (language === "en" ? `Focus ${day.calendarRegion === "south" ? "South Island" : "North Island"} itinerary` : `聚焦${day.calendarRegion === "south" ? "南岛" : "北岛"}行程`) : undefined}
                   aria-pressed={isSelectableRegion ? day.calendarRegion === selectedRegion : undefined}
                   key={date.toISOString()}
-                  className={day ? "route-day-cell has-day" : "route-day-cell"}
+                  className={day ? "has-day" : undefined}
                   data-day-region={day?.calendarRegion}
                   data-has-flight-transfer={hasFlightTransfer || undefined}
                   data-region-selectable={isSelectableRegion || undefined}
@@ -940,10 +944,8 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                   role={isSelectableRegion ? "button" : undefined}
                   style={cellStyle}
                   tabIndex={isSelectableRegion ? 0 : undefined}
+                  date={`${date.getMonth() + 1}/${date.getDate()}`}
                 >
-                  <Stack direction="row" alignItems="center" className="route-day-date">
-                    <Typography>{date.getMonth() + 1}/{date.getDate()}</Typography>
-                  </Stack>
                   {day && (
                     <Box>
                       <Stack direction="row" className="route-event-tags">
@@ -972,32 +974,21 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                       </Stack>
                     </Box>
                   )}
-                </Box>
+                </CalendarDayCell>
               );
             })}
-          </Box>
+          </CalendarGrid>
         </Box>
       </Box>
-      <Dialog
-        className="route-dialog"
-        fullScreen={isSmallDialog}
-        open={Boolean(selectedEvent)}
-        onClose={() => onEventSelect?.(null)}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{ style: selectedEvent ? { "--event-color": selectedEvent.color } : undefined }}
-      >
-        {selectedEvent && (
-          <>
-            {isSmallDialog && (
-              <IconButton
-                aria-label={language === "en" ? "Close trip details" : "关闭行程详情"}
-                className="route-dialog-close"
-                onClick={() => onEventSelect?.(null)}
-              >
-                <CloseIcon />
-              </IconButton>
-            )}
+    );
+  }
+
+  return (
+    <Box
+      aria-label={language === "en" ? "Trip event detail" : "行程事件详情"}
+      className="route-event-page"
+      style={{ "--event-color": selectedEvent.color }}
+    >
             <Box className="route-dialog-hero-grid">
               <EventHeroCarousel
                 eventKey={selectedEventKey}
@@ -1053,13 +1044,13 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
               value={activeDialogTab}
               variant="scrollable"
             >
-              <Tab value="schedule" label={routeText("行程安排", language)} />
-              {selectedEvent.flights?.length > 0 && <Tab value="flight" label={routeText("机票信息", language)} />}
-              {selectedEvent.media?.localNames?.length > 0 && <Tab value="names" label={routeText("相关地名", language)} />}
-              {selectedSocialGuides.length > 0 && <Tab value="social" label={language === "en" ? "Social guides" : "社交攻略"} />}
-              {selectedEvent.media?.links?.length > 0 && <Tab value="links" label={routeText("相关链接", language)} />}
+              <Tab icon={<CalendarTodayIcon />} iconPosition="start" value="schedule" label={routeText("行程安排", language)} />
+              {selectedEvent.flights?.length > 0 && <Tab icon={<FlightIcon />} iconPosition="start" value="flight" label={routeText("机票信息", language)} />}
+              {selectedEvent.media?.localNames?.length > 0 && <Tab icon={<PlaceIcon />} iconPosition="start" value="names" label={routeText("相关地名", language)} />}
+              {selectedSocialGuides.length > 0 && <Tab icon={<ForumIcon />} iconPosition="start" value="social" label={language === "en" ? "Social guides" : "社交攻略"} />}
+              {selectedEvent.media?.links?.length > 0 && <Tab icon={<LinkIcon />} iconPosition="start" value="links" label={routeText("相关链接", language)} />}
             </Tabs>
-            <DialogContent>
+            <Box className="route-event-page-content">
               {activeDialogTab === "schedule" && (
                 <>
                   <Stack spacing={1.2} className="route-dialog-events">
@@ -1154,11 +1145,8 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                   )}
                 </Stack>
               )}
-            </DialogContent>
-          </>
-        )}
-      </Dialog>
-    </>
+            </Box>
+    </Box>
   );
 }
 
@@ -1514,7 +1502,7 @@ function GoogleRouteMap({ language = "zh", mode = "overview" }) {
   );
 }
 
-export function RouteMap({ mode = "overview", days = itineraryDays }) {
+export function RouteMap({ mode = "overview", days = itineraryDays, onDetailChange }) {
   const { language } = useLanguage();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const config = routeConfigs[mode] ?? routeConfigs.overview;
@@ -1533,21 +1521,25 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
     ? (region) => setSelectedRegion((current) => current === region ? null : region)
     : undefined;
 
+  const closeEvent = useCallback(() => {
+    setEventView(null);
+    if (history.state?.routeEventPage || history.state?.routeEventDialog) {
+      history.back();
+      return;
+    }
+    writeEventUrl(null);
+  }, []);
+
   const selectEvent = (event) => {
     if (!event) {
-      setEventView(null);
-      if (history.state?.routeEventDialog) {
-        history.back();
-        return;
-      }
-      writeEventUrl(null);
+      closeEvent();
       return;
     }
 
     const view = { eventId: eventUrlId(event), tab: "schedule" };
     const currentState = history.state && typeof history.state === "object" ? history.state : {};
     setEventView(view);
-    writeEventUrl(view, "pushState", { ...currentState, routeEventDialog: true }, mode);
+    writeEventUrl(view, "pushState", { ...currentState, routeEventPage: true }, mode);
   };
 
   const changeDialogTab = (tab) => {
@@ -1582,6 +1574,36 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
     };
   }, [eventById, mode]);
 
+  useEffect(() => {
+    if (!onDetailChange) return undefined;
+    if (!selectedEvent) {
+      onDetailChange(null);
+      return undefined;
+    }
+
+    onDetailChange({
+      label: language === "en" ? (eventTitleEn[selectedEvent.title] ?? selectedEvent.title) : selectedEvent.title,
+      onBack: closeEvent,
+    });
+    return () => onDetailChange(null);
+  }, [closeEvent, language, onDetailChange, selectedEvent]);
+
+  const calendar = (
+    <RouteDayCalendar
+      days={localizedDays}
+      dialogTab={eventView?.tab}
+      language={language}
+      onDayRegionSelect={selectRegion}
+      onDialogTabChange={changeDialogTab}
+      onEventSelect={selectEvent}
+      selectedEvent={selectedEvent}
+      selectedRegion={selectedRegion}
+      title={config.calendarTitle}
+    />
+  );
+
+  if (selectedEvent) return calendar;
+
   return (
     <Box className="route-map-section">
       <Box className="map-frame map-frame-full">
@@ -1604,17 +1626,7 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
           <LeafletRouteMap language={language} mode={mapMode} />
         )}
       </Box>
-      <RouteDayCalendar
-        days={localizedDays}
-        dialogTab={eventView?.tab}
-        language={language}
-        onDayRegionSelect={selectRegion}
-        onDialogTabChange={changeDialogTab}
-        onEventSelect={selectEvent}
-        selectedEvent={selectedEvent}
-        selectedRegion={selectedRegion}
-        title={config.calendarTitle}
-      />
+      {calendar}
     </Box>
   );
 }

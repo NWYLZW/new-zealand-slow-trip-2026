@@ -13,7 +13,7 @@ const theme = createTheme({
     background: { default: "#f4f7f3", paper: "#fffdf8" },
     text: { primary: "#18342e", secondary: "#58716a" },
   },
-  shape: { borderRadius: 18 },
+  shape: { borderRadius: 10 },
   typography: {
     fontFamily:
       '"PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif',

@@ -15,14 +15,17 @@ import { assetPath } from "../assets";
 import { tabs } from "../tripData";
 import { tabLabel } from "./tabIcons";
 
-export function Sidebar({ tab, onTabChange, progress, language, onLanguageToggle }) {
+export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress, language, onLanguageToggle }) {
   const isEnglish = language === "en";
   return (
-    <Paper className="sidebar" elevation={0}>
+    <Paper className={`sidebar ${className}`.trim()} component="nav" aria-label={isEnglish ? "Main navigation" : "主导航"} elevation={0}>
       <Tabs
         orientation="vertical"
         value={tab}
-        onChange={(_, value) => onTabChange(value)}
+        onChange={(_, value) => {
+          onTabChange(value);
+          onNavigate?.();
+        }}
         className="side-tabs"
       >
         {tabs.map((item) => (

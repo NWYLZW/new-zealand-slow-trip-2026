@@ -1,20 +1,35 @@
 @media (max-width: 1040px) {
   .layout {
     grid-template-columns: 210px minmax(0, 1fr);
-    gap: 16px;
   }
 
+  .sidebar {
+    width: 210px;
+  }
 }
 
 @media (max-width: 900px) {
-  body {
-    padding-bottom: calc(86px + env(safe-area-inset-bottom));
+  .layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100% !important;
+    padding: 0 !important;
   }
 
-  .layout {
-    display: block !important;
-    width: min(100% - 20px, 720px) !important;
-    padding-top: 10px !important;
+  .page-header {
+    min-height: calc(54px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .page-header-copy > h1,
+  .page-header-breadcrumb h1 {
+    font-size: 18px;
+  }
+
+  .page-header-breadcrumb button {
+    max-width: 38%;
   }
 
   .map-frame,
@@ -26,7 +41,7 @@
   }
 
   .route-day-calendar {
-    overflow-x: auto;
+    overflow-x: hidden;
   }
 
   .route-dialog-hero-grid {
@@ -45,7 +60,7 @@
 
   .route-weekdays,
   .route-month-grid {
-    min-width: 760px;
+    min-width: 0;
   }
 
   .section-title {
@@ -80,22 +95,24 @@
 }
 
 @media (max-width: 600px) {
-  .route-dialog .MuiDialog-container,
-  .route-dialog .MuiDialog-paper {
-    width: 100%;
-    height: 100%;
-    max-height: none;
-    margin: 0;
-    border: 0;
-    border-radius: 0 !important;
+  .page-header {
+    gap: 0;
   }
 
-  .route-dialog .MuiDialog-paper {
-    overflow-x: hidden;
-    background: rgba(255, 253, 248, 0.96);
+  .page-header .MuiIconButton-root {
+    padding: 8px;
   }
 
-  .route-dialog .MuiDialogTitle-root,
+  .page-header-copy > h1,
+  .page-header-breadcrumb h1 {
+    font-size: 16px;
+  }
+
+  .page-header-breadcrumb {
+    gap: 6px;
+  }
+
+  .route-event-page .route-dialog-title,
   .route-dialog-hero-grid .route-dialog-title {
     min-height: 210px;
   }
@@ -104,8 +121,8 @@
     flex-shrink: 0;
   }
 
-  .route-dialog .MuiDialogTitle-root {
-    padding: calc(42px + env(safe-area-inset-top)) 18px 18px;
+  .route-event-page .route-dialog-title {
+    padding: 18px;
   }
 
   .route-dialog-title-copy > .MuiStack-root:first-child {
@@ -183,7 +200,7 @@
     font-size: 12px;
   }
 
-  .route-dialog .MuiDialogContent-root {
+  .route-event-page-content {
     padding: 14px 16px calc(24px + env(safe-area-inset-bottom));
   }
 
@@ -204,8 +221,21 @@
 }
 
 @media print {
+  html,
+  body,
+  #root,
+  .page-shell,
+  .layout,
+  .content,
+  .page-body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
   .sidebar,
-  .mobile-nav,
+  .page-header-menu,
   .MuiButton-root {
     display: none !important;
   }

@@ -1,0 +1,112 @@
+/*
+ * Shared layout rhythm: page edges are flush, structural sections meet at a
+ * divider. Only page-level layout surfaces are square: controls, map chrome,
+ * status chips, avatars and carousel controls retain their semantic shape.
+ */
+.page-shell {
+  --layout-section-gap: var(--section-gap);
+  --layout-content-padding: var(--content-padding);
+  --layout-control-gap: var(--control-gap);
+}
+
+.page-shell :where(
+  .route-month,
+  .accommodation-overview-card,
+  .activity-calendar-card,
+  .panel-hero
+) {
+  border-radius: var(--radius-layout) !important;
+  box-shadow: none !important;
+}
+
+.page-shell :where(.MuiGrid2-container) {
+  --Grid-rowSpacing: var(--space-4) !important;
+  --Grid-columnSpacing: var(--space-4) !important;
+}
+
+.route-month,
+.map-frame,
+.route-map-section {
+  border-radius: var(--radius-layout) !important;
+  box-shadow: none !important;
+}
+
+.route-map-section {
+  display: grid;
+  grid-template-rows: minmax(0, auto) minmax(0, auto);
+  gap: var(--layout-section-gap);
+}
+
+.route-map-section > .route-day-calendar {
+  margin-top: 0;
+}
+
+.route-map-section > .map-frame + .route-day-calendar .route-month {
+  border-top-color: rgba(24, 52, 46, 0.16);
+}
+
+.route-event-page-content,
+.activity-booking-card .MuiCardContent-root,
+.rental-booking-confirmed .MuiCardContent-root,
+.rental-guide-card .MuiCardContent-root,
+.route-social-guide-card .MuiCardContent-root {
+  padding: var(--layout-content-padding) !important;
+}
+
+.hotel-comparison-content {
+  padding: 0 !important;
+}
+
+.hotel-comparison-map-wrap {
+  margin: 0 !important;
+  border-right: 0;
+  border-left: 0;
+  border-radius: var(--radius-layout) !important;
+  box-shadow: none !important;
+}
+
+.hotel-destination-research {
+  margin: 0 !important;
+  border-right: 0 !important;
+  border-left: 0 !important;
+}
+
+.hotel-comparison-tabs-panel {
+  border-radius: var(--radius-layout) !important;
+  border-right: 0;
+  border-left: 0;
+  box-shadow: none !important;
+}
+
+.hotel-option-card {
+  padding: var(--layout-content-padding) !important;
+}
+
+.hotel-room-type-layout,
+.hotel-platform-ratings,
+.hotel-room-platform-prices,
+.hotel-nearby-attractions-grid,
+.hotel-option-pros-cons,
+.airport-overnight-guides {
+  gap: var(--layout-control-gap);
+}
+
+.activity-detail-page {
+  padding: 0 !important;
+}
+
+.activity-booking-facts {
+  gap: var(--layout-control-gap);
+  margin: var(--space-4) 0;
+}
+
+.rental-panel,
+.notes-panel {
+  gap: var(--space-4) !important;
+}
+
+@media (max-width: 900px) {
+  .accommodation-calendar {
+    margin-bottom: 0;
+  }
+}

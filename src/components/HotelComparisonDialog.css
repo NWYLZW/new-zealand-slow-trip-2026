@@ -1,28 +1,19 @@
-.hotel-comparison-dialog .MuiDialog-paper {
-  overflow: hidden;
-  border-radius: var(--radius-card);
-  background: #fffdf8;
+.hotel-comparison-page {
+  min-width: 0;
+  min-height: 100%;
+  background: rgba(255, 253, 248, 0.74);
 }
 
-.hotel-comparison-title {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 22px 24px 16px !important;
+.hotel-comparison-stay-meta {
+  padding: 10px 16px;
   border-bottom: 1px solid rgba(18, 63, 54, 0.12);
-}
-
-.hotel-comparison-title h2 {
-  white-space: nowrap;
-}
-
-.hotel-comparison-title > .MuiIconButton-root {
-  flex: 0 0 auto;
+  font-size: 13px !important;
+  font-weight: 800 !important;
 }
 
 .hotel-comparison-content {
-  padding: 20px 24px 26px !important;
+  min-width: 0;
+  padding: 16px;
 }
 
 .hotel-comparison-map-wrap {
@@ -812,27 +803,8 @@
   .hotel-nearby-attractions-grid {
     grid-template-columns: 1fr;
   }
-  .hotel-comparison-dialog .MuiDialog-paper {
-    border-radius: 0;
-  }
-
-  .hotel-comparison-title {
-    position: sticky;
-    z-index: 2;
-    top: 0;
-    padding: 14px 14px 12px !important;
-    background: #fffdf8;
-  }
-
-  .hotel-comparison-title h2 {
-    overflow: hidden;
-    max-width: calc(100vw - 96px);
-    font-size: 22px !important;
-    text-overflow: ellipsis;
-  }
-
   .hotel-comparison-content {
-    padding: 14px !important;
+    padding: 10px;
   }
 
   .hotel-comparison-map {

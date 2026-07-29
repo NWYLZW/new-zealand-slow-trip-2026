@@ -1,186 +1,282 @@
+.booking-panel,
 .accommodation-calendar {
-  margin: 18px 0;
+  height: 100%;
+  min-height: 0;
 }
 
-.activity-booking-section { display: grid; gap: 14px; }
-.activity-booking-summary {
+.accommodation-calendar {
+  margin: 0;
+}
+
+.route-day-calendar.accommodation-calendar {
+  margin-top: 0;
+}
+
+.accommodation-overview-card {
+  display: grid;
+  grid-template-rows: auto minmax(220px, 28vh) auto minmax(0, 1fr);
+  height: 100%;
   overflow: hidden;
-  border: 1px solid rgba(52, 126, 144, 0.24);
-  background: radial-gradient(circle at 96% 4%, rgba(242, 184, 107, 0.22), transparent 34%), linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(237, 245, 236, 0.96));
+  border-color: rgba(255, 255, 255, 0.56) !important;
+  background: rgba(255, 253, 248, 0.72) !important;
+  box-shadow: var(--shadow-lg) !important;
+  backdrop-filter: blur(18px) saturate(1.16);
+  -webkit-backdrop-filter: blur(18px) saturate(1.16);
 }
-.activity-booking-summary .MuiCardContent-root { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; padding: clamp(22px, 3vw, 32px); }
-.activity-booking-kicker, .activity-booking-operator { color: var(--lake); font-size: 12px !important; font-weight: 900 !important; letter-spacing: 0.09em !important; text-transform: uppercase; }
-.activity-booking-summary h2 { margin: 5px 0 8px; font-size: clamp(26px, 3vw, 38px); line-height: 1.15; }
-.activity-booking-summary > .MuiCardContent-root > div:first-child > p:last-child { max-width: 690px; line-height: 1.65; }
-.activity-booking-total { max-width: 420px; min-width: 260px; padding: 18px 20px; border: 1px solid rgba(18, 63, 54, 0.12); border-radius: var(--radius-inner); background: rgba(255, 253, 248, 0.78); }
-.activity-booking-total > p:first-child { color: var(--ink-soft); font-size: 13px; font-weight: 800; }
-.activity-booking-total-value { margin: 4px 0 !important; color: var(--forest); font-family: Georgia, serif !important; font-size: clamp(30px, 3.2vw, 42px) !important; font-weight: 900 !important; line-height: 1.1 !important; }
-.activity-booking-total > p:last-child { color: var(--ink-soft); font-size: 12px; }
-.activity-booking-card { height: 100%; border: 1px solid rgba(52, 126, 144, 0.18); background: rgba(255, 253, 248, 0.92); transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
-.activity-booking-card:hover { border-color: rgba(52, 126, 144, 0.42); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
-.activity-booking-card.checked { border-color: rgba(46, 125, 50, 0.35); background: rgba(237, 245, 236, 0.94); }
-.activity-booking-card .MuiCardContent-root { display: flex; min-height: 360px; height: 100%; padding: 22px; flex-direction: column; }
-.activity-booking-card .MuiCheckbox-root { flex: 0 0 auto; margin: -10px -8px 0 0; }
-.activity-booking-status { max-width: calc(100% - 48px); height: auto !important; min-height: 26px; font-weight: 800; }
-.activity-booking-status .MuiChip-label { overflow: visible; padding-block: 5px; white-space: normal; }
-.activity-booking-status[data-tone="selected"] { color: #225a4f; background: #dcebdd; }
-.activity-booking-status[data-tone="available"] { color: #245f39; background: #e5f3df; }
-.activity-booking-status[data-tone="attention"] { color: #7a4b12; background: #f8e7c8; }
-.activity-booking-status[data-tone="blocked"] { color: #8b3528; background: #f7ddd6; }
-.activity-booking-operator { margin: 12px 0 5px !important; }
-.activity-booking-card h3 { font-size: clamp(20px, 2.2vw, 26px); line-height: 1.28; }
-.activity-booking-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 18px 0 14px; }
-.activity-booking-facts > div { display: flex; min-width: 0; min-height: 66px; gap: 9px; align-items: flex-start; padding: 11px 12px; border: 1px solid rgba(52, 126, 144, 0.14); border-radius: var(--radius-control); background: rgba(255, 255, 255, 0.72); }
-.activity-booking-facts svg { flex: 0 0 auto; margin-top: 2px; color: var(--forest); font-size: 20px; }
-.activity-booking-facts span, .activity-booking-facts strong, .activity-booking-facts small { display: block; }
-.activity-booking-facts span { min-width: 0; font-size: 13px; line-height: 1.45; }
-.activity-booking-facts strong { color: var(--forest); font-size: 18px; font-variant-numeric: tabular-nums; }
-.activity-booking-facts small { color: var(--ink-soft); font-size: 11px; }
-.activity-booking-detail, .activity-booking-policy { line-height: 1.65 !important; }
-.activity-booking-detail { font-size: 14px !important; }
-.activity-booking-policy { margin-top: 7px !important; font-size: 12px !important; }
-.activity-booking-link { align-self: flex-start; min-height: 44px; margin-top: auto !important; padding-top: 10px !important; }
-.activity-booking-checked-at { margin: -2px 4px 0 !important; font-size: 12px !important; }
 
-.accommodation-calendar-grid-scroll {
-  overflow-x: auto;
+.accommodation-progress-strip {
+  padding: 10px 16px 9px;
+  border-bottom: 1px solid rgba(24, 52, 46, 0.12);
+  background: linear-gradient(90deg, rgba(237, 245, 236, 0.98), rgba(255, 253, 248, 0.92));
+}
+
+.accommodation-progress-title {
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.accommodation-progress-strip .MuiTypography-colorTextSecondary {
+  font-size: 12px;
+}
+
+.accommodation-progress-percent {
+  flex: 0 0 auto;
+  color: var(--forest);
+  font-family: Georgia, serif !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.accommodation-progress-strip .MuiLinearProgress-root {
+  height: 6px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: rgba(18, 63, 54, 0.12);
+}
+
+.accommodation-progress-strip .MuiLinearProgress-bar {
+  border-radius: inherit;
+  background: var(--forest);
+}
+
+.accommodation-overview-card > .accommodation-map-wrap {
+  height: auto;
+  min-height: 0;
 }
 
 .accommodation-calendar-title {
-  min-height: 76px;
-  padding: 14px 16px;
+  min-height: 0;
+  padding: 8px 14px;
+  border-top: 1px solid rgba(24, 52, 46, 0.08);
   background: #edf5ec;
 }
 
 .accommodation-calendar-title > .MuiSvgIcon-root {
   flex: 0 0 auto;
   color: var(--forest);
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .accommodation-calendar-title .route-month-title {
   padding: 0;
+  font-size: 17px !important;
 }
 
 .accommodation-calendar-title p:last-child {
-  margin-top: 2px;
-  font-size: 13px;
+  margin-top: 1px;
+  font-size: 11.5px;
+}
+
+.accommodation-calendar-grid-scroll {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.accommodation-calendar-grid-scroll .route-weekdays {
+  min-height: 29px;
+  padding: 5px 10px;
+}
+
+.accommodation-calendar-grid-scroll .route-month-grid {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  height: 100%;
+  min-height: 0;
+}
+
+.accommodation-stay-segment {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.accommodation-stay-segment[data-confirmation]::before {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 5px;
+  content: "";
+  pointer-events: none;
+}
+
+.accommodation-stay-segment[data-confirmation="confirmed"]::before {
+  background: #2f7d55;
+}
+
+.accommodation-stay-segment[data-confirmation="pending"]::before {
+  background: #b64036;
+}
+
+.accommodation-stay-segment-days {
+  display: grid;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.accommodation-stay-segment-summary {
+  position: absolute;
+  z-index: 2;
+  top: 52px;
+  right: 8px;
+  left: 8px;
+  min-width: 0;
+  pointer-events: none;
 }
 
 .route-day-cell.accommodation-day-cell {
+  position: relative;
   display: flex;
+  min-width: 0;
+  min-height: 0;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  width: 100%;
-  min-width: 0;
-  min-height: 136px;
-  padding: 10px;
+  overflow: hidden;
+  padding: 7px 8px;
   color: var(--ink);
   text-align: left;
   vertical-align: top;
   transition: box-shadow 160ms ease, filter 160ms ease;
 }
 
-.accommodation-day-selector {
-  display: flex !important;
-  flex-direction: column;
-  align-items: stretch !important;
+.accommodation-stay-segment[data-tone="airport"] { background: #e7f2f3; }
+.accommodation-stay-segment[data-tone="auckland-city"] { background: #e8f0e7; }
+.accommodation-stay-segment[data-tone="queenstown"] { background: #e9f1e5; }
+.accommodation-stay-segment[data-tone="wanaka"] { background: #e5eff6; }
+.accommodation-stay-segment[data-tone="mount-cook"] { background: #eee9f5; }
+.accommodation-stay-segment[data-tone="oamaru"] { background: #f4eddc; }
+.accommodation-stay-segment[data-tone="christchurch"] { background: #f6eadf; }
+.accommodation-stay-segment[data-tone="flight"] { background: #eceeed; }
+
+.accommodation-day-cell-trigger {
+  position: absolute !important;
+  z-index: 1;
+  inset: 0;
   width: 100%;
-  color: inherit !important;
-  text-align: left;
+  height: 100%;
+  cursor: pointer;
 }
 
-.accommodation-day-cell[data-tone="airport"] { background: #e7f2f3; }
-.accommodation-day-cell[data-tone="auckland-city"] { background: #e8f0e7; }
-.accommodation-day-cell[data-tone="queenstown"] { background: #e9f1e5; }
-.accommodation-day-cell[data-tone="wanaka"] { background: #e5eff6; }
-.accommodation-day-cell[data-tone="mount-cook"] { background: #eee9f5; }
-.accommodation-day-cell[data-tone="christchurch"] { background: #f6eadf; }
-.accommodation-day-cell[data-tone="rotorua"] { background: #f3e8dc; }
-.accommodation-day-cell[data-tone="flight"] { background: #eceeed; }
-
-.accommodation-day-cell:hover {
-  z-index: 1;
+.accommodation-stay-segment:has(.accommodation-day-cell:hover),
+.accommodation-stay-segment:has(.accommodation-day-cell-trigger:focus-visible) {
+  z-index: 2;
   filter: brightness(0.97);
   box-shadow: inset 0 0 0 2px rgba(18, 63, 54, 0.32);
 }
 
-.accommodation-day-selector:focus-visible {
-  z-index: 2;
-  outline: 3px solid var(--forest);
-  outline-offset: -3px;
+.accommodation-day-cell-trigger:focus-visible {
+  outline: 0;
 }
 
-.accommodation-day-cell[data-selected="true"] {
+.accommodation-stay-segment[data-selected="true"] {
   position: relative;
   z-index: 1;
   box-shadow: inset 0 0 0 3px #2f7467;
 }
 
 .accommodation-date {
-  gap: 6px;
   width: 100%;
+  min-width: 0;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 3px;
 }
 
 .accommodation-date > p {
-  flex: 0 0 auto;
+  font-size: 12px;
   font-weight: 900;
 }
 
-.accommodation-date .MuiChip-root {
-  min-width: 0;
-  height: 22px;
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.72);
-  font-size: 10px;
-  font-weight: 800;
+.accommodation-status-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
 }
 
-.accommodation-date .MuiChip-label {
-  overflow: hidden;
-  padding: 0 7px;
-  text-overflow: ellipsis;
+.accommodation-transit-tag {
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.66);
 }
 
 .accommodation-place {
   display: flex;
+  min-width: 0;
   gap: 5px;
   align-items: center;
-  margin-top: 18px;
+  margin-top: 7px;
+}
+
+.accommodation-stay-segment-summary .accommodation-place {
+  margin-top: 0;
 }
 
 .accommodation-place .MuiSvgIcon-root {
   flex: 0 0 auto;
   color: var(--forest);
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .accommodation-place p {
   min-width: 0;
   overflow: hidden;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .accommodation-hotel-name {
-  display: inline-flex;
-  gap: 3px;
-  align-items: center;
+  display: -webkit-box;
   align-self: flex-start;
   overflow: hidden;
-  margin-top: 5px !important;
+  max-height: 2.7em;
+  margin-top: 3px !important;
   color: var(--ink-soft);
-  font-size: 11px !important;
-  line-height: 1.35 !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
   text-decoration: none;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.accommodation-hotel-name:is(a) {
+  position: relative;
+  z-index: 2;
 }
 
 .accommodation-hotel-name .MuiSvgIcon-root {
-  flex: 0 0 auto;
-  font-size: 12px;
+  margin-bottom: -2px;
+  font-size: 11px;
 }
 
 .accommodation-hotel-name:hover,
@@ -191,67 +287,124 @@
 }
 
 .accommodation-day-cell.is-no-stay .accommodation-place {
-  margin-top: 22px;
+  margin-top: 10px;
 }
 
-.booking-card {
-  height: 100%;
-  cursor: pointer;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-}
-
-.booking-card:hover {
-  transform: translateY(-2px);
-  border-color: #aac4b5;
-}
-
-.booking-card.checked {
-  border-color: #a8c5b0;
-  background: rgba(237, 245, 236, 0.66) !important;
-}
-
-.progress-card {
-  position: sticky;
-  top: 18px;
-  color: #fff !important;
-  background: rgba(18, 63, 54, 0.78) !important;
-}
-
-.progress-card .MuiTypography-root { color: inherit; }
-.progress-note { margin-top: 16px !important; }
-
-.progress-card .MuiLinearProgress-root {
-  height: 9px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.progress-card .MuiLinearProgress-bar {
-  border-radius: inherit;
-  background: var(--sun);
-}
-
-.big-progress {
-  margin: 8px 0 !important;
-  font-family: Georgia, serif !important;
-  font-size: 58px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
+@media (min-width: 901px) {
+  .page-shell[data-tab="booking"] .accommodation-calendar {
+    margin-top: 0;
+  }
 }
 
 @media (max-width: 900px) {
-  .accommodation-calendar { overflow-x: visible; }
-  .activity-booking-summary .MuiCardContent-root { grid-template-columns: 1fr; gap: 18px; }
-  .activity-booking-total { min-width: 0; }
+  .booking-panel,
+  .accommodation-calendar {
+    height: auto;
+  }
+
+  .accommodation-calendar {
+    overflow-x: visible;
+    margin: 0 0 14px;
+  }
+
+  .accommodation-overview-card {
+    display: block;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .accommodation-overview-card > .accommodation-map-wrap {
+    height: 300px;
+  }
+
+  .accommodation-calendar-grid-scroll {
+    display: grid;
+    overflow: hidden;
+  }
+
+  .accommodation-calendar-grid-scroll .route-month-grid {
+    height: auto;
+  }
+
+  .accommodation-stay-segment,
+  .accommodation-stay-segment-days {
+    min-height: 118px;
+  }
+
+  .route-day-cell.accommodation-day-cell {
+    min-height: 118px;
+  }
 }
 
 @media (max-width: 600px) {
-  .activity-booking-facts { grid-template-columns: 1fr; }
-  .activity-booking-card .MuiCardContent-root { min-height: 0; }
-  .activity-booking-link { width: 100%; margin-top: 18px !important; }
+  .accommodation-progress-strip {
+    padding: 10px 12px 9px;
+  }
+
+  .accommodation-calendar-title {
+    padding: 10px 12px;
+  }
+
+  .accommodation-calendar-title p:last-child {
+    font-size: 11px;
+  }
+
+  .route-day-cell.accommodation-day-cell {
+    min-height: 116px;
+    padding: 6px 4px;
+  }
+
+  .accommodation-stay-segment,
+  .accommodation-stay-segment-days {
+    min-height: 116px;
+  }
+
+  .accommodation-stay-segment-summary {
+    top: 42px;
+    right: 4px;
+    left: 4px;
+  }
+
+  .accommodation-place {
+    justify-content: center;
+    margin-top: 5px;
+  }
+
+  .accommodation-day-cell .accommodation-place p,
+  .accommodation-day-cell .accommodation-hotel-name,
+  .accommodation-stay-segment:not([data-multi-night="true"]) .accommodation-stay-segment-summary .accommodation-place p,
+  .accommodation-stay-segment:not([data-multi-night="true"]) .accommodation-stay-segment-summary .accommodation-hotel-name {
+    display: none;
+  }
+
+  .accommodation-stay-segment[data-multi-night="true"] .accommodation-stay-segment-summary .accommodation-place {
+    justify-content: flex-start;
+  }
+
+  .accommodation-stay-segment[data-multi-night="true"] .accommodation-stay-segment-summary .accommodation-place p {
+    display: block;
+    font-size: 10px;
+  }
+
+  .accommodation-stay-segment[data-multi-night="true"] .accommodation-stay-segment-summary .accommodation-hotel-name {
+    display: -webkit-box;
+    max-height: 2.4em;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+  }
+
+  .accommodation-place .MuiSvgIcon-root {
+    font-size: 18px;
+  }
+
+  .accommodation-date > p {
+    font-size: 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .activity-booking-card { transition: none; }
-  .activity-booking-card:hover { transform: none; }
+  .route-day-cell.accommodation-day-cell,
+  .accommodation-stay-segment {
+    transition: none;
+  }
 }

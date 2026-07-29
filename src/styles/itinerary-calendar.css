@@ -21,12 +21,6 @@
   font-weight: 900 !important;
 }
 
-.route-weekdays,
-.route-month-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-}
-
 .route-weekdays {
   padding: 8px 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.26);
@@ -92,12 +86,16 @@
 }
 
 .route-event-tags {
+  min-width: 0;
+  overflow: hidden;
   flex-wrap: wrap;
   gap: 5px;
   margin-top: 10px;
 }
 
 .route-event-tags .MuiChip-root {
+  min-width: 0;
+  overflow: hidden;
   max-width: 100%;
   height: 26px;
   border: 1px solid transparent;
@@ -142,4 +140,90 @@
   line-height: 1.25;
   text-overflow: clip;
   white-space: normal;
+}
+
+@media (max-width: 900px) {
+  .route-day-cell {
+    min-width: 0;
+    min-height: 118px;
+    padding: 7px 5px;
+  }
+
+  .route-event-tags {
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .route-event-tags .MuiChip-root {
+    width: 100%;
+    min-width: 0;
+    height: 24px;
+  }
+
+  .route-event-tags .MuiChip-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 600px) {
+  .route-month-title {
+    padding: var(--space-3);
+    font-size: 16px !important;
+  }
+
+  .route-weekdays {
+    padding: 6px 0;
+  }
+
+  .route-weekdays p {
+    font-size: 10px;
+  }
+
+  .route-day-cell {
+    min-height: 92px;
+    padding: 5px 3px;
+  }
+
+  .route-day-date {
+    margin-bottom: 3px;
+  }
+
+  .route-day-date > p {
+    font-size: 10px;
+  }
+
+  .route-event-tags .MuiChip-root,
+  .route-event-tags .MuiChip-root[data-flight-transfer="true"] {
+    position: relative;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .route-event-tags .MuiChip-label {
+    display: none;
+  }
+
+  .route-event-tags .MuiSvgIcon-root {
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: var(--radius-control);
+    background: var(--event-color);
+    box-sizing: border-box;
+    margin: 0 !important;
+    font-size: 15px !important;
+  }
+
+  .route-event-tags .MuiChip-root:hover {
+    background: transparent;
+  }
 }

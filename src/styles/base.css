@@ -15,21 +15,40 @@
   --glass-bg-strong: rgba(255, 253, 248, 0.72);
   --glass-border: rgba(255, 255, 255, 0.42);
   --glass-dark: rgba(18, 63, 54, 0.58);
-  --radius-card: 16px;
-  --radius-inner: 12px;
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --page-padding: var(--space-0);
+  --section-gap: var(--space-0);
+  --content-padding: var(--space-4);
+  --compact-padding: var(--space-3);
+  --control-gap: var(--space-2);
+  --radius-layout: 0px;
+  --radius-card: 12px;
+  --radius-inner: 10px;
   --radius-control: 10px;
   --shadow-sm: 0 10px 30px rgba(18, 63, 54, 0.07);
   --shadow-lg: 0 24px 70px rgba(18, 63, 54, 0.13);
 }
 
 html {
+  height: 100%;
   scroll-behavior: smooth;
 }
 
 body {
+  height: 100%;
   margin: 0;
+  overflow: hidden;
   color: var(--ink);
   background: var(--surface);
+}
+
+#root {
+  height: 100%;
 }
 
 body::before {

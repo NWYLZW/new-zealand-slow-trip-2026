@@ -1,25 +1,11 @@
-.route-dialog .MuiDialog-paper {
+.route-event-page {
   position: relative;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-card);
-  background: rgba(255, 253, 248, 0.82);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  min-height: 100%;
+  overflow: hidden;
+  background: rgba(255, 253, 248, 0.54);
 }
 
-.route-dialog-close {
-  position: absolute !important;
-  z-index: 1000;
-  top: calc(10px + env(safe-area-inset-top));
-  right: max(10px, env(safe-area-inset-right));
-  color: #fff !important;
-  background: rgba(18, 63, 54, 0.82) !important;
-  box-shadow: 0 8px 22px rgba(18, 63, 54, 0.22) !important;
-  backdrop-filter: blur(14px);
-}
-
-.route-dialog .MuiDialogTitle-root {
+.route-event-page .route-dialog-title {
   position: relative;
   isolation: isolate;
   min-height: 180px;
@@ -39,7 +25,7 @@
   border-radius: 0;
 }
 
-.route-dialog .MuiDialogContent-root {
+.route-event-page-content {
   padding: 16px 24px 24px;
 }
 

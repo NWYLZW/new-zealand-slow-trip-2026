@@ -1,33 +1,4 @@
-.mobile-nav {
-  position: fixed;
-  z-index: 100;
-  right: 10px;
-  bottom: calc(10px + env(safe-area-inset-bottom));
-  left: 10px;
-  overflow: hidden;
-  border-radius: var(--radius-inner) !important;
-  background: rgba(255, 253, 248, 0.68) !important;
-  backdrop-filter: blur(20px) saturate(1.2);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
-}
-
-.mobile-nav .MuiTabs-flexContainer,
-.mobile-nav .MuiTabs-list {
-  min-width: max-content;
-}
-
-.mobile-nav .MuiTab-root {
-  min-width: 82px;
-  min-height: 58px;
-  padding: 8px 10px;
-}
-
-.mobile-language-switch {
-  position: fixed !important;
-  z-index: 101;
-  right: 12px;
-  bottom: calc(72px + env(safe-area-inset-bottom));
-  border-radius: 999px !important;
-  text-transform: none !important;
-  box-shadow: var(--shadow-lg) !important;
+/* Mobile navigation reuses the desktop Sidebar inside a left Drawer. */
+.page-header-menu {
+  margin-left: -8px !important;
 }

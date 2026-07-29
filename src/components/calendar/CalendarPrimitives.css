@@ -1,0 +1,16 @@
+.calendar-weekdays,
+.calendar-seven-column-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: 100%;
+  min-width: 0;
+}
+
+.calendar-day-cell,
+.calendar-date-header {
+  min-width: 0;
+}
+
+.calendar-day-cell {
+  overflow: hidden;
+}
