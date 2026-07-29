@@ -7,8 +7,11 @@ import {
   aucklandAirportHotels,
   bookingUrlForStay,
 } from "../src/data/aucklandAirportHotels.js";
-import { aucklandCityHotels } from "../src/data/aucklandCityHotels.js";
-import { regionalHotels } from "../src/data/regionalHotels.js";
+import {
+  aucklandCityHotels,
+  aucklandCityStay,
+} from "../src/data/aucklandCityHotels.js";
+import { regionalHotels, regionalStays } from "../src/data/regionalHotels.js";
 
 const imagePrefix = "/new-zealand-slow-trip-2026/images/hotels/";
 const dataFiles = [
@@ -22,25 +25,76 @@ const forbiddenPhotoClaims = [
   "平台没有对应房型图",
   "平台未提供房型图",
 ];
+const allowedOfficialStatuses = new Set([
+  "exact-rate-verified",
+  "exact-date-unavailable",
+  "no-independent-official-found",
+  "official-inquiry-only",
+  "official-unreachable",
+]);
 
 const hotelGroups = {
   "auckland-airport": aucklandAirportHotels,
   "auckland-city": aucklandCityHotels,
   ...regionalHotels,
 };
+const officialStayRanges = {
+  "auckland-airport": "2026-09-28/2026-09-29",
+  "auckland-city": `${aucklandCityStay.dates.checkIn}/${aucklandCityStay.dates.checkOut}`,
+  ...Object.fromEntries(
+    Object.entries(regionalStays).map(([group, stay]) => [
+      group,
+      `${stay.dates.checkIn}/${stay.dates.checkOut}`,
+    ]),
+  ),
+};
 
 const errors = [];
 const warnings = [];
 const seenHotelIds = new Set();
+const hotelDialogSource = await readFile(
+  new URL("../src/components/HotelComparisonDialog.jsx", import.meta.url),
+  "utf8",
+);
 
 function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
 function rateHasPrice(rate) {
-  return [rate.nonRefundableNzd, rate.refundableNzd].some(
+  const legacyPrice = [rate.nonRefundableNzd, rate.refundableNzd].some(
     (value) => typeof value === "number" && Number.isFinite(value) && value > 0,
   );
+  const optionPrice = (rate.rateOptions ?? []).some(
+    (option) => typeof option?.nzd === "number" && Number.isFinite(option.nzd) && option.nzd > 0,
+  );
+  return legacyPrice || optionPrice;
+}
+
+function countOfficialRates(hotel) {
+  let count = 0;
+  for (const snapshot of Object.values(hotel.rateSnapshots ?? {})) {
+    for (const platforms of Object.values(snapshot?.roomRates ?? {})) {
+      if (platforms?.official) count += 1;
+    }
+  }
+  return count;
+}
+
+function countOfficialRatesForRange(hotel, dateRange) {
+  const snapshot = hotel.rateSnapshots?.[dateRange];
+  return Object.values(snapshot?.roomRates ?? {}).filter(
+    (platforms) => platforms?.official,
+  ).length;
+}
+
+function isValidHttpUrl(value) {
+  if (!hasText(value)) return false;
+  try {
+    return ["http:", "https:"].includes(new URL(value).protocol);
+  } catch {
+    return false;
+  }
 }
 
 function auditGeneratedPlatformUrl(rate, path, hotel, checkIn, checkOut) {
@@ -78,6 +132,11 @@ function auditRate(rate, path, hotel, checkIn, checkOut, expectedRoomKey) {
   if (!hasText(rate.source)) errors.push(`${path}: source is required`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(rate.quotedAt ?? "")) errors.push(`${path}: quotedAt must be an ISO date`);
   if (!rateHasPrice(rate)) errors.push(`${path}: requires a verified total price`);
+  for (const [optionIndex, option] of (rate.rateOptions ?? []).entries()) {
+    if (!hasText(option?.label) || !hasText(option?.labelEn)) errors.push(`${path}/rate option ${optionIndex + 1}: bilingual labels are required`);
+    if (!hasText(option?.detail) || !hasText(option?.detailEn)) errors.push(`${path}/rate option ${optionIndex + 1}: bilingual details are required`);
+    if (typeof option?.nzd !== "number" || !Number.isFinite(option.nzd) || option.nzd <= 0) errors.push(`${path}/rate option ${optionIndex + 1}: nzd must be a positive number`);
+  }
   if (expectedRoomKey && rate.roomKey !== expectedRoomKey) errors.push(`${path}: rate roomKey must match ${expectedRoomKey}`);
   auditGeneratedPlatformUrl(rate, path, hotel, checkIn, checkOut);
 }
@@ -109,6 +168,58 @@ for (const [group, hotels] of Object.entries(hotelGroups)) {
     if (!hasText(hotel.id)) errors.push(`${hotelPath}: hotel id is required`);
     if (seenHotelIds.has(hotel.id)) errors.push(`${hotelPath}: duplicate hotel id`);
     seenHotelIds.add(hotel.id);
+
+    const officialRateCount = countOfficialRates(hotel);
+    const officialEntryUrl = hotel.officialBookingUrl ?? hotel.officialUrl;
+    const expectedStayRange = officialStayRanges[group];
+    if (hotel.officialLinkRetainsSearch === false) {
+      if (!hasText(hotel.officialLinkNote) || !hasText(hotel.officialLinkNoteEn)) {
+        errors.push(`${hotelPath}: an official link that does not retain the search requires bilingual reselection guidance`);
+      }
+      if (!hasText(hotel.officialLinkLabel) || !hasText(hotel.officialLinkLabelEn)) {
+        errors.push(`${hotelPath}: an official link that does not retain the search requires bilingual link labels`);
+      }
+    }
+    if (hotel.officialStatus != null && !allowedOfficialStatuses.has(hotel.officialStatus)) {
+      errors.push(`${hotelPath}: officialStatus must be one of ${[...allowedOfficialStatuses].join(", ")}`);
+    }
+    if (hotel.officialStatus === "exact-date-unavailable") {
+      if (!hasText(hotel.officialStatusDetail)) errors.push(`${hotelPath}: exact-date-unavailable requires officialStatusDetail`);
+      if (!hasText(hotel.officialStatusEn)) errors.push(`${hotelPath}: exact-date-unavailable requires officialStatusEn`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(hotel.officialVerifiedAt ?? "")) errors.push(`${hotelPath}: exact-date-unavailable requires an ISO officialVerifiedAt date`);
+      if (!isValidHttpUrl(officialEntryUrl)) errors.push(`${hotelPath}: exact-date-unavailable requires a valid officialBookingUrl or officialUrl`);
+      if (officialRateCount > 0) errors.push(`${hotelPath}: exact-date-unavailable cannot carry an official rate`);
+    }
+    if (hotel.officialStatus === "official-unreachable") {
+      if (!hasText(hotel.officialStatusDetail)) errors.push(`${hotelPath}: official-unreachable requires officialStatusDetail`);
+      if (!hasText(hotel.officialStatusEn)) errors.push(`${hotelPath}: official-unreachable requires officialStatusEn`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(hotel.officialVerifiedAt ?? "")) errors.push(`${hotelPath}: official-unreachable requires an ISO officialVerifiedAt date`);
+      if (!isValidHttpUrl(hotel.officialUrl)) errors.push(`${hotelPath}: official-unreachable requires a valid officialUrl`);
+      if (officialRateCount > 0) errors.push(`${hotelPath}: official-unreachable cannot carry an official rate`);
+    }
+    if (hotel.officialStatus === "official-inquiry-only") {
+      if (!hasText(hotel.officialStatusDetail)) errors.push(`${hotelPath}: official-inquiry-only requires officialStatusDetail`);
+      if (!hasText(hotel.officialStatusEn)) errors.push(`${hotelPath}: official-inquiry-only requires officialStatusEn`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(hotel.officialVerifiedAt ?? "")) errors.push(`${hotelPath}: official-inquiry-only requires an ISO officialVerifiedAt date`);
+      if (!isValidHttpUrl(hotel.officialUrl)) errors.push(`${hotelPath}: official-inquiry-only requires a valid officialUrl`);
+      if (officialRateCount > 0) errors.push(`${hotelPath}: official-inquiry-only cannot carry an official rate`);
+    }
+    if (hotel.officialStatus === "no-independent-official-found") {
+      if (!hasText(hotel.officialStatusDetail)) errors.push(`${hotelPath}: no-independent-official-found requires officialStatusDetail`);
+      if (!hasText(hotel.officialStatusEn)) errors.push(`${hotelPath}: no-independent-official-found requires officialStatusEn`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(hotel.officialVerifiedAt ?? "")) errors.push(`${hotelPath}: no-independent-official-found requires an ISO officialVerifiedAt date`);
+      if (officialRateCount > 0) errors.push(`${hotelPath}: no-independent-official-found cannot carry an official rate`);
+    }
+    if (hotel.officialStatus === "exact-rate-verified") {
+      if (!hasText(hotel.officialStatusDetail)) errors.push(`${hotelPath}: exact-rate-verified requires officialStatusDetail`);
+      if (!hasText(hotel.officialStatusEn)) errors.push(`${hotelPath}: exact-rate-verified requires officialStatusEn`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(hotel.officialVerifiedAt ?? "")) errors.push(`${hotelPath}: exact-rate-verified requires an ISO officialVerifiedAt date`);
+      if (!isValidHttpUrl(officialEntryUrl)) errors.push(`${hotelPath}: exact-rate-verified requires a valid officialBookingUrl or officialUrl`);
+      if (officialRateCount === 0) errors.push(`${hotelPath}: exact-rate-verified requires at least one official rate`);
+      if (expectedStayRange && countOfficialRatesForRange(hotel, expectedStayRange) === 0) {
+        errors.push(`${hotelPath}: exact-rate-verified requires an official rate for current stay ${expectedStayRange}`);
+      }
+    }
 
     if (hotel.isAirbnb) {
       if (hotel.isVerifiedListing !== true) errors.push(`${hotelPath}: Airbnb must be marked as a verified concrete listing`);
@@ -165,6 +276,12 @@ for (const [group, hotels] of Object.entries(hotelGroups)) {
       }
     }
   }
+}
+
+if (!hotelDialogSource.includes('tone: "is-unmatched"')
+  || !hotelDialogSource.includes('官网 · 本房型未映射')
+  || !hotelDialogSource.includes("roomOfficialPresentation")) {
+  errors.push("HotelComparisonDialog: rooms without a matched direct rate must keep a neutral unmatched state");
 }
 
 for (const fileUrl of dataFiles) {

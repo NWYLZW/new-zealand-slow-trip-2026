@@ -24,6 +24,7 @@ const bookingTitleEn = {
   "mount-cook-helicopter": "Mount Cook glacier helicopter",
   "mount-cook-stargazing": "Big Sky Stargazing",
   "hotel-christchurch": "Christchurch accommodation",
+  "oamaru-wildlife-option": "Ōamaru penguin and fur-seal route option",
   "hotel-rotorua": "Rotorua accommodation",
   "walter-peak": "Walter Peak cruise and barbecue",
   "flight-jq242": "JQ242 Christchurch → Auckland",

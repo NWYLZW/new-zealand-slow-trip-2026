@@ -187,6 +187,21 @@
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
 }
 
+.route-hero-credit {
+  position: absolute;
+  z-index: 4;
+  top: 18px;
+  right: 14px;
+  max-width: min(45%, 260px);
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 0.68rem !important;
+  line-height: 1.2 !important;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
+}
+
 .route-visually-hidden {
   position: absolute !important;
   width: 1px !important;
@@ -349,6 +364,20 @@
 .route-dialog-highlight {
   background: rgba(242, 184, 107, 0.18);
   color: var(--ink);
+}
+
+.route-dialog-alternative {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(53, 123, 115, 0.22);
+  border-radius: var(--radius-inner);
+  background: rgba(53, 123, 115, 0.09);
+  color: var(--ink);
+}
+
+.route-dialog-alternative p + p {
+  margin-top: 5px;
+  color: var(--ink-soft);
 }
 
 .route-flight-summary,

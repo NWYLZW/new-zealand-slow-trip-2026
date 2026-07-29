@@ -60,6 +60,83 @@ function directionsUrl(hotel, attraction) {
   return url.toString();
 }
 
+function officialStatusPresentation(hotel, isEnglish) {
+  if (hotel.isAirbnb && hotel.isVerifiedListing) {
+    return {
+      tone: "is-verified",
+      title: isEnglish ? "Airbnb official listing verified" : "Airbnb 官方房源已核验",
+      roomLabel: isEnglish ? "Airbnb official listing" : "Airbnb 官方房源",
+      roomNote: isEnglish ? "See the verified listing total above." : "精确日期房源总价见上方核验结果。",
+      linkLabel: isEnglish ? "Open verified Airbnb listing" : "打开已核验 Airbnb 房源",
+    };
+  }
+
+  const presentations = {
+    "exact-rate-verified": {
+      tone: "is-verified",
+      title: isEnglish ? "Official exact-date rates verified" : "官网精确日期已核验",
+      roomLabel: isEnglish ? "Official website · checked" : "官网 · 已核验",
+      roomNote: isEnglish
+        ? "This room was not reliably matched to an official exact-date rate; see the hotel-level verification above."
+        : "该房型未可靠映射到官网精确日期价；完整核验说明见上方。",
+      linkLabel: isEnglish ? "Open verified official rates" : "打开已核验官网价",
+    },
+    "exact-date-unavailable": {
+      tone: "is-unavailable",
+      title: isEnglish ? "Official website · unavailable for these dates" : "官网 · 指定日期无房",
+      roomLabel: isEnglish ? "Official website · no availability" : "官网 · 指定日期无房",
+      roomNote: isEnglish
+        ? "No direct inventory for the selected stay; platform inventory is shown separately."
+        : "官网无本次日期库存；平台库存单独显示。",
+      linkLabel: isEnglish ? "Recheck official availability" : "重新检查官网库存",
+    },
+    "official-unreachable": {
+      tone: "is-unreachable",
+      title: isEnglish ? "Official website · unreachable" : "官网无法访问",
+      roomLabel: isEnglish ? "Official website · unreachable" : "官网无法访问",
+      roomNote: isEnglish
+        ? "The official exact-date inventory and price could not be obtained; platform inventory is shown separately."
+        : "无法取得本次日期官网库存与价格；平台库存单独显示。",
+      linkLabel: isEnglish ? "Retry official website" : "重试打开官网",
+    },
+    "official-inquiry-only": {
+      tone: "is-unavailable",
+      title: isEnglish ? "Official website · enquiry only" : "官网 · 仅支持询价",
+      roomLabel: isEnglish ? "Official website · enquiry only" : "官网 · 仅支持询价",
+      roomNote: isEnglish
+        ? "The direct site confirms the room but does not expose reproducible exact-date online rates; verified platform rates are shown separately."
+        : "官网确认了房型，但没有可复现的精确日期在线价；已核验的平台报价单独显示。",
+      linkLabel: isEnglish ? "Open official room information" : "打开官网房型信息",
+    },
+    "no-independent-official-found": {
+      tone: "is-unreachable",
+      title: isEnglish ? "No independent official booking site found" : "未找到独立官网直订",
+      roomLabel: isEnglish ? "No independent official rate" : "无独立官网报价",
+      roomNote: isEnglish
+        ? "No independently controlled direct site was verified; the checked platform rate is shown separately."
+        : "未核验到由经营方独立控制的直订网站；已实查的平台报价单独显示。",
+      linkLabel: isEnglish ? "Open checked platform listing" : "打开已核验平台房源",
+    },
+  };
+
+  const presentation = presentations[hotel.officialStatus] ?? {
+    tone: "",
+    title: isEnglish ? "Official price verification pending" : "官网价格待核验",
+    roomLabel: isEnglish ? "Official website · verification pending" : "官网入口 · 待核验",
+    roomNote: isEnglish
+      ? "No reproducible exact-date total has been verified for this room."
+      : "该房型尚无可复现的官网精确日期含税价。",
+    linkLabel: isEnglish ? "Open official website" : "打开官网",
+  };
+
+  return {
+    ...presentation,
+    linkLabel: isEnglish
+      ? (hotel.officialLinkLabelEn ?? presentation.linkLabel)
+      : (hotel.officialLinkLabel ?? presentation.linkLabel),
+  };
+}
+
 function gallerySourceForHotel(hotel, identity, isEnglish) {
   if (!hotel || !identity) return null;
   if (identity === "hotel") {
@@ -342,6 +419,7 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
           <Box className="hotel-comparison-grid">
           {[activeHotel].map((hotel) => {
             const selected = hotel.id === selectedHotelId;
+            const officialPresentation = officialStatusPresentation(hotel, isEnglish);
             return (
               <Paper className="hotel-option-card" data-selected={selected} key={hotel.id} variant="outlined">
                 <Stack className="hotel-option-heading" direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
@@ -389,17 +467,17 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                 {hotel.availabilityNote && (
                   <Box className="hotel-availability-note">
                     <Typography fontWeight={900}>{isEnglish ? "Exact-date availability" : "精确日期库存"}</Typography>
-                    <Typography>{hotel.availabilityNote}</Typography>
+                    <Typography>{isEnglish ? (hotel.availabilityNoteEn ?? hotel.availabilityNote) : hotel.availabilityNote}</Typography>
                   </Box>
                 )}
-                <Box className={`hotel-official-verification ${hotel.officialStatus === "exact-rate-verified" || (hotel.isAirbnb && hotel.isVerifiedListing) ? "is-verified" : ""}`}>
+                {(hotel.officialStatus || hotel.officialStayUrl || (hotel.isAirbnb && hotel.isVerifiedListing)) && <Box className={`hotel-official-verification ${officialPresentation.tone}`}>
                   <Typography fontWeight={900}>
-                    {isEnglish ? "Official-site verification" : "官网优先核验"}
+                    {officialPresentation.title}
                   </Typography>
                   <Typography>
                     {isEnglish
                       ? (hotel.officialStatusEn ?? (hotel.isAirbnb && hotel.isVerifiedListing
-                        ? hotel.availabilityNote
+                        ? (hotel.availabilityNoteEn ?? hotel.availabilityNote)
                         : hotel.officialStayUrl
                           ? "Official website recorded; exact-date checkout price still needs verification."
                           : "No verifiable independent official website is recorded; availability and rates rely on the labelled platform checks."))
@@ -410,9 +488,12 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                           : "未记录可核验的独立官网；库存与价格以卡片中明确标注的平台实查结果为准。"))}
                   </Typography>
                   {hotel.officialStayUrl && <Typography component="a" href={hotel.officialStayUrl} rel="noreferrer" target="_blank">
-                    {isEnglish ? (hotel.isAirbnb ? "Open official Airbnb listing" : "Open official website") : (hotel.isAirbnb ? "打开 Airbnb 官方房源页" : "打开官网")}<OpenInNewIcon aria-hidden="true" />
+                    {officialPresentation.linkLabel}<OpenInNewIcon aria-hidden="true" />
                   </Typography>}
-                </Box>
+                  {hotel.officialLinkNote && <Typography className="hotel-official-link-note" color="text.secondary">
+                    {isEnglish ? (hotel.officialLinkNoteEn ?? hotel.officialLinkNote) : hotel.officialLinkNote}
+                  </Typography>}
+                </Box>}
                 <Stack className="hotel-option-facts" spacing={0.7}>
                   <Stack direction="row" spacing={0.8}><DirectionsWalkIcon /><Typography>{isEnglish ? hotel.accessEn : hotel.access}</Typography></Stack>
                   <Stack direction="row" spacing={0.8}><LocalParkingIcon /><Typography>{isEnglish ? hotel.parkingEn : hotel.parking}</Typography></Stack>
@@ -484,7 +565,15 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                       );
                       const airbnbRate = explicitRates?.airbnb ?? (airbnbQuotedRoom ? hotel.currentRate : null);
                       const officialRatePending = !hotel.isAirbnb && Boolean(hotel.officialStayUrl) && !officialRate && Boolean(bookingRate || agodaRate);
-                      const officialSiteChecked = Boolean(hotel.officialStatus || hotel.officialVerifiedAt);
+                      const roomOfficialPresentation = hotel.officialStatus === "exact-rate-verified"
+                        ? {
+                            tone: "is-unmatched",
+                            roomLabel: isEnglish ? "Official website · room not matched" : "官网 · 本房型未映射",
+                            roomNote: isEnglish
+                              ? "The hotel-level direct search was checked, but this exact platform room was not reliably matched to a direct category or rate."
+                              : "酒店级官网搜索已核验，但该平台房型未可靠匹配到官网分类或价格。",
+                          }
+                        : officialPresentation;
                       return (
                       <Box className="hotel-room-type" key={room.name}>
                         <Box className="hotel-room-type-layout">
@@ -513,35 +602,41 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                           <Box className="hotel-room-platform-prices">
                             {officialRate && <Box className="hotel-room-platform-official">
                               <Typography className="hotel-room-platform-name" component="a" href={hotel.officialStayUrl} rel="noreferrer" target="_blank">
-                                {isEnglish ? "Official website" : "官网 · 优先核验"}<OpenInNewIcon />
+                                {isEnglish
+                                  ? (hotel.officialRateLinkLabelEn ?? "Official website · verified")
+                                  : (hotel.officialRateLinkLabel ?? "官网 · 已核验")}<OpenInNewIcon />
                               </Typography>
-                              <Typography color="text.secondary">{isEnglish ? "Official room" : "官网房型"}：{officialRate.room.split(" · ")[0]}</Typography>
+                              {hotel.officialLinkNote && <Typography className="hotel-official-link-note" color="text.secondary">
+                                {isEnglish ? (hotel.officialLinkNoteEn ?? hotel.officialLinkNote) : hotel.officialLinkNote}
+                              </Typography>}
+                              <Typography color="text.secondary">{isEnglish ? "Official room" : "官网房型"}：{(isEnglish ? (officialRate.roomEn ?? officialRate.room) : officialRate.room).split(" · ")[0]}</Typography>
+                              {(officialRate.rateOptions ?? []).map((option) => <Box key={`${option.label}-${option.nzd}`}>
+                                <Typography fontWeight={900}>{currencyLabel(option.nzd)}</Typography>
+                                <Typography color="text.secondary">{isEnglish ? (option.labelEn ?? option.label) : option.label} · {isEnglish ? (option.detailEn ?? option.detail) : option.detail}</Typography>
+                                {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(option.nzd / nights)}</Typography>}
+                              </Box>)}
                               {officialRate.nonRefundableNzd != null && <>
                                 <Typography fontWeight={900}>{currencyLabel(officialRate.nonRefundableNzd)}</Typography>
-                                <Typography color="text.secondary">{officialRate.rateLabel ?? (isEnglish ? "Tax-inclusive total · non-refundable" : `${dates.label}含税总价 · 不可退款`)}</Typography>
+                                <Typography color="text.secondary">{(isEnglish ? officialRate.rateLabelEn : officialRate.rateLabel) ?? officialRate.rateLabel ?? (isEnglish ? "Tax-inclusive total · non-refundable" : `${dates.label}含税总价 · 不可退款`)}</Typography>
                                 {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(officialRate.nonRefundableNzd / nights)}</Typography>}
                               </>}
                               {officialRate.refundableNzd != null && <>
                                 <Typography fontWeight={900}>{currencyLabel(officialRate.refundableNzd)}</Typography>
-                                <Typography color="text.secondary">{isEnglish ? `Tax-inclusive total · free cancellation before ${officialRate.cancelUntil}` : `${dates.label}含税总价 · ${officialRate.cancelUntil} 前免费取消`}</Typography>
+                                <Typography color="text.secondary">{(isEnglish ? officialRate.refundableRateLabelEn : officialRate.refundableRateLabel) ?? officialRate.refundableRateLabel ?? (isEnglish ? `Tax-inclusive total · free cancellation before ${officialRate.cancelUntilEn ?? officialRate.cancelUntil}` : `${dates.label}含税总价 · ${officialRate.cancelUntil} 前免费取消`)}</Typography>
                                 {nights > 1 && <Typography color="text.secondary">{isEnglish ? "Average per night" : "平均每晚"} {currencyLabel(officialRate.refundableNzd / nights)}</Typography>}
                               </>}
-                              {officialRate.memberNote && <Typography color="text.secondary">{officialRate.memberNote}</Typography>}
-                              {(officialRate.payment || officialRate.breakfast) && <Typography color="text.secondary">{[officialRate.payment, officialRate.breakfast].filter(Boolean).join(" · ")}</Typography>}
+                              {(isEnglish ? (officialRate.memberNoteEn ?? officialRate.memberNote) : officialRate.memberNote) && <Typography color="text.secondary">{isEnglish ? (officialRate.memberNoteEn ?? officialRate.memberNote) : officialRate.memberNote}</Typography>}
+                              {(officialRate.payment || officialRate.breakfast) && <Typography color="text.secondary">{[
+                                isEnglish ? (officialRate.paymentEn ?? officialRate.payment) : officialRate.payment,
+                                isEnglish ? (officialRate.breakfastEn ?? officialRate.breakfast) : officialRate.breakfast,
+                              ].filter(Boolean).join(" · ")}</Typography>}
                             </Box>}
-                            {officialRatePending && <Box className="hotel-room-platform-official-pending">
+                            {officialRatePending && <Box className={`hotel-room-platform-official-pending ${roomOfficialPresentation.tone}`}>
                               <Typography className="hotel-room-platform-name" component="a" href={hotel.officialStayUrl} rel="noreferrer" target="_blank">
-                                {isEnglish
-                                  ? (officialSiteChecked ? "Official website · checked" : "Official website · verification pending")
-                                  : (officialSiteChecked ? "官网 · 已访问" : "官网入口 · 待核验")}<OpenInNewIcon />
+                                {roomOfficialPresentation.roomLabel}<OpenInNewIcon />
                               </Typography>
                               <Typography fontWeight={900}>
-                                {isEnglish ? "No reproducible exact-date total for this room" : "该房型暂无可复现的官网精确日期含税价"}
-                              </Typography>
-                              <Typography color="text.secondary">
-                                {isEnglish
-                                  ? (hotel.officialStatusEn ?? `The official link is recorded, but ${dates.checkIn}–${dates.checkOut}, two guests and one room have not yet been verified through checkout. The platform price beside it is not treated as an official rate.`)
-                                  : (hotel.officialStatusDetail ?? `已记录官网入口，但尚未实际核验 ${dates.label}、2 人 1 间的对应房型含税结算总价；旁边的平台价格不会被当作官网价。`)}
+                                {roomOfficialPresentation.roomNote}
                               </Typography>
                             </Box>}
                             {bookingRate && <Box>
@@ -611,11 +706,11 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                 <Box className="hotel-option-pros-cons">
                   <Box>
                     <Typography fontWeight={900}>{isEnglish ? "Good for" : "优点"}</Typography>
-                    {hotel.strengths.map((item) => <Typography key={item}>+ {item}</Typography>)}
+                    {(isEnglish ? (hotel.strengthsEn ?? hotel.strengths) : hotel.strengths).map((item) => <Typography key={item}>+ {item}</Typography>)}
                   </Box>
                   <Box>
                     <Typography fontWeight={900}>{isEnglish ? "Watch for" : "注意"}</Typography>
-                    {hotel.cautions.map((item) => <Typography key={item}>− {item}</Typography>)}
+                    {(isEnglish ? (hotel.cautionsEn ?? hotel.cautions) : hotel.cautions).map((item) => <Typography key={item}>− {item}</Typography>)}
                   </Box>
                 </Box>
                 {hotel.id === "novotel-auckland-airport" && (

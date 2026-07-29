@@ -21,8 +21,10 @@ const expectedEventTitles = [
   "库克山观星夜",
   "库克山候补安排",
   "蒂卡波到基督城",
+  "奥马鲁企鹅与海狗备选",
   "基督城城市半日",
   "还车飞奥克兰",
+  "奥马鲁直达基督城机场",
   "奥克兰购物日",
   "取车前往霍比屯",
   "霍比屯游览",
@@ -167,7 +169,7 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`事件图片审计通过：${expectedEventTitles.length}/24 个事件，页面共 ${auditedFiles.size} 个本地行程图片文件。`);
+  console.log(`事件图片审计通过：${expectedEventTitles.length}/${expectedEventTitles.length} 个事件，页面共 ${auditedFiles.size} 个本地行程图片文件。`);
   for (const [relativePath, result] of [...auditedFiles].sort(([left], [right]) => left.localeCompare(right))) {
     console.log(`- ${relativePath}: ${result.width}×${result.height}, ${result.size} bytes`);
   }

@@ -101,6 +101,14 @@
   font-weight: 950;
 }
 
+.leaflet-route-sequence-icon-option .leaflet-route-sequence-number {
+  width: 23px;
+  height: 23px;
+  border-style: dashed;
+  background: color-mix(in srgb, var(--route-color) 82%, white);
+  font-size: 8px;
+}
+
 .leaflet-route-direction {
   position: absolute;
   top: 0;
@@ -123,6 +131,12 @@
   border-radius: 50%;
   background: var(--stop-color);
   box-shadow: 0 2px 8px rgba(18, 63, 54, 0.3);
+}
+
+.leaflet-route-stop-icon-option span {
+  border-color: var(--stop-color);
+  border-style: dashed;
+  background: color-mix(in srgb, var(--stop-color) 28%, white);
 }
 
 .leaflet-route-map .leaflet-tooltip {

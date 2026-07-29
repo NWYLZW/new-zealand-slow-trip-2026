@@ -372,6 +372,37 @@ export const aucklandAirportHotels = [
       "2026-09-28/2026-09-29": {
         roomRates: {
           "superior-king-30": {
+            official: {
+              source: "Pullman 官网",
+              roomKey: "superior-king-30",
+              room: "Superior Room with 1 king bed · 30 m²",
+              roomEn: "Superior Room with 1 king bed · 30 m²",
+              nonRefundableNzd: 351.2,
+              refundableNzd: 439,
+              rateLabel:
+                "官网一晚含税总价 · Hotel Sale · 不含早餐 · 不可退款 · 在线付款",
+              rateLabelEn:
+                "Direct tax-inclusive one-night total · Hotel Sale · room only · non-refundable · online payment",
+              refundableRateLabel:
+                "官网一晚含税总价 · Flexible · 不含早餐 · 2026 年 9 月 27 日 18:00（酒店当地时间）前免费取消 · 无需预付",
+              refundableRateLabelEn:
+                "Direct tax-inclusive one-night total · Flexible · room only · free cancellation until 6:00 p.m. hotel local time on 27 Sep 2026 · no prepayment",
+              cancelUntil: "2026-09-27 18:00（酒店当地时间）",
+              cancelUntilEn: "6:00 p.m. hotel local time on 27 Sep 2026",
+              payment:
+                "Hotel Sale 须在线付款且不可退款；Flexible 无需预付，并可在 9 月 27 日 18:00（酒店当地时间）前免费取消",
+              paymentEn:
+                "Hotel Sale requires online payment and is non-refundable; Flexible requires no prepayment and may be cancelled free until 6:00 p.m. hotel local time on 27 Sep",
+              breakfast:
+                "上述 NZD 351.20 与 NZD 439 均为不含早餐价；含早餐替代档为 Hotel Sale 公开含税价 NZD 429.20（不可退款、在线付款）及 Flexible 公开含税价 NZD 517（同一免费取消截止时间、无需预付）",
+              breakfastEn:
+                "The NZD 351.20 and NZD 439 rates above are room-only; breakfast-inclusive alternatives are Hotel Sale at NZD 429.20 public tax-inclusive (non-refundable, online payment) and Flexible at NZD 517 public tax-inclusive (same cancellation deadline, no prepayment)",
+              memberNote:
+                "ALL 会员含税价：Hotel Sale 不含早餐 NZD 333.64、含早餐 NZD 407.74；Flexible 不含早餐 NZD 417.05、含早餐 NZD 491.15；需登录会员账户",
+              memberNoteEn:
+                "ALL member tax-inclusive rates: Hotel Sale NZD 333.64 room-only or NZD 407.74 with breakfast; Flexible NZD 417.05 room-only or NZD 491.15 with breakfast; sign-in required",
+              quotedAt: "2026-07-28",
+            },
             booking: {
               source: "Booking.com",
               roomKey: "superior-king-30",
@@ -424,7 +455,18 @@ export const aucklandAirportHotels = [
         },
       },
     },
+    availabilityNote:
+      "Pullman 官网已按 2026 年 9 月 28—29 日、2 人 1 间核验：6 种房型可订；Superior King 30 m² 的 Hotel Sale 不含早餐公开含税价 NZD 351.20、不可退款且在线付款，Flexible 不含早餐公开含税价 NZD 439、9 月 27 日 18:00 前免费取消且无需预付；含早与 ALL 会员替代价也已分别核验并展示。Booking 同房型不可退 NZD 351、可取消 NZD 439；Agoda 不可退 NZD 306，渠道条款分别展示。",
+    availabilityNoteEn:
+      "The Pullman direct site was checked for 28–29 Sep 2026, two adults and one room: six room categories were available. For the 30 m² Superior King, the room-only Hotel Sale public tax-inclusive rate is NZD 351.20, non-refundable with online payment; the room-only Flexible public tax-inclusive rate is NZD 439, cancellable free until 6:00 p.m. on 27 Sep with no prepayment. Breakfast-inclusive and ALL member alternatives were also verified and are shown separately. Booking.com lists NZD 351 non-refundable and NZD 439 cancellable, while Agoda lists NZD 306 non-refundable; each channel's terms are shown separately.",
+    officialStatus: "exact-rate-verified",
+    officialStatusDetail:
+      "2026-07-28 已在 Pullman Auckland Airport 的 Accor 官方预订页带入 2026 年 9 月 28—29 日、2 位成人、1 间。页面明确显示 6 种房型可订，Superior Room with 1 king bed 为 30 m²、1 张 King；Hotel Sale 与 Flexible 的不含早/含早公开价、ALL 会员价、退改及付款方式均已逐档展开核验，页面标注税费已含。",
+    officialStatusEn:
+      "Verified on 28 Jul 2026 in Pullman Auckland Airport's official Accor engine for 28–29 Sep 2026, two adults and one room. Six categories were available; the Superior Room with one king bed is 30 m². Public and ALL member Hotel Sale and Flexible rates, both room-only and breakfast-inclusive, were opened and checked individually together with their cancellation and payment terms; the page marks taxes and fees as included.",
+    officialVerifiedAt: "2026-07-28",
     officialUrl: "https://www.pullmanaucklandairport.com/",
+    officialHotelCode: "A8U9",
     bookingUrl:
       "https://www.booking.com/hotel/nz/pullman-auckland-airport.html",
     agodaUrl:
@@ -567,6 +609,57 @@ export const aucklandAirportHotels = [
       "2026-09-28/2026-09-29": {
         roomRates: {
           "superior-king-23": {
+            official: {
+              source: "JetPark Auckland 官网",
+              roomKey: "superior-king-23",
+              room: "Superior King · 23 m² · 1 张 King 床",
+              roomEn: "Superior King · 23 m² · one king bed",
+              nonRefundableNzd: 196.56,
+              refundableNzd: 234,
+              rateLabel:
+                "官网一晚总价 · Jet Saver Non Refundable · 含 15% GST；税费页房费 NZD 196.56、信用卡服务费 NZD 0",
+              rateLabelEn:
+                "Direct one-night total · Jet Saver Non Refundable · includes 15% GST; tax-and-fee panel shows NZD 196.56 room charge and NZD 0 card service fee",
+              refundableRateLabel:
+                "官网一晚总价 · Flexi · 含 15% GST；2026 年 9 月 27 日 14:00（酒店当地时间）前取消不收罚金",
+              refundableRateLabelEn:
+                "Direct one-night total · Flexi · includes 15% GST; cancel without penalty by 2:00 p.m. hotel local time on 27 Sep 2026",
+              rateOptions: [
+                {
+                  label: "会员价",
+                  labelEn: "Members Rate",
+                  nzd: 198.9,
+                  detail:
+                    "官网显示原价 NZD 234、会员价 NZD 198.90，含 15% GST；需满足会员资格；有效银行卡仅作担保、不扣款，可免费改期；9 月 27 日 14:00（酒店当地时间）前取消不收罚金，逾期取消或未入住收取一晚房费",
+                  detailEn:
+                    "The direct engine shows NZD 234 struck through and a NZD 198.90 member rate including 15% GST; membership eligibility applies; a valid card guarantees the booking without charge, changes carry no penalty, cancellation is penalty-free by 2:00 p.m. hotel local time on 27 Sep, and late cancellation or no-show incurs one night",
+                },
+                {
+                  label: "JetPark Winter Special",
+                  labelEn: "JetPark Winter Special",
+                  nzd: 198.9,
+                  detail:
+                    "官网显示的一晚价格；页面未展开可复现的取消、扣款和早餐规则",
+                  detailEn:
+                    "One-night price shown by the direct engine; reproducible cancellation, payment and breakfast terms were not expanded",
+                },
+              ],
+              cancelUntil: "2026-09-27 14:00（酒店当地时间）",
+              cancelUntilEn: "2:00 p.m. hotel local time on 27 Sep 2026",
+              payment:
+                "Jet Saver 须预订时全额预付，取消不退款，改期按个案处理；Flexi 与会员价用有效银行卡担保但不扣款，可免费改期，9 月 27 日 14:00（酒店当地时间）后取消或未入住收取一晚房费",
+              paymentEn:
+                "Jet Saver requires full prepayment and is non-refundable, with changes considered case by case; Flexi and Members Rate use a valid card as a no-charge guarantee, allow penalty-free changes, and charge one night for cancellation after 2:00 p.m. hotel local time on 27 Sep or no-show",
+              breakfast:
+                "官网未标明这些房价包含早餐；页面仅出现儿童早餐价格，不能据此推断成人早餐或含早",
+              breakfastEn:
+                "The direct engine does not state that these rates include breakfast; child breakfast pricing alone does not establish adult breakfast pricing or inclusion",
+              memberNote:
+                "本次房价页面另明确列出免费机场接驳、过夜停车、Wi-Fi 与最多 10 天存车",
+              memberNoteEn:
+                "The verified rate page also lists complimentary airport shuttle, overnight parking, Wi-Fi and up to ten days of car storage",
+              quotedAt: "2026-07-28",
+            },
             booking: {
               source: "Booking.com · Genius 1",
               roomKey: "superior-king-23",
@@ -632,7 +725,19 @@ export const aucklandAirportHotels = [
         },
       },
     },
+    availabilityNote:
+      "JetPark 官网已按 2026 年 9 月 28—29 日、2 人 1 间核验 Superior King（23 m²、1 张 King 床）：Jet Saver Non Refundable NZD 196.56，会员价 NZD 198.90（原价 NZD 234）、Winter Special NZD 198.90、Flexi NZD 234，均含 15% GST。Jet Saver 须全额预付且取消不退款；Flexi 与会员价以银行卡担保但不扣款，可免费改期，并可在 9 月 27 日 14:00（酒店当地时间）前无罚金取消，逾期取消或未入住收取一晚。Winter Special 条款尚未核验，官网也未标明含早餐。",
+    availabilityNoteEn:
+      "The JetPark direct engine was checked for 28–29 Sep 2026, two adults and one room. The 23 m² Superior King with one king bed showed Jet Saver Non Refundable at NZD 196.56, Members Rate at NZD 198.90 (NZD 234 struck through), Winter Special at NZD 198.90 and Flexi at NZD 234, all including 15% GST. Jet Saver requires full prepayment and is non-refundable. Flexi and Members Rate use a card guarantee without charge, allow penalty-free changes, and may be cancelled without penalty by 2:00 p.m. hotel local time on 27 Sep; late cancellation or no-show incurs one night. Winter Special terms remain unverified and breakfast inclusion was not stated.",
+    officialStatus: "exact-rate-verified",
+    officialStatusDetail:
+      "2026-07-28 已从 JetPark Auckland 官网进入其官方 TravelClick 预订引擎，带入 2026 年 9 月 28—29 日、2 位成人、1 间。页面明确显示 Superior King（23 m²、1 张 King 床）及四档一晚含 15% GST 价格。Jet Saver Non Refundable 为 NZD 196.56，须全额预付、取消不退款；Flexi NZD 234 与会员价 NZD 198.90 均以有效银行卡担保但不扣款、可免费改期，并可在抵达日前 24 小时的 14:00 前取消（本次为 9 月 27 日 14:00 酒店当地时间），逾期取消或未入住收取一晚。Winter Special 条款及早餐包含情况未作推断。",
+    officialStatusEn:
+      "Verified on 28 Jul 2026 via JetPark Auckland's official TravelClick engine for 28–29 Sep 2026, two adults and one room. The page explicitly showed a 23 m² Superior King with one king bed and four one-night prices including 15% GST. Jet Saver Non Refundable was NZD 196.56, fully prepaid and non-refundable. Flexi at NZD 234 and Members Rate at NZD 198.90 use a valid card guarantee without charge, allow penalty-free changes, and can be cancelled without penalty by 2:00 p.m. hotel local time 24 hours before arrival (27 Sep for this stay); late cancellation or no-show incurs one night. Winter Special terms and breakfast inclusion were not inferred.",
+    officialVerifiedAt: "2026-07-28",
     officialUrl: "https://www.jetparkauckland.co.nz/",
+    officialBookingUrl:
+      "https://reservations.jetparkauckland.co.nz/10854?Adults=2&Children=0&DateIn=09/28/26&DateOut=09/29/26&hotelid=10854&LanguageID=1",
     bookingUrl:
       "https://www.booking.com/hotel/nz/jet-park-airport-conference-centre.html",
     agodaUrl:
@@ -704,9 +809,55 @@ export const aucklandAirportHotels = [
       },
     ],
     hotelImages: [],
-    rateSnapshots: {},
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": {
+        roomRates: {
+          "budget-queen-12": {
+            official: {
+              source: "ibis budget 官网",
+              roomKey: "budget-queen-12",
+              room: "Budget Room with 1 Queen Bed · 12 m²",
+              roomEn: "Budget Room with 1 Queen Bed · 12 m²",
+              nonRefundableNzd: 159.2,
+              refundableNzd: 199,
+              rateLabel:
+                "官网一晚含税费总价 · Hotel Sale · 不含早餐 · 不可退款 · 在线付款",
+              rateLabelEn:
+                "Direct one-night total including taxes and fees · Hotel Sale · room only · non-refundable · online payment",
+              refundableRateLabel:
+                "官网一晚含税费总价 · Flexible · 不含早餐 · 2026 年 9 月 27 日 23:59 前免费取消 · 无需预付",
+              refundableRateLabelEn:
+                "Direct one-night total including taxes and fees · Flexible · room only · free cancellation until 11:59 p.m. on 27 Sep 2026 · no prepayment",
+              cancelUntil: "2026-09-27 23:59",
+              cancelUntilEn: "11:59 p.m. on 27 Sep 2026",
+              payment:
+                "Hotel Sale 须在线付款且不可退款；Flexible 无需预付，并可在 9 月 27 日 23:59 前免费取消",
+              paymentEn:
+                "Hotel Sale requires online payment and is non-refundable; Flexible requires no prepayment and may be cancelled free until 11:59 p.m. on 27 Sep",
+              breakfast:
+                "上述 NZD 159.20 与 NZD 199 均为不含早餐价；含早餐公开含税费总价为 Hotel Sale NZD 196（不可退款、在线付款）或 Flexible NZD 245（同一免费取消截止时间、无需预付）",
+              breakfastEn:
+                "The NZD 159.20 and NZD 199 rates above are room-only; public breakfast-inclusive totals including taxes and fees are NZD 196 for Hotel Sale (non-refundable, online payment) or NZD 245 for Flexible (same cancellation deadline, no prepayment)",
+              memberNote:
+                "ALL 会员 Hotel Sale 含税费总价：不含早餐 NZD 151.24，含早餐 NZD 186.20；两档均不可退款、在线付款，需登录会员账户。页面未显示会员 Flexible 价，未作推断",
+              memberNoteEn:
+                "ALL member Hotel Sale totals including taxes and fees: NZD 151.24 room-only or NZD 186.20 with breakfast; both are non-refundable, require online payment and require sign-in. No member Flexible price was shown or inferred",
+              quotedAt: "2026-07-28",
+            },
+          },
+        },
+      },
+    },
     availabilityNote:
-      "Accor 页面只显示未进入结算的会员起价；Booking 详情链接本次返回 404。因未能核验 9 月 28—29 日、2 人 1 间的真实结算总价，暂不展示价格。",
+      "Accor 官网已按 2026 年 9 月 28—29 日、2 人 1 间核验：7 种房型可订。Budget Queen 12 m² 不含早的公开含税费总价为 Hotel Sale NZD 159.20（不可退款、在线付款）或 Flexible NZD 199（9 月 27 日 23:59 前免费取消、无需预付）；含早餐公开价分别为 NZD 196 / 245。ALL 会员 Hotel Sale 为不含早 NZD 151.24、含早 NZD 186.20；页面未显示会员 Flexible 价。Booking 详情链接本次仍返回 404，因此只展示官网已核验价。",
+    availabilityNoteEn:
+      "The Accor direct site was checked for 28–29 Sep 2026, two adults and one room: seven categories were available. For the 12 m² Budget Queen, room-only public totals including taxes and fees were NZD 159.20 for Hotel Sale (non-refundable, online payment) or NZD 199 for Flexible (free cancellation until 11:59 p.m. on 27 Sep, no prepayment); breakfast-inclusive public totals were NZD 196 / 245. ALL member Hotel Sale totals were NZD 151.24 room-only or NZD 186.20 with breakfast; no member Flexible price was shown. The Booking.com detail link still returns an error, so only the verified direct price is shown.",
+    officialStatus: "exact-rate-verified",
+    officialStatusDetail:
+      "2026-07-28 已在 ibis budget Auckland Airport 的 Accor 官方预订页带入 2026 年 9 月 28—29 日、2 位成人、1 间。页面明确显示 7 种房型可订，Budget Room with 1 Queen Bed 为 12 m²、1 张 Queen；Hotel Sale 与 Flexible 的不含早/含早公开含税费总价、Hotel Sale 会员价、退改及付款方式均已逐档展开核验。页面未显示会员 Flexible 价，未作推断。",
+    officialStatusEn:
+      "Verified on 28 Jul 2026 in ibis budget Auckland Airport's official Accor engine for 28–29 Sep 2026, two adults and one room. Seven categories were available; the Budget Room with one queen bed is 12 m². Public room-only and breakfast-inclusive Hotel Sale and Flexible totals including taxes and fees, together with Hotel Sale member prices, cancellation and payment terms, were opened and checked individually. No member Flexible price was shown or inferred.",
+    officialVerifiedAt: "2026-07-28",
     officialUrl: "https://all.accor.com/hotel/7865/index.en.shtml",
     officialHotelCode: "7865",
     bookingUrl:

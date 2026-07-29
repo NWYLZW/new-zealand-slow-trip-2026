@@ -79,7 +79,7 @@ export const accommodationResearch = {
       "仅住一晚，位置与天气备选价值高于厨房；必须确认2026年施工影响",
     ],
     accommodationQuestion: "同时比较库克山村、普卡基湖、Braemar Station、Ben Ohau 与 Twizel 的真实可订大床酒店/旅馆及整套民宿；酒店按大床偏好筛选，民宿不限卧室和床位数量，把 Big Sky 后夜间驾驶和次晨候补直升机时间作为核心代价。",
-    status: "booked-direct-hermitage-r2009c",
+    status: "booked-direct-hermitage-confirmation-private",
   },
   christchurch: {
     place: "基督城",

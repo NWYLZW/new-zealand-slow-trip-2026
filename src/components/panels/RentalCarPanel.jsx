@@ -36,7 +36,8 @@ import "./RentalCarPanel.css";
 
 const confirmedBooking = {
   company: "Budget",
-  reservation: "00725083NZ2",
+  reservation: "已私下保存",
+  reservationEn: "stored privately",
   vehicle: "Toyota RAV4 Hybrid 或同级",
   vehicleEn: "Toyota RAV4 Hybrid or similar",
   route: "皇后镇机场（ZQN）→ 基督城机场（CHC）",
@@ -241,7 +242,7 @@ const northQuotes = [
 ];
 
 const bookingStepsZh = [
-  "保存 Budget 确认邮件和订单截图；预订代码 00725083NZ2 同步到手机离线备忘。",
+  "保存 Budget 确认邮件和订单截图；预订代码仅同步到手机离线备忘，不在分享页公开。",
   "在 Manage Booking 核对主驾驶英文姓名、手机号、邮箱和航班号；不要重复下单。",
   "如两人都要开车，取车前确认第二驾驶员已正式加入合同，不能只口头告知。",
   "本单可随时取消且取消/未到店不收费；若行程变化，仍在 9月29日15:30 取车前主动在线取消。",
@@ -249,7 +250,7 @@ const bookingStepsZh = [
 ];
 
 const bookingStepsEn = [
-  "Save the Budget confirmation email and screenshots, and copy reservation 00725083NZ2 into an offline phone note.",
+  "Save the Budget confirmation email and screenshots, and keep the reservation code only in an offline phone note rather than on the shared page.",
   "Use Manage Booking to verify the lead driver's English name, mobile, email and flight number; do not create a duplicate booking.",
   "If both travellers will drive, make sure the second driver is formally added to the agreement before pickup.",
   "This booking may be cancelled at any time with no cancellation or no-show fee; still cancel online before the 29 Sep 15:30 pickup if plans change.",
@@ -310,7 +311,7 @@ export function RentalCarPanel() {
               <Typography className="rental-kicker">{isEnglish ? "SOUTH ISLAND BOOKING" : "南岛租车订单"}</Typography>
               <Typography variant="h2">{confirmedBooking.company} · {isEnglish ? confirmedBooking.vehicleEn : confirmedBooking.vehicle}</Typography>
               <Typography color="text.secondary">
-                {isEnglish ? `Booked on 27 Jul 2026 · Reservation ${confirmedBooking.reservation}` : `已于 2026-07-27 完成预订 · 预订代码 ${confirmedBooking.reservation}`}
+                {isEnglish ? `Booked on 27 Jul 2026 · Reservation ${confirmedBooking.reservationEn}` : `已于 2026-07-27 完成预订 · 预订代码${confirmedBooking.reservation}`}
               </Typography>
             </Box>
             <Chip icon={<CheckCircleOutlineIcon />} color="success" label={isEnglish ? "BOOKED" : "已预订"} />

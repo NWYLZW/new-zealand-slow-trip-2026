@@ -216,7 +216,7 @@ export const aucklandCityHotels = [
     recommendation: "酒店型性价比",
     recommendationEn: "Hotel value",
     summary:
-      "位置评分 9.4，标准酒店服务比公寓更直接；高级大床房两晚含税价格接近 Adina 的可取消档。",
+      "位置评分 9.4，标准酒店服务比公寓更直接；高级大床房两晚价格接近 Adina 的可取消档。",
     summaryEn:
       "A conventional hotel with a 9.4 location score and a competitive king-room total.",
     access:
@@ -260,7 +260,7 @@ export const aucklandCityHotels = [
         rateKey: "superior-king",
         name: "高级特大号床间",
         size: "22 m²",
-        bed: "1 张大号双人床",
+        bed: "1 张 King 特大床（官网房型页明确标注）",
         facilities: [
           "高层",
           "城市景",
@@ -275,7 +275,7 @@ export const aucklandCityHotels = [
         rateKey: "deluxe-harbour-king",
         name: "Deluxe King Harbour View",
         size: "22 m²",
-        bed: "1 张大号双人床",
+        bed: "1 张 King 特大床（官网房型页明确标注）",
         facilities: [
           "高层",
           "海景",
@@ -320,8 +320,20 @@ export const aucklandCityHotels = [
         },
       },
     },
+    availabilityNote:
+      "官网与 Booking.com 出现渠道库存差异：官网精确日期查询无房，Booking.com 仍显示两种大床房可订；预订时以实际进入的渠道结算页为准。",
+    availabilityNoteEn:
+      "Channel inventory differs: the direct engine has no availability for the exact stay, while Booking.com still lists both king-room categories. Treat each channel's checkout as authoritative.",
+    officialStatus: "exact-date-unavailable",
+    officialStatusDetail:
+      "2026-07-28 已从 Hotel Grand Chancellor Auckland 官网进入官方预订引擎，查询 10 月 7—9 日、1 间、2 人；入住条件栏明确显示 1 room / 2 adults，结果页提示所选日期无房。官网首页的“Rates from”不是本次日期报价，未写入比较。",
+    officialStatusEn:
+      "Verified on 28 Jul 2026 through Hotel Grand Chancellor Auckland's direct booking engine for 7–9 Oct, one room and two adults. The occupancy control shows 1 room / 2 adults and the results state no availability for the selected dates. Generic homepage 'Rates from' prices were not used.",
+    officialVerifiedAt: "2026-07-28",
     officialUrl:
       "https://www.grandchancellorhotels.com/hotel-grand-chancellor-auckland",
+    officialBookingUrl:
+      "https://www.grandchancellorhotels.com/hotel-grand-chancellor-auckland/book/accommodations?Adults=2&Children=0&DateIn=10/07/26&DateOut=10/09/26&HotelId=98773&LanguageID=1&Rooms=1",
     bookingUrl:
       "https://www.booking.com/hotel/nz/grand-chancellor-auckland.html",
     agodaUrl:
@@ -371,6 +383,16 @@ export const aucklandCityHotels = [
     ],
     strengths: ["房价包含早餐", "明确免费取消", "无需预付、到店付款", "超大床"],
     cautions: ["两晚总价高于 Adina", "最便宜大床房仅 20 m²"],
+    strengthsEn: [
+      "Breakfast included",
+      "Clearly stated cancellation terms",
+      "No prepayment; pay at the property",
+      "King-bed option",
+    ],
+    cautionsEn: [
+      "The two-night total is higher than Adina",
+      "The lowest-priced king room is only 20 m²",
+    ],
     ratings: [
       { platform: "Booking.com", score: "8.7 / 10", reviews: "3,788 条" },
     ],
@@ -401,6 +423,10 @@ export const aucklandCityHotels = [
       },
     ],
     hotelImages: [],
+    availabilityNote:
+      "IHG 官网已按 2026 年 10 月 7—9 日、2 人 1 间核验：1 King Standard With Free Breakfast（20 m²、高楼层城市景、1 张 King 床）可订。IHG 会员 Advance Saver 两晚含税费总价 NZD 428，9 月 7 日前可更改或取消；Best Flexible 会员总价 NZD 558，10 月 6 日前可更改或取消。两档均含免费早餐、无需预付并到店付款。只有这一项可与现有 20 m² 标准 King 安全映射；Standard With Free Breakfast 与 Upgraded Standard 均不保证到店房型偏好，因此未挂到 Queen 或 28 m² 市景超级特大床房。",
+    availabilityNoteEn:
+      "Verified on IHG for 7–9 Oct 2026, two adults and one room: 1 King Standard With Free Breakfast (20 m², high-floor city view and one king bed) was available. The two-night tax-and-fee-inclusive IHG member total was NZD 428 on Advance Saver, changeable or cancellable through 7 Sep, or NZD 558 on Best Flexible, changeable or cancellable through 6 Oct. Both include free breakfast, require no prepayment and are payable at the property. This is the only official category that can be safely matched to the existing 20 m² standard king; Standard With Free Breakfast and Upgraded Standard do not guarantee the room preference at check-in and are not mapped to the queen or 28 m² city-view super-king categories.",
     rateSnapshots: {
       "2026-10-07/2026-10-09": {
         roomRates: {
@@ -431,6 +457,28 @@ export const aucklandCityHotels = [
             },
           },
           "standard-king": {
+            official: {
+              source: "IHG 官网",
+              roomKey: "standard-king",
+              room: "1 King Standard With Free Breakfast · 20 m²",
+              roomEn: "1 King Standard With Free Breakfast · 20 m²",
+              nonRefundableNzd: null,
+              refundableNzd: 428,
+              cancelUntil: "2026-09-07",
+              refundableRateLabel: "10月7日—9日含税费总价 · Advance Saver 可更改或取消至 2026-09-07",
+              refundableRateLabelEn: "Tax-and-fee-inclusive total · Advance Saver changeable or cancellable through 7 Sep 2026",
+              payment:
+                "IHG One Rewards 会员 Advance Saver：平均每晚 NZD 214（原价 238），两晚含税费总价 NZD 428，无需预付、到店付款；Best Flexible 会员价平均每晚 NZD 279（原价 294），两晚含税费总价 NZD 558，10 月 6 日前可更改或取消，同样无需预付、到店付款",
+              paymentEn:
+                "IHG One Rewards member Advance Saver: average NZD 214 per night (was NZD 238), NZD 428 total for two nights including taxes and fees, changeable or cancellable through 7 Sep, with no prepayment and payment at the property. Best Flexible member rate: average NZD 279 per night (was NZD 294), NZD 558 total for two nights including taxes and fees, changeable or cancellable through 6 Oct, also with no prepayment and payment at the property.",
+              breakfast: "含免费早餐",
+              breakfastEn: "Free breakfast included",
+              memberNote:
+                "官网房型为 20 m²、高楼层城市景的 1 King Standard，因面积与床型一致，只映射到 standard-king；不与 Booking 的 28 m² city-view-super-king 合并",
+              memberNoteEn:
+                "The official category is a 20 m² high-floor city-view 1 King Standard. Its size and bed type support mapping only to standard-king; it is not merged with Booking.com's 28 m² city-view-super-king.",
+              quotedAt: "2026-07-28",
+            },
             booking: {
               source: "Booking.com",
               roomKey: "standard-king",
@@ -446,8 +494,16 @@ export const aucklandCityHotels = [
         },
       },
     },
+    officialStatus: "exact-rate-verified",
+    officialStatusDetail:
+      "2026-07-28 已在 IHG 官网实际带入 10 月 7—9 日、2 人 1 间：已核验 1 King Standard With Free Breakfast 的含税费两晚总价、免费早餐、付款与取消条款。该官网房型为 20 m²，只与现有 standard-king 映射；两个不保证到店房型偏好的泛标准房未写入 Queen 或 28 m² 市景超级特大床房。",
+    officialStatusEn:
+      "Verified on IHG on 28 Jul 2026 for 7–9 Oct 2026, two adults and one room. The tax-and-fee-inclusive totals, free breakfast, payment and cancellation terms for 1 King Standard With Free Breakfast were checked. This 20 m² official category is mapped only to the existing standard-king; the two generic standard categories that do not guarantee the room preference at check-in are not assigned to the queen or 28 m² city-view super-king rooms.",
+    officialVerifiedAt: "2026-07-28",
     officialUrl:
-      "https://www.ihg.com/holidayinnexpress/hotels/us/en/auckland/aklct/hoteldetail",
+      "https://www.ihg.com/holidayinnexpress/hotels/us/en/auckland/aklcc/hoteldetail",
+    officialBookingUrl:
+      "https://www.ihg.com/hotels/us/en/find-hotels/select-roomrate?qDest=58%20Albert%20Street%2C%20Auckland%201010%2C%20New%20Zealand&qPt=CASH&qCiD=7&qCoD=9&qCiMy=092026&qCoMy=092026&qAdlt=2&qChld=0&qRms=1&qAAR=6CBARC&qSlH=AKLCC&qAkamaiCC=CN&srb_u=1&qExpndSrch=false&qFS=false&qSrt=sAV&qBrs=6c.hi.ex.sb.ul.ic.cp.cw.in.vn.cv.rs.ki.kd.ma.sp.va.re.vx.nd.sx.we.lx.rn.sn.nu.ge.fa&qWch=0&qSmP=0&qRad=30&qRdU=mi&setPMCookies=true&qpMbw=0&qErm=false&qpMn=1&qpMbx=0&qLoSe=false&qDr=1&qSt=Holiday%20Inn%20Express%20Auckland%20City%20Centre&qRmFltr=",
     bookingUrl:
       "https://www.booking.com/hotel/nz/holiday-inn-express-auckland-city-centre-an-ihg.html",
     agodaUrl:

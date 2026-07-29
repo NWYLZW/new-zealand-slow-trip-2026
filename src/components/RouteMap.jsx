@@ -33,6 +33,7 @@ import { eventTitleEn, mapStopEn, routeSegmentEn, routeText } from "../routeI18n
 import { socialGuidesByEvent } from "../socialGuides";
 import { EventRouteMap } from "./EventRouteMap";
 import { SocialGuideCard } from "./SocialGuideCard";
+import { WildlifeRouteOption } from "./WildlifeRouteOption";
 
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -189,6 +190,34 @@ const routeSegments = [
     modes: ["overview", "south"],
   },
   {
+    id: "aoraki-oamaru-option",
+    sequence: "8A",
+    colorIndex: 7,
+    date: "10/6",
+    label: "库克山 → 蒂卡波 → 奥马鲁（备选）",
+    transport: "road",
+    from: "AOR",
+    to: "OAM",
+    waypoints: [{ lat: -44.0047, lng: 170.4771 }],
+    modes: ["overview", "south"],
+    optional: true,
+    color: "#357b73",
+  },
+  {
+    id: "oamaru-christchurch-option",
+    sequence: "8B",
+    colorIndex: 7,
+    date: "10/7",
+    label: "奥马鲁 → 基督城机场（备选）",
+    transport: "road",
+    from: "OAM",
+    to: "CHC",
+    toPosition: placePositions.christchurchAirport,
+    modes: ["overview", "south"],
+    optional: true,
+    color: "#357b73",
+  },
+  {
     id: "chc-akl",
     sequence: 9,
     date: "10/7",
@@ -282,7 +311,7 @@ const routeSegments = [
   },
 ].map((segment, index) => ({
   ...segment,
-  color: routeColorScale[Math.min(index, routeColorScale.length - 1)],
+  color: segment.color ?? routeColorScale[Math.min(segment.colorIndex ?? segment.sequence - 1, routeColorScale.length - 1)],
 }));
 
 function segmentPath(segment) {
@@ -303,7 +332,7 @@ const routeConfigs = {
   south: {
     center: { lat: -44.35, lng: 169.7 },
     zoom: 6,
-    stopTags: ["AKL", "ZQN", "WTP", "WKA", "AOR", "TEK", "CHC"],
+    stopTags: ["AKL", "ZQN", "WTP", "WKA", "AOR", "TEK", "OAM", "KAT", "CHC"],
     calendarTitle: "南岛行程 · 9月28日—10月7日",
   },
   north: {
@@ -345,10 +374,13 @@ const calendarRegionColors = {
 const eventColors = {
   internationalFlight: "#4f79a8",
   domesticFlight: "#6f7db8",
+  flightTransfer: "#a52a22",
   queenstownRoad: "#9d7052",
   wanakaRoad: "#8a6a45",
   mountCookRoad: "#6f8fb5",
   christchurchRoad: "#7d765f",
+  wildlifeRoad: "#357b73",
+  wildlife: "#357b73",
   northRoad: "#347e90",
   queenstown: "#df7659",
   wanaka: "#6fa37d",
@@ -439,6 +471,17 @@ const eventGoogleRoutes = {
     waypoints: ["Church of the Good Shepherd Lake Tekapo"],
     travelmode: "driving",
   },
+  "奥马鲁企鹅与海狗备选": {
+    origin: "Mt Cook Lodge & Motels",
+    destination: "Oamaru Blue Penguin Colony",
+    waypoints: ["Church of the Good Shepherd Lake Tekapo"],
+    travelmode: "driving",
+  },
+  "奥马鲁直达基督城机场": {
+    origin: "Oamaru New Zealand",
+    destination: "Budget Car Rental Christchurch Airport",
+    travelmode: "driving",
+  },
   "还车飞奥克兰": {
     origin: "Budget Car Rental Christchurch Airport",
     destination: "Britomart Auckland",
@@ -487,10 +530,10 @@ function keyForDate(date) {
 
 const calendarEventGroupsByDate = {
   "9月28日": [
-    { title: "乘机前往新西兰", time: "02:45—23:50", color: eventColors.internationalFlight, icon: "flight", items: [0, 1, 2, 3, 4, 5, 6], flights: internationalFlights.outbound, flightSummary, segmentIds: ["szx-kul", "kul-akl"], stopTags: ["SZX", "KUL", "AKL"] },
+    { title: "乘机前往新西兰", calendarLabel: "MH0523 / MH0133", calendarLabelEn: "MH0523 / MH0133", isFlightTransfer: true, time: "02:45—23:50", color: eventColors.flightTransfer, icon: "flight", items: [0, 1, 2, 3, 4, 5, 6], flights: internationalFlights.outbound, flightSummary, segmentIds: ["szx-kul", "kul-akl"], stopTags: ["SZX", "KUL", "AKL"] },
   ],
   "9月29日": [
-    { title: "飞往皇后镇", time: "09:45—13:30", color: eventColors.domesticFlight, icon: "domesticFlight", items: [0, 1, 2], flights: [{ flightNumber: "NZ619", date: "2026-09-29", from: "奥克兰 AKL", to: "皇后镇 ZQN", departure: "11:35", arrival: "13:30", departureTerminal: "国内航站楼", arrivalTerminal: "以出票信息为准", cabin: "以出票信息为准", status: "待确认行李" }], segmentIds: ["akl-zqn"], stopTags: ["AKL", "ZQN"] },
+    { title: "飞往皇后镇", calendarLabel: "NZ619", calendarLabelEn: "NZ619", isFlightTransfer: true, time: "09:45—13:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [0, 1, 2], flights: [{ flightNumber: "NZ619", date: "2026-09-29", from: "奥克兰 AKL", to: "皇后镇 ZQN", departure: "11:35", arrival: "13:30", departureTerminal: "国内航站楼", arrivalTerminal: "以出票信息为准", cabin: "以出票信息为准", status: "待确认行李" }], segmentIds: ["akl-zqn"], stopTags: ["AKL", "ZQN"] },
     { title: "南岛取车入住", time: "15:30—16:15", color: eventColors.queenstownRoad, icon: "car", drive: { distanceKm: 8, durationZh: "约 15 分钟", durationEn: "about 15 min" }, items: [3, 4], segmentIds: [], stopTags: ["ZQN"] },
   ],
   "9月30日": [
@@ -520,7 +563,7 @@ const calendarEventGroupsByDate = {
   ],
   "10月7日": [
     { title: "基督城城市半日", time: "10:00—13:00", color: eventColors.christchurch, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["CHC"] },
-    { title: "还车飞奥克兰", time: "15:30—22:30", color: eventColors.domesticFlight, icon: "domesticFlight", items: [3, 4, 5, 6], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
+    { title: "还车飞奥克兰", calendarLabel: "JQ242", calendarLabelEn: "JQ242", isFlightTransfer: true, time: "15:30—22:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [3, 4, 5, 6], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
   ],
   "10月8日": [
     { title: "奥克兰购物日", time: "09:00—19:30", color: eventColors.auckland, icon: "shopping", items: [0, 1, 2, 3, 4, 5], segmentIds: ["auckland-shopping"], stopTags: ["AKL"] },
@@ -536,7 +579,7 @@ const calendarEventGroupsByDate = {
     { title: "办理返程值机", time: "21:45", color: eventColors.internationalFlight, icon: "flight", items: [5], flights: internationalFlights.inbound, flightSummary, segmentIds: [], stopTags: ["AKL"] },
   ],
   "10月11日": [
-    { title: "返程回深圳", time: "00:30—次日 01:15", color: eventColors.internationalFlight, icon: "flight", items: [0, 1, 2], flights: internationalFlights.inbound, flightSummary, segmentIds: ["akl-kul", "kul-szx"], stopTags: ["AKL", "KUL", "SZX"] },
+    { title: "返程回深圳", calendarLabel: "MH0132 / MH0522", calendarLabelEn: "MH0132 / MH0522", isFlightTransfer: true, time: "00:30—次日 01:15", color: eventColors.flightTransfer, icon: "flight", items: [0, 1, 2], flights: internationalFlights.inbound, flightSummary, segmentIds: ["akl-kul", "kul-szx"], stopTags: ["AKL", "KUL", "SZX"] },
   ],
 };
 
@@ -726,6 +769,7 @@ function EventHeroCarousel({ children, eventKey, language, media }) {
   const [resumeAfterManualChange, setResumeAfterManualChange] = useState(false);
   const [isDocumentVisible, setIsDocumentVisible] = useState(documentIsVisible);
   const hasMultipleImages = images.length > 1;
+  const activeImage = images[activeIndex];
 
   useEffect(() => {
     setActiveIndex(0);
@@ -788,6 +832,17 @@ function EventHeroCarousel({ children, eventKey, language, media }) {
         />
       ))}
       <Box className="route-hero-content">{children}</Box>
+      {activeImage?.sourceName && (
+        <Typography
+          className="route-hero-credit"
+          component={activeImage.sourceUrl ? "a" : "span"}
+          href={activeImage.sourceUrl}
+          rel="noreferrer"
+          target={activeImage.sourceUrl ? "_blank" : undefined}
+        >
+          {language === "en" ? "Photo" : "图片"} · {activeImage.sourceName}{activeImage.license ? ` · ${activeImage.license}` : ""}
+        </Typography>
+      )}
       {hasMultipleImages && (
         <>
           <IconButton
@@ -864,6 +919,8 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
           <Box className="route-month-grid">
             {getTripCalendarCells(days).map((date, index) => {
               const day = daysByKey.get(keyForDate(date));
+              const calendarEvents = day ? getCalendarEvents(day) : [];
+              const hasFlightTransfer = calendarEvents.some((event) => event.isFlightTransfer);
               const cellStyle = {
                 gridColumnStart: index === 0 ? date.getDay() + 1 : undefined,
                 "--day-color": day ? calendarRegionColors[day.calendarRegion] : undefined,
@@ -883,6 +940,7 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                   key={date.toISOString()}
                   className={day ? "route-day-cell has-day" : "route-day-cell"}
                   data-day-region={day?.calendarRegion}
+                  data-has-flight-transfer={hasFlightTransfer || undefined}
                   data-region-selectable={isSelectableRegion || undefined}
                   data-region-state={regionState}
                   onClick={selectDayRegion}
@@ -902,13 +960,18 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                   {day && (
                     <Box>
                       <Stack direction="row" className="route-event-tags">
-                        {getCalendarEvents(day).map((event) => {
+                        {calendarEvents.map((event) => {
                           const EventIcon = eventIconMap[event.icon] ?? CalendarTodayIcon;
+                          const eventLabel = language === "en"
+                            ? (event.calendarLabelEn ?? eventTitleEn[event.title] ?? event.title)
+                            : (event.calendarLabel ?? event.title);
                           return (
                             <Chip
+                              aria-label={`${eventLabel} · ${event.time}`}
+                              data-flight-transfer={event.isFlightTransfer || undefined}
                               key={[day.date, event.title].join("-")}
                               icon={<EventIcon />}
-                              label={language === "en" ? (eventTitleEn[event.title] ?? event.title) : event.title}
+                              label={eventLabel}
                               size="small"
                               title={event.time}
                               onClick={(clickEvent) => {
@@ -1022,6 +1085,12 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                   </Stack>
                   <Typography className="route-dialog-stay">{selectedEvent.day.stay}</Typography>
                   {selectedEvent.day.highlight && <Typography className="route-dialog-highlight">{selectedEvent.day.highlight}</Typography>}
+                  {selectedEvent.day.alternative && (
+                    <Box className="route-dialog-alternative">
+                      <Typography fontWeight={950}>{selectedEvent.day.alternative.title}</Typography>
+                      <Typography>{selectedEvent.day.alternative.desc}</Typography>
+                    </Box>
+                  )}
                 </>
               )}
               {activeDialogTab === "flight" && (
@@ -1150,9 +1219,22 @@ function RoadRouteSegment({ segment }) {
           suppressMarkers: true,
           polylineOptions: {
             strokeColor: segment.color,
-            strokeOpacity: 0.96,
-            strokeWeight: 5,
-            zIndex: 100 + segment.sequence,
+            strokeOpacity: segment.optional ? 0 : 0.96,
+            strokeWeight: segment.optional ? 4 : 5,
+            icons: segment.optional ? [
+              {
+                icon: {
+                  path: "M 0,-1 0,1",
+                  strokeColor: segment.color,
+                  strokeOpacity: 0.9,
+                  strokeWeight: 2,
+                  scale: 2,
+                },
+                offset: "0",
+                repeat: "14px",
+              },
+            ] : undefined,
+            zIndex: segment.optional ? 90 : 100 + Number(segment.sequence),
           },
         }}
       />
@@ -1166,8 +1248,21 @@ function RoadRouteSegment({ segment }) {
         geodesic: false,
         strokeColor: segment.color,
         strokeOpacity: hasFailed ? 0.88 : 0.46,
-        strokeWeight: hasFailed ? 5 : 4,
-        zIndex: 100 + segment.sequence,
+        strokeWeight: segment.optional ? 4 : (hasFailed ? 5 : 4),
+        icons: segment.optional && window.google ? [
+          {
+            icon: {
+              path: "M 0,-1 0,1",
+              strokeColor: segment.color,
+              strokeOpacity: 0.9,
+              strokeWeight: 2,
+              scale: 2,
+            },
+            offset: "0",
+            repeat: "14px",
+          },
+        ] : undefined,
+        zIndex: segment.optional ? 90 : 100 + Number(segment.sequence),
       }}
     />
   );
@@ -1212,7 +1307,7 @@ function ManualRouteSegment({ segment, isLoaded }) {
         strokeOpacity: 0,
         strokeWeight: 4,
         icons,
-        zIndex: 100 + segment.sequence,
+        zIndex: 100 + Number(segment.sequence),
       }}
     />
   );
@@ -1243,7 +1338,7 @@ function segmentMarkerInfo(segment) {
 
 function routeSequenceIcon(segment, bearing) {
   return divIcon({
-    className: "leaflet-route-sequence-icon",
+    className: `leaflet-route-sequence-icon${segment.optional ? " leaflet-route-sequence-icon-option" : ""}`,
     html: `<span class="leaflet-route-sequence-marker" style="--route-color:${segment.color};--route-bearing:${bearing}deg"><span class="leaflet-route-sequence-number">${segment.sequence}</span><span class="leaflet-route-direction" aria-hidden="true"></span></span>`,
     iconAnchor: [15, 15],
     iconSize: [30, 30],
@@ -1252,7 +1347,7 @@ function routeSequenceIcon(segment, bearing) {
 
 function stopIcon(stop) {
   return divIcon({
-    className: "leaflet-route-stop-icon",
+    className: `leaflet-route-stop-icon${stop.optional ? " leaflet-route-stop-icon-option" : ""}`,
     html: `<span style="--stop-color:${stop.color}"></span>`,
     iconAnchor: [7, 7],
     iconSize: [14, 14],
@@ -1312,7 +1407,7 @@ function LeafletRouteMap({ language = "zh", mode }) {
             key={segment.id}
             pathOptions={{
               color: segment.color,
-              dashArray: segment.transport === "road" ? undefined : "8 8",
+              dashArray: segment.optional || segment.transport !== "road" ? "8 8" : undefined,
               lineCap: "round",
               lineJoin: "round",
               opacity: 0.94,
@@ -1328,9 +1423,9 @@ function LeafletRouteMap({ language = "zh", mode }) {
               icon={routeSequenceIcon(segment, marker.bearing)}
               interactive
               key={`${segment.id}-sequence`}
-              opacity={1}
+              opacity={segment.optional ? 0.85 : 1}
               position={marker.position}
-              zIndexOffset={300 + segment.sequence}
+              zIndexOffset={segment.optional ? 280 : 300 + Number(segment.sequence)}
             >
               <LeafletTooltip direction="top" offset={[0, -15]}>
                 {segment.date} · {language === "en" ? (routeSegmentEn[segment.label] ?? segment.label) : segment.label}
@@ -1401,9 +1496,18 @@ function GoogleRouteMap({ language = "zh", mode = "overview" }) {
       ))}
       {visibleStops.map((stop, index) => (
         <MarkerF
+          icon={stop.optional ? {
+            path: window.google.maps.SymbolPath.CIRCLE,
+            fillColor: stop.color,
+            fillOpacity: 0.18,
+            scale: 8,
+            strokeColor: stop.color,
+            strokeOpacity: 0.95,
+            strokeWeight: 2,
+          } : undefined}
           key={stop.tag}
           position={{ lat: stop.position[0], lng: stop.position[1] }}
-          label={{ text: String(index + 1), color: "#ffffff", fontWeight: "900" }}
+          label={stop.optional ? { text: language === "en" ? "OPTION" : "备选", color: stop.color, fontSize: "9px", fontWeight: "900" } : { text: String(visibleStops.slice(0, index + 1).filter((item) => !item.optional).length), color: "#ffffff", fontWeight: "900" }}
           title={`${stop.tag} · ${language === "en" ? (mapStopEn[stop.tag]?.[0] ?? stop.name) : stop.name}`}
           onMouseOver={() => setHoveredTag(stop.tag)}
           onMouseOut={() => setHoveredTag(null)}
@@ -1434,9 +1538,37 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
   const localizedDays = useMemo(() => language === "en"
     ? days.map((day) => englishDayByDate.get(day.dateKey ?? day.date) ?? day)
     : days, [days, language]);
-  const eventById = useMemo(() => new Map(
+  const baseEventById = useMemo(() => new Map(
     localizedDays.flatMap((day) => getCalendarEvents(day).map((event) => [eventUrlId(event), event])),
   ), [localizedDays]);
+  const wildlifeOptionEvent = useMemo(() => {
+    const optionDay = localizedDays.find((day) => (day.dateKey ?? day.date) === "10月6日");
+    if (!optionDay) return null;
+    return {
+      color: eventColors.wildlife,
+      day: {
+        ...optionDay,
+        alternative: null,
+        displayDate: language === "en" ? "6–7 Oct" : optionDay.displayDate,
+        highlight: null,
+        stay: language === "en" ? "Ōamaru accommodation · not selected or booked." : "住宿 · 奥马鲁住宿尚未选择、尚未预订。",
+        title: language === "en" ? "Aoraki / Mount Cook → Ōamaru → Christchurch Airport" : "库克山 → 奥马鲁 → 基督城机场",
+      },
+      drive: { distanceKm: 281, durationZh: "约 3 小时 26 分钟", durationEn: "about 3 hr 26 min" },
+      events: optionDay.events.slice(5, 9),
+      icon: "nature",
+      media: eventMediaByTitle["奥马鲁企鹅与海狗备选"],
+      segmentIds: ["aoraki-oamaru-option", "oamaru-christchurch-option"],
+      stopTags: ["AOR", "TEK", "OAM", "CHC"],
+      time: language === "en" ? "6 Oct 10:00—about 22:00; 7 Oct drive to CHC" : "10月6日 10:00—约22:00；10月7日直达基督城机场",
+      title: "奥马鲁企鹅与海狗备选",
+    };
+  }, [language, localizedDays]);
+  const eventById = useMemo(() => {
+    const events = new Map(baseEventById);
+    if (wildlifeOptionEvent) events.set(eventUrlId(wildlifeOptionEvent), wildlifeOptionEvent);
+    return events;
+  }, [baseEventById, wildlifeOptionEvent]);
   const [eventView, setEventView] = useState(() => readEventUrl(eventById, mode));
   const selectedEvent = eventView ? eventById.get(eventView.eventId) ?? null : null;
   const selectRegion = mode === "overview"
@@ -1514,6 +1646,17 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
           <LeafletRouteMap language={language} mode={mapMode} />
         )}
       </Box>
+      {(mode === "overview" || mode === "south") && (
+        <WildlifeRouteOption
+          onOpenEvent={() => {
+            if (!wildlifeOptionEvent) return;
+            const view = { eventId: eventUrlId(wildlifeOptionEvent), tab: "schedule" };
+            const currentState = history.state && typeof history.state === "object" ? history.state : {};
+            setEventView(view);
+            writeEventUrl(view, "pushState", { ...currentState, routeEventDialog: true }, mode);
+          }}
+        />
+      )}
       <RouteDayCalendar
         days={localizedDays}
         dialogTab={eventView?.tab}

@@ -145,6 +145,24 @@ const christchurchImage = {
   license: "CC BY-SA 4.0",
 };
 
+const oamaruPenguinImage = {
+  image: assetPath("images/oamaru-little-blue-penguin.jpg"),
+  alt: "奥马鲁附近走向海边的小蓝企鹅",
+  altEn: "A little blue penguin heading toward the sea near Ōamaru",
+  sourceName: "Avenue · Wikimedia Commons",
+  sourceUrl: "https://commons.wikimedia.org/wiki/File:Little_Blue_Penguin_(Eudyptula_minor),_heading_for_the_sea.jpg",
+  license: "CC BY-SA 3.0",
+};
+
+const oamaruFurSealImage = {
+  image: assetPath("images/oamaru-fur-seal.jpg"),
+  alt: "奥马鲁小蓝企鹅保护区附近晒太阳的新西兰海狗",
+  altEn: "A New Zealand fur seal resting at the Ōamaru Blue Penguin Colony",
+  sourceName: "Oren Rozen · Wikimedia Commons",
+  sourceUrl: "https://commons.wikimedia.org/wiki/File:NZ070315_Oamaru_Seal_01.jpg",
+  license: "CC BY-SA 3.0",
+};
+
 // `image` remains the backwards-compatible fallback. Events may opt into a
 // carousel by supplying the same media records in `images`.
 const mediaGallery = (primary, ...alternates) => ({
@@ -191,6 +209,11 @@ export const localNameTranslations = {
   "Mt Cook Lodge & Motels": "库克山旅舍及汽车旅馆",
   "Lake Tekapo / Takapō": "蒂卡波湖",
   "Church of the Good Shepherd": "好牧羊人教堂",
+  "Ōamaru / Te Oha-a-Maru": "奥马鲁",
+  "Ōamaru Blue Penguin Colony": "奥马鲁小蓝企鹅保护区",
+  "Oamaru Harbour": "奥马鲁港",
+  "Kātiki Point Walking Track": "卡提基角步道",
+  "New Zealand fur seal / kekeno": "新西兰海狗",
   "Christchurch / Ōtautahi": "基督城",
   "Novotel Christchurch Cathedral Square": "诺富特基督城大教堂广场酒店",
   "Rydges Latimer Christchurch": "Rydges Latimer 基督城酒店",
@@ -299,6 +322,31 @@ export const eventMediaByTitle = {
     localNames: ["Mt Cook Lodge & Motels", "Lake Tekapo / Takapō", "Church of the Good Shepherd", "Christchurch / Ōtautahi", "Novotel Christchurch Cathedral Square"],
     ...mediaGallery(tekapoImage, aorakiImage, christchurchImage),
     links: [official("Lake Tekapo 官方旅游信息", "https://www.mackenzienz.com/visit-lake-tekapo/"), googleDirections("库克山—蒂卡波—基督城路线", "Mt Cook Lodge & Motels", "Novotel Christchurch Cathedral Square", ["Church of the Good Shepherd Lake Tekapo"]), redbook("蒂卡波 基督城 自驾")],
+  },
+  "奥马鲁企鹅与海狗备选": {
+    route: "库克山 → 蒂卡波 → 奥马鲁",
+    localNames: ["Ōamaru / Te Oha-a-Maru", "Ōamaru Blue Penguin Colony", "Oamaru Harbour", "New Zealand fur seal / kekeno", "Kātiki Point Walking Track"],
+    ...mediaGallery(oamaruPenguinImage, oamaruFurSealImage),
+    links: [
+      official("10月6日 General 晚场 · 20:00", "https://book.penguins.co.nz/activity/selection?filter=ProdGroup-General&date=2026-10-06"),
+      official("10月6日 Premium 晚场 · 20:00", "https://book.penguins.co.nz/activity/selection?filter=ProdGroup-Premium&date=2026-10-06"),
+      official("奥马鲁企鹅参观规则", "https://www.penguins.co.nz/visit/plan-your-visit/"),
+      official("保护区附近的海狗与其他动物", "https://www.penguins.co.nz/about/other-local-species"),
+      official("Kātiki Point · DOC", "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/moeraki-area/things-to-do/katiki-point-walking-track/"),
+      official("海狗观赏安全距离 · DOC", "https://www.doc.govt.nz/nature/native-animals/marine-mammals/seals/nz-fur-seal/what-to-do/"),
+      googleDirections("库克山—蒂卡波—奥马鲁路线", "Mt Cook Lodge & Motels", "Oamaru Blue Penguin Colony", ["Church of the Good Shepherd Lake Tekapo"]),
+      googleMaps("Oamaru Blue Penguin Colony", "企鹅保护区地图"),
+      googleMaps("Katiki Point Lighthouse", "Kātiki Point 地图"),
+    ],
+  },
+  "奥马鲁直达基督城机场": {
+    route: "奥马鲁 → 基督城机场",
+    localNames: ["Ōamaru / Te Oha-a-Maru", "Budget Car Rental Christchurch Airport", "Christchurch Airport (CHC)"],
+    ...christchurchImage,
+    links: [
+      official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"),
+      googleDirections("奥马鲁—基督城机场路线", "Oamaru New Zealand", "Budget Car Rental Christchurch Airport"),
+    ],
   },
   "基督城城市半日": {
     location: "基督城市中心",

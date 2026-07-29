@@ -66,7 +66,7 @@ export function EventRouteMap({ color, googleMapsLabel = "在 Google 地图打�
             key={segment.id}
             pathOptions={{
               color: segment.color ?? color,
-              dashArray: segment.transport === "road" ? undefined : "7 7",
+              dashArray: segment.optional || segment.transport !== "road" ? "7 7" : undefined,
               lineCap: "round",
               lineJoin: "round",
               opacity: 0.96,
@@ -84,7 +84,7 @@ export function EventRouteMap({ color, googleMapsLabel = "在 Google 地图打�
             pathOptions={{
               color: "#ffffff",
               fillColor: segment.color ?? color,
-              fillOpacity: 1,
+              fillOpacity: segment.optional ? 0.72 : 1,
               weight: 2,
             }}
             radius={5}

@@ -257,6 +257,23 @@
   background: #edf8ef;
 }
 
+.hotel-room-platform-official-pending.is-verified {
+  border-color: rgba(47, 138, 69, 0.32);
+  background: #edf8ef !important;
+}
+
+.hotel-official-verification.is-unavailable,
+.hotel-room-platform-official-pending.is-unavailable {
+  border-color: rgba(202, 125, 39, 0.34);
+  background: #fff7e8 !important;
+}
+
+.hotel-official-verification.is-unreachable,
+.hotel-room-platform-official-pending.is-unreachable {
+  border-color: rgba(117, 117, 117, 0.32);
+  background: #f4f4f2 !important;
+}
+
 .hotel-official-verification > a {
   display: inline-flex;
   gap: 4px;
@@ -270,14 +287,25 @@
   font-size: 15px;
 }
 
+.hotel-official-link-note {
+  margin-top: 4px;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+}
+
 .hotel-room-platform-official {
   border-color: rgba(47, 138, 69, 0.32) !important;
   background: #edf8ef !important;
 }
 
 .hotel-room-platform-official-pending {
-  border: 1px dashed rgba(47, 138, 69, 0.36);
-  background: #f2f8f1 !important;
+  border: 1px dashed rgba(117, 117, 117, 0.32);
+  background: #f4f4f2 !important;
+}
+
+.hotel-room-platform-official-pending.is-unmatched {
+  border-color: rgba(117, 117, 117, 0.32);
+  background: #f4f4f2 !important;
 }
 
 .hotel-availability-note {

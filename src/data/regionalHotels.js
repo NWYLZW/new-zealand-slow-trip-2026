@@ -159,14 +159,26 @@ export const regionalHotels = {
         },
       ],
       strengths: [
-        "4 种已核验纯特大床/特大床公寓",
+        "Booking 4 种纯特大床房型可订；官网对应类别价格已核验",
         "免费停车与镇中心接驳",
         "评分 8.7",
       ],
+      strengthsEn: [
+        "Four guaranteed-king Booking.com categories are available; matching direct-category prices were checked",
+        "Free parking and a town-centre shuttle",
+        "8.7 rating",
+      ],
       cautions: [
         "四晚总价高",
+        "官网前两类客房写 Super King 或 Twin；直订时必须备注并让酒店确认 King，不能只凭官网类别名保证床型",
         "Walter Peak 当天不如步行酒店直接",
-        "可取消截止较早",
+        "Booking 免费取消至 9 月 22 日；官网首晚押金档采用分段取消规则",
+      ],
+      cautionsEn: [
+        "High four-night total",
+        "The first two direct room categories allow either a super king or twin king singles; request and confirm a king when booking direct",
+        "Less convenient than a walkable hotel on the Walter Peak day",
+        "Booking.com is cancellable through 22 Sep; the direct first-night-deposit plan uses staged cancellation charges",
       ],
       ratings: [
         { platform: "Booking.com", score: "8.7 / 10", reviews: "1,000+ 条" },
@@ -174,9 +186,9 @@ export const regionalHotels = {
       roomTypes: [
         {
           rateKey: "lake-view-king",
-          name: "湖景特大床房",
+          name: "湖景特大床房（Booking 保证 King）",
           size: "34 m²",
-          bed: "1 张超大号双人床",
+          bed: "Booking 明确 1 张超大号双人床；官网对应类别可能为 Super King 或 Twin",
           photosVerified: true,
           facilities: ["湖景", "私人浴室", "空调", "免费 Wi-Fi"],
           images: [
@@ -187,9 +199,9 @@ export const regionalHotels = {
         },
         {
           rateKey: "executive-lake-view-king",
-          name: "行政湖景特大床房",
+          name: "行政湖景特大床房（Booking 保证 King）",
           size: "40 m²",
-          bed: "1 张超大号双人床",
+          bed: "Booking 明确 1 张超大号双人床；官网对应类别可能为 Super King 或 Twin",
           facilities: ["湖景", "休息区", "私人浴室", "空调", "免费 Wi-Fi"],
           images: [],
         },
@@ -225,10 +237,29 @@ export const regionalHotels = {
         },
       ],
       hotelImages: [],
+      availabilityNote:
+        "The Rees 官网已按 2026 年 9 月 29 日—10 月 3 日、2 人 1 间核验 4 种对应类别价格；但官网 Lake View Hotel Room 与 Executive Lake View Hotel Room 的床型均写 Super King 或 Twin King Singles，不能视为保证 King。Booking 的对应房型明确为纯 King；若从官网直订前两类，必须备注并让酒店书面确认 King。官网不可退档低于 Booking，另有分段取消的首晚押金档；酒店客房官网直订含双人早餐，公寓页面未明确含早。",
+      availabilityNoteEn:
+        "Direct prices for four corresponding categories were verified for 29 Sep–3 Oct 2026, two adults and one room. However, the direct Lake View Hotel Room and Executive Lake View Hotel Room specify either a super king or twin king singles, so they do not guarantee a king; the matching Booking.com categories do. Request and obtain written king-bed confirmation before booking either direct hotel room. Direct hotel-room rates include breakfast for two, while the apartment descriptions did not confirm breakfast.",
       rateSnapshots: {
         "2026-09-29/2026-10-03": {
           roomRates: {
             "lake-view-king": {
+              official: {
+                source: "The Rees 官网",
+                roomKey: "lake-view-king",
+                room: "湖景酒店客房 · 30—35 m²",
+                roomEn: "Lake View Hotel Room · 30–35 m²",
+                nonRefundableNzd: 2831,
+                refundableNzd: null,
+                payment: "不可退档现在全额支付；另有首晚押金档 NZD 2,980，余款入住时付；信用卡手续费另计",
+                paymentEn: "The non-refundable plan is charged in full now; a NZD 2,980 first-night-deposit plan is also available, with the balance due at check-in; credit-card fees apply",
+                breakfast: "官网直订含 2 位成人早餐（促销码房价除外）",
+                breakfastEn: "Direct bookings include breakfast for two adults, except promotional-code rates",
+                memberNote: "官网床型为 Super King 或 Twin King Singles，必须请求并确认 King；首晚押金档：入住前超过 7 天取消免费，7 天内但超过 24 小时收首晚，24 小时内收全程",
+                memberNoteEn: "The direct bed is a super king or twin king singles; request and confirm a king. First-night-deposit plan: free cancellation more than seven days before arrival; the first night is charged from seven days to 24 hours; the full stay is charged within 24 hours",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "lake-view-king",
@@ -242,6 +273,21 @@ export const regionalHotels = {
               },
             },
             "executive-lake-view-king": {
+              official: {
+                source: "The Rees 官网",
+                roomKey: "executive-lake-view-king",
+                room: "行政湖景客房 · 约 40 m²",
+                roomEn: "Executive Lake View Hotel Room · about 40 m²",
+                nonRefundableNzd: 3201.5,
+                refundableNzd: null,
+                payment: "不可退档现在全额支付；另有首晚押金档 NZD 3,370，余款入住时付；信用卡手续费另计",
+                paymentEn: "The non-refundable plan is charged in full now; a NZD 3,370 first-night-deposit plan is also available, with the balance due at check-in; credit-card fees apply",
+                breakfast: "官网直订含 2 位成人早餐（促销码房价除外）",
+                breakfastEn: "Direct bookings include breakfast for two adults, except promotional-code rates",
+                memberNote: "官网床型为 Super King 或 Twin King Singles，必须请求并确认 King；首晚押金档：入住前超过 7 天取消免费，7 天内但超过 24 小时收首晚，24 小时内收全程",
+                memberNoteEn: "The direct bed is a super king or twin king singles; request and confirm a king. First-night-deposit plan: free cancellation more than seven days before arrival; the first night is charged from seven days to 24 hours; the full stay is charged within 24 hours",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "executive-lake-view-king",
@@ -255,6 +301,21 @@ export const regionalHotels = {
               },
             },
             "one-bedroom-lake-apartment": {
+              official: {
+                source: "The Rees 官网",
+                roomKey: "one-bedroom-lake-apartment",
+                room: "湖景一居室公寓 · 60 m²",
+                roomEn: "One Bedroom Lake View Apartment · 60 m²",
+                nonRefundableNzd: 3581.5,
+                refundableNzd: null,
+                payment: "不可退档现在全额支付；另有首晚押金档 NZD 3,770，余款入住时付；信用卡手续费另计",
+                paymentEn: "The non-refundable plan is charged in full now; a NZD 3,770 first-night-deposit plan is also available, with the balance due at check-in; credit-card fees apply",
+                breakfast: "官网公寓说明未明确含早餐，未按含早价处理",
+                breakfastEn: "The direct apartment description does not confirm breakfast, so this is not treated as a breakfast-inclusive rate",
+                memberNote: "首晚押金档：入住前超过 7 天取消免费；7 天内但超过 24 小时收首晚；24 小时内收全程",
+                memberNoteEn: "First-night-deposit plan: free cancellation more than seven days before arrival; the first night is charged from seven days to 24 hours; the full stay is charged within 24 hours",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "one-bedroom-lake-apartment",
@@ -268,6 +329,21 @@ export const regionalHotels = {
               },
             },
             "executive-one-bedroom-lake-apartment": {
+              official: {
+                source: "The Rees 官网",
+                roomKey: "executive-one-bedroom-lake-apartment",
+                room: "行政级湖景一居室公寓 · 70 m²",
+                roomEn: "Executive One Bedroom Lake View Apartment · 70 m²",
+                nonRefundableNzd: 4351,
+                refundableNzd: null,
+                payment: "不可退档现在全额支付；另有首晚押金档 NZD 4,580，余款入住时付；信用卡手续费另计",
+                paymentEn: "The non-refundable plan is charged in full now; a NZD 4,580 first-night-deposit plan is also available, with the balance due at check-in; credit-card fees apply",
+                breakfast: "官网公寓说明未明确含早餐，未按含早价处理",
+                breakfastEn: "The direct apartment description does not confirm breakfast, so this is not treated as a breakfast-inclusive rate",
+                memberNote: "首晚押金档：入住前超过 7 天取消免费；7 天内但超过 24 小时收首晚；24 小时内收全程",
+                memberNoteEn: "First-night-deposit plan: free cancellation more than seven days before arrival; the first night is charged from seven days to 24 hours; the full stay is charged within 24 hours",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "executive-one-bedroom-lake-apartment",
@@ -288,7 +364,15 @@ export const regionalHotels = {
       agodaStatus: "精确日期已售罄",
       agodaStatusDetail:
         "Agoda 已正确带入 9 月 29 日—10 月 3 日、2 人 1 间，页面明确显示“我们的空房已售罄”，因此没有可比较的四晚总价。",
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已在 The Rees 官网实际带入 9 月 29 日—10 月 3 日、2 人 1 间并核验 4 种对应类别的含税四晚总价、早餐、预付与分段取消规则。官网前两种酒店客房均写 Super King 或 Twin King Singles，不保证 King；只有 Booking 对应房型明确为纯 King，官网直订必须另行确认床型。",
+      officialStatusEn:
+        "Verified on The Rees official booking engine for 29 Sep–3 Oct 2026, two adults and one room, with tax-inclusive totals, breakfast inclusion, payment and staged cancellation terms checked across four corresponding categories. The first two direct hotel-room categories allow either a super king or twin king singles and therefore do not guarantee a king; only the matching Booking.com categories do.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.therees.co.nz/",
+      officialBookingUrl:
+        "https://book-directonline.com/thereeshotel/properties/thereesqueendirect?locale=zh-CN&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=NZD&checkInDate=2026-09-29&checkOutDate=2026-10-03&trackPage=no",
       bookingUrl:
         "https://www.booking.com/hotel/nz/the-rees-luxury-apartments.html",
       agodaUrl:
@@ -331,15 +415,26 @@ export const regionalHotels = {
         },
       ],
       strengths: [
-        "4 种纯特大床房型已核验",
+        "4 种以特大床为主的房型已核验；一卧室套房另含日间床",
         "基础山景特大床四晚价格低",
         "免费取消、无需预付",
+      ],
+      strengthsEn: [
+        "Four primarily king-bed categories verified; the one-bedroom suite also has a daybed",
+        "Low four-night price for the entry mountain-view king",
+        "Free cancellation with no prepayment",
       ],
       cautions: [
         "不适合 Walter Peak 步行日",
         "四天往返镇中心",
         "停车 NZD 20/晚，四晚需另加 NZD 80",
         "Agoda 本次只显示酒店介绍、未加载可预订房型卡；旧报价不再当作当前可订价",
+      ],
+      cautionsEn: [
+        "Not convenient for walking to the Walter Peak departure",
+        "Requires repeated trips into central Queenstown over four days",
+        "Parking is NZD 20 per night, adding NZD 80 for four nights",
+        "Agoda loaded only the hotel overview, not bookable room cards; the old quote is not treated as current availability",
       ],
       ratings: [
         { platform: "Booking.com", score: "8.8 / 10", reviews: "2,000+ 条" },
@@ -400,10 +495,30 @@ export const regionalHotels = {
         },
       ],
       hotelImages: [],
+      availabilityNote:
+        "IHG 官网已按 2026 年 9 月 29 日—10 月 3 日、2 人 1 间核验：以下 4 种以特大床为主的房型均可订，其中一卧室套房另含日间床；展示价格为 IHG One Rewards 会员 Advance Saver 的 4 晚含 15% 税总价，均可在 8 月 30 日 18:00（酒店当地时间）前免费取消、无需预付并到店付款。",
+      availabilityNoteEn:
+        "Verified on IHG for 29 Sep–3 Oct 2026, two adults and one room: all four primarily king-bed categories were available, with the one-bedroom suite also including a daybed. The displayed IHG One Rewards Advance Saver totals cover four nights and include 15% tax; each can be cancelled free before 6:00 p.m. hotel local time on 30 Aug, requires no prepayment and is payable at the property.",
       rateSnapshots: {
         "2026-09-29/2026-10-03": {
           roomRates: {
             "mountain-king": {
+              official: {
+                source: "IHG 官网",
+                roomKey: "mountain-king",
+                room: "1 King Standard Mountain View · 28 m²",
+                roomEn: "1 King Standard Mountain View · 28 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 1220.4,
+                cancelUntil: "2026-08-30 18:00（酒店当地时间）",
+                payment: "IHG One Rewards 会员 Advance Saver；无需预付、到店付款；4 晚总价含 15% 税",
+                paymentEn: "IHG One Rewards member Advance Saver; no prepayment and pay at the property; the four-night total includes 15% tax",
+                breakfast: "不含早餐",
+                breakfastEn: "Breakfast not included",
+                memberNote: "IHG 页面动态换算参考价约 CNY 4,689.14；与本站按固定汇率计算的人民币参考价不同",
+                memberNoteEn: "IHG's dynamic currency conversion showed about CNY 4,689.14, which differs from this site's fixed-rate CNY estimate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "mountain-king",
@@ -417,6 +532,22 @@ export const regionalHotels = {
               },
             },
             "mountain-balcony-king": {
+              official: {
+                source: "IHG 官网",
+                roomKey: "mountain-balcony-king",
+                room: "1 King Standard Mountain View Balcony · 28 m²",
+                roomEn: "1 King Standard Mountain View Balcony · 28 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 1400.4,
+                cancelUntil: "2026-08-30 18:00（酒店当地时间）",
+                payment: "IHG One Rewards 会员 Advance Saver；无需预付、到店付款；4 晚总价含 15% 税",
+                paymentEn: "IHG One Rewards member Advance Saver; no prepayment and pay at the property; the four-night total includes 15% tax",
+                breakfast: "不含早餐",
+                breakfastEn: "Breakfast not included",
+                memberNote: "IHG 页面动态换算参考价约 CNY 5,380.76；与本站按固定汇率计算的人民币参考价不同",
+                memberNoteEn: "IHG's dynamic currency conversion showed about CNY 5,380.76, which differs from this site's fixed-rate CNY estimate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "mountain-balcony-king",
@@ -430,6 +561,22 @@ export const regionalHotels = {
               },
             },
             "california-king-suite": {
+              official: {
+                source: "IHG 官网",
+                roomKey: "california-king-suite",
+                room: "1 California King Suite Mountain View · 42 m²",
+                roomEn: "1 California King Suite Mountain View · 42 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 1940.4,
+                cancelUntil: "2026-08-30 18:00（酒店当地时间）",
+                payment: "IHG One Rewards 会员 Advance Saver；无需预付、到店付款；4 晚总价含 15% 税",
+                paymentEn: "IHG One Rewards member Advance Saver; no prepayment and pay at the property; the four-night total includes 15% tax",
+                breakfast: "不含早餐",
+                breakfastEn: "Breakfast not included",
+                memberNote: "IHG 页面动态换算参考价约 CNY 7,455.60；与本站按固定汇率计算的人民币参考价不同",
+                memberNoteEn: "IHG's dynamic currency conversion showed about CNY 7,455.60, which differs from this site's fixed-rate CNY estimate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "california-king-suite",
@@ -443,6 +590,22 @@ export const regionalHotels = {
               },
             },
             "one-bedroom-king-suite": {
+              official: {
+                source: "IHG 官网",
+                roomKey: "one-bedroom-king-suite",
+                room: "1 Bedroom Suite Daybed Mountain View · 42 m²",
+                roomEn: "1 Bedroom Suite Daybed Mountain View · 42 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 1940.4,
+                cancelUntil: "2026-08-30 18:00（酒店当地时间）",
+                payment: "IHG One Rewards 会员 Advance Saver；无需预付、到店付款；4 晚总价含 15% 税",
+                paymentEn: "IHG One Rewards member Advance Saver; no prepayment and pay at the property; the four-night total includes 15% tax",
+                breakfast: "不含早餐",
+                breakfastEn: "Breakfast not included",
+                memberNote: "IHG 页面动态换算参考价约 CNY 7,455.60；与本站按固定汇率计算的人民币参考价不同",
+                memberNoteEn: "IHG's dynamic currency conversion showed about CNY 7,455.60, which differs from this site's fixed-rate CNY estimate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "one-bedroom-king-suite",
@@ -462,14 +625,16 @@ export const regionalHotels = {
       agodaStatus: "精确日期详情已打开，但房型卡未加载",
       agodaStatusDetail:
         "2026-07-28 已实际打开 Agoda 同一酒店并确认 9 月 29 日—10 月 3 日、2 人 1 间；本次页面只加载酒店介绍，没有出现可订房型卡或结算总价，因此撤下旧 Agoda 报价。",
-      officialStatus: "hotel-info-only",
+      officialStatus: "exact-rate-verified",
       officialStatusDetail:
-        "2026-07-28 已实际打开 IHG 官网并尝试带入 9 月 29 日—10 月 3 日、2 人 1 间，但页面重定向至 IHG Explore，未取得可复现的房型与含税结算价；当前 Booking 精确日期价仍作为报价依据。",
+        "2026-07-28 已在 IHG 官网实际带入 9 月 29 日—10 月 3 日、2 人 1 间并进入 Select Room：4 种以特大床为主的房型均可订，其中一卧室套房另含日间床；已逐项核验 IHG One Rewards 会员 Advance Saver 的 4 晚含 15% 税总价、早餐、付款与取消条款。",
       officialStatusEn:
-        "IHG was opened with the exact stay parameters on 28 Jul 2026, but redirected to IHG Explore, so no reproducible official checkout price was obtained.",
+        "Verified on the IHG website on 28 Jul 2026 for 29 Sep–3 Oct 2026, two adults and one room. Four king-oriented room categories were available; the one-bedroom suite also includes a daybed. Their four-night tax-inclusive IHG One Rewards Advance Saver rates and terms were checked.",
       officialVerifiedAt: "2026-07-28",
       officialUrl:
-        "https://www.ihg.com/holidayinn/hotels/us/en/queenstown/zqnrm/hoteldetail",
+        "https://www.ihg.com/holidayinn/hotels/us/en/queenstown/zqnpk/hoteldetail",
+      officialBookingUrl:
+        "https://www.ihg.com/hotels/us/en/find-hotels/select-roomrate?qDest=28%20Red%20Oaks%20Drive%2C%20Frankton%2C%20Queenstown%209371%2C%20New%20Zealand&qPt=CASH&qCiD=29&qCoD=3&qCiMy=082026&qCoMy=092026&qAdlt=2&qChld=0&qRms=1&qAAR=6CBARC&qSlH=ZQNPK&qAkamaiCC=CN&srb_u=1&qExpndSrch=false&qFS=false&qSrt=sAV&qBrs=6c.hi.ex.sb.ul.ic.cp.cw.in.vn.cv.rs.ki.kd.ma.sp.va.re.vx.nd.sx.we.lx.rn.sn.nu.ge.fa&qWch=0&qSmP=0&qRad=30&qRdU=mi&setPMCookies=true&qpMbw=0&qErm=false&qpMn=1&qpMbx=0&qLoSe=false&qDr=1&qSt=Holiday%20Inn%20Queenstown%20Remarkables%20Park&qRmFltr=",
       bookingUrl:
         "https://www.booking.com/hotel/nz/holiday-inn-queenstown-remarkables-park.html",
       agodaUrl:
@@ -790,9 +955,9 @@ export const regionalHotels = {
       recommendation: "码头步行标杆 · 高价",
       recommendationEn: "Premium wharf walkability",
       summary:
-        "就在 Beach Street 湖边，位置评分 9.8，去 Steamer Wharf 与镇中心最直接；已核验湖景阳台特大床房的 15 张平台画廊并精选展示 5 张，但四晚总价 NZD 5,249，适合作为便利性的价格上限参考。",
+        "就在 Beach Street 湖边，位置评分 9.8，去 Steamer Wharf 与镇中心最直接；官网山景阳台 King 含双早四晚 NZD 3,900.72 起，湖景阳台 King 的 Booking 可取消价则为 NZD 5,249。",
       summaryEn:
-        "The strongest hotel for wharf walkability, but the verified four-night king-room total is extremely high.",
+        "The strongest hotel for wharf walkability; the verified direct mountain-view balcony king starts at NZD 3,900.72 with breakfast, while Booking's cancellable lake-view king totals NZD 5,249.",
       access: "Beach Street 湖边；Steamer Wharf 对面一带",
       accessEn: "Lakefront Beach Street, next to the wharf precinct",
       parking: "私人停车额外收费；Booking 含 1 个车位套餐总价 NZD 5,253",
@@ -831,15 +996,38 @@ export const regionalHotels = {
         "9 月 28 日前免费取消",
         "位置评分 9.8",
       ],
+      strengthsEn: [
+        "Almost no transport needed on the Walter Peak day",
+        "Lake-view balcony room with a guaranteed king bed",
+        "Fifteen platform room photos verified, with five selected for display",
+        "Breakfast included",
+        "Free cancellation before 28 Sep",
+        "9.8 location score",
+      ],
       cautions: [
-        "四晚总价 NZD 5,249",
+        "官网山景阳台 King 四晚仍需 NZD 3,900.72 起；湖景房更贵",
         "普通方案停车另收费",
         "性价比评分仅 7.6",
+      ],
+      cautionsEn: [
+        "The direct mountain-view balcony king still starts at NZD 3,900.72 for four nights; lake-view rooms cost more",
+        "Parking costs extra on the standard plan",
+        "Value-for-money score is only 7.6",
       ],
       ratings: [
         { platform: "Booking.com", score: "8.3 / 10", reviews: "1,524 条 · 位置 9.8" },
       ],
       roomTypes: [
+        {
+          rateKey: "mountain-view-balcony-king",
+          name: "山景阳台标准特大床房",
+          size: "26 m²",
+          bed: "1 张超大号双人床",
+          photosVerified: false,
+          photoNote: "IHG 官网房型名称、面积与价格已核验；对应房型图片尚未单独整理",
+          facilities: ["山景", "阳台", "私人浴室", "空调", "免费 Wi-Fi"],
+          images: [],
+        },
         {
           rateKey: "lake-view-balcony-king",
           name: "湖景阳台特大床房",
@@ -857,21 +1045,55 @@ export const regionalHotels = {
         },
       ],
       hotelImages: [],
+      availabilityNote:
+        "IHG 官网已按 2026 年 9 月 29 日—10 月 3 日、2 人 1 间核验：1 King Standard Mountain View Balcony（26 m²）可订。含双早、含 GST 的四晚总价为预付不可退 NZD 3,900.72，或到店付款 NZD 4,021.35；后者可在 8 月 30 日 18:00（酒店当地时间）前免费取消。该官网价对应山景阳台房，不与 Booking 的湖景阳台房混用。",
+      availabilityNoteEn:
+        "Verified on IHG for 29 Sep–3 Oct 2026, two adults and one room: the 26 m² 1 King Standard Mountain View Balcony was available. The four-night GST-inclusive totals with breakfast for two were NZD 3,900.72 prepaid and non-refundable, or NZD 4,021.35 payable at the property with free cancellation before 6:00 p.m. hotel local time on 30 Aug. These direct rates belong to the mountain-view balcony room, not Booking.com's lake-view room.",
       rateSnapshots: {
         "2026-09-29/2026-10-03": {
-          source: "Booking.com",
-          roomKey: "lake-view-balcony-king",
-          room: "Lake View King with Balcony · 32 m²",
-          nonRefundableNzd: null,
-          refundableNzd: 5249,
-          cancelUntil: "2026-09-28",
-          payment: "无需预付、到店付款；含停车套餐总价 NZD 5,253",
-          breakfast: "含早餐",
-          quotedAt: "2026-07-27",
+          roomRates: {
+            "mountain-view-balcony-king": {
+              official: {
+                source: "IHG 官网",
+                roomKey: "mountain-view-balcony-king",
+                room: "1 King Standard Mountain View Balcony · 26 m²",
+                roomEn: "1 King Standard Mountain View Balcony · 26 m²",
+                nonRefundableNzd: 3900.72,
+                refundableNzd: 4021.35,
+                cancelUntil: "2026-08-30 18:00（酒店当地时间）",
+                payment: "不可退档全额预付；可取消档到店付款；两档四晚总价均含 GST",
+                paymentEn: "The non-refundable plan is fully prepaid; the cancellable plan is payable at the property; both four-night totals include GST",
+                breakfast: "两档均含 2 位成人早餐",
+                breakfastEn: "Both plans include breakfast for two adults",
+                quotedAt: "2026-07-28",
+              },
+            },
+            "lake-view-balcony-king": {
+              booking: {
+                source: "Booking.com",
+                roomKey: "lake-view-balcony-king",
+                room: "Lake View King with Balcony · 32 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 5249,
+                cancelUntil: "2026-09-28",
+                payment: "无需预付、到店付款；含停车套餐总价 NZD 5,253",
+                breakfast: "含早餐",
+                quotedAt: "2026-07-27",
+              },
+            },
+          },
         },
       },
       research: sharedSocial.queenstown,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已在 IHG 官网实际带入 9 月 29 日—10 月 3 日、2 人 1 间，并核验山景阳台标准 King 的含 GST 四晚总价、双早、付款与取消条款；官网价未挂到不同的湖景房型。",
+      officialStatusEn:
+        "Verified on IHG on 28 Jul 2026 for 29 Sep–3 Oct 2026, two adults and one room. The GST-inclusive totals, breakfast for two, payment and cancellation terms belong specifically to the 26 m² mountain-view balcony king, not the lake-view room.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.ihg.com/crowneplaza/hotels/us/en/queenstown/zqnbs/hoteldetail",
+      officialBookingUrl:
+        "https://www.ihg.com/hotels/us/en/find-hotels/select-roomrate?qDest=93%20Beach%20Street%2C%20Queenstown%209300%2C%20New%20Zealand&qPt=CASH&qCiD=29&qCoD=3&qCiMy=082026&qCoMy=092026&qAdlt=2&qChld=0&qRms=1&qAAR=6CBARC&qSlH=ZQNBS&qAkamaiCC=CN&srb_u=1&qExpndSrch=false&qFS=false&qSrt=sAV&qBrs=6c.hi.ex.sb.ul.ic.cp.cw.in.vn.cv.rs.ki.kd.ma.sp.va.re.vx.nd.sx.we.lx.rn.sn.nu.ge.fa&qWch=0&qSmP=0&qRad=30&qRdU=mi&setPMCookies=true&qpMbw=0&qErm=false&qpMn=1&qpMbx=0&qLoSe=false&qDr=1&qSt=Crowne%20Plaza%20Queenstown&qRmFltr=",
       bookingUrl:
         "https://www.booking.com/hotel/nz/crowne-plaza-queenstown.zh-cn.html",
       position: [-45.0311, 168.6583],
@@ -923,7 +1145,7 @@ export const regionalHotels = {
         "59 m² 纯大床公寓",
         "厨房、Spa 浴缸与壁炉",
         "免费停车",
-        "两晚可取消且价格合理",
+        "Booking 两晚可取消；官网两晚总价更低",
       ],
       cautions: [
         "不是正湖畔第一排",
@@ -959,30 +1181,82 @@ export const regionalHotels = {
         image("wanaka-hotel-1.jpg", "公寓泳池与山景"),
         image("wanaka-hotel-2.jpg", "公寓建筑与泳池"),
       ],
+      availabilityNote:
+        "官网预订引擎已按 2026 年 10 月 3—5 日、2 人核验：符合需求的 One Bedroom Apartment（最多 2 人、1 张 Queen 床）可订，展开 Nightly rate 后两晚总价 NZD 620；结算显示应付押金 NZD 155，余款 NZD 465 按条款在入住日从留档信用卡自动扣款。10 月 3 日不在官网特殊季节范围内，适用普通直订条款：入住前 72 小时内取消不可退款，未入住收取全部住宿费。Booking 同房型可取消档为 NZD 660。日历上的 10 月 3 日、4 日“from NZD 290”只是起价，不代替精确结果。Twin、两卧室、三卧室与 Loft 在本次日期均不可订；官网未说明税费或含早餐，均不作推断。",
+      availabilityNoteEn:
+        "Verified in the direct booking engine for 3–5 Oct 2026 and two guests: the matching One Bedroom Apartment (maximum two guests, one queen bed) was available, and its expanded Nightly rate showed NZD 620 for two nights. Checkout showed a NZD 155 deposit, leaving NZD 465 to be charged automatically to the card on file on arrival day under the direct terms. As 3 Oct falls outside the property's special seasonal windows, the standard direct policy applies: cancellations within 72 hours of arrival are non-refundable, and no-shows are charged the full accommodation total. Booking.com's cancellable rate for the same category is NZD 660. The calendar's ‘from NZD 290’ labels on 3 and 4 Oct are starting prices and do not replace the exact result. The Twin, Two Bedroom, Three Bedroom and Loft categories were unavailable. Tax and breakfast inclusion were not stated and are not inferred.",
       rateSnapshots: {
         "2026-10-03/2026-10-05": {
-          source: "Booking.com",
-          roomKey: "one-bedroom-queen",
-          room: "一卧室公寓 · 59 m²",
-          nonRefundableNzd: null,
-          refundableNzd: 660,
-          cancelUntil: "2026-09-19",
-          payment: "9 月 17 日前（不含当日）零付款",
-          breakfast: "带厨房，不含早餐",
-          quotedAt: "2026-07-27",
+          roomRates: {
+            "one-bedroom-queen": {
+              official: {
+                source: "Wanaka Luxury Apartments 官网",
+                roomKey: "one-bedroom-queen",
+                room: "One Bedroom Apartment · 最多 2 人 · 1 张 Queen 床",
+                roomEn: "One Bedroom Apartment · maximum two guests · one queen bed",
+                refundableNzd: null,
+                nonRefundableNzd: null,
+                rateOptions: [
+                  {
+                    label: "官网 Nightly rate · 两晚总价",
+                    labelEn: "Direct Nightly rate · two-night total",
+                    nzd: 620,
+                    detail:
+                      "10 月 3—5 日 · 2 人；NZD 310/晚 × 2 晚 = NZD 620；结算押金 NZD 155；入住前 72 小时内取消不可退款；税费与早餐未说明",
+                    detailEn:
+                      "3–5 Oct · two guests; NZD 310 per night × two nights = NZD 620; NZD 155 deposit at checkout; cancellations within 72 hours are non-refundable; tax and breakfast are not stated",
+                  },
+                ],
+                cancelUntil: "2026-09-30（入住前 72 小时；具体时刻以订单为准）",
+                payment:
+                  "官网建议使用信用卡；结算显示总价 NZD 620、当前应付押金 NZD 155，余款 NZD 465 按条款在入住日从留档信用卡自动扣款；未入住收取全部住宿费",
+                paymentEn:
+                  "Credit card is preferred; checkout shows NZD 620 total and NZD 155 due as a deposit, with the remaining NZD 465 charged automatically to the card on file on arrival day; a no-show is charged the full accommodation total",
+                breakfast: "官网当前结果未标明含早餐；不按含早价处理",
+                breakfastEn: "The current direct result does not state that breakfast is included, so the rate is not treated as breakfast-inclusive",
+                memberNote:
+                  "10 月 3 日不在滑雪季（6 月 25 日—9 月 30 日）或夏季（12 月 20 日—4 月 30 日）特殊条款范围内，因此适用普通直订的 72 小时不可退款窗口；日历起价不代替精确日期总价",
+                memberNoteEn:
+                  "The 3 Oct arrival falls outside the ski (25 Jun–30 Sep) and summer (20 Dec–30 Apr) special-policy windows, so the standard 72-hour non-refundable window applies; calendar starting prices do not replace the exact-stay total",
+                quotedAt: "2026-07-28",
+              },
+              booking: {
+                source: "Booking.com",
+                roomKey: "one-bedroom-queen",
+                room: "一卧室公寓 · 59 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 660,
+                cancelUntil: "2026-09-19",
+                payment: "9 月 17 日前（不含当日）零付款",
+                breakfast: "带厨房，不含早餐",
+                quotedAt: "2026-07-27",
+              },
+            },
+          },
         },
       },
       agodaStatus: "当前没有可预订房型",
       agodaStatusDetail:
         "已用 IAB 复核 10 月 3—5 日、2 人 1 间：Agoda 房型区没有任何可预订卡片，只显示 3 种房型已售罄。因此“低至 NZD 330”不能作为本次两晚价格。",
       research: sharedSocial.wanaka,
-      officialStatus: "official-unreachable",
+      officialStatus: "exact-rate-verified",
       officialStatusDetail:
-        "2026-07-28 已在 IAB 实际打开官网，但网站拒绝连接，无法查询 10 月 3—5 日的官网库存与结算价；不把 Agoda 起价代替官网价，当前仅保留 Booking 精确日期报价。",
+        "2026-07-28 已从 Wanaka Luxury Apartments 官网进入其官方 Ibex 预订引擎，带入 10 月 3—5 日、2 人。One Bedroom Apartment（最多 2 人、1 张 Queen 床）是唯一可订的匹配房型，NZD 310/晚、两晚总价 NZD 620；结算显示押金 NZD 155，余款按条款在入住日从留档信用卡自动扣款。本次入住不在特殊季节范围内，适用入住前 72 小时内取消不可退款的普通直订条款；未入住收取全部住宿费。Twin、两卧室、三卧室和 Loft 均不可订；税费与早餐未说明，未作推断。",
       officialStatusEn:
-        "The official website was opened in the in-app browser on 28 Jul 2026 but refused the connection; no official exact-date inventory or checkout price was obtained.",
+        "Verified on 28 Jul 2026 after entering the official Ibex booking engine from the Wanaka Luxury Apartments website for 3–5 Oct and two guests. The One Bedroom Apartment (maximum two guests, one queen bed) was the only available matching category at NZD 310 per night and NZD 620 total. Checkout showed a NZD 155 deposit, with the balance charged automatically to the card on file on arrival day under the direct terms. This arrival is outside the special seasonal windows, so cancellations within 72 hours are non-refundable; no-shows are charged the full accommodation total. The Twin, Two Bedroom, Three Bedroom and Loft categories were unavailable. Tax and breakfast were not stated and are not inferred.",
       officialVerifiedAt: "2026-07-28",
-      officialUrl: "https://www.wanakaluxuryapartments.co.nz/",
+      officialUrl: "https://wla.co.nz/",
+      officialBookingUrl:
+        "https://fbs.ibexres.com/production/wanakalu33/fbs706.html?bc=7073#/",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网预订引擎（需重新选择日期）",
+      officialLinkLabelEn: "Open official engine (reselect dates)",
+      officialRateLinkLabel: "官网 · 已核验（链接不保留日期）",
+      officialRateLinkLabelEn: "Official website · verified (link does not retain dates)",
+      officialLinkNote:
+        "Ibex 链接不会保留本次搜索条件；打开后请重新选择 2026 年 10 月 3—5 日、2 位客人。页面记录的 NZD 620 来自 2026-07-28 的实际核验结果，不代表链接打开时会自动复现。",
+      officialLinkNoteEn:
+        "The Ibex link does not retain this search. After opening it, reselect 3–5 Oct 2026 and two guests. The recorded NZD 620 total comes from the live check on 28 Jul 2026 and will not automatically reappear from the link.",
       bookingUrl:
         "https://www.booking.com/hotel/nz/wanaka-luxury-apartments.html",
       agodaUrl:
@@ -1036,10 +1310,22 @@ export const regionalHotels = {
         "免费取消",
         "免费停车",
       ],
+      strengthsEn: [
+        "Two guaranteed king-bed categories",
+        "The Agoda king studio reached a real checkout price",
+        "Rated 9.2 on Booking.com and 9.4 on Agoda",
+        "Free cancellation",
+        "Free parking",
+      ],
       cautions: [
         "步行湖边不如首选",
         "单间公寓面积录入不一致：Booking 35 m²、Agoda 30 m²",
         "一卧室公寓的 Agoda 总价未完成结算页核验，因此只展示 Booking 报价",
+      ],
+      cautionsEn: [
+        "Less convenient for walking to the lake than the first choice",
+        "The studio size differs by platform: 35 m² on Booking.com and 30 m² on Agoda",
+        "The Agoda total for the one-bedroom apartment was not verified at checkout, so only the Booking.com quote is shown",
       ],
       ratings: [
         { platform: "Booking.com", score: "9.2 / 10", reviews: "500+ 条" },
@@ -1091,10 +1377,30 @@ export const regionalHotels = {
         },
       ],
       hotelImages: [],
+      availabilityNote:
+        "West Meadows Motel 官网已按 2026 年 10 月 3—5 日、2 人核验：King Studio 两晚 NZD 590，One Bedroom 两晚 NZD 730。官网通用条款为信用卡担保、离店结清；King Studio 结算摘要另确认押金 NZD 0。入住前至少 7 天取消免费，之后取消收取全程房费；官网未注明具体截止时刻，也未显示含早方案。",
+      availabilityNoteEn:
+        "Verified direct for 3–5 Oct 2026 and two adults: the King Studio total was NZD 590 and the One Bedroom total was NZD 730. The property's general terms require a card guarantee and payment on departure; the King Studio review also confirmed a NZD 0 deposit. Cancellation is free at least seven days before arrival, after which the full stay is charged; no exact cutoff time or breakfast-inclusive option was shown.",
       rateSnapshots: {
         "2026-10-03/2026-10-05": {
           roomRates: {
             "king-studio": {
+              official: {
+                source: "West Meadows Motel 官网",
+                roomKey: "king-studio",
+                room: "King Studio · 1 张特大床",
+                roomEn: "King Studio · one king bed",
+                refundableNzd: 590,
+                nonRefundableNzd: null,
+                cancelUntil: "入住前至少 7 天（官网未注明具体时刻）",
+                refundableRateLabel: "官网两晚总价 · 入住前至少 7 天取消免费 · 税费状态未单列",
+                refundableRateLabelEn: "Direct two-night total · free cancellation at least seven days before arrival · tax not itemised",
+                payment: "Nightly rate；信用卡仅作担保，押金 NZD 0；住宿费离店时结清，未入住才从担保卡扣款",
+                paymentEn: "Nightly rate; the card is used only as a guarantee, the deposit is NZD 0 and the stay is settled on departure; the guaranteed card is charged only for a no-show",
+                breakfast: "官网未标明是否包含早餐，也未显示可单独核验的含早方案；不作推断",
+                breakfastEn: "The direct page does not state whether breakfast is included and shows no separately verifiable breakfast plan; no inference is made",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "king-studio",
@@ -1119,6 +1425,22 @@ export const regionalHotels = {
               },
             },
             "one-bedroom-king": {
+              official: {
+                source: "West Meadows Motel 官网",
+                roomKey: "one-bedroom-king",
+                room: "One Bedroom · 1 张特大床",
+                roomEn: "One Bedroom · one king bed",
+                refundableNzd: 730,
+                nonRefundableNzd: null,
+                cancelUntil: "入住前至少 7 天（官网未注明具体时刻）",
+                refundableRateLabel: "官网两晚总价 · 入住前至少 7 天取消免费 · 税费状态未单列",
+                refundableRateLabelEn: "Direct two-night total · free cancellation at least seven days before arrival · tax not itemised",
+                payment: "Nightly rate；官网通用条款为信用卡担保、住宿费离店时结清；该房型未单独进入结算摘要复核押金金额",
+                paymentEn: "Nightly rate; the general direct terms require a card guarantee and payment on departure; the deposit amount for this category was not separately rechecked in the booking summary",
+                breakfast: "官网未标明是否包含早餐，也未显示可单独核验的含早方案；不作推断",
+                breakfastEn: "The direct page does not state whether breakfast is included and shows no separately verifiable breakfast plan; no inference is made",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "one-bedroom-king",
@@ -1135,7 +1457,15 @@ export const regionalHotels = {
         },
       },
       research: sharedSocial.wanaka,
-      officialUrl: "https://westmeadowswanaka.co.nz/",
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已在 West Meadows Motel 官网按 10 月 3—5 日、2 人核验并展开 Nightly rate：King Studio 两晚总价 NZD 590，One Bedroom 两晚总价 NZD 730。官网通用条款为信用卡担保、住宿费离店时结清，King Studio 结算摘要另确认押金 NZD 0；入住前至少 7 天取消免费，之后取消收取全程房费，具体截止时刻未注明。官网未显示含早方案。",
+      officialStatusEn:
+        "Verified on the West Meadows Motel website on 28 Jul 2026 for 3–5 Oct 2026 and two adults: the Nightly rate total was NZD 590 for the King Studio and NZD 730 for the One Bedroom. General terms require a card guarantee and payment on departure; the King Studio review separately confirmed a NZD 0 deposit. Cancellation is free at least seven days before arrival, with no exact cutoff time stated, and no breakfast-inclusive option was shown.",
+      officialVerifiedAt: "2026-07-28",
+      officialUrl: "https://westmeadowsmotel.co.nz/",
+      officialBookingUrl:
+        "https://westmeadowsmotel.co.nz/book?startDate=2026-10-03&endDate=2026-10-05&guests=2&children=0&infants=0#/",
       bookingUrl:
         "https://www.booking.com/hotel/nz/west-meadows-of-wanaka.html",
       agodaUrl:
@@ -1240,7 +1570,15 @@ export const regionalHotels = {
         },
       },
       research: sharedSocial.wanaka,
+      officialStatus: "exact-date-unavailable",
+      officialStatusDetail:
+        "2026-07-28 已在 Edgewater 官方预订引擎带入 2026 年 10 月 3—5 日、2 人 1 间；页面明确提示整家酒店在所选日期售罄，Hotel Room、Suite、Premium Hotel Room、Premium Suite 与 Premium Apartment 均不可订，因此没有官网结算价。Agoda 同期基础 Hotel Room 库存作为独立渠道保留，不会冒充官网库存。",
+      officialStatusEn:
+        "The official Edgewater booking engine was opened on 28 Jul 2026 for 3–5 Oct 2026, two adults and one room. It explicitly showed the property sold out for the selected stay across Hotel Room, Suite, Premium Hotel Room, Premium Suite and Premium Apartment, so no direct checkout rate exists. The Agoda Hotel Room inventory remains a separate channel.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.edgewater.co.nz/",
+      officialBookingUrl:
+        "https://app-apac.thebookingbutton.com/properties/edgewaternzdirect?locale=en&checkInDate=2026-10-03&checkOutDate=2026-10-05&currency=NZD&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&trackPage=no",
       agodaUrl:
         "https://www.agoda.com/zh-cn/edgewater-hotel/hotel/wanaka-nz.html",
       position: [-44.6976, 169.1105],
@@ -1478,21 +1816,35 @@ export const regionalHotels = {
         },
       ],
       strengths: [
-        "冬宫官网订单已确认，确认号 R2009C",
+        "冬宫官网订单已确认，确认号已私下保存",
         "住在库克山村内，比住 Twizel 少约 50 分钟夜间驾驶",
         "Queen 床、完整厨房、独立浴室和免费停车",
         "入住前 48 小时以外取消可全额退款",
         "小红书实住者认为 Motel 空间和性价比优于主楼基础体验",
       ],
+      strengthsEn: [
+        "Direct Hermitage booking confirmed, with the confirmation number stored privately",
+        "Stays inside Mount Cook Village and avoids roughly 50 minutes of night driving to Twizel",
+        "Queen bed, full kitchen, private bathroom and free parking",
+        "Fully refundable when cancelled more than 48 hours before arrival",
+        "Xiaohongshu guests report better space and value than the main hotel's entry-level experience",
+      ],
       cautions: [
         "不是 The Hermitage 主楼客房；去主楼餐厅步行约 16 分钟",
         "官网明确写明不提供 Aoraki / Mount Cook 景观保证",
         "景观取决于具体分房，小红书的前排山景不能视为保证",
-        "已全额支付 NZD 504；10 月 3 日后取消收全额",
+        "已全额支付 NZD 504；进入入住前 48 小时后取消收全额",
         "10 月入住需先到 Mt Cook Lodge 办理入住",
       ],
+      cautionsEn: [
+        "This is not in The Hermitage main building; the main restaurants are about a 16-minute walk away",
+        "The official listing explicitly does not guarantee an Aoraki / Mount Cook view",
+        "The view depends on room allocation; front-row mountain views shown on Xiaohongshu are not guaranteed",
+        "NZD 504 has been paid in full; cancellation within 48 hours of arrival forfeits the full amount",
+        "October arrivals check in at Mt Cook Lodge",
+      ],
       ratings: [
-        { platform: "冬宫官网", score: "预订已确认", reviews: "确认号 R2009C · 2026-07-28" },
+        { platform: "冬宫官网", score: "预订已确认", reviews: "确认号已私下保存 · 2026-07-28" },
       ],
       roomTypes: [
         {
@@ -1518,22 +1870,26 @@ export const regionalHotels = {
       ],
       hotelImages: [],
       availabilityNote:
-        "已在冬宫官网预订成功：确认号 R2009C；2026 年 10 月 5 日入住、10 月 6 日退房，2 位成人；Special Bed and Breakfast Save $10 套餐，总价 NZD 504（含税），早餐在 The Hermitage 主楼 Alpine Restaurant。",
+        "已在冬宫官网预订成功：确认号已私下保存；2026 年 10 月 5 日入住、10 月 6 日退房，2 位成人；Special Bed and Breakfast Save $10 套餐，总价 NZD 504（含税），早餐在 The Hermitage 主楼 Alpine Restaurant。",
+      availabilityNoteEn:
+        "Booked successfully on The Hermitage website for 5–6 Oct 2026 and two adults; the confirmation number is stored privately. The Special Bed and Breakfast Save $10 package totals NZD 504 including tax, with breakfast served at Alpine Restaurant in The Hermitage main building.",
       rateSnapshots: {
         "2026-10-05/2026-10-06": {
           roomRates: {
             "mt-cook-motel-studio-queen": {
-              booking: {
+              official: {
                 source: "冬宫官网",
                 roomKey: "mt-cook-motel-studio-queen",
                 room: "Mt Cook Motel Studio Queen · 20 m²",
+                roomEn: "Mt Cook Motel Studio Queen · 20 m²",
                 refundableNzd: 504,
                 nonRefundableNzd: null,
-                cancelUntil: "2026-10-03（入住前 48 小时）",
-                payment: "已全额支付；确认号 R2009C；10 月 3 日后取消收 NZD 504",
+                cancelUntil: "入住前 48 小时（酒店当地时间）",
+                payment: "已全额支付；确认号已私下保存；进入入住前 48 小时后取消收 NZD 504",
+                paymentEn: "Paid in full; the confirmation number is stored privately; cancellation within 48 hours of arrival incurs the full NZD 504 charge",
                 breakfast: "含 2 位成人自助早餐；在 The Hermitage 主楼 Alpine Restaurant 用餐",
+                breakfastEn: "Buffet breakfast for two adults included, served at Alpine Restaurant in The Hermitage main building",
                 quotedAt: "2026-07-28",
-                useOfficialUrl: true,
               },
             },
           },
@@ -1542,9 +1898,9 @@ export const regionalHotels = {
       research: sharedSocial.mountCook,
       officialStatus: "exact-rate-verified",
       officialStatusDetail:
-        "冬宫官网订单已完成：2026 年 10 月 5—6 日、2 位成人、Mt Cook Motel Studio Queen、含双人早餐，含税总价 NZD 504；确认号 R2009C。",
+        "冬宫官网订单已完成：2026 年 10 月 5—6 日、2 位成人、Mt Cook Motel Studio Queen、含双人早餐，含税总价 NZD 504；确认号已私下保存。",
       officialStatusEn:
-        "Booked direct for 5–6 Oct 2026, two adults, Mt Cook Motel Studio Queen with breakfast for two, NZD 504 tax-inclusive; confirmation R2009C.",
+        "Booked direct for 5–6 Oct 2026, two adults, Mt Cook Motel Studio Queen with breakfast for two, NZD 504 tax-inclusive; confirmation number stored privately.",
       officialVerifiedAt: "2026-07-28",
       officialUrl:
         "https://book.hermitage.co.nz/onecart/wbe/room/20104/hermitage/2026-10-05/2026-10-06/BBSAVE10/2",
@@ -1711,6 +2067,12 @@ export const regionalHotels = {
         },
       },
       research: sharedSocial.mountCook,
+      officialStatus: "no-independent-official-found",
+      officialStatusDetail:
+        "2026-07-28 已实际查找并打开 Omahau Down / Omahau Downs 的搜索候选，包括区域旅游页、Traveleto、酒店聚合页、Facebook、Airbnb 与 Booking；未找到可确认由经营方控制、并能按 2026 年 10 月 5—6 日、2 人查询的独立官网或直订引擎。聚合站不会冒充官网，页面仅保留已实查的 Booking 报价。",
+      officialStatusEn:
+        "Searched for and opened Omahau Down / Omahau Downs candidates on 28 Jul 2026, including the regional tourism page, Traveleto, hotel aggregators, Facebook, Airbnb and Booking.com. No independently controlled property website or direct engine could be verified for 5–6 Oct 2026 and two guests. Aggregators are not presented as the official site; only the checked Booking.com rates remain.",
+      officialVerifiedAt: "2026-07-28",
       bookingUrl: "https://www.booking.com/hotel/nz/omahau-down.html",
       position: [-44.167, 170.127],
       mapQuery: "Omahau Down Lake Pukaki",
@@ -1721,7 +2083,7 @@ export const regionalHotels = {
       recommendation: "高分观星木屋 · 真实可订",
       recommendationEn: "Verified high-rated dark-sky chalet",
       summary:
-        "SH8 旁的独立一卧室 Queen 木屋，评分、私密性和观星环境最好，带厨房和热水浴池；价格明显最高，且次晨去库克山机场仍需长途驾驶。",
+        "SH8 旁的 Simons Hill Station 官方 Queen 小屋，私密性和观星环境强，官网确认两种小屋均带私人浴室和 Spa；精确日期价格目前仅在 Booking 核验，官网只提供邮件询价，且次晨去库克山机场仍需长途驾驶。",
       summaryEn:
         "A verified private queen chalet with a kitchen and hot tub in the dark-sky reserve, but at a high price and with a long airport drive.",
       access: "2963 Tekapo–Twizel Road；距 Twizel 餐饮约 29 公里",
@@ -1749,7 +2111,7 @@ export const regionalHotels = {
         },
       ],
       strengths: [
-        "Booking 真实详情页已核验",
+        "经营方官网与 Booking 真实详情页均已访问",
         "整套一卧室 Queen 木屋",
         "评分 9.2、位置 9.6",
         "私人厨房与热水浴池",
@@ -1757,6 +2119,7 @@ export const regionalHotels = {
       ],
       cautions: [
         "一晚 NZD 825 起，价格高",
+        "官网只有邮件询价，未提供可复现的精确日期直订价",
         "距餐厅约 29 公里",
         "Big Sky 后和次晨候补均要较长驾驶",
       ],
@@ -1845,6 +2208,13 @@ export const regionalHotels = {
         },
       },
       research: sharedSocial.mountCook,
+      officialStatus: "official-inquiry-only",
+      officialStatusDetail:
+        "2026-07-28 已实际打开 Simons Hill Station 官网及 The Good Shepherds Hut、Concertina Charlie's Hut 两个房型页。官网确认两者均为 2 人 Queen 床小屋，带私人浴室和 Spa，但预订入口仅为邮件询价，未提供可带入 2026 年 10 月 5—6 日、2 人并复现价格的在线引擎；因此页面仅保留 Booking 已核验报价，不猜官网价。",
+      officialStatusEn:
+        "Visited the Simons Hill Station website and both The Good Shepherds Hut and Concertina Charlie's Hut pages on 28 Jul 2026. The direct site confirms two-person queen-bed huts with private bathrooms and spas, but booking is by email enquiry only and no online engine reproduces a price for 5–6 Oct 2026 and two guests. Only the verified Booking.com rates are retained; no direct rate is inferred.",
+      officialVerifiedAt: "2026-07-28",
+      officialUrl: "https://www.simonshillstation.com/",
       bookingUrl:
         "https://www.booking.com/hotel/nz/the-good-shepherds-hut-in-the-nz-dark-sky-reserve.html",
       position: [-44.051, 170.155],
@@ -1856,7 +2226,7 @@ export const regionalHotels = {
       recommendation: "Braemar 农场体验 · 真实可订",
       recommendationEn: "Verified Braemar farm stay",
       summary:
-        "用户提出的 Braemar Station 方向确实有真实可订大床帐篷，星空和农场景观强；但它在 Tasman River 另一侧，酒店自己说明驾车到库克山村约 1.5 小时，不适合 Big Sky 和次晨直升机候补。",
+        "用户提出的 Braemar Station 方向确实有真实可订的 Queen 牧羊人小屋，星空和农场景观强；但它在 Tasman River 另一侧，官网明确说明驾车到库克山村约 1.5 小时，不适合 Big Sky 和次晨直升机候补。",
       summaryEn:
         "A verified queen hut on Braemar Mount Cook Station Road, but the property states Mount Cook Village is about 1.5 hours away by road.",
       access: "1580 Braemar Mount Cook Station Road；碎石路进入",
@@ -1884,18 +2254,32 @@ export const regionalHotels = {
         },
       ],
       strengths: [
-        "Booking 真实详情页已核验",
+        "官网与 Booking 精确日期均已核验",
         "1 张 Queen 床",
         "农场、星空和南阿尔卑斯景观",
         "免费停车",
         "评分 8.7",
       ],
+      strengthsEn: [
+        "Exact dates verified on both the direct site and Booking.com",
+        "One queen bed",
+        "Farm, dark-sky and Southern Alps setting",
+        "Free parking",
+        "Booking.com score 8.7",
+      ],
       cautions: [
-        "不可退款、在线付款",
+        "官网预订时全额支付；任何取消收 NZD 25，入住前 30 天内取消则 100% 不退款",
         "浴室和厨房需走到户外",
         "碎石路颠簸",
         "无手机信号、Wi-Fi 有限",
         "不适合本次 Big Sky 与直升机候补动线",
+      ],
+      cautionsEn: [
+        "The direct rate is paid in full at booking; every cancellation costs NZD 25 and cancellations within 30 days are fully non-refundable",
+        "The shared bathroom and kitchen require going outdoors",
+        "Long, bumpy gravel-road access",
+        "Little or no mobile coverage and limited Wi-Fi",
+        "Poor fit for this trip's Big Sky and helicopter-backup logistics",
       ],
       ratings: [
         { platform: "Booking.com", score: "8.7 / 10", reviews: "265 条" },
@@ -1903,33 +2287,97 @@ export const regionalHotels = {
       roomTypes: [
         {
           rateKey: "queen-hut",
-          name: "牧羊人小屋 / 帐篷",
+          name: "Station Huts Queen · Queen 牧羊人小屋",
           size: "平台未标",
-          bed: "1 张大号双人床",
+          bed: "1 张 Queen 大号双人床（官网明确标注）",
+          photosVerified: true,
+          photoNote:
+            "官网 Station Huts 图库将该图明确标为 Inside Double；页面同时标注小屋床型为 1 Queen / 2 Singles",
           facilities: [
             "景观",
             "共用独立厨房",
             "户外通往浴室",
             "免费 Wi-Fi（信号有限）",
           ],
-          images: [],
+          images: [
+            image(
+              "mount-cook-station-huts-queen-official.webp",
+              "Station Huts · Inside Double 官网图",
+              "Mount Cook Station 官网",
+            ),
+          ],
         },
       ],
       hotelImages: [],
+      availabilityNote:
+        "官网与 Booking.com 同日均有 Station Huts Queen：官网含 15% GST 的结算总额 NZD 350，Booking 当前不可退款档 NZD 403。官网低 NZD 53，但需预订时全额支付；任何取消收 NZD 25，入住前 30 天内取消则 100% 不退款。官网未标明早餐。",
+      availabilityNoteEn:
+        "The Station Huts Queen is available for the exact stay both direct and on Booking.com: NZD 350 including 15% GST at direct checkout versus NZD 403 for Booking.com's current non-refundable rate. Direct is NZD 53 lower but requires full payment at booking; every cancellation costs NZD 25 and cancellations within 30 days are fully non-refundable. Breakfast is not stated.",
       rateSnapshots: {
         "2026-10-05/2026-10-06": {
-          source: "Booking.com",
-          roomKey: "queen-hut",
-          room: "Queen 牧羊人小屋 / 帐篷",
-          refundableNzd: null,
-          nonRefundableNzd: 403,
-          cancelUntil: null,
-          payment: "不可退款、在线付款；当前剩 1 间",
-          breakfast: "共用厨房，不含早餐",
-          quotedAt: "2026-07-27",
+          roomRates: {
+            "queen-hut": {
+              official: {
+                source: "Mount Cook Station 官网",
+                roomKey: "queen-hut",
+                room: "Station Huts Queen · 1 张 Queen 床",
+                roomEn: "Station Huts Queen · one queen bed",
+                refundableNzd: null,
+                nonRefundableNzd: null,
+                rateOptions: [
+                  {
+                    label: "官网结算总额",
+                    labelEn: "Direct checkout total",
+                    nzd: 350,
+                    detail:
+                      "10 月 5—6 日 · 2 位成人 · 1 晚 · 含 15% GST；预订时全额付款；任何取消收 NZD 25，入住前 30 天内取消 100% 不退款",
+                    detailEn:
+                      "5–6 Oct · two adults · one night · includes 15% GST; full payment at booking; every cancellation costs NZD 25 and cancellations within 30 days are fully non-refundable",
+                  },
+                ],
+                cancelUntil: null,
+                payment:
+                  "结算按钮显示“全额支付 NZD 350”；官网条款要求预订时全额付款，信用卡手续费已包含在预订费中",
+                paymentEn:
+                  "The checkout button says pay NZD 350 in full; the direct terms require full payment at booking and state that card fees are included in the booking fee",
+                breakfast: "官网房型页与结算摘要均未标明含早餐",
+                breakfastEn:
+                  "Neither the direct room page nor checkout summary states that breakfast is included",
+                quotedAt: "2026-07-28",
+              },
+              booking: {
+                source: "Booking.com",
+                roomKey: "queen-hut",
+                room: "Queen 牧羊人小屋 / 帐篷",
+                refundableNzd: null,
+                nonRefundableNzd: 403,
+                cancelUntil: null,
+                payment: "不可退款、在线付款；当前剩 1 间",
+                breakfast: "共用厨房，不含早餐",
+                quotedAt: "2026-07-27",
+              },
+            },
+          },
         },
       },
       research: sharedSocial.mountCook,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已在 Mount Cook Station 官方预订引擎带入 2026 年 10 月 5—6 日、2 位成人；Station Huts Queen 可订，结算摘要和付款按钮均显示总额 NZD 350。官网预订条款另行核验确认：房价含 15% GST、预订时全额付款；任何取消收 NZD 25，入住前 30 天内取消则 100% 不退款。官网未标明早餐，未作推断。",
+      officialStatusEn:
+        "Verified on 28 Jul 2026 in Mount Cook Station's direct booking engine for 5–6 Oct 2026 and two adults. The Station Huts Queen is available and both the cart summary and payment button show NZD 350 total. The direct terms were also opened and confirm 15% GST is included, full payment is required at booking, every cancellation costs NZD 25, and cancellations within 30 days are fully non-refundable. Breakfast is not stated and was not inferred.",
+      officialVerifiedAt: "2026-07-28",
+      officialUrl: "https://mountcookstation.co.nz/station-huts/",
+      officialBookingUrl: "https://mountcookstation.co.nz/book-online/",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网预订页（需重新选择日期）",
+      officialLinkLabelEn: "Open direct booking page (reselect dates)",
+      officialRateLinkLabel: "官网 · 已核验（链接不保留搜索）",
+      officialRateLinkLabelEn: "Official website · verified (link does not retain search)",
+      officialLinkNote:
+        "官网链接在新会话中不会保留本次购物车；打开后请重新选择 2026 年 10 月 5—6 日、2 位成人及 Station Huts Queen。NZD 350 与政策来自 2026-07-28 的实际结算和条款核验。",
+      officialLinkNoteEn:
+        "A new session will not retain this cart. After opening, reselect 5–6 Oct 2026, two adults and Station Huts Queen. The NZD 350 total and policies come from the live checkout and terms check on 28 Jul 2026.",
       bookingUrl:
         "https://www.booking.com/hotel/nz/mount-cook-station-huts.html",
       position: [-43.866, 170.482],
@@ -1938,12 +2386,12 @@ export const regionalHotels = {
     {
       id: "ben-ohau-vista",
       name: "Ben Ohau Vista",
-      recommendation: "Agoda 民宿 · 已核验可订",
-      recommendationEn: "Verified Agoda holiday home",
+      recommendation: "官网与 Agoda 均已核验可订",
+      recommendationEn: "Verified direct and on Agoda",
       summary:
-        "Twizel 镇内的整栋三卧室度假屋，10 月 5 日 Agoda 只剩 1 套。景观、厨房和私密性优于普通酒店；民宿不限制床位数量，是否选择主要看总价、取钥匙安排和往返库克山的夜间驾驶。",
+        "Twizel 镇内的整栋度假屋，管理方 Twizel Holiday Homes 官网与 Agoda 在 10 月 5 日均显示只剩 1 套。官网当前显示价低于 Agoda，但两端卧室元数据不一致，最终价差与第四间卧室配置都应在下单前确认；民宿不限制床位数量。",
       summaryEn:
-        "A verified three-bedroom Twizel holiday home with strong privacy and self-catering facilities, but it adds driving after the helicopter flight and stargazing.",
+        "A four-bedroom Twizel holiday home verified both direct with Twizel Holiday Homes and on Agoda, with strong privacy and self-catering facilities but added driving after the helicopter flight and stargazing.",
       access:
         "Twizel 镇内；到 Mount Cook Airport / Hermitage 约 50—55 分钟车程",
       accessEn:
@@ -1977,10 +2425,11 @@ export const regionalHotels = {
         },
       ],
       strengths: [
-        "10 月 5 日 Agoda 已核验可订",
+        "10 月 5—6 日官网与 Agoda 均已核验可订",
         "整栋房屋、厨房、花园与烧烤设施",
-        "9 月 20 日前免费取消",
-        "9 月 18 日再付款",
+        "官网当前显示含清洁与预订费总价 NZD 338",
+        "Agoda 档 9 月 20 日前免费取消",
+        "Agoda 档 9 月 18 日再付款",
         "免费停车与 Wi-Fi",
       ],
       cautions: [
@@ -1991,10 +2440,13 @@ export const regionalHotels = {
       ratings: [{ platform: "Agoda", score: "9.6 / 10", reviews: "6 条" }],
       roomTypes: [
         {
-          rateKey: "three-bedroom-house",
-          name: "三卧室整栋度假屋",
+          rateKey: "whole-home",
+          name: "Ben Ohau Vista · Whare Tironui 整栋度假屋",
           size: "平台未标",
-          bed: "2 张双人床 + 1 张大床",
+          bed: "官网称 4 间卧室，但只列 1 张 California King + 2 张 Queen；Agoda 称 3 卧，需确认第四房配置",
+          photosVerified: true,
+          photoNote:
+            "已在 Twizel Holiday Homes 同一房源官网与官方 RMS Cloud 预订页核对",
           facilities: [
             "独立厨房",
             "客厅与用餐区",
@@ -2003,19 +2455,54 @@ export const regionalHotels = {
             "烧烤设施",
             "免费 Wi-Fi",
           ],
-          images: [],
+          images: [
+            image(
+              "ben-ohau-vista-official.jpg",
+              "Ben Ohau Vista 管理方官网房源图",
+              "Twizel Holiday Homes 官网",
+            ),
+          ],
         },
       ],
       hotelImages: [],
       availabilityNote:
-        "Agoda 已按 2026 年 10 月 5—6 日、2 人、1 间核验：仅剩 1 套。页面显示含税总价 NZD 456；9 月 20 日前免费取消，9 月 18 日再付款。",
+        "管理方官网与 Agoda 已按 2026 年 10 月 5—6 日、2 人核验，均显示只剩 1 套。官网 Standard（含清洁与预订费）当前显示 NZD 338；Agoda 含税总价 NZD 456，当前页面价差 NZD 118，但最终价差仍以官网结算页税费为准。官网称 4 卧却只列 3 张床，Agoda 称 3 卧，平台元数据有冲突；下单前需确认第四房配置。Agoda 已明确 9 月 20 日前免费取消、9 月 18 日再付款；官网退改与扣款规则未在价格卡中展开。",
+      availabilityNoteEn:
+        "The manager's direct site and Agoda both show one home left for 5–6 Oct 2026 and two guests. The direct Standard total is NZD 338 including cleaning and booking fees, versus Agoda's NZD 456 tax-inclusive total, a NZD 118 difference. Agoda states free cancellation until 20 Sep and payment on 18 Sep; the direct price card does not expand cancellation or payment terms, so recheck them before checkout.",
       rateSnapshots: {
         "2026-10-05/2026-10-06": {
           roomRates: {
-            "three-bedroom-house": {
+            "whole-home": {
+              official: {
+                source: "Twizel Holiday Homes 官网",
+                roomKey: "whole-home",
+                room: "Ben Ohau Vista · Whare Tironui 整栋度假屋",
+                roomEn: "Ben Ohau Vista · Whare Tironui whole holiday home",
+                nonRefundableNzd: null,
+                refundableNzd: null,
+                rateOptions: [
+                  {
+                    label: "Standard · 含清洁与预订费",
+                    labelEn: "Standard · cleaning and booking fees included",
+                    nzd: 338,
+                    detail:
+                      "10 月 5—6 日 · 2 位客人 · 1 晚 · 官网显示仅剩 1 套；退改、扣款和税费拆分待结算前确认",
+                    detailEn:
+                      "5–6 Oct · two guests · one night · one home left; recheck cancellation, payment and any tax breakdown before checkout",
+                  },
+                ],
+                cancelUntil: null,
+                payment:
+                  "官网价格卡未展开可复现的扣款与退款规则；加入购物车前需读取并确认",
+                paymentEn:
+                  "The direct price card does not expose reproducible payment or refund terms; recheck them before adding the stay to the cart",
+                breakfast: "整栋民宿带厨房；官网价格卡未标明是否包含早餐，不作推断",
+                breakfastEn: "The whole home has a kitchen; the direct price card does not state whether breakfast is included, so no inference is made",
+                quotedAt: "2026-07-28",
+              },
               agoda: {
                 source: "Agoda",
-                roomKey: "three-bedroom-house",
+                roomKey: "whole-home",
                 room: "House, 3 Bedrooms · 整栋房屋",
                 nonRefundableNzd: null,
                 refundableNzd: 456,
@@ -2029,6 +2516,24 @@ export const regionalHotels = {
         },
       },
       research: sharedSocial.mountCook,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已实际打开管理方 Twizel Holiday Homes 的 Ben Ohau Vista 同一房源页，并进入其官方 RMS Cloud 预订引擎带入 2026 年 10 月 5—6 日、2 位客人。结果明确显示 Available、Only 1 left，Standard（含清洁与预订费）总价 NZD 338。官网价格卡未展开退改、扣款与税费拆分，因此未作推断。",
+      officialStatusEn:
+        "Verified on 28 Jul 2026 on Twizel Holiday Homes' matching property page and its official RMS Cloud engine for 5–6 Oct 2026 and two guests. The result explicitly shows Available, Only 1 left, and a NZD 338 Standard total including cleaning and booking fees. Cancellation, payment and tax breakdowns were not expanded on the direct price card and were not inferred.",
+      officialVerifiedAt: "2026-07-28",
+      officialUrl: "https://twizelholidayhomes.com/property-view/?id=139",
+      officialBookingUrl:
+        "https://bookings.rmscloud.com/obookings3/Search/Index/9891/53/139",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网预订引擎（需重新选择日期）",
+      officialLinkLabelEn: "Open direct engine (reselect dates)",
+      officialRateLinkLabel: "官网 · 已核验（链接不保留搜索）",
+      officialRateLinkLabelEn: "Official website · verified (link does not retain search)",
+      officialLinkNote:
+        "RMS Cloud 链接不编码本次日期和人数；打开后请重新选择 2026 年 10 月 5—6 日、2 位客人，并核对 Ben Ohau Vista。NZD 338 来自 2026-07-28 的实际结果。",
+      officialLinkNoteEn:
+        "The RMS Cloud link does not encode this stay or guest count. After opening, reselect 5–6 Oct 2026 and two guests, then confirm Ben Ohau Vista. The NZD 338 total comes from the live result on 28 Jul 2026.",
       agodaUrl:
         "https://www.agoda.com/zh-cn/ben-ohau-vista/hotel/twizel-nz.html",
       position: [-44.2594, 170.1006],
@@ -2566,6 +3071,25 @@ export const regionalHotels = {
         "2026-10-06/2026-10-07": {
           roomRates: {
             "superior-king": {
+              official: {
+                source: "Rydges 官网",
+                roomKey: "superior-king",
+                room: "Superior King · 1 张 King 床 · 28 m²",
+                roomEn: "Superior King · one king bed · 28 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 409,
+                cancelUntil: null,
+                rateLabel: null,
+                refundableRateLabel: "官网一晚公开 Best Flexible Rate · 灵活档 · 税费与具体取消条件需在结算页再次确认",
+                refundableRateLabelEn: "Direct public Best Flexible Rate for one night · flexible plan · tax and cancellation terms require reconfirmation at checkout",
+                payment: "官网显示 pay now or pay later；另有 EVT Stays 会员价 NZD 368",
+                paymentEn: "The website shows pay now or pay later; an EVT Stays member price of NZD 368 is also displayed",
+                breakfast: "基础灵活价不含早餐；含早公开价 NZD 473",
+                breakfastEn: "The base flexible rate excludes breakfast; the public bed-and-breakfast rate is NZD 473",
+                memberNote: "公开价与会员价分开记录；未将 NZD 368 会员价冒充公开价",
+                memberNoteEn: "Public and member prices are kept separate; the NZD 368 member rate is not presented as the public rate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com · Genius",
                 roomKey: "superior-king",
@@ -2579,6 +3103,24 @@ export const regionalHotels = {
               },
             },
             "deluxe-king": {
+              official: {
+                source: "Rydges 官网",
+                roomKey: "deluxe-king",
+                room: "Deluxe King · 1 张 King 床 · 28 m²",
+                roomEn: "Deluxe King · one king bed · 28 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 459,
+                cancelUntil: null,
+                refundableRateLabel: "官网一晚公开 Best Flexible Rate · 灵活档 · 税费与具体取消条件需在结算页再次确认",
+                refundableRateLabelEn: "Direct public Best Flexible Rate for one night · flexible plan · tax and cancellation terms require reconfirmation at checkout",
+                payment: "官网显示 pay now or pay later；另有 EVT Stays 会员价 NZD 413",
+                paymentEn: "The website shows pay now or pay later; an EVT Stays member price of NZD 413 is also displayed",
+                breakfast: "基础灵活价不含早餐；含早公开价 NZD 523",
+                breakfastEn: "The base flexible rate excludes breakfast; the public bed-and-breakfast rate is NZD 523",
+                memberNote: "官网另有需登录的 EVT Stays Package NZD 229，不作为公开可订价展示",
+                memberNoteEn: "A login-only EVT Stays Package at NZD 229 is shown separately and is not presented as a public rate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com · Genius",
                 roomKey: "deluxe-king",
@@ -2592,6 +3134,24 @@ export const regionalHotels = {
               },
             },
             "premier-king": {
+              official: {
+                source: "Rydges 官网",
+                roomKey: "premier-king",
+                room: "Premier King · 1 张 King 床 · 28 m²",
+                roomEn: "Premier King · one king bed · 28 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 489,
+                cancelUntil: null,
+                refundableRateLabel: "官网一晚公开 Best Flexible Rate · 灵活档 · 税费与具体取消条件需在结算页再次确认",
+                refundableRateLabelEn: "Direct public Best Flexible Rate for one night · flexible plan · tax and cancellation terms require reconfirmation at checkout",
+                payment: "官网显示 pay now or pay later；另有 EVT Stays 会员价 NZD 440",
+                paymentEn: "The website shows pay now or pay later; an EVT Stays member price of NZD 440 is also displayed",
+                breakfast: "基础灵活价不含早餐；含早公开价 NZD 553",
+                breakfastEn: "The base flexible rate excludes breakfast; the public bed-and-breakfast rate is NZD 553",
+                memberNote: "公开价与会员价分开记录",
+                memberNoteEn: "Public and member prices are kept separate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com · Genius",
                 roomKey: "premier-king",
@@ -2605,6 +3165,24 @@ export const regionalHotels = {
               },
             },
             "premier-suite": {
+              official: {
+                source: "Rydges 官网",
+                roomKey: "premier-suite",
+                room: "Premier Suite · 1 张 King 床 · 46 m²",
+                roomEn: "Premier Suite · one king bed · 46 m²",
+                nonRefundableNzd: null,
+                refundableNzd: 641,
+                cancelUntil: null,
+                refundableRateLabel: "官网一晚公开 Best Flexible Rate · 灵活档 · 税费与具体取消条件需在结算页再次确认",
+                refundableRateLabelEn: "Direct public Best Flexible Rate for one night · flexible plan · tax and cancellation terms require reconfirmation at checkout",
+                payment: "官网显示 pay now or pay later；另有 EVT Stays 会员价 NZD 576",
+                paymentEn: "The website shows pay now or pay later; an EVT Stays member price of NZD 576 is also displayed",
+                breakfast: "基础灵活价不含早餐；含早公开价 NZD 705",
+                breakfastEn: "The base flexible rate excludes breakfast; the public bed-and-breakfast rate is NZD 705",
+                memberNote: "公开价与会员价分开记录",
+                memberNoteEn: "Public and member prices are kept separate",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com · Genius",
                 roomKey: "premier-suite",
@@ -2624,8 +3202,25 @@ export const regionalHotels = {
       agodaStatusDetail:
         "已用 IAB 实际打开 Agoda 同一酒店，并正确带入 10 月 6—7 日、2 人 1 间。页面当前显示高级大床房 NZD 237 起、豪华大床房 NZD 271 起；这些仍是房型卡起价，尚未逐项核对含税总价、取消与付款条款，因此暂不作为可比较报价展示。",
       research: sharedSocial.christchurch,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已在 Rydges 官网实际选择 2026 年 10 月 6—7 日、2 人 1 间，并核验四种明确 King 房型。页面同时显示公开价与 EVT Stays 会员价；卡片仅把公开 Best Flexible Rate 作为主比较价，会员价单独注明。官网尚未在当前步骤明确列出税费组成与取消截止时间，因此不会补写未经核验的“含税”或免费取消日期。",
+      officialStatusEn:
+        "Verified on the Rydges website on 28 Jul 2026 for 6–7 Oct 2026, two adults and one room, across four clearly identified king categories. Public and EVT Stays member prices were shown together; only the public Best Flexible Rate is used as the main comparison, with member prices labelled separately. Tax composition and the cancellation deadline were not explicit at this step and are not inferred.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl:
         "https://www.rydges.com/accommodation/new-zealand/latimer-christchurch/",
+      officialBookingUrl:
+        "https://www.rydges.com/rates/#/latimer-christchurch/",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网房价页（需重新选择日期）",
+      officialLinkLabelEn: "Open direct rates (reselect dates)",
+      officialRateLinkLabel: "官网 · 已核验（链接不保留搜索）",
+      officialRateLinkLabelEn: "Official website · verified (link does not retain search)",
+      officialLinkNote:
+        "Rydges 房价链接会回到默认日期；打开后请重新选择 2026 年 10 月 6—7 日、2 位成人、1 间。页面价格来自 2026-07-28 的实际核验结果。",
+      officialLinkNoteEn:
+        "The Rydges rates link returns to default dates. After opening, reselect 6–7 Oct 2026, two adults and one room. The recorded prices come from the live check on 28 Jul 2026.",
       bookingUrl:
         "https://www.booking.com/hotel/nz/rydges-latimer-christchurch.html",
       agodaUrl:
@@ -2762,8 +3357,16 @@ export const regionalHotels = {
       agodaStatusDetail:
         "Agoda 已带入 10 月 6—7 日并识别一卧室公寓/一室公寓；当前采集尚未取得可与 Booking 对齐的含税结算总价及取消条款，因此不把酒店介绍页或房型起价当作报价。",
       research: sharedSocial.christchurch,
+      officialStatus: "exact-date-unavailable",
+      officialStatusDetail:
+        "2026-07-28 已在 Quest 官网进入该酒店官方预订引擎，并确认 2026 年 10 月 6—7 日、2 人 1 间；页面明确显示所选日期无库存，因此没有可比较的官网结算价。Booking 同日库存独立保留，不与官网状态混写。",
+      officialStatusEn:
+        "The official Quest booking engine was opened on 28 Jul 2026 for 6–7 Oct 2026, two adults and one room. It explicitly showed no availability for the selected dates, so there is no direct checkout rate to compare; Booking.com inventory remains a separate source.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl:
         "https://www.questapartments.co.nz/properties/south-island/christchurch/quest-on-manchester/overview",
+      officialBookingUrl:
+        "https://reservations.questapartments.co.nz/quest-on-manchester/book/accommodations?adults=2&children=0&datein=10/06/2026&dateout=10/07/2026&languageid=1",
       bookingUrl: "https://www.booking.com/hotel/nz/quest-on-manchester.html",
       agodaUrl:
         "https://www.agoda.com/quest-on-manchester_2/hotel/christchurch-nz.html",
@@ -2862,7 +3465,9 @@ export const regionalHotels = {
         { name: "Christchurch Airport", distance: "约 10 公里", travelTime: "驾车约 20—25 分钟", destinationQuery: "Christchurch Airport" },
       ],
       strengths: ["位置评分 9.7", "多种纯特大床房型", "经典 King 可取消价 NZD 435", "10 月 5 日前免费取消", "10 月 3 日前零付款"],
+      strengthsEn: ["9.7 location score", "Several guaranteed king-bed categories", "Classic King cancellable rate at NZD 435", "Free cancellation before 5 Oct", "No payment before 3 Oct"],
       cautions: ["代客停车费用未在 Booking 页面公开", "早餐另加 NZD 38/人", "信用卡付款加收 2.5%"],
+      cautionsEn: ["The valet-parking fee is not published on Booking.com", "Breakfast costs an extra NZD 38 per person", "Credit-card payments incur a 2.5% fee"],
       ratings: [{ platform: "Booking.com", score: "8.9 / 10", reviews: "577 条；位置 9.7" }],
       roomTypes: [
         { rateKey: "classic-king", name: "经典特大号床", size: "24 m²", bed: "1 张超大号双人床", photosVerified: false, photoNote: "价格与床型已核验；对应房型图库尚未单独整理", facilities: ["空调", "独立浴室", "迷你吧", "免费 Wi-Fi"], images: [] },
@@ -2871,16 +3476,40 @@ export const regionalHotels = {
       ],
       hotelImages: [],
       availabilityNote:
-        "Booking IAB 已按 2026 年 10 月 6—7 日、2 人 1 间核验；页面明确显示 King 床、含税费总价、取消与付款条款。",
+        "Distinction 官网已按 2026 年 10 月 6—7 日、2 人 1 间核验：Classic King 官网一晚总价为不可退 NZD 400、灵活取消 NZD 425；Classic Super King 为 NZD 425 / 450。官网结算摘要确认 Classic King 灵活档一晚总计 NZD 425；灵活档需预付全款，但抵达前 24 小时外可取消并全额退款。Classic Junior Suite 虽显示 NZD 480 / 505，但官网写明 Super King 或两张单人床，床型不保证，因此不把官网价映射到大床选项。",
+      availabilityNoteEn:
+        "Verified direct for 6–7 Oct 2026, two adults and one room. The Classic King was NZD 400 non-refundable or NZD 425 flexible, and the Classic Super King was NZD 425 / 450. The direct booking summary confirmed the Classic King flexible one-night total at NZD 425. Flexible rates are charged in full at booking but may be cancelled more than 24 hours before arrival for a full refund. The Classic Junior Suite showed NZD 480 / 505, but its direct listing says super king or two singles, so those rates are not mapped to a guaranteed large-bed option.",
       rateSnapshots: {
         "2026-10-06/2026-10-07": { roomRates: {
-          "classic-king": { booking: { source: "Booking.com", roomKey: "classic-king", room: "经典特大号床 · 24 m²", nonRefundableNzd: 410, refundableNzd: 435, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 524", quotedAt: "2026-07-28" } },
-          "classic-super-king": { booking: { source: "Booking.com", roomKey: "classic-super-king", room: "典雅超级特大号床间 · 31 m²", nonRefundableNzd: 435, refundableNzd: 460, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 549", quotedAt: "2026-07-28" } },
-          "classic-junior-suite": { booking: { source: "Booking.com", roomKey: "classic-junior-suite", room: "经典小型套房 · 55 m²", nonRefundableNzd: 490, refundableNzd: 515, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款；当前剩 1 间", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 579", quotedAt: "2026-07-28" } },
+          "classic-king": {
+            official: { source: "Distinction 官网", roomKey: "classic-king", room: "Classic King Room · 1 张 King 床", roomEn: "Classic King Room · one king bed", nonRefundableNzd: 400, refundableNzd: 425, cancelUntil: "抵达前 24 小时", rateLabel: "官网一晚总价 · 不可退款 · 税费未单列", rateLabelEn: "Direct one-night total · non-refundable · tax not itemised", refundableRateLabel: "官网一晚总价 · 抵达前超过 24 小时取消可全额退款 · 税费未单列", refundableRateLabelEn: "Direct one-night total · fully refundable when cancelled more than 24 hours before arrival · tax not itemised", payment: "两档均预订时全额扣款；灵活档在抵达前 24 小时外取消可全额退款", paymentEn: "Both rates are charged in full at booking; the flexible rate is fully refundable when cancelled more than 24 hours before arrival", breakfast: "基础房价不含早餐；官网另有含早档", breakfastEn: "Room-only; separate breakfast-inclusive plans are available", quotedAt: "2026-07-28" },
+            booking: { source: "Booking.com", roomKey: "classic-king", room: "经典特大号床 · 24 m²", nonRefundableNzd: 410, refundableNzd: 435, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 524", quotedAt: "2026-07-28" },
+          },
+          "classic-super-king": {
+            official: { source: "Distinction 官网", roomKey: "classic-super-king", room: "Classic Super King Room · 1 张 Super King 床", roomEn: "Classic Super King Room · one super king bed", nonRefundableNzd: 425, refundableNzd: 450, cancelUntil: "抵达前 24 小时", rateLabel: "官网一晚总价 · 不可退款 · 税费未单列", rateLabelEn: "Direct one-night total · non-refundable · tax not itemised", refundableRateLabel: "官网一晚总价 · 抵达前超过 24 小时取消可全额退款 · 税费未单列", refundableRateLabelEn: "Direct one-night total · fully refundable when cancelled more than 24 hours before arrival · tax not itemised", payment: "两档均预订时全额扣款；灵活档在抵达前 24 小时外取消可全额退款", paymentEn: "Both rates are charged in full at booking; the flexible rate is fully refundable when cancelled more than 24 hours before arrival", breakfast: "基础房价不含早餐；官网另有含早档", breakfastEn: "Room-only; separate breakfast-inclusive plans are available", quotedAt: "2026-07-28" },
+            booking: { source: "Booking.com", roomKey: "classic-super-king", room: "典雅超级特大号床间 · 31 m²", nonRefundableNzd: 435, refundableNzd: 460, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 549", quotedAt: "2026-07-28" },
+          },
+          "classic-junior-suite": {
+            booking: { source: "Booking.com", roomKey: "classic-junior-suite", room: "经典小型套房 · 55 m²", nonRefundableNzd: 490, refundableNzd: 515, cancelUntil: "2026-10-05", payment: "不可退档在线付款；可取消档 10 月 3 日前零付款；当前剩 1 间", breakfast: "早餐另加 NZD 38/人；可取消含早总价 NZD 579", quotedAt: "2026-07-28" },
+          },
         } },
       },
       research: sharedSocial.christchurch,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail: "2026-07-28 已在 Distinction 官网预订引擎带入 10 月 6—7 日、2 人 1 间，核验 Classic King 与 Classic Super King 的一晚价格；并实际选择 Classic King 灵活档，结算摘要确认总价 NZD 425。床型为二选一的 Junior Suite 未映射官网价。",
+      officialStatusEn: "Verified on the Distinction booking engine on 28 Jul 2026 for 6–7 Oct, two adults and one room. Exact one-night rates were checked for the Classic King and Classic Super King, and the Classic King flexible checkout summary confirmed NZD 425 total. The bed-choice Junior Suite was not mapped.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.distinctionhotelschristchurch.co.nz/",
+      officialBookingUrl: "https://www.distinctionhotelschristchurch.co.nz/bookings/bookengine.aspx?idsup=4131&tsMode=1&date=06/10/2026",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网预订页（请确认 2 人 1 间）",
+      officialLinkLabelEn: "Open direct booking (confirm two guests, one room)",
+      officialRateLinkLabel: "官网 · 已核验（人数需重新确认）",
+      officialRateLinkLabelEn: "Official website · verified (reconfirm guests)",
+      officialLinkNote:
+        "链接只带入 2026 年 10 月 6 日；打开后请确认退房为 10 月 7 日、2 位成人、1 间。页面价格来自 2026-07-28 的实际核验结果。",
+      officialLinkNoteEn:
+        "The link carries only the 6 Oct 2026 arrival date. After opening, confirm checkout on 7 Oct, two adults and one room. The recorded prices come from the live check on 28 Jul 2026.",
       bookingUrl: "https://www.booking.com/hotel/nz/distinction-christchurch.zh-cn.html",
       agodaUrl: "https://www.agoda.com/distinction-christchurch-hotel/hotel/christchurch-nz.html",
       position: [-43.5306, 172.6367],
@@ -2923,27 +3552,27 @@ export const regionalHotels = {
         },
       ],
       strengths: [
-        "翻新大床房",
+        "官网明确保证 King 床",
         "免费停车与高速网络",
-        "10 月 8 日前免费取消",
-        "无需预付",
+        "官网直订含欧陆早餐",
+        "公开 Jet Saver 低于会员价",
       ],
       cautions: [
         "不是湖景度假型住宿",
         "单晚不需要公寓厨房",
-        "Booking 页面链接偶尔返回旧版错误页",
+        "官网取消与扣款细则需下单前再确认",
       ],
       ratings: [
         { platform: "Booking.com", score: "8.3 / 10", reviews: "1,500+ 条" },
       ],
       roomTypes: [
         {
-          rateKey: "superior-queen-king",
-          name: "高级大床房",
+          rateKey: "superior-king",
+          name: "Superior King 高级特大床房",
           size: "26 m²",
-          bed: "1 张大床（平台标注 queen/king，结算时确认）",
-          photosVerified: false,
-          photoNote: "Rotorua 真实详情页仍返回错误页；此前误用的机场店图片已撤下",
+          bed: "1 张 King 特大床（官网明确标注）",
+          photosVerified: true,
+          photoNote: "已在 JetPark Rotorua 官网精确日期结果页核对 Superior King 房型图",
           facilities: [
             "空调",
             "独立浴室",
@@ -2951,17 +3580,73 @@ export const regionalHotels = {
             "高速 Wi-Fi",
             "免费停车",
           ],
-          images: [],
+          images: [
+            image(
+              "jetpark-rotorua-superior-king-official.avif",
+              "Superior King 官网房型图",
+              "JetPark Rotorua 官网",
+            ),
+          ],
         },
       ],
       hotelImages: [],
       availabilityNote:
-        "旧 Booking 链接当前返回错误页，且此前保存的客房图属于 JetPark Auckland Airport；价格与图片均已撤下，重新打开 Rotorua 真实详情页前不作为已核验报价。",
+        "官网精确日期已确认 Superior King 可订；Booking 旧链接仍返回错误页，因此页面只展示官网已核验价，不沿用旧平台报价。",
+      availabilityNoteEn:
+        "The official engine confirms the Superior King for the exact stay. The old Booking link still errors, so only the verified direct rate is shown.",
       agodaStatus: "真实详情页已打开，结算总价待核验",
       agodaStatusDetail:
         "Agoda 已正确带入 10 月 9—10 日并列出高级大床房；当前采集尚未完成含税结算总价、取消和付款条款核验，不能用酒店介绍页的历史起价代替。",
       research: sharedSocial.rotorua,
+      rateSnapshots: {
+        "2026-10-09/2026-10-10": {
+          roomRates: {
+            "superior-king": {
+              official: {
+                source: "JetPark Rotorua 官网",
+                roomKey: "superior-king",
+                room: "Superior King · 26 m² · 1 张 King 床",
+                roomEn: "Superior King · 26 m² · one king bed",
+                nonRefundableNzd: null,
+                refundableNzd: null,
+                rateOptions: [
+                  {
+                    label: "Jet Saver",
+                    labelEn: "Jet Saver",
+                    nzd: 276.36,
+                    detail: "官网结果页显示的一晚价格 · 含免费欧陆早餐 · 税费、取消和扣款规则待结算前确认",
+                    detailEn: "One-night price shown by the direct engine · complimentary continental breakfast · confirm tax, cancellation and payment terms before checkout",
+                  },
+                  {
+                    label: "Flexi Rate",
+                    labelEn: "Flexi Rate",
+                    nzd: 329,
+                    detail: "官网结果页显示的一晚价格 · 含免费欧陆早餐 · 税费、取消和扣款规则待结算前确认",
+                    detailEn: "One-night price shown by the direct engine · complimentary continental breakfast · confirm tax, cancellation and payment terms before checkout",
+                  },
+                ],
+                cancelUntil: null,
+                payment: "官网结果页未显示可复现的扣款时点；进入结算前再次确认",
+                paymentEn: "The results page does not expose a reproducible payment timing; recheck before checkout",
+                breakfast: "本次 Superior King 两档官网价均明确包含免费欧陆早餐",
+                breakfastEn: "Both verified Superior King direct rates explicitly include complimentary continental breakfast",
+                memberNote: "Jetsetter 会员价 NZD 279.65，需登录；公开 Jet Saver 反而低 NZD 3.29",
+                memberNoteEn: "The signed-in Jetsetter member rate is NZD 279.65; the public Jet Saver is NZD 3.29 lower",
+                quotedAt: "2026-07-28",
+              },
+            },
+          },
+        },
+      },
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已从 JetPark Rotorua 官网表单进入其官方 TravelClick 预订引擎，带入 10 月 9—10 日、2 人 1 间；页面明确显示 2/0、Superior King（26 m²、1 张 King 床）及公开 Flexi NZD 329、Jet Saver NZD 276.36，均含免费欧陆早餐。税费、取消和扣款细则未能稳定复现，因此没有自行推断，也未把两档标成可退或不可退。",
+      officialStatusEn:
+        "Verified on 28 Jul 2026 via JetPark Rotorua's own form and official TravelClick engine for 9–10 Oct, two adults and one room. The page explicitly shows 2/0, a 26 m² Superior King with one king bed, public Flexi at NZD 329 and Jet Saver at NZD 276.36, both with complimentary continental breakfast. Tax, cancellation and payment details were not reproducibly exposed; neither rate was classified as refundable or non-refundable.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.jetparkrotorua.co.nz/",
+      officialBookingUrl:
+        "https://reservations.jetparkrotorua.co.nz/98373?Adults=2&Children=0&DateIn=10/09/26&DateOut=10/10/26&hotelid=98373&LanguageID=1#/accommodation/room",
       bookingUrl: "https://www.booking.com/hotel/nz/jet-park-rotorua.html",
       agodaUrl: "https://www.agoda.com/jet-park-rotorua/hotel/rotorua-nz.html",
       position: [-38.1435, 176.2495],
@@ -3004,15 +3689,33 @@ export const regionalHotels = {
       ],
       strengths: [
         "精确日期 Booking 真实详情已核验",
-        "多种纯特大床房型",
+        "官网 3 种纯 King 房型可明确对应",
         "免费停车",
         "泳池与温泉设施",
         "10 月 8 日前可取消",
       ],
+      strengthsEn: [
+        "Exact-date Booking.com details verified",
+        "Three guaranteed king categories can be safely matched to direct rates",
+        "Free parking",
+        "Pool and thermal facilities",
+        "Cancellable before 8 Oct",
+      ],
       cautions: [
         "价格高于旧版 JetPark 报价",
-        "早餐另加 NZD 40/人",
+        "Booking 基础房早餐另加 NZD 40/人；官网 Club/Lakeview/Suite 房型权益含欧陆早餐",
         "Club 房型仅限成人",
+        "官网 Superior Balcony Room 的床型分类为 Twin/King，预订前仍需确认分配 King",
+        "官网 Superior Lakefacing Room 标注 Twin/Double，不能与 Booking 的临湖纯 King 合并比价",
+        "官网价格页未明确税费是否已计入，灵活价的免费取消精确截止也需到结算页确认",
+      ],
+      cautionsEn: [
+        "More expensive than the older JetPark quote",
+        "Booking.com's base rooms charge NZD 40 per person for breakfast; direct Club, Lakeview and Suite benefits include continental breakfast",
+        "Club categories are adults only",
+        "The direct Superior Balcony category is Twin/King, so a king allocation still needs confirmation before booking",
+        "The direct Superior Lakefacing category is Twin/Double and cannot be merged with Booking.com's guaranteed lakeside king",
+        "The direct rate page does not state whether tax is included, and the exact free-cancellation deadline for flexible rates still requires checkout confirmation",
       ],
       ratings: [
         { platform: "Booking.com", score: "8.4 / 10", reviews: "3,235 条" },
@@ -3064,7 +3767,7 @@ export const regionalHotels = {
             "花园景",
             "城市景",
             "Club 酒廊",
-            "Club 酒廊礼遇（早餐是否包含以具体价格档为准）",
+            "免费欧陆式早餐",
             "空调",
             "独立浴室",
           ],
@@ -3102,7 +3805,7 @@ export const regionalHotels = {
           size: "29 m²",
           bed: "1 张超大号双人床",
           photosVerified: true,
-          facilities: ["Spa 浴缸", "Club 酒廊", "含早餐", "空调", "独立浴室"],
+          facilities: ["Spa 浴缸", "Club 酒廊", "官网未显示免费早餐图标", "空调", "独立浴室"],
           images: [
             image("millennium-deluxe-spa-1.jpg", "Deluxe Spa 1 King 卧室"),
             image("millennium-deluxe-spa-2.jpg", "Deluxe Spa 1 King 休息区"),
@@ -3112,7 +3815,7 @@ export const regionalHotels = {
         },
         {
           rateKey: "club-king-suite",
-          name: "特大号床套房 · 酒廊礼遇",
+          name: "Millennium Suite King · 酒廊礼遇",
           size: "58 m²",
           bed: "1 张超大号双人床",
           photosVerified: true,
@@ -3125,6 +3828,10 @@ export const regionalHotels = {
         },
       ],
       hotelImages: [],
+      availabilityNote:
+        "Millennium 官网已按 2026 年 10 月 9—10 日、2 人 1 间、NZD 核验。Club Room King、Club Room Lakeview King 与 Millennium Suite King 均有会员 Book Pay Stay 不可退价及灵活价。Superior Balcony Room 只能选择 Twin/King 大类、不能锁定 King；Deluxe Room King 与平台 Deluxe Spa 1 King 的名称证据不足；Superior Lakefacing Room 又标注 Twin/Double，因此三者均不强行挂官网价。官网价格页未明确税费是否已计入。",
+      availabilityNoteEn:
+        "Verified on the Millennium website for 9–10 Oct 2026, two adults, one room and NZD. Club Room King, Club Room Lakeview King and Millennium Suite King offered member Book Pay Stay and flexible rates. Superior Balcony only offers a Twin/King category without a guaranteed king allocation; Deluxe Room King could not be proven identical to the platform's Deluxe Spa King; and Superior Lakefacing is Twin/Double. None of those three is force-mapped. The rate page did not explicitly state whether tax was included.",
       rateSnapshots: {
         "2026-10-09/2026-10-10": {
           roomRates: {
@@ -3166,6 +3873,23 @@ export const regionalHotels = {
               },
             },
             "club-king": {
+              official: {
+                source: "Millennium 官网",
+                roomKey: "club-king",
+                room: "Club Room King · 29 m²",
+                roomEn: "Club Room King · 29 m²",
+                nonRefundableNzd: 460.8,
+                refundableNzd: null,
+                rateLabel: "官网会员价 · Book Pay Stay · 税费状态待结算 · 不可退款",
+                rateLabelEn: "Member Book Pay Stay · tax inclusion pending checkout · non-refundable",
+                payment: "Book Pay Stay 价格档不可退款；会员灵活价 NZD 485.10，可免费取消，精确截止待结算页确认",
+                paymentEn: "The Book Pay Stay plan is non-refundable; the member flexible rate is NZD 485.10 with free cancellation, with the exact deadline pending checkout confirmation",
+                breakfast: "房型权益含免费欧陆式早餐及 Club Lounge；官网价格档名称仍标为 room-only",
+                breakfastEn: "Room benefits include complimentary continental breakfast and Club Lounge access, although the direct plan is still labelled room-only",
+                memberNote: "非会员：不可退 NZD 512、灵活 NZD 539",
+                memberNoteEn: "Public rates: NZD 512 non-refundable or NZD 539 flexible",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "club-king",
@@ -3190,6 +3914,23 @@ export const regionalHotels = {
               },
             },
             "club-lakeview-king": {
+              official: {
+                source: "Millennium 官网",
+                roomKey: "club-lakeview-king",
+                room: "Club Room Lakeview King · 29 m²",
+                roomEn: "Club Room Lakeview King · 29 m²",
+                nonRefundableNzd: 503.1,
+                refundableNzd: null,
+                rateLabel: "官网会员价 · Book Pay Stay · 税费状态待结算 · 不可退款",
+                rateLabelEn: "Member Book Pay Stay · tax inclusion pending checkout · non-refundable",
+                payment: "Book Pay Stay 价格档不可退款；会员灵活价 NZD 530.10，可免费取消，精确截止待结算页确认",
+                paymentEn: "The Book Pay Stay plan is non-refundable; the member flexible rate is NZD 530.10 with free cancellation, with the exact deadline pending checkout confirmation",
+                breakfast: "房型权益含免费欧陆式早餐及 Club Lounge；官网价格档名称仍标为 room-only",
+                breakfastEn: "Room benefits include complimentary continental breakfast and Club Lounge access, although the direct plan is still labelled room-only",
+                memberNote: "非会员：不可退 NZD 559、灵活 NZD 589",
+                memberNoteEn: "Public rates: NZD 559 non-refundable or NZD 589 flexible",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "club-lakeview-king",
@@ -3216,6 +3957,23 @@ export const regionalHotels = {
               },
             },
             "club-king-suite": {
+              official: {
+                source: "Millennium 官网",
+                roomKey: "club-king-suite",
+                room: "Millennium Suite King · 58 m²",
+                roomEn: "Millennium Suite King · 58 m²",
+                nonRefundableNzd: 631.8,
+                refundableNzd: null,
+                rateLabel: "官网会员价 · Book Pay Stay · 税费状态待结算 · 不可退款",
+                rateLabelEn: "Member Book Pay Stay · tax inclusion pending checkout · non-refundable",
+                payment: "Book Pay Stay 价格档不可退款；会员灵活价 NZD 665.10，可免费取消，精确截止待结算页确认",
+                paymentEn: "The Book Pay Stay plan is non-refundable; the member flexible rate is NZD 665.10 with free cancellation, with the exact deadline pending checkout confirmation",
+                breakfast: "房型权益含免费欧陆式早餐及 Club Lounge；官网价格档名称仍标为 room-only",
+                breakfastEn: "Room benefits include complimentary continental breakfast and Club Lounge access, although the direct plan is still labelled room-only",
+                memberNote: "非会员：不可退 NZD 702、灵活 NZD 739",
+                memberNoteEn: "Public rates: NZD 702 non-refundable or NZD 739 flexible",
+                quotedAt: "2026-07-28",
+              },
               booking: {
                 source: "Booking.com",
                 roomKey: "club-king-suite",
@@ -3234,9 +3992,17 @@ export const regionalHotels = {
       agodaStatus: "精确日期真实详情页已核验",
       agodaStatusDetail:
         "Agoda 的正确详情链接带 _2；已实际打开并核验 10 月 9—10 日、2 人 1 间。当前纯特大床可订房型中，湖景高级大床房与 Club King 已显示含税单价、取消和付款条款。",
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-28 已在 Millennium 官网实际带入 10 月 9—10 日、2 人 1 间并以 NZD 展开房价。已记录 3 个可明确对应纯 King 房型的会员 Book Pay Stay 不可退价，并透明附注会员灵活价、非会员价、早餐与 Club 权益。价格页未明确税费是否已计入，灵活价的免费取消精确截止待结算页确认。Superior Balcony 不能锁定 King、Deluxe Room King 与平台 Deluxe Spa King 证据不足、Superior Lakefacing 为 Twin/Double，三者均未强行映射。",
+      officialStatusEn:
+        "Verified on the Millennium website on 28 Jul 2026 for 9–10 Oct 2026, two adults, one room and NZD. Member Book Pay Stay rates are recorded only for three clearly matched king categories. Flexible and public prices plus breakfast and Club benefits are disclosed in notes. Tax inclusion and the exact flexible-rate cancellation deadline remain pending checkout; the non-guaranteed Twin/King balcony, weak Deluxe Spa and Twin/Double lakefacing mappings were excluded.",
+      officialVerifiedAt: "2026-07-28",
       research: sharedSocial.rotorua,
       officialUrl:
         "https://www.millenniumhotels.com/en/rotorua/millennium-hotel-rotorua/",
+      officialBookingUrl:
+        "https://www.millenniumhotels.com/en/bookings/?city=Rotorua&hotelcode=13528&checkin=2026-10-09&checkout=2026-10-10&rooms=1&discountcode=&groupcode=&promo=&adults=2&children=0&AAA=false&AARP=false&GOV=false&Accessible=false&viewrates=rooms",
       bookingUrl: "https://www.booking.com/hotel/nz/millennium-rotorua.html",
       agodaUrl:
         "https://www.agoda.com/millennium-hotel-rotorua_2/hotel/rotorua-nz.html",
@@ -3285,7 +4051,21 @@ export const regionalHotels = {
         } },
       },
       research: sharedSocial.rotorua,
+      officialStatus: "exact-date-unavailable",
+      officialStatusDetail:
+        "2026-07-28 已在 Sudima 官网预订引擎选择 2026 年 10 月 9—10 日、2 人 1 间；官网结果页明确显示所选日期无库存，因此没有可比较的官网结算价。Booking 同日高级大床库存作为独立渠道保留，不会冒充官网库存或官网价。",
+      officialStatusEn:
+        "The Sudima booking engine was opened on 28 Jul 2026 for 9–10 Oct 2026, two adults and one room. It explicitly showed no availability for the selected dates, so there is no direct checkout rate to compare. The Booking.com Superior King inventory remains a separate source.",
+      officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.sudimahotels.com/en/our-hotels/rotorua/",
+      officialBookingUrl: "https://bookings.sudimahotels.com/rotorua/book/accommodations",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "重新检查官网库存（需重新选择日期）",
+      officialLinkLabelEn: "Recheck direct availability (reselect dates)",
+      officialLinkNote:
+        "Sudima 通用预订入口不保留本次搜索；打开后请重新选择 2026 年 10 月 9—10 日、2 位成人、1 间。2026-07-28 的实际核验结果为官网无房。",
+      officialLinkNoteEn:
+        "The Sudima booking entry does not retain this search. After opening, reselect 9–10 Oct 2026, two adults and one room. The live check on 28 Jul 2026 showed no direct availability.",
       bookingUrl: "https://www.booking.com/hotel/nz/sudima-lake-rotorua.zh-cn.html",
       agodaUrl: "https://www.agoda.com/sudima-hotel-lake-rotorua/hotel/rotorua-nz.html",
       position: [-38.1389, 176.2588],

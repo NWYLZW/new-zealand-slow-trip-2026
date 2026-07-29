@@ -1,0 +1,52 @@
+.wildlife-route-option {
+  margin-top: 18px;
+  border: 1px solid rgba(53, 123, 115, 0.25) !important;
+  background: linear-gradient(145deg, rgba(232, 244, 240, 0.92), rgba(255, 253, 248, 0.88)) !important;
+}
+
+.wildlife-route-heading .MuiSvgIcon-root {
+  color: #357b73;
+}
+
+.wildlife-route-heading .MuiChip-root {
+  align-self: flex-start;
+  font-weight: 900;
+}
+
+.wildlife-route-grid {
+  margin-top: 12px;
+}
+
+.wildlife-route-fact,
+.wildlife-route-verdict {
+  height: 100%;
+  padding: 13px 14px;
+  border: 1px solid rgba(24, 52, 46, 0.1);
+  border-radius: var(--radius-inner);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.wildlife-route-fact p + p,
+.wildlife-route-verdict p + p {
+  margin-top: 5px;
+  color: var(--ink-soft);
+}
+
+.wildlife-route-verdict {
+  height: auto;
+  margin-top: 14px;
+}
+
+.wildlife-route-actions,
+.wildlife-route-driving-note {
+  margin-top: 14px;
+}
+
+.wildlife-route-driving-note {
+  color: var(--ink-soft);
+  font-weight: 800;
+}
+
+.wildlife-route-driving-note .MuiSvgIcon-root {
+  color: #357b73;
+}
