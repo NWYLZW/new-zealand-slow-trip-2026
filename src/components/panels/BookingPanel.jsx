@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, ButtonBase, Card, CardContent, Checkbox, Chip, Grid2 as Grid, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Card, CardContent, Checkbox, Chip, Grid2 as Grid, LinearProgress, Stack, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
-import { bookingItems, hotelPlans } from "../../tripData";
+import { activityBookingPlans, activityBookingSummary, bookingItems, hotelPlans } from "../../tripData";
 import sharedHotelSelections from "../../data/hotel-selections.json";
 import { AUCKLAND_AIRPORT_SELECTION_KEY, aucklandAirportHotels, aucklandAirportStayDates } from "../../data/aucklandAirportHotels";
 import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHotels";
@@ -24,7 +26,8 @@ const bookingTitleEn = {
   "mount-cook-helicopter": "Mount Cook glacier helicopter",
   "mount-cook-stargazing": "Big Sky Stargazing",
   "hotel-christchurch": "Christchurch accommodation",
-  "oamaru-stay-penguins": "Ōamaru accommodation and blue-penguin evening · booking pending",
+  "hotel-oamaru": "Ōamaru accommodation · booking pending",
+  "oamaru-penguins": "Ōamaru blue-penguin evening · booking pending",
   "walter-peak": "Walter Peak cruise and barbecue",
   "flight-jq242": "JQ242 Christchurch → Auckland · booking pending",
   "north-car-cancel": "North Island Budget rental · cancellation pending",
@@ -42,7 +45,8 @@ const bookingDescriptionEn = {
   "mount-cook-helicopter": "Around 15:30 on 5 Oct; Glacier Highlights is about 45 minutes and NZD 1,298 for two as a reference. Confirm that weather cancellation is refundable.",
   "mount-cook-stargazing": "Choose a later session on 5 Oct; about 75–90 minutes, from NZD 318 for two. Ask whether Mandarin commentary is available.",
   "hotel-christchurch": "One night from 7 to 8 Oct; Novotel Christchurch Cathedral Square remains the current first choice. Recheck the exact one-night total and terms for the new dates.",
-  "oamaru-stay-penguins": "Now part of the itinerary: stay in Ōamaru on 6 Oct and attend the official 20:00 blue-penguin session. General entry is NZD 100 for two and Premium is NZD 140; accommodation and penguin tickets still need to be booked.",
+  "hotel-oamaru": "Stay in Ōamaru on 6 Oct for one night. Verify a real listing, exact-date availability, total price and cancellation terms before booking.",
+  "oamaru-penguins": "Attend the official 20:00 blue-penguin session on 6 Oct. General entry is NZD 100 for two and Premium is NZD 140; recheck availability and terms before payment.",
   "walter-peak": "2 Oct; prefer a lunchtime or early-afternoon departure. Allow about 3.5–4 hours.",
   "flight-jq242": "8 Oct, 20:30–21:50. Google Flights showed a base fare from NZD 156 per person / NZD 312 for two, excluding optional baggage; verify and book directly with Jetstar.",
   "north-car-cancel": "A real Budget booking still exists. The revised itinerary no longer collects the car, but editing this page does not cancel the booking; cancel it in Budget's booking manager and save the confirmation.",
@@ -52,14 +56,19 @@ const bookingDescriptionEn = {
 const bookingTitleZh = {
   "south-car": "Budget 南岛租车 · 已改为10月8日还车",
   "hotel-christchurch": "基督城住宿 · 10月7日住1晚",
-  "oamaru-stay-penguins": "奥马鲁住宿 + 小蓝企鹅晚场 · 待预订",
+  "hotel-oamaru": "奥马鲁住宿 · 待预订",
+  "oamaru-penguins": "奥马鲁小蓝企鹅晚场 · 待预订",
 };
 
 const bookingDescriptionZh = {
   "south-car": "订单已改为10月8日在基督城机场还车；具体时刻、改期后总价、车型、保障及预订号是否沿用，须按新确认邮件核对。旧的8 × 24小时和 NZ$2,052.96 不再作为新订单信息。",
   "hotel-christchurch": "10月7日入住、10月8日退房，共1晚；当前首选仍是 Novotel Christchurch Cathedral Square，须按新日期复核精确总价和条款。",
-  "oamaru-stay-penguins": "已纳入主行程：10月6日住奥马鲁，参加20:00官方小蓝企鹅归巢晚场。General 2人NZD 100、Premium 2人NZD 140；住宿和企鹅票均待预订。",
+  "hotel-oamaru": "10月6日住奥马鲁1晚；须核验真实房源、精确日期库存、总价与退改规则。",
+  "oamaru-penguins": "10月6日参加20:00官方小蓝企鹅归巢晚场；General 2人NZD 100、Premium 2人NZD 140，付款前重新确认余位与条款。",
 };
+
+const activityBookingIds = new Set(activityBookingPlans.map((activity) => activity.id));
+const generalBookingItems = bookingItems.filter(([id]) => !activityBookingIds.has(id));
 
 const hotelOfficialUrls = new Map(hotelPlans.map((hotel) => [hotel.name, hotel.links[0][1]]));
 
@@ -423,13 +432,73 @@ export function BookingPanel({ checked, setChecked, storageKey }) {
 
   return (
     <Stack spacing={3}>
+      <Box component="section" aria-labelledby="activity-booking-title" className="activity-booking-section">
+        <Card className="activity-booking-summary">
+          <CardContent>
+            <Box>
+              <Typography className="activity-booking-kicker">{isEnglish ? "ACTIVITIES TO BOOK" : "活动待预订"}</Typography>
+              <Typography id="activity-booking-title" variant="h2">
+                {isEnglish ? "Official links and two-person prices" : "官方入口与双人价格"}
+              </Typography>
+              <Typography color="text.secondary">
+                {isEnglish
+                  ? "No payment has been made. Prices and inventory can change until checkout."
+                  : "以下项目均未付款；完成结算前价格、余票与条款仍可能变化。"}
+              </Typography>
+            </Box>
+            <Box className="activity-booking-total">
+              <Typography>{isEnglish ? "Current scope" : "当前范围"}</Typography>
+              <Typography className="activity-booking-total-value">{activityBookingPlans.length} {isEnglish ? "activities" : "项活动"}</Typography>
+              <Typography>{isEnglish ? activityBookingSummary.noteEn : activityBookingSummary.note}</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Grid container spacing={1.5} className="activity-booking-grid">
+          {activityBookingPlans.map((activity) => (
+            <Grid size={{ xs: 12, md: 6 }} key={activity.id}>
+              <Card className={checked[activity.id] ? "activity-booking-card checked" : "activity-booking-card"}>
+                <CardContent>
+                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1.5}>
+                    <Chip className="activity-booking-status" data-tone={activity.statusTone} label={isEnglish ? activity.statusEn : activity.status} size="small" />
+                    <Checkbox
+                      checked={Boolean(checked[activity.id])}
+                      inputProps={{ "aria-label": isEnglish ? `Mark ${activity.titleEn} as completed` : `将${activity.title}标记为已完成` }}
+                      onChange={() => toggle(activity.id)}
+                    />
+                  </Stack>
+                  <Typography className="activity-booking-operator">{activity.operator}</Typography>
+                  <Typography variant="h3">{isEnglish ? activity.titleEn : activity.title}</Typography>
+                  <Box className="activity-booking-facts">
+                    <Box><CalendarMonthOutlinedIcon aria-hidden="true" /><span>{isEnglish ? activity.dateEn : activity.date}</span></Box>
+                    <Box>
+                      <PaymentsOutlinedIcon aria-hidden="true" />
+                      <span><strong>{activity.total}</strong><small>{isEnglish ? activity.unitPriceEn : activity.unitPrice}</small></span>
+                    </Box>
+                  </Box>
+                  <Typography className="activity-booking-detail">{isEnglish ? activity.detailEn : activity.detail}</Typography>
+                  <Typography className="activity-booking-policy" color="text.secondary">{isEnglish ? activity.policyEn : activity.policy}</Typography>
+                  <Button className="activity-booking-link" endIcon={<OpenInNewIcon />} href={activity.bookingUrl} rel="noreferrer" target="_blank" variant="outlined">
+                    {isEnglish ? activity.bookingLabelEn : activity.bookingLabel}
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+        <Typography className="activity-booking-checked-at" color="text.secondary">
+          {isEnglish
+            ? `Information and price references last compiled on ${activityBookingSummary.checkedAt}. Recheck each item's inventory and terms at checkout; all amounts are New Zealand dollars.`
+            : `信息与价格参考最近整理于 ${activityBookingSummary.checkedAt}；各项库存与条款以结账页为准，金额均为新西兰元。`}
+        </Typography>
+      </Box>
       <Box>
         <AccommodationCalendar isEnglish={isEnglish} />
       </Box>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 8 }}>
           <Grid container spacing={1.5}>
-            {bookingItems.map(([id, title, desc]) => (
+            {generalBookingItems.map(([id, title, desc]) => (
               <Grid size={{ xs: 12, sm: 6 }} key={id}>
                 <Card className={checked[id] ? "booking-card checked" : "booking-card"} onClick={() => toggle(id)}>
                   <CardContent>

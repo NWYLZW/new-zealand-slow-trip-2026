@@ -2,6 +2,46 @@
   margin: 18px 0;
 }
 
+.activity-booking-section { display: grid; gap: 14px; }
+.activity-booking-summary {
+  overflow: hidden;
+  border: 1px solid rgba(52, 126, 144, 0.24);
+  background: radial-gradient(circle at 96% 4%, rgba(242, 184, 107, 0.22), transparent 34%), linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(237, 245, 236, 0.96));
+}
+.activity-booking-summary .MuiCardContent-root { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; padding: clamp(22px, 3vw, 32px); }
+.activity-booking-kicker, .activity-booking-operator { color: var(--lake); font-size: 12px !important; font-weight: 900 !important; letter-spacing: 0.09em !important; text-transform: uppercase; }
+.activity-booking-summary h2 { margin: 5px 0 8px; font-size: clamp(26px, 3vw, 38px); line-height: 1.15; }
+.activity-booking-summary > .MuiCardContent-root > div:first-child > p:last-child { max-width: 690px; line-height: 1.65; }
+.activity-booking-total { max-width: 420px; min-width: 260px; padding: 18px 20px; border: 1px solid rgba(18, 63, 54, 0.12); border-radius: var(--radius-inner); background: rgba(255, 253, 248, 0.78); }
+.activity-booking-total > p:first-child { color: var(--ink-soft); font-size: 13px; font-weight: 800; }
+.activity-booking-total-value { margin: 4px 0 !important; color: var(--forest); font-family: Georgia, serif !important; font-size: clamp(30px, 3.2vw, 42px) !important; font-weight: 900 !important; line-height: 1.1 !important; }
+.activity-booking-total > p:last-child { color: var(--ink-soft); font-size: 12px; }
+.activity-booking-card { height: 100%; border: 1px solid rgba(52, 126, 144, 0.18); background: rgba(255, 253, 248, 0.92); transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
+.activity-booking-card:hover { border-color: rgba(52, 126, 144, 0.42); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.activity-booking-card.checked { border-color: rgba(46, 125, 50, 0.35); background: rgba(237, 245, 236, 0.94); }
+.activity-booking-card .MuiCardContent-root { display: flex; min-height: 360px; height: 100%; padding: 22px; flex-direction: column; }
+.activity-booking-card .MuiCheckbox-root { flex: 0 0 auto; margin: -10px -8px 0 0; }
+.activity-booking-status { max-width: calc(100% - 48px); height: auto !important; min-height: 26px; font-weight: 800; }
+.activity-booking-status .MuiChip-label { overflow: visible; padding-block: 5px; white-space: normal; }
+.activity-booking-status[data-tone="selected"] { color: #225a4f; background: #dcebdd; }
+.activity-booking-status[data-tone="available"] { color: #245f39; background: #e5f3df; }
+.activity-booking-status[data-tone="attention"] { color: #7a4b12; background: #f8e7c8; }
+.activity-booking-status[data-tone="blocked"] { color: #8b3528; background: #f7ddd6; }
+.activity-booking-operator { margin: 12px 0 5px !important; }
+.activity-booking-card h3 { font-size: clamp(20px, 2.2vw, 26px); line-height: 1.28; }
+.activity-booking-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 18px 0 14px; }
+.activity-booking-facts > div { display: flex; min-width: 0; min-height: 66px; gap: 9px; align-items: flex-start; padding: 11px 12px; border: 1px solid rgba(52, 126, 144, 0.14); border-radius: var(--radius-control); background: rgba(255, 255, 255, 0.72); }
+.activity-booking-facts svg { flex: 0 0 auto; margin-top: 2px; color: var(--forest); font-size: 20px; }
+.activity-booking-facts span, .activity-booking-facts strong, .activity-booking-facts small { display: block; }
+.activity-booking-facts span { min-width: 0; font-size: 13px; line-height: 1.45; }
+.activity-booking-facts strong { color: var(--forest); font-size: 18px; font-variant-numeric: tabular-nums; }
+.activity-booking-facts small { color: var(--ink-soft); font-size: 11px; }
+.activity-booking-detail, .activity-booking-policy { line-height: 1.65 !important; }
+.activity-booking-detail { font-size: 14px !important; }
+.activity-booking-policy { margin-top: 7px !important; font-size: 12px !important; }
+.activity-booking-link { align-self: flex-start; min-height: 44px; margin-top: auto !important; padding-top: 10px !important; }
+.activity-booking-checked-at { margin: -2px 4px 0 !important; font-size: 12px !important; }
+
 .accommodation-calendar-grid-scroll {
   overflow-x: auto;
 }
@@ -201,4 +241,17 @@
 
 @media (max-width: 900px) {
   .accommodation-calendar { overflow-x: visible; }
+  .activity-booking-summary .MuiCardContent-root { grid-template-columns: 1fr; gap: 18px; }
+  .activity-booking-total { min-width: 0; }
+}
+
+@media (max-width: 600px) {
+  .activity-booking-facts { grid-template-columns: 1fr; }
+  .activity-booking-card .MuiCardContent-root { min-height: 0; }
+  .activity-booking-link { width: 100%; margin-top: 18px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-booking-card { transition: none; }
+  .activity-booking-card:hover { transform: none; }
 }

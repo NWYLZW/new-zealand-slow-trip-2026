@@ -545,7 +545,7 @@ const calendarEventGroupsByDate = {
     { title: "奥马鲁企鹅与海狗", time: "16:30—活动后", timeEn: "16:30—after the viewing", color: eventColors.wildlife, icon: "nature", items: [5, 6, 7, 8, 9], segmentIds: [], stopTags: ["OAM"] },
   ],
   "10月7日": [
-    { title: "奥马鲁前往基督城", time: "09:30—14:30", color: eventColors.wildlifeRoad, icon: "car", drive: { distanceKm: 250, durationZh: "约 3 小时 15 分钟", durationEn: "about 3 hr 15 min" }, items: [0, 1, 2, 3], segmentIds: ["oamaru-christchurch"], stopTags: ["OAM", "CHC"], stopOverrides: { CHC: { name: "基督城市中心", date: "10/7—10/8", desc: "市中心住1晚；租车保留至10月8日，具体还车时刻待新确认邮件", position: [-43.5321, 172.6362] } } },
+    { title: "奥马鲁前往基督城", time: "09:30—14:30", color: eventColors.wildlifeRoad, icon: "car", drive: { distanceKm: 245, durationZh: "约 3 小时 6 分钟", durationEn: "about 3 hr 6 min" }, items: [0, 1, 2, 3], segmentIds: ["oamaru-christchurch"], stopTags: ["OAM", "CHC"], stopOverrides: { CHC: { name: "基督城市中心", date: "10/7—10/8", desc: "市中心住1晚；租车保留至10月8日，具体还车时刻待新确认邮件", position: [-43.5321, 172.6362] } } },
     { title: "基督城补充半日", time: "15:30—18:30", color: eventColors.christchurch, icon: "city", items: [4, 5, 6], segmentIds: [], stopTags: ["CHC"], stopOverrides: { CHC: { name: "基督城市中心", date: "10/7—10/8", desc: "市中心住1晚；租车保留至10月8日，具体还车时刻待新确认邮件", position: [-43.5321, 172.6362] } } },
   ],
   "10月8日": [

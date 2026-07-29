@@ -60,7 +60,7 @@ export const mapStopEn = {
   MFN: ["Milford Sound", "Optional high-intensity 12–13 hour coach and cruise day"],
   WKA: ["Wānaka", "Two-night stay, lakefront and easy walks"],
   AOR: ["Aoraki / Mount Cook", "Glacier helicopter landing and Big Sky Stargazing"],
-  TEK: ["Lake Tekapo / Takapō", "About 100 km southeast of Aoraki; possible overnight base for Mount John or Crater stargazing"],
+  TEK: ["Lake Tekapo / Takapō", "A short church, lakeside and lunch stop en route to Ōamaru"],
   OAM: ["Ōamaru", "One-night main-route stop; 20:00 little-penguin viewing and possible New Zealand fur seals near the harbour"],
   KAT: ["Kātiki Point", "A stronger fur-seal stop; yellow-eyed penguins are only a possibility; open 07:30–17:30"],
   CHC: ["Christchurch", "One-night stay; return the South Island car on 8 Oct, with the exact time awaiting the updated confirmation"],
