@@ -89,7 +89,7 @@ export default function App() {
     }
   });
   const progress = useMemo(() => {
-    const done = Object.values(checked).filter(Boolean).length;
+    const done = bookingItems.filter(([id]) => Boolean(checked[id])).length;
     return {
       done,
       total: bookingItems.length,

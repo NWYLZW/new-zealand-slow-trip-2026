@@ -50,15 +50,15 @@ export function WildlifeRouteOption({ onOpenEvent }) {
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
             <Box className="wildlife-route-fact">
-              <Typography fontWeight={950}>{en ? "7 Oct · direct to CHC" : "10月7日 · 直达基督城机场"}</Typography>
-              <Typography>{en ? "About 245 km / 3 hr 6 min; keep the 15:30 car return (Google Maps, 29 Jul)." : "约245公里 / 3小时6分；仍按15:30还车（7月29日 Google 地图实查）。"}</Typography>
+              <Typography fontWeight={950}>{en ? "7 Oct · return to Christchurch" : "10月7日 · 返回基督城"}</Typography>
+              <Typography>{en ? "About 245 km / 3 hr 6 min to Christchurch, then keep the 8 Oct 15:30 airport return." : "约245公里 / 3小时6分返回基督城；次日10月8日15:30再到机场还车。"}</Typography>
             </Box>
           </Grid>
         </Grid>
 
         <Box className="wildlife-route-verdict">
           <Typography fontWeight={950}>{en ? "What you gain and give up" : "得到什么、牺牲什么"}</Typography>
-          <Typography>{en ? "The paid evening colony is the highest-confidence penguin experience. New Zealand fur seals often rest on rocks near the same colony, but are not guaranteed. The trade-off is the Christchurch hotel and city half-day; total driving over the two days rises by roughly two hours, based on the current Google Maps snapshot." : "付费晚场是看企鹅把握最高的方案；同一保护区附近岩石常有新西兰海狗，但不能保证。代价是取消基督城住宿与市区半日；按当前 Google 地图快照，两天合计纯驾驶约增加2小时。"}</Typography>
+          <Typography>{en ? "The paid evening colony is the highest-confidence penguin experience. New Zealand fur seals often rest on rocks near the same colony, but are not guaranteed. The trade-off is replacing the first Christchurch night with Ōamaru and shortening the 7 Oct city day; total driving over the two days rises by roughly two hours." : "付费晚场是看企鹅把握最高的方案；同一保护区附近岩石常有新西兰海狗，但不能保证。代价是把基督城第1晚改成奥马鲁，并压缩10月7日的城市时间；两天合计纯驾驶约增加2小时。"}</Typography>
           <Typography>{en ? "Kātiki Point is 44 km south of Ōamaru and is open 07:30–17:30. Fur seals are more reliable there; yellow-eyed penguins remain only a possibility. Do not add it on flight day." : "Kātiki Point 在奥马鲁以南约44公里，07:30—17:30开放；海狗更稳，黄眼企鹅仍只是概率。不要塞到赶飞机当天。"}</Typography>
           <Typography>{en ? "Rules: no cameras, filming or bright screens during the penguin viewing; keep at least 20 m from fur seals. Refund requests require at least 24 hours' notice." : "规则：企鹅晚场禁止相机、录像和亮屏；与海狗至少保持20米。退票需至少提前24小时通知。"}</Typography>
         </Box>

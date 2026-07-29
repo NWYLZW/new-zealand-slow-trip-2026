@@ -10,10 +10,10 @@
 
 .rental-booking-confirmed {
   overflow: hidden;
-  border: 1px solid rgba(46, 125, 50, 0.28);
+  border: 1px solid rgba(184, 112, 27, 0.3);
   background:
-    radial-gradient(circle at 100% 0%, rgba(138, 181, 155, 0.2), transparent 34%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(244, 249, 245, 0.96));
+    radial-gradient(circle at 100% 0%, rgba(242, 184, 107, 0.22), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(252, 248, 239, 0.96));
 }
 
 .rental-booking-confirmed .MuiCardContent-root {
@@ -131,6 +131,15 @@
 
 .rental-cover-limit {
   margin-top: 4px;
+}
+
+.rental-change-note {
+  margin-top: 12px;
+}
+
+.rental-cancelled-notice {
+  font-weight: 650;
+  line-height: 1.6;
 }
 
 .rental-manage-button {

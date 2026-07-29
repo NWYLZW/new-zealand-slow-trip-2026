@@ -12,7 +12,6 @@
       "hotelId": "adina-auckland-britomart",
       "hotelName": "Adina Apartment Hotel Auckland Britomart",
       "stayDates": [
-        "2026-10-07",
         "2026-10-08"
       ]
     },
@@ -34,7 +33,7 @@
     "christchurch": {
       "hotelId": "novotel-christchurch-cathedral-square",
       "hotelName": "Novotel Christchurch Cathedral Square",
-      "stayDates": ["2026-10-06"]
+      "stayDates": ["2026-10-06", "2026-10-07"]
     },
     "rotorua": {
       "hotelId": "millennium-rotorua",

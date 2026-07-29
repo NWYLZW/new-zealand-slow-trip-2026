@@ -26,6 +26,7 @@ const forbiddenPhotoClaims = [
   "平台未提供房型图",
 ];
 const allowedOfficialStatuses = new Set([
+  "needs-recheck",
   "exact-rate-verified",
   "exact-date-unavailable",
   "no-independent-official-found",

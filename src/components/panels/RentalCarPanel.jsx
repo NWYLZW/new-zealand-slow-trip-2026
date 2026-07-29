@@ -18,6 +18,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import { assetPath } from "../../assets";
@@ -25,24 +26,24 @@ import { useLanguage } from "../../LanguageContext";
 import { PanelHero } from "../PanelHero";
 import "./RentalCarPanel.css";
 
-const confirmedBookings = [
+const rentalBookings = [
   {
     id: "south",
     island: "南岛",
     islandEn: "South Island",
     reservation: "已私下保存",
     reservationEn: "stored privately",
-    vehicle: "Toyota RAV4 Hybrid 或同级",
-    vehicleEn: "Toyota RAV4 Hybrid or similar",
+    vehicle: "Mazda CX-30 或同级紧凑型 SUV",
+    vehicleEn: "Mazda CX-30 or similar compact SUV",
     route: "皇后镇机场（ZQN）→ 基督城机场（CHC）",
     routeEn: "Queenstown Airport (ZQN) → Christchurch Airport (CHC)",
-    dates: "2026年9月29日 15:30 — 10月7日 15:30",
-    datesEn: "29 Sep 2026 15:30 — 7 Oct 2026 15:30",
-    duration: "8 × 24小时 · 异地还车 · 无限公里",
-    durationEn: "Eight 24-hour periods · one-way · unlimited kilometres",
-    total: "NZ$2,052.96",
-    protection: "LDW + Zero Excess + 道路救援",
-    protectionEn: "LDW + Zero Excess + roadside assistance",
+    dates: "计划：2026年9月29日 15:30 — 10月8日 15:30",
+    datesEn: "Planned: 29 Sep 2026 15:30 — 8 Oct 2026 15:30",
+    duration: "9 × 24小时 · 异地还车 · 无限公里",
+    durationEn: "Nine 24-hour periods · one-way · unlimited kilometres",
+    total: "NZ$1,663.96",
+    protection: "LDW + Zero Excess + 附加驾驶员 + 道路救援",
+    protectionEn: "LDW + Zero Excess + additional driver + roadside assistance",
     counter: "皇后镇机场柜台 08:00–22:00；基督城机场柜台 06:00–次日01:30，可使用非营业时间钥匙箱。",
     counterEn: "Queenstown Airport desk 08:00–22:00; Christchurch Airport desk 06:00–01:30, with an after-hours key drop.",
     cancellation: "Pay at Counter；确认邮件写明取消或未到店均不收费。行程有变时仍请在取车前在线取消。",
@@ -51,32 +52,8 @@ const confirmedBookings = [
     paymentEn: "Physical Visa, Mastercard or Amex in the lead driver's name; Visa/Mastercard 2.53%, Amex 3.57%; pre-authorisation at pickup.",
     coverLimit: "玻璃、轮胎、车顶、底盘、涉水和禁行道路等未确认包含；不要驶入 Skippers Canyon。",
     coverLimitEn: "Windscreen, tyres, overhead, underbody, water damage and prohibited roads are not confirmed as covered. Do not drive Skippers Canyon.",
-  },
-  {
-    id: "north",
-    island: "北岛",
-    islandEn: "North Island",
-    reservation: "已私下保存",
-    reservationEn: "stored privately",
-    vehicle: "Mazda CX-30 或同级紧凑型自动挡 SUV",
-    vehicleEn: "Mazda CX-30 or similar compact automatic SUV",
-    route: "奥克兰机场（AKL）→ 奥克兰机场（AKL）",
-    routeEn: "Auckland Airport (AKL) → Auckland Airport (AKL)",
-    dates: "2026年10月9日 08:30 — 10月10日 17:00",
-    datesEn: "9 Oct 2026 08:30 — 10 Oct 2026 17:00",
-    duration: "2个计费日 · 原地还车 · 无限公里",
-    durationEn: "Two billed days · same-location return · unlimited kilometres",
-    total: "NZ$303.03",
-    protection: "LDW + Zero Excess + 道路救援",
-    protectionEn: "LDW + Zero Excess + roadside assistance",
-    counter: "奥克兰机场航站楼内柜台，每日 05:00–次日01:30。",
-    counterEn: "Inside the Auckland Airport terminal, open daily 05:00–01:30.",
-    cancellation: "Pay at Counter；确认邮件写明取消或未到店均不收费。行程有变时仍请在取车前在线取消。",
-    cancellationEn: "Pay at Counter; the confirmation states no cancellation or no-show fee. Still cancel online before pickup if plans change.",
-    payment: "主驾驶本人名下实体 Visa / Mastercard / Amex；Visa/Mastercard 约 NZ$7.67，Amex 约 NZ$10.82；预授权通常 7–10个工作日释放。",
-    paymentEn: "Physical Visa, Mastercard or Amex in the lead driver's name; card fee about NZ$7.67 or NZ$10.82; pre-authorisation is usually released within 7–10 working days.",
-    coverLimit: "确认邮件未单列玻璃和轮胎保障，取车时向 Budget 再确认；Zero Excess 仍受租车条款限制。",
-    coverLimitEn: "Windscreen and tyre cover is not listed separately. Reconfirm it with Budget at pickup; Zero Excess remains subject to the rental terms.",
+    changeNote: "Budget 的修改页已生成上述重报价，但尚未提交。当前有效订单仍是 RAV4 Hybrid 或同级、9月29日—10月7日、NZ$2,052.96；确认接受 CX-30 后才可完成延期。",
+    changeNoteEn: "Budget has generated this revised quote, but it has not been submitted. The active booking is still a RAV4 Hybrid or similar for 29 Sep–7 Oct at NZ$2,052.96 until the CX-30 change is accepted.",
   },
 ];
 
@@ -136,7 +113,7 @@ function BookingConfirmationCard({ booking, isEnglish }) {
               {isEnglish ? "Reservation" : "预订代码"} <strong>{isEnglish ? booking.reservationEn : booking.reservation}</strong>
             </Typography>
           </Box>
-          <Chip icon={<CheckCircleOutlineIcon />} color="success" label={isEnglish ? "BOOKED" : "已预订"} />
+          <Chip icon={<PendingActionsOutlinedIcon />} color="warning" label={isEnglish ? "CHANGE PENDING" : "修改待确认"} />
         </Stack>
 
         <Grid container spacing={1.5} className="rental-booking-facts">
@@ -155,7 +132,7 @@ function BookingConfirmationCard({ booking, isEnglish }) {
             </BookingFact>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <BookingFact icon={<PaymentsOutlinedIcon />} label={isEnglish ? "Confirmed total" : "确认总价"}>
+            <BookingFact icon={<PaymentsOutlinedIcon />} label={isEnglish ? "Revised quote" : "修改后报价"}>
               <b>{booking.total}</b>
             </BookingFact>
           </Grid>
@@ -177,6 +154,10 @@ function BookingConfirmationCard({ booking, isEnglish }) {
 
         <Alert severity="warning" className="rental-cover-limit">
           {isEnglish ? booking.coverLimitEn : booking.coverLimit}
+        </Alert>
+
+        <Alert severity="info" className="rental-change-note">
+          {isEnglish ? booking.changeNoteEn : booking.changeNote}
         </Alert>
 
         <Button
@@ -204,15 +185,21 @@ export function RentalCarPanel() {
       <PanelHero
         image={assetPath("images/queenstown.webp")}
         kicker="SELF DRIVE"
-        title={isEnglish ? "Two confirmed car rentals" : "南北岛两段租车均已确认"}
+        title={isEnglish ? "One South Island rental; North Island cancelled" : "只保留南岛租车 · 北岛已取消"}
         desc={isEnglish
-          ? "The reservation codes are stored privately; keep the airport times, payment card and pickup checks handy for the road trip."
-          : "预订代码已私下保存；旅行中关注机场取还车时间、现场付款和取车检查即可。"}
+          ? "The South Island return is planned for 8 Oct, but the cheaper CX-30 modification still needs approval and submission."
+          : "南岛计划延长到10月8日还车；Budget 已给出更便宜的 CX-30 报价，但车型变化仍需确认并提交。"}
       />
 
+      <Alert severity="success" className="rental-cancelled-notice">
+        {isEnglish
+          ? "North Island Budget reservation cancelled successfully. No pickup, refuelling or return is required; arrange the Auckland–Hobbiton–Rotorua transfers instead."
+          : "北岛 Budget 订单已成功取消：无需取车、加油或还车；10月9—10日改订奥克兰—霍比屯—罗托鲁瓦联程及返机场接驳。"}
+      </Alert>
+
       <Grid container spacing={2}>
-        {confirmedBookings.map((booking) => (
-          <Grid size={{ xs: 12, xl: 6 }} key={booking.id}>
+        {rentalBookings.map((booking) => (
+          <Grid size={{ xs: 12 }} key={booking.id}>
             <BookingConfirmationCard booking={booking} isEnglish={isEnglish} />
           </Grid>
         ))}

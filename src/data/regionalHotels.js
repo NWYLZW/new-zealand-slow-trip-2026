@@ -71,8 +71,8 @@ export const regionalStays = {
     anchorIcon: "◎",
     dates: {
       checkIn: "2026-10-06",
-      checkOut: "2026-10-07",
-      label: "10月6日—7日",
+      checkOut: "2026-10-08",
+      label: "10月6日—8日",
     },
     selectedHotelId: "novotel-christchurch-cathedral-square",
   },
@@ -113,7 +113,7 @@ const sharedSocial = {
   },
   christchurch: {
     verdict:
-      "社交媒体上常见市中心公寓、设计酒店和自驾 motel 三类选择；但本次只住一晚，次日上午还要步行逛 New Regent Street、Riverside Market 与植物园，再去机场还车，Cathedral Square 周边酒店比收清洁费、需要自助入住的民宿更省时间。Booking 精确日期复核后，Novotel 与 Distinction 都有纯 King 房；Rydges 停车更清楚但步行 Riverside Market 更远。",
+      "社交媒体上常见市中心公寓、设计酒店和自驾 motel 三类选择；行程现改为基督城连续两晚，10月7日完整步行游览 New Regent Street、Riverside Market 与植物园，10月8日再去机场还车。Cathedral Square 周边仍最省时间，但旧的一晚报价已失效，两晚新价格与取消规则必须重新核验。",
     url: xiaohongshuSearch("基督城 住宿 推荐 酒店 民宿"),
   },
   rotorua: {
@@ -3202,7 +3202,7 @@ export const regionalHotels = {
       agodaStatusDetail:
         "已用 IAB 实际打开 Agoda 同一酒店，并正确带入 10 月 6—7 日、2 人 1 间。页面当前显示高级大床房 NZD 237 起、豪华大床房 NZD 271 起；这些仍是房型卡起价，尚未逐项核对含税总价、取消与付款条款，因此暂不作为可比较报价展示。",
       research: sharedSocial.christchurch,
-      officialStatus: "exact-rate-verified",
+      officialStatus: "needs-recheck",
       officialStatusDetail:
         "2026-07-28 已在 Rydges 官网实际选择 2026 年 10 月 6—7 日、2 人 1 间，并核验四种明确 King 房型。页面同时显示公开价与 EVT Stays 会员价；卡片仅把公开 Best Flexible Rate 作为主比较价，会员价单独注明。官网尚未在当前步骤明确列出税费组成与取消截止时间，因此不会补写未经核验的“含税”或免费取消日期。",
       officialStatusEn:
@@ -3357,7 +3357,7 @@ export const regionalHotels = {
       agodaStatusDetail:
         "Agoda 已带入 10 月 6—7 日并识别一卧室公寓/一室公寓；当前采集尚未取得可与 Booking 对齐的含税结算总价及取消条款，因此不把酒店介绍页或房型起价当作报价。",
       research: sharedSocial.christchurch,
-      officialStatus: "exact-date-unavailable",
+      officialStatus: "needs-recheck",
       officialStatusDetail:
         "2026-07-28 已在 Quest 官网进入该酒店官方预订引擎，并确认 2026 年 10 月 6—7 日、2 人 1 间；页面明确显示所选日期无库存，因此没有可比较的官网结算价。Booking 同日库存独立保留，不与官网状态混写。",
       officialStatusEn:
@@ -3434,7 +3434,7 @@ export const regionalHotels = {
       agodaStatus: "尚未取得对应房型的含税结算总价",
       agodaStatusDetail: "本轮只记录 Booking 真实详情页的精确日期价格；Agoda 在取得同房型含税结算总价前不显示报价。",
       research: sharedSocial.christchurch,
-      officialStatus: "exact-rate-verified",
+      officialStatus: "needs-recheck",
       officialStatusDetail: "2026-07-28 已在 Novotel 官网实际带入 10 月 6—7 日、2 人 1 间：5 种房型可订；Superior King 含税公开不可退 NZD 379、灵活价 NZD 399，退改和早餐方案已展开核验。",
       officialStatusEn: "Verified on the Novotel website for 6–7 Oct 2026, two adults and one room; five room categories were available and the Superior King rates and terms were opened.",
       officialVerifiedAt: "2026-07-28",
@@ -3495,7 +3495,7 @@ export const regionalHotels = {
         } },
       },
       research: sharedSocial.christchurch,
-      officialStatus: "exact-rate-verified",
+      officialStatus: "needs-recheck",
       officialStatusDetail: "2026-07-28 已在 Distinction 官网预订引擎带入 10 月 6—7 日、2 人 1 间，核验 Classic King 与 Classic Super King 的一晚价格；并实际选择 Classic King 灵活档，结算摘要确认总价 NZD 425。床型为二选一的 Junior Suite 未映射官网价。",
       officialStatusEn: "Verified on the Distinction booking engine on 28 Jul 2026 for 6–7 Oct, two adults and one room. Exact one-night rates were checked for the Classic King and Classic Super King, and the Classic King flexible checkout summary confirmed NZD 425 total. The bed-choice Junior Suite was not mapped.",
       officialVerifiedAt: "2026-07-28",

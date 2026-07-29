@@ -348,11 +348,11 @@ export const eventMediaByTitle = {
       googleDirections("奥马鲁—基督城机场路线", "Oamaru New Zealand", "Budget Car Rental Christchurch Airport"),
     ],
   },
-  "基督城城市半日": {
+  "基督城完整城市日": {
     location: "基督城市中心",
     localNames: ["Christchurch / Ōtautahi", "Riverside Market", "Christchurch Botanic Gardens", "Christchurch Town Hall"],
     ...christchurchImage,
-    links: [official("ChristchurchNZ 官方旅游信息", "https://www.christchurchnz.com/"), official("基督城植物园官方信息", "https://ccc.govt.nz/parks-and-gardens/christchurch-botanic-gardens"), googleDirections("市中心半日步行路线", "Riverside Market Christchurch", "Christchurch Botanic Gardens", ["Christchurch Town Hall"], "walking"), redbook("基督城 半日游 攻略")],
+    links: [official("ChristchurchNZ 官方旅游信息", "https://www.christchurchnz.com/"), official("基督城植物园官方信息", "https://ccc.govt.nz/parks-and-gardens/christchurch-botanic-gardens"), googleDirections("市中心步行路线", "Riverside Market Christchurch", "Christchurch Botanic Gardens", ["New Regent Street", "Christchurch Town Hall"], "walking"), redbook("基督城 一日游 攻略")],
   },
   "还车飞奥克兰": {
     route: "基督城 → 奥克兰",
@@ -360,17 +360,11 @@ export const eventMediaByTitle = {
     ...christchurchImage,
     links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("基督城机场", "https://www.christchurchairport.co.nz/"), official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"), googleMaps("Budget Car Rental Christchurch Airport", "还车点地图"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), redbook("基督城机场 还车 飞奥克兰")],
   },
-  "奥克兰购物日": {
-    location: "奥克兰 CBD 与 Newmarket",
-    localNames: ["Auckland / Tāmaki Makaurau", "Queen Street", "Commercial Bay", "Westfield Newmarket", "Auckland International Airport"],
-    ...mediaGallery(aucklandImage, aucklandAirportImage),
-    links: [official("Westfield Newmarket", "https://www.westfield.co.nz/newmarket"), official("Commercial Bay", "https://www.commercialbay.co.nz/"), official("SkyDrive 机场巴士", "https://www.skydrive.co.nz/"), googleDirections("机场—CBD—Newmarket 路线", "Auckland International Airport", "Auckland International Airport", ["Queen Street Auckland", "Commercial Bay Auckland", "Westfield Newmarket"]), redbook("奥克兰 购物 Newmarket 攻略")],
-  },
-  "取车前往霍比屯": {
-    route: "奥克兰机场 → 霍比屯",
-    localNames: ["Auckland International Airport", "The Shire's Rest", "Hobbiton Movie Set"],
+  "接驳前往霍比屯": {
+    route: "奥克兰市中心 → 霍比屯",
+    localNames: ["Britomart Auckland", "The Shire's Rest", "Hobbiton Movie Set"],
     ...mediaGallery(hobbitonImage, aucklandAirportImage),
-    links: [official("Hobbiton Movie Set 购票", "https://www.hobbitontours.com/experiences/hobbiton-movie-set-tour/"), googleDirections("奥克兰机场—霍比屯路线", "Auckland International Airport", "The Shire's Rest Hobbiton"), redbook("霍比屯 自驾 攻略")],
+    links: [official("Hobbiton Movie Set 购票", "https://www.hobbitontours.com/experiences/hobbiton-movie-set-tour/"), official("InterCity 城际巴士", "https://www.intercity.co.nz/"), googleDirections("奥克兰市中心—霍比屯路线", "Britomart Auckland", "The Shire's Rest Hobbiton")],
   },
   "霍比屯游览": {
     location: "Hobbiton Movie Set",
@@ -378,11 +372,11 @@ export const eventMediaByTitle = {
     ...hobbitonImage,
     links: [official("Hobbiton Movie Set 购票", "https://www.hobbitontours.com/experiences/hobbiton-movie-set-tour/"), googleMaps("The Shire's Rest", "集合点地图"), redbook("霍比屯 游览 攻略"), facebook("Hobbiton Movie Set")],
   },
-  "前往罗托鲁瓦": {
+  "接驳前往罗托鲁瓦": {
     route: "霍比屯 → 罗托鲁瓦",
     localNames: ["Hobbiton Movie Set", "Rotorua", "Redwoods Whakarewarewa Forest", "JetPark Hotel Rotorua"],
     ...mediaGallery(rotoruaImage, hobbitonImage),
-    links: [official("RotoruaNZ 官方旅游信息", "https://www.rotoruanz.com/"), official("Redwoods Whakarewarewa Forest", "https://redwoods.co.nz/"), googleDirections("霍比屯—罗托鲁瓦路线", "The Shire's Rest Hobbiton", "JetPark Hotel Rotorua", ["Redwoods Whakarewarewa Forest"]), redbook("罗托鲁瓦 攻略")],
+    links: [official("RotoruaNZ 官方旅游信息", "https://www.rotoruanz.com/"), official("InterCity 城际巴士", "https://www.intercity.co.nz/"), googleDirections("霍比屯—罗托鲁瓦路线", "The Shire's Rest Hobbiton", "Millennium Hotel Rotorua")],
   },
   "Te Puia 地热文化": {
     location: "Te Puia · 罗托鲁瓦",
@@ -390,11 +384,11 @@ export const eventMediaByTitle = {
     ...rotoruaImage,
     links: [official("Te Puia 日间体验购票", "https://ecommerce.tepuia.com/te-ra-guided-experience"), googleMaps("Te Puia Rotorua"), redbook("Te Puia 罗托鲁瓦 攻略"), facebook("Te Puia Rotorua")],
   },
-  "返回奥克兰机场": {
+  "接驳返回奥克兰机场": {
     route: "罗托鲁瓦 → 奥克兰机场",
     localNames: ["JetPark Hotel Rotorua", "Auckland International Airport"],
     ...mediaGallery(aucklandAirportImage, rotoruaImage, aucklandImage),
-    links: [official("奥克兰机场", "https://www.aucklandairport.co.nz/"), googleDirections("罗托鲁瓦—奥克兰机场路线", "JetPark Hotel Rotorua", "Auckland International Airport"), redbook("罗托鲁瓦 奥克兰机场 自驾 还车")],
+    links: [official("奥克兰机场", "https://www.aucklandairport.co.nz/"), official("InterCity 城际巴士", "https://www.intercity.co.nz/"), googleDirections("罗托鲁瓦—奥克兰机场路线", "Millennium Hotel Rotorua", "Auckland International Airport")],
   },
   "办理返程值机": {
     location: "奥克兰国际机场",

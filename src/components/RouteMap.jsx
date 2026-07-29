@@ -6,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
+import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import ExploreIcon from "@mui/icons-material/Explore";
 import FlightIcon from "@mui/icons-material/Flight";
@@ -51,8 +52,8 @@ const googleRouteActions = {
     waypoints: ["Arrowtown New Zealand", "Crown Range Summit", "Cardrona Hotel"],
   },
   north: {
-    label: "在 Google 地图打开北岛自驾",
-    origin: "Auckland International Airport",
+    label: "在 Google 地图查看北岛地面路线",
+    origin: "Britomart Auckland",
     destination: "Auckland International Airport",
     waypoints: ["The Shire's Rest Hobbiton", "Te Puia Rotorua"],
   },
@@ -208,11 +209,11 @@ const routeSegments = [
     sequence: "8B",
     colorIndex: 7,
     date: "10/7",
-    label: "奥马鲁 → 基督城机场（备选）",
+    label: "奥马鲁 → 基督城市区（备选）",
     transport: "road",
     from: "OAM",
     to: "CHC",
-    toPosition: placePositions.christchurchAirport,
+    toPosition: placePositions.christchurchCbd,
     modes: ["overview", "south"],
     optional: true,
     color: "#357b73",
@@ -220,7 +221,7 @@ const routeSegments = [
   {
     id: "chc-akl",
     sequence: 9,
-    date: "10/7",
+    date: "10/8",
     label: "基督城 → 奥克兰",
     transport: "flight",
     from: "CHC",
@@ -232,7 +233,7 @@ const routeSegments = [
   {
     id: "akl-cbd-transfer",
     sequence: 10,
-    date: "10/7",
+    date: "10/8",
     label: "奥克兰机场 → 市中心",
     transport: "road",
     from: "AKL",
@@ -242,35 +243,21 @@ const routeSegments = [
     modes: ["overview", "south", "north"],
   },
   {
-    id: "auckland-shopping",
-    sequence: 11,
-    date: "10/8",
-    label: "奥克兰市区购物动线",
-    transport: "road",
-    from: "AKL",
-    to: "AKL",
-    fromPosition: placePositions.aucklandCbd,
-    toPosition: placePositions.aucklandCbd,
-    waypoints: [placePositions.aucklandCbd],
-    modes: ["overview", "north"],
-  },
-  {
     id: "akl-hobbiton",
     sequence: 12,
     date: "10/9",
-    label: "奥克兰市中心 → 机场取车 → 霍比屯",
+    label: "奥克兰市中心 → 霍比屯（接驳待订）",
     transport: "road",
     from: "AKL",
     to: "HBT",
     fromPosition: placePositions.aucklandCbd,
-    waypoints: [placePositions.aucklandAirport],
     modes: ["overview", "north"],
   },
   {
     id: "hobbiton-rotorua",
     sequence: 13,
     date: "10/9",
-    label: "霍比屯 → 罗托鲁瓦",
+    label: "霍比屯 → 罗托鲁瓦（接驳待订）",
     transport: "road",
     from: "HBT",
     to: "ROT",
@@ -280,7 +267,7 @@ const routeSegments = [
     id: "rotorua-akl",
     sequence: 14,
     date: "10/10",
-    label: "罗托鲁瓦 → 奥克兰机场",
+    label: "罗托鲁瓦 → 奥克兰机场（接驳待订）",
     transport: "road",
     from: "ROT",
     to: "AKL",
@@ -333,13 +320,13 @@ const routeConfigs = {
     center: { lat: -44.35, lng: 169.7 },
     zoom: 6,
     stopTags: ["AKL", "ZQN", "WTP", "WKA", "AOR", "TEK", "OAM", "KAT", "CHC"],
-    calendarTitle: "南岛行程 · 9月28日—10月7日",
+    calendarTitle: "南岛行程 · 9月28日—10月8日",
   },
   north: {
     center: { lat: -37.55, lng: 175.45 },
     zoom: 7,
     stopTags: ["AKL", "HBT", "ROT"],
-    calendarTitle: "北岛行程 · 10月8日—10月11日",
+    calendarTitle: "北岛行程 · 10月9日—10月11日",
   },
 };
 
@@ -398,6 +385,7 @@ const eventIconMap = {
   flight: FlightTakeoffIcon,
   domesticFlight: FlightIcon,
   car: DirectionsCarIcon,
+  bus: DirectionsBusIcon,
   boat: DirectionsBoatIcon,
   hotel: HotelIcon,
   city: ParkIcon,
@@ -487,19 +475,17 @@ const eventGoogleRoutes = {
     destination: "Britomart Auckland",
     waypoints: ["Christchurch Airport", "Auckland Airport Domestic Terminal"],
   },
-  "取车前往霍比屯": {
+  "接驳前往霍比屯": {
     origin: "Britomart Auckland",
     destination: "The Shire's Rest Hobbiton Movie Set",
-    waypoints: ["Auckland International Airport"],
     travelmode: "driving",
   },
-  "前往罗托鲁瓦": {
+  "接驳前往罗托鲁瓦": {
     origin: "The Shire's Rest Hobbiton Movie Set",
     destination: "Millennium Hotel Rotorua",
-    waypoints: ["Redwoods Whakarewarewa Forest Rotorua"],
     travelmode: "driving",
   },
-  "返回奥克兰机场": {
+  "接驳返回奥克兰机场": {
     origin: "Millennium Hotel Rotorua",
     destination: "Auckland Airport International Terminal",
     travelmode: "driving",
@@ -562,21 +548,20 @@ const calendarEventGroupsByDate = {
     { title: "蒂卡波到基督城", time: "11:30—17:30", color: eventColors.christchurchRoad, icon: "car", drive: { distanceKm: 330, durationZh: "约 4 小时 15 分钟", durationEn: "about 4 hr 15 min" }, items: [2, 3, 4], segmentIds: ["aoraki-christchurch"], stopTags: ["AOR", "TEK", "CHC"] },
   ],
   "10月7日": [
-    { title: "基督城城市半日", time: "10:00—13:00", color: eventColors.christchurch, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["CHC"] },
-    { title: "还车飞奥克兰", calendarLabel: "JQ242", calendarLabelEn: "JQ242", isFlightTransfer: true, time: "15:30—22:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [3, 4, 5, 6], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
+    { title: "基督城完整城市日", time: "10:00—晚上", color: eventColors.christchurch, icon: "city", items: [0, 1, 2, 3, 4, 5], segmentIds: [], stopTags: ["CHC"] },
   ],
   "10月8日": [
-    { title: "奥克兰购物日", time: "09:00—19:30", color: eventColors.auckland, icon: "shopping", items: [0, 1, 2, 3, 4, 5], segmentIds: ["auckland-shopping"], stopTags: ["AKL"] },
+    { title: "还车飞奥克兰", calendarLabel: "JQ242", calendarLabelEn: "JQ242", isFlightTransfer: true, time: "上午—22:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [0, 1, 2, 3, 4, 5], flights: [{ flightNumber: "JQ242", date: "2026-10-08", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
   ],
   "10月9日": [
-    { title: "取车前往霍比屯", time: "07:30—11:20", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 186, durationZh: "纯驾驶约 2 小时 45 分钟，另留取车时间", durationEn: "about 2 hr 45 min driving, plus car pickup" }, items: [0, 1, 2, 3], segmentIds: ["akl-hobbiton"], stopTags: ["AKL", "HBT"] },
-    { title: "霍比屯游览", time: "12:00—14:30", color: eventColors.hobbiton, icon: "movie", items: [4, 5], segmentIds: [], stopTags: ["HBT"] },
-    { title: "前往罗托鲁瓦", time: "16:30—17:30", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 75, durationZh: "约 1 小时", durationEn: "about 1 hr" }, items: [6, 7], segmentIds: ["hobbiton-rotorua"], stopTags: ["HBT", "ROT"] },
+    { title: "接驳前往霍比屯", time: "07:30—计划12:00", color: eventColors.northRoad, icon: "bus", items: [0, 1], segmentIds: ["akl-hobbiton"], stopTags: ["AKL", "HBT"] },
+    { title: "霍比屯游览", time: "计划12:00", color: eventColors.hobbiton, icon: "movie", items: [2], segmentIds: [], stopTags: ["HBT"] },
+    { title: "接驳前往罗托鲁瓦", time: "下午—傍晚", color: eventColors.northRoad, icon: "bus", items: [3, 4, 5], segmentIds: ["hobbiton-rotorua"], stopTags: ["HBT", "ROT"] },
   ],
   "10月10日": [
     { title: "Te Puia 地热文化", time: "09:00—12:00", color: eventColors.rotorua, icon: "volcano", items: [0, 1], segmentIds: [], stopTags: ["ROT"] },
-    { title: "返回奥克兰机场", time: "13:30—18:00", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 230, durationZh: "约 3 小时", durationEn: "about 3 hr" }, items: [2, 3, 4], segmentIds: ["rotorua-akl"], stopTags: ["ROT", "AKL"] },
-    { title: "办理返程值机", time: "21:45", color: eventColors.internationalFlight, icon: "flight", items: [5], flights: internationalFlights.inbound, flightSummary, segmentIds: [], stopTags: ["AKL"] },
+    { title: "接驳返回奥克兰机场", time: "待预订 · 建议18:00前", color: eventColors.northRoad, icon: "bus", items: [2, 3], segmentIds: ["rotorua-akl"], stopTags: ["ROT", "AKL"] },
+    { title: "办理返程值机", time: "21:45", color: eventColors.internationalFlight, icon: "flight", items: [4], flights: internationalFlights.inbound, flightSummary, segmentIds: [], stopTags: ["AKL"] },
   ],
   "10月11日": [
     { title: "返程回深圳", calendarLabel: "MH0132 / MH0522", calendarLabelEn: "MH0132 / MH0522", isFlightTransfer: true, time: "00:30—次日 01:15", color: eventColors.flightTransfer, icon: "flight", items: [0, 1, 2], flights: internationalFlights.inbound, flightSummary, segmentIds: ["akl-kul", "kul-szx"], stopTags: ["AKL", "KUL", "SZX"] },
@@ -1552,7 +1537,7 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
         displayDate: language === "en" ? "6–7 Oct" : optionDay.displayDate,
         highlight: null,
         stay: language === "en" ? "Ōamaru accommodation · not selected or booked." : "住宿 · 奥马鲁住宿尚未选择、尚未预订。",
-        title: language === "en" ? "Aoraki / Mount Cook → Ōamaru → Christchurch Airport" : "库克山 → 奥马鲁 → 基督城机场",
+        title: language === "en" ? "Aoraki / Mount Cook → Ōamaru → Christchurch" : "库克山 → 奥马鲁 → 基督城",
       },
       drive: { distanceKm: 281, durationZh: "约 3 小时 26 分钟", durationEn: "about 3 hr 26 min" },
       events: optionDay.events.slice(5, 9),
@@ -1560,7 +1545,7 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
       media: eventMediaByTitle["奥马鲁企鹅与海狗备选"],
       segmentIds: ["aoraki-oamaru-option", "oamaru-christchurch-option"],
       stopTags: ["AOR", "TEK", "OAM", "CHC"],
-      time: language === "en" ? "6 Oct 10:00—about 22:00; 7 Oct drive to CHC" : "10月6日 10:00—约22:00；10月7日直达基督城机场",
+      time: language === "en" ? "6 Oct 10:00—about 22:00; 7 Oct return to Christchurch" : "10月6日 10:00—约22:00；10月7日返回基督城",
       title: "奥马鲁企鹅与海狗备选",
     };
   }, [language, localizedDays]);

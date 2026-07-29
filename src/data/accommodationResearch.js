@@ -35,12 +35,12 @@ export const accommodationResearchMethod = {
 export const accommodationResearch = {
   "auckland-city": {
     place: "奥克兰市中心",
-    dates: "2026-10-07/2026-10-09",
-    nights: 2,
+    dates: "2026-10-08/2026-10-09",
+    nights: 1,
     itineraryFit: [
-      "10月7日21:50国内航班落地后能顺利进城并办理晚到入住",
-      "10月8日步行覆盖 Queen Street、Britomart 与 Commercial Bay，去 Newmarket 交通直接",
-      "10月9日退房后能在08:30前后抵达奥克兰机场取车",
+      "10月8日21:50国内航班落地后能顺利进城并办理晚到入住",
+      "10月9日退房后方便前往北岛联程接驳集合点",
+      "取消北岛租车后，不再需要兼顾奥克兰机场取车动线",
     ],
     accommodationQuestion: "优先比较 Britomart / Commercial Bay 与 Newmarket 的酒店；只有核验到具体、可取消且含总价优势的整套 Airbnb 才加入。",
     status: "pending-iab-verification",
@@ -83,14 +83,14 @@ export const accommodationResearch = {
   },
   christchurch: {
     place: "基督城",
-    dates: "2026-10-06/2026-10-07",
-    nights: 1,
+    dates: "2026-10-06/2026-10-08",
+    nights: 2,
     itineraryFit: [
       "10月6日长途自驾后约17:30入住，需要停车和晚到便利",
-      "10月7日上午安排 Riverside Market、植物园或咖啡，市区步行效率重要",
-      "15:30前往 Budget 基督城机场网点还车并准备20:30航班，离城路线不能太绕",
+      "10月7日完整安排 Riverside Market、植物园与城市散步，连续住两晚避免搬行李",
+      "10月8日15:30前往 Budget 基督城机场网点还车并准备20:30航班，离城路线不能太绕",
     ],
-    accommodationQuestion: "比较市中心有停车的酒店与 aparthotel；单晚 Airbnb 清洁费通常不利，只有具体房源总价明显更低才纳入。",
+    accommodationQuestion: "比较市中心有停车的酒店与 aparthotel；两晚新日期的库存、含税总价与取消规则需要重新核验。",
     status: "pending-iab-verification",
   },
   rotorua: {

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, ButtonBase, Card, CardContent, Checkbox, Chip, Grid2 as Grid, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Card, CardContent, Checkbox, Chip, Grid2 as Grid, LinearProgress, Stack, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
-import { bookingItems, hotelPlans } from "../../tripData";
+import { activityBookingPlans, activityBookingSummary, bookingItems, hotelPlans } from "../../tripData";
 import sharedHotelSelections from "../../data/hotel-selections.json";
 import { AUCKLAND_AIRPORT_SELECTION_KEY, aucklandAirportHotels, aucklandAirportStayDates } from "../../data/aucklandAirportHotels";
 import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHotels";
@@ -15,7 +17,7 @@ import "./BookingPanel.css";
 
 const bookingTitleEn = {
   "flight-nz619": "NZ619 Auckland → Queenstown",
-  "south-car": "Budget South Island rental car · booked",
+  "south-car": "Budget South Island rental car · change pending",
   "hotel-airport": "Auckland Airport hotel",
   "hotel-auckland-city": "Central Auckland accommodation",
   "hotel-queenstown": "Queenstown accommodation",
@@ -28,9 +30,13 @@ const bookingTitleEn = {
   "hotel-rotorua": "Rotorua accommodation",
   "walter-peak": "Walter Peak cruise and barbecue",
   "flight-jq242": "JQ242 Christchurch → Auckland",
-  "north-car": "North Island rental car",
+  "north-car": "North Island rental car · cancelled",
   hobbiton: "Hobbiton Movie Set",
+  "te-puia": "Te Puia · Te Rā Guided Experience",
 };
+
+const activityBookingIds = new Set(activityBookingPlans.map((activity) => activity.id));
+const generalBookingItems = bookingItems.filter(([id]) => !activityBookingIds.has(id));
 
 const hotelOfficialUrls = new Map(hotelPlans.map((hotel) => [hotel.name, hotel.links[0][1]]));
 
@@ -43,9 +49,9 @@ const accommodationCalendar = [
   { date: "10/3", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
   { date: "10/4", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
   { date: "10/5", stayGroup: "mount-cook", hotel: "The Hermitage · Mt Cook Motel Studio Queen", place: "库克山村", placeEn: "Aoraki / Mount Cook Village", status: "已预订", statusEn: "Booked", tone: "mount-cook", position: [-43.7363846, 170.0987676], mapQuery: "Mt Cook Lodge & Motels New Zealand" },
-  { date: "10/6", stayGroup: "christchurch", hotel: "Novotel Christchurch Cathedral Square", place: "基督城", placeEn: "Christchurch", status: "入住", statusEn: "Check in", tone: "christchurch", position: [-43.5309, 172.6372], mapQuery: "Novotel Christchurch Cathedral Square" },
-  { date: "10/7", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 1 晚", statusEn: "City night 1", tone: "auckland-city", position: [-36.8462, 174.7761], mapQuery: "Adina Apartment Hotel Auckland Britomart" },
-  { date: "10/8", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 2 晚", statusEn: "City night 2", tone: "auckland-city" },
+  { date: "10/6", stayGroup: "christchurch", hotel: "Novotel Christchurch Cathedral Square", place: "基督城", placeEn: "Christchurch", status: "第 1 晚", statusEn: "Night 1", tone: "christchurch", position: [-43.5309, 172.6372], mapQuery: "Novotel Christchurch Cathedral Square" },
+  { date: "10/7", stayGroup: "christchurch", hotel: "Novotel Christchurch Cathedral Square", place: "基督城", placeEn: "Christchurch", status: "第 2 晚", statusEn: "Night 2", tone: "christchurch" },
+  { date: "10/8", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "入住", statusEn: "Check in", tone: "auckland-city", position: [-36.8462, 174.7761], mapQuery: "Adina Apartment Hotel Auckland Britomart" },
   { date: "10/9", stayGroup: "rotorua", hotel: "Millennium Hotel Rotorua", place: "罗托鲁瓦", placeEn: "Rotorua", status: "入住", statusEn: "Check in", tone: "rotorua", position: [-38.1385, 176.2574], mapQuery: "Millennium Hotel Rotorua" },
   { date: "10/10", place: "奥克兰机场", placeEn: "Auckland Airport", status: "夜间返程 · 无住宿", statusEn: "Overnight flight · no hotel", tone: "flight", noStay: true },
   { date: "10/11", place: "返程途中", placeEn: "In transit", status: "吉隆坡转机", statusEn: "Kuala Lumpur connection", tone: "flight", noStay: true },
@@ -238,7 +244,7 @@ function AccommodationCalendar({ isEnglish }) {
       regions: {
         ...sharedHotelSelections.regions,
         ...savedSelections.regions,
-        [region]: { hotelId: hotel.id, hotelName: hotel.name, stayDates: region === "auckland-airport" ? aucklandAirportStayDates : (regionalStays[region] ? [regionalStays[region].dates.checkIn] : ["2026-10-07", "2026-10-08"]) },
+        [region]: { hotelId: hotel.id, hotelName: hotel.name, stayDates: region === "auckland-airport" ? aucklandAirportStayDates : (region === "auckland-city" ? ["2026-10-08"] : (regionalStays[region] ? [regionalStays[region].dates.checkIn] : [])) },
       },
     };
     if (region === "auckland-airport") setAirportHotelId(hotel.id);
@@ -362,7 +368,7 @@ function AccommodationCalendar({ isEnglish }) {
 export function BookingPanel({ checked, setChecked, storageKey }) {
   const { language } = useLanguage();
   const isEnglish = language === "en";
-  const done = Object.values(checked).filter(Boolean).length;
+  const done = bookingItems.filter(([id]) => Boolean(checked[id])).length;
   const percent = Math.round((done / bookingItems.length) * 100);
   const toggle = (id) => {
     setChecked((prev) => {
@@ -374,13 +380,104 @@ export function BookingPanel({ checked, setChecked, storageKey }) {
 
   return (
     <Stack spacing={3}>
+      <Box component="section" aria-labelledby="activity-booking-title" className="activity-booking-section">
+        <Card className="activity-booking-summary">
+          <CardContent>
+            <Box>
+              <Typography className="activity-booking-kicker">{isEnglish ? "ACTIVITIES TO BOOK" : "活动待预订"}</Typography>
+              <Typography id="activity-booking-title" variant="h2">
+                {isEnglish ? "Official links and two-person totals" : "官方链接与双人金额"}
+              </Typography>
+              <Typography color="text.secondary">
+                {isEnglish
+                  ? "No payment has been made. Prices and inventory can change until checkout, and carts may expire."
+                  : "以下项目均未付款；完成结算前价格与余票仍可能变化，已加入的购物车也可能失效。"}
+              </Typography>
+            </Box>
+            <Box className="activity-booking-total">
+              <Typography>{isEnglish ? "Five-item planned total" : "5项预计合计"}</Typography>
+              <Typography className="activity-booking-total-value">{activityBookingSummary.plannedTotal}</Typography>
+              <Typography>
+                {isEnglish
+                  ? `${activityBookingSummary.confirmedSubtotal} verified + estimated Hobbiton fare`
+                  : `${activityBookingSummary.confirmedSubtotal} 已核价 + 霍比屯预估`}
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Grid container spacing={1.5} className="activity-booking-grid">
+          {activityBookingPlans.map((activity) => (
+            <Grid size={{ xs: 12, md: 6 }} key={activity.id}>
+              <Card className={checked[activity.id] ? "activity-booking-card checked" : "activity-booking-card"}>
+                <CardContent>
+                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1.5}>
+                    <Chip
+                      className="activity-booking-status"
+                      data-tone={activity.statusTone}
+                      label={isEnglish ? activity.statusEn : activity.status}
+                      size="small"
+                    />
+                    <Checkbox
+                      checked={Boolean(checked[activity.id])}
+                      inputProps={{ "aria-label": isEnglish ? `Mark ${activity.titleEn} as completed` : `将${activity.title}标记为已完成` }}
+                      onChange={() => toggle(activity.id)}
+                    />
+                  </Stack>
+
+                  <Typography className="activity-booking-operator">{activity.operator}</Typography>
+                  <Typography variant="h3">{isEnglish ? activity.titleEn : activity.title}</Typography>
+
+                  <Box className="activity-booking-facts">
+                    <Box>
+                      <CalendarMonthOutlinedIcon aria-hidden="true" />
+                      <span>{isEnglish ? activity.dateEn : activity.date}</span>
+                    </Box>
+                    <Box>
+                      <PaymentsOutlinedIcon aria-hidden="true" />
+                      <span>
+                        <strong>{activity.total}</strong>
+                        <small>{isEnglish ? activity.unitPriceEn : activity.unitPrice}</small>
+                      </span>
+                    </Box>
+                  </Box>
+
+                  <Typography className="activity-booking-detail">
+                    {isEnglish ? activity.detailEn : activity.detail}
+                  </Typography>
+                  <Typography className="activity-booking-policy" color="text.secondary">
+                    {isEnglish ? activity.policyEn : activity.policy}
+                  </Typography>
+
+                  <Button
+                    className="activity-booking-link"
+                    endIcon={<OpenInNewIcon />}
+                    href={activity.bookingUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                    variant="outlined"
+                  >
+                    {isEnglish ? activity.bookingLabelEn : activity.bookingLabel}
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+        <Typography className="activity-booking-checked-at" color="text.secondary">
+          {isEnglish
+            ? `Prices and availability checked on ${activityBookingSummary.checkedAt}. All amounts are in New Zealand dollars.`
+            : `价格与余票核对于 ${activityBookingSummary.checkedAt}；金额均为新西兰元。`}
+        </Typography>
+      </Box>
+
       <Box>
         <AccommodationCalendar isEnglish={isEnglish} />
       </Box>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 8 }}>
           <Grid container spacing={1.5}>
-            {bookingItems.map(([id, title, desc]) => (
+            {generalBookingItems.map(([id, title, desc]) => (
               <Grid size={{ xs: 12, sm: 6 }} key={id}>
                 <Card className={checked[id] ? "booking-card checked" : "booking-card"} onClick={() => toggle(id)}>
                   <CardContent>

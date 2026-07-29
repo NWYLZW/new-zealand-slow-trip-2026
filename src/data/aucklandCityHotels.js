@@ -8,9 +8,9 @@ export const aucklandCityStay = {
   anchorLabel: "Britomart",
   anchorLabelEn: "Britomart",
   dates: {
-    checkIn: "2026-10-07",
+    checkIn: "2026-10-08",
     checkOut: "2026-10-09",
-    label: "10月7日—9日",
+    label: "10月8日—9日",
   },
   selectedHotelId: "adina-auckland-britomart",
 };
@@ -22,9 +22,9 @@ export const aucklandCityHotels = [
     recommendation: "行程最匹配",
     recommendationEn: "Best itinerary fit",
     summary:
-      "22:30 左右进城仍可由 24 小时前台办理入住；第二天从 Britomart 步行去 Commercial Bay 与 Queen Street，第三天退房后去机场取车，三段动线最顺。",
+      "10月8日22:30 左右进城仍可由 24 小时前台办理入住；第二天退房后从市区前往北岛联程接驳集合点，动线较顺。",
     summaryEn:
-      "A 24-hour front desk supports the late arrival, while Britomart, Commercial Bay and Queen Street are walkable the next day.",
+      "A 24-hour front desk supports the late arrival, with convenient access to central transfer meeting points the next morning.",
     access: "距 Britomart 站约 650 米；位置评分 9.5，距机场约 18 公里",
     accessEn: "About 650 m from Britomart Station; location score 9.5",
     parking:
@@ -59,11 +59,12 @@ export const aucklandCityHotels = [
     ],
     strengths: [
       "24 小时前台适合晚到",
-      "购物日步行动线最佳",
+      "次日去市区接驳集合点方便",
       "25 m² 且有小厨房",
-      "两晚含税总价明显较低",
+      "原两晚报价有价格优势",
     ],
     cautions: [
+      "行程已改为10月8日单晚，旧报价不能继续使用，必须重新核价",
       "距离 Newmarket 仍需乘公交或打车",
       "停车位有限且平台未显示具体收费",
       "一室公寓只能请求 King，平台明确写床型视供应；若要锁定大床应选尊贵一室 Queen",
@@ -193,7 +194,7 @@ export const aucklandCityHotels = [
         },
       },
     },
-    officialStatus: "exact-rate-verified",
+    officialStatus: "needs-recheck",
     officialStatusDetail:
       "2026-07-28 已在 Adina 官网实际操作日期控件，带入 10 月 7—9 日、2 人 1 间；Premier Studio Room 明确为 Queen，eClub 冬季套餐含税两晚 NZD 313.88，含双早、1 个停车位、12:00 延迟退房，10 月 6 日前免费取消且无需预付。",
     officialStatusEn:
@@ -202,7 +203,7 @@ export const aucklandCityHotels = [
     officialUrl:
       "https://adinahotels.com/en/apartments/auckland-britomart/",
     officialBookingUrl:
-      "https://reservations.adinahotels.com/?adult=2&arrive=2026-10-07&chain=14687&child=0&config=SBE&currency=NZD&depart=2026-10-09&hotel=66054&level=hotel&locale=en-US&productcurrency=NZD&room=SPR&rooms=1&theme=ADISBE",
+      "https://reservations.adinahotels.com/?adult=2&arrive=2026-10-08&chain=14687&child=0&config=SBE&currency=NZD&depart=2026-10-09&hotel=66054&level=hotel&locale=en-US&productcurrency=NZD&room=SPR&rooms=1&theme=ADISBE",
     bookingUrl:
       "https://www.booking.com/hotel/nz/adina-apartment-auckland-britomart.html",
     agodaUrl:
@@ -324,7 +325,7 @@ export const aucklandCityHotels = [
       "官网与 Booking.com 出现渠道库存差异：官网精确日期查询无房，Booking.com 仍显示两种大床房可订；预订时以实际进入的渠道结算页为准。",
     availabilityNoteEn:
       "Channel inventory differs: the direct engine has no availability for the exact stay, while Booking.com still lists both king-room categories. Treat each channel's checkout as authoritative.",
-    officialStatus: "exact-date-unavailable",
+    officialStatus: "needs-recheck",
     officialStatusDetail:
       "2026-07-28 已从 Hotel Grand Chancellor Auckland 官网进入官方预订引擎，查询 10 月 7—9 日、1 间、2 人；入住条件栏明确显示 1 room / 2 adults，结果页提示所选日期无房。官网首页的“Rates from”不是本次日期报价，未写入比较。",
     officialStatusEn:
@@ -494,7 +495,7 @@ export const aucklandCityHotels = [
         },
       },
     },
-    officialStatus: "exact-rate-verified",
+    officialStatus: "needs-recheck",
     officialStatusDetail:
       "2026-07-28 已在 IHG 官网实际带入 10 月 7—9 日、2 人 1 间：已核验 1 King Standard With Free Breakfast 的含税费两晚总价、免费早餐、付款与取消条款。该官网房型为 20 m²，只与现有 standard-king 映射；两个不保证到店房型偏好的泛标准房未写入 Queen 或 28 m² 市景超级特大床房。",
     officialStatusEn:

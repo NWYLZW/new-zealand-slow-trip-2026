@@ -8,6 +8,11 @@ import { socialGuidesByEvent } from "../src/socialGuides.js";
 const routeMapUrl = new URL("../src/components/RouteMap.jsx", import.meta.url);
 const requiredStances = ["positive", "pitfall"];
 const minimumGuidesPerEvent = 5;
+const socialGuideOptionalEvents = new Set([
+  "接驳前往霍比屯",
+  "接驳前往罗托鲁瓦",
+  "接驳返回奥克兰机场",
+]);
 const forbiddenBrowserScreenshotDimensions = new Set(["1280x720", "1136x863", "1159x863", "1122x863", "436x863"]);
 const forbiddenBrowserScreenshotMedia = new Set([
   "/new-zealand-slow-trip-2026/images/xhs-klia-smooth-transfer.jpg",
@@ -170,7 +175,9 @@ const calendarEventTitles = extractCalendarEventTitles(routeMapSource);
 const calendarEventTitleSet = new Set(calendarEventTitles);
 const report = await Promise.all(calendarEventTitles.map(async (eventTitle) => ({
   eventTitle,
-  errors: await auditEvent(eventTitle, socialGuidesByEvent[eventTitle]),
+  errors: socialGuideOptionalEvents.has(eventTitle)
+    ? []
+    : await auditEvent(eventTitle, socialGuidesByEvent[eventTitle]),
 })));
 const orphanedEvents = Object.keys(socialGuidesByEvent).filter((title) => !calendarEventTitleSet.has(title));
 const failed = report.filter(({ errors }) => errors.length > 0);

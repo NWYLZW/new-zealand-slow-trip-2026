@@ -72,6 +72,15 @@ function officialStatusPresentation(hotel, isEnglish) {
   }
 
   const presentations = {
+    "needs-recheck": {
+      tone: "",
+      title: isEnglish ? "Dates changed · recheck official price" : "行程日期已变 · 官网价格待复核",
+      roomLabel: isEnglish ? "Official website · recheck required" : "官网入口 · 需重新核价",
+      roomNote: isEnglish
+        ? "The previous quote was for the old stay dates and must not be used for this itinerary."
+        : "旧报价对应原住宿日期，不能用于当前行程。",
+      linkLabel: isEnglish ? "Open official website to recheck" : "打开官网重新核价",
+    },
     "exact-rate-verified": {
       tone: "is-verified",
       title: isEnglish ? "Official exact-date rates verified" : "官网精确日期已核验",
