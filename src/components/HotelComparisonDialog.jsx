@@ -409,7 +409,7 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                 label={(
                   <Stack alignItems="center" direction="row" spacing={0.7}>
                     <span>{`${index + 1} · ${hotel.name.replace(" Auckland Airport", "")}`}</span>
-                    {hotel.id === selectedHotelId && <CheckCircleIcon className="hotel-tab-selected-icon" />}
+                    {hotel.id === selectedHotelId && !hotel.isResearchPlaceholder && <CheckCircleIcon className="hotel-tab-selected-icon" />}
                   </Stack>
                 )}
                 value={hotel.id}
@@ -418,7 +418,7 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
           </Tabs>
           <Box className="hotel-comparison-grid">
           {[activeHotel].map((hotel) => {
-            const selected = hotel.id === selectedHotelId;
+            const selected = hotel.id === selectedHotelId && !hotel.isResearchPlaceholder;
             const officialPresentation = officialStatusPresentation(hotel, isEnglish);
             return (
               <Paper className="hotel-option-card" data-selected={selected} key={hotel.id} variant="outlined">
@@ -427,12 +427,12 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                     <Chip label={isEnglish ? hotel.recommendationEn : hotel.recommendation} size="small" />
                     <Typography
                       className="hotel-option-name"
-                      component="a"
-                      href={hotel.stayUrl}
-                      rel="noreferrer"
-                      target="_blank"
+                      component={hotel.stayUrl ? "a" : "span"}
+                      href={hotel.stayUrl || undefined}
+                      rel={hotel.stayUrl ? "noreferrer" : undefined}
+                      target={hotel.stayUrl ? "_blank" : undefined}
                     >
-                      {hotel.name}<OpenInNewIcon aria-hidden="true" />
+                      {hotel.name}{hotel.stayUrl && <OpenInNewIcon aria-hidden="true" />}
                     </Typography>
                     <IconButton
                       aria-label={isEnglish ? `Copy hotel name: ${hotel.name}` : `复制酒店名称：${hotel.name}`}
@@ -741,12 +741,16 @@ export function HotelComparisonDialog({ activeHotelId, comparison = defaultCompa
                 )}
                 <Button
                   className="hotel-select-button"
-                  disabled={selected}
+                  disabled={selected || hotel.isResearchPlaceholder}
                   fullWidth
                   onClick={() => onSelect(hotel)}
                   variant={selected ? "outlined" : "contained"}
                 >
-                  {selected ? (isEnglish ? "Current choice" : "当前选择") : (isEnglish ? "Choose this hotel" : "选择这家")}
+                  {hotel.isResearchPlaceholder
+                    ? (isEnglish ? "No specific accommodation selected" : "尚未选定具体住宿")
+                    : selected
+                      ? (isEnglish ? "Current choice" : "当前选择")
+                      : (isEnglish ? "Choose this hotel" : "选择这家")}
                 </Button>
               </Paper>
             );

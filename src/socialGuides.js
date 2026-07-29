@@ -666,10 +666,21 @@ const tekapoChristchurchVerifiedPosts = [
 
 const tekapoChristchurchPostsFor = (context) => tekapoChristchurchVerifiedPosts.map((post) => ({
   ...post,
-  excerpt: `${context === "drive" ? "作为蒂卡波到基督城长途日的参考：" : "作为基督城市区半日的参考："}${post.excerpt}`,
-  excerptEn: `${context === "drive" ? "For the Tekapo-to-Christchurch driving day: " : "For the Christchurch city half-day: "}${post.excerptEn}`,
-  tip: `${context === "drive" ? "先保证天黑前安全抵达，沿途停靠随剩余时间删减。" : "市区停留必须服从下午还车和航班时间。"}${post.tip}`,
-  tipEn: `${context === "drive" ? "Prioritise a safe arrival before dark and remove stops as the remaining time shrinks. " : "The city visit must remain subordinate to the afternoon car-return and flight deadlines. "}${post.tipEn}`,
+  excerpt: `${context === "drive" ? "作为奥马鲁往返方向长途自驾的参考：" : "作为基督城市区慢游的参考："}${post.excerpt}`,
+  excerptEn: `${context === "drive" ? "For the Tekapo-to-Christchurch driving day: " : "For relaxed sightseeing in central Christchurch: "}${post.excerptEn}`,
+  tip: `${context === "drive" ? "先保证天黑前安全抵达，沿途停靠随剩余时间删减。" : "按当天还车、取行李或机场交通节点删减市区停留。"}${post.tip}`,
+  tipEn: `${context === "drive" ? "Prioritise a safe arrival before dark and remove stops as the remaining time shrinks. " : "Shorten city stops around the day's car-return, luggage-collection or airport-transfer deadline. "}${post.tipEn}`,
+}));
+
+// These five posts were verified as general South Island driving and stop-planning
+// references, not as first-hand reviews of the Ōamaru colony. Keep that scope
+// explicit while the official colony and DOC links carry the wildlife rules.
+const oamaruWildlifeContextPosts = tekapoChristchurchVerifiedPosts.map((post) => ({
+  ...post,
+  excerpt: `这不是奥马鲁企鹅保护区实测，而是本次前往奥马鲁当天的南岛自驾与停车背景参考：${post.excerpt}`,
+  excerptEn: `This is not a first-hand review of the Ōamaru colony. It is South Island driving and parking context for the day travelling to Ōamaru: ${post.excerptEn}`,
+  tip: `企鹅票价、余量、禁拍规则和海狗安全距离不采用本帖说法，分别以保护区与 DOC 官方页面为准。${post.tip}`,
+  tipEn: `Do not use this post for penguin prices, availability, photography rules or seal distances; use the colony and DOC official pages instead. ${post.tipEn}`,
 }));
 
 const contextualizeVerifiedPosts = (posts, { excerpt, excerptEn, tip, tipEn }) => posts.map((post) => ({
@@ -684,74 +695,35 @@ const christchurchAirportReturnPosts = contextualizeVerifiedPosts([
   rentalInsurancePitfallPost,
   ...tekapoChristchurchVerifiedPosts.slice(1),
 ], {
-  excerpt: "作为基督城还车、赶国内航班和抵达奥克兰的通用参考；原帖并非本次 JQ242 航班实测：",
-  excerptEn: "General context for returning the car in Christchurch, catching a domestic flight and arriving in Auckland; the post is not a review of this trip's JQ242 flight: ",
+  excerpt: "作为基督城机场还车或前往机场的通用参考；原帖并非本次 Budget 订单或 JQ242 航班实测：",
+  excerptEn: "General context for returning a car or travelling to Christchurch Airport; the post is not a review of this Budget booking or JQ242 flight: ",
   tip: "先服从 Budget 还车截止时间、机场指引和 Jetstar 实时通知；",
   tipEn: "Prioritise Budget's return deadline, airport directions and live Jetstar notices. ",
 });
 
-const northIslandDriveReferencePosts = contextualizeVerifiedPosts([
-  rentalInsurancePitfallPost,
-  verifiedFlightTransitGuides[1],
-  verifiedAucklandShoppingGuides[0],
-  verifiedAucklandShoppingGuides[2],
-  verifiedAucklandShoppingGuides[3],
-], {
-  excerpt: "仓库暂无已逐帖核验的霍比屯原帖；这里只把已核验的奥克兰机场、租车和停车经验作为北岛取车自驾的通用参考：",
-  excerptEn: "No individually verified Hobbiton post is available in the repository. This card reuses a verified Auckland-airport, rental or parking post only as general North Island driving context: ",
-  tip: "该帖不能证明霍比屯现场情况；景区集合、场次、停车和入场要求必须以 Hobbiton 订单及官网为准。",
-  tipEn: "This post does not verify conditions at Hobbiton. Use the Hobbiton booking confirmation and official website for meeting, session, parking and entry requirements. ",
+const hobbitonCoachReferencePosts = contextualizeVerifiedPosts(verifiedAucklandShoppingGuides, {
+  excerpt: "仓库暂无已逐帖核验的霍比屯或 GreatSights 原帖；这里只复用已核验的奥克兰帖子作为市中心集合、返程后活动和时间管理参考，不是该产品证据：",
+  excerptEn: "No individually verified Hobbiton or GreatSights post is available in the repository. These verified Auckland posts are reused only for city-centre meeting, post-return activity and time-management context—not as evidence for the product: ",
+  tip: "帖子不能证明大巴班次、霍比屯体验、价格或余位；07:00报到、行程内容、价格和取消条款只能以 GreatSights 官网订单为准。",
+  tipEn: "The post does not verify coach timing, the Hobbiton experience, price or availability. Use only the GreatSights booking for the 07:00 check-in, inclusions, price and cancellation terms. ",
 });
 
-const hobbitonVisitReferencePosts = contextualizeVerifiedPosts(northIslandDriveReferencePosts, {
-  excerpt: "用于霍比屯游览当天的外围交通与停车准备，不是霍比屯体验攻略：",
-  excerptEn: "For transport and parking preparation around the Hobbiton visit; this is not a guide to the attraction itself: ",
-  tip: "目前没有真实核验的霍比屯小红书原帖，不能据此判断景区体验；",
-  tipEn: "There is currently no genuinely verified Hobbiton Xiaohongshu post, so this card cannot be used to judge the attraction experience. ",
+const hobbitonVisitReferencePosts = contextualizeVerifiedPosts(verifiedAucklandShoppingGuides, {
+  excerpt: "仓库暂无已逐帖核验的霍比屯原帖；这是已核验奥克兰帖的明确跨主题复用，只用于全日时间与返城安排，不是霍比屯体验评价：",
+  excerptEn: "No individually verified Hobbiton post is available in the repository. This explicit cross-topic reuse of verified Auckland posts is only for full-day timing and the return to the city—not a review of Hobbiton: ",
+  tip: "不能据此判断霍比屯现场；导览、Bagshot Row、Green Dragon 饮品和 Party Marquee 午餐以 GreatSights 官网及订单为准。",
+  tipEn: "Do not use these posts to judge conditions at Hobbiton. Confirm the guided visit, Bagshot Row interiors, Green Dragon drink and Party Marquee lunch in the GreatSights booking. ",
 });
 
-// No authenticated Rotorua-specific Xiaohongshu posts are available in the
-// repository yet. These cards deliberately retain their original titles and
-// summaries, and label themselves as general New Zealand driving references
-// so a South Island example is never presented as first-hand evidence for the
-// Hobbiton–Rotorua or Rotorua–Auckland routes.
-const verifiedRoadPostsFor = (context) => {
-  const isRotoruaApproach = context === "rotorua-approach";
-  const prefixZh = isRotoruaApproach
-    ? "作为前往罗托鲁瓦时的新西兰自驾通用参考（非霍比屯—罗托鲁瓦路段实测）："
-    : "作为返回奥克兰机场时的新西兰自驾通用参考（非罗托鲁瓦—奥克兰机场路段实测）：";
-  const prefixEn = isRotoruaApproach
-    ? "As general New Zealand driving guidance for the Rotorua approach—not a first-hand Hobbiton–Rotorua route report: "
-    : "As general New Zealand driving guidance for the return to Auckland Airport—not a first-hand Rotorua–Auckland Airport route report: ";
-  const eventTipZh = isRotoruaApproach
-    ? "只借用驾驶规则、保险和停车教训；具体路况仍以当天 NZTA 与现场标志为准。"
-    : "先保证按时抵达机场并完成还车；只借用通用驾驶教训，具体路况仍以当天 NZTA 与现场标志为准。";
-  const eventTipEn = isRotoruaApproach
-    ? "Use only the driving, insurance and parking lessons; rely on NZTA and on-site signs for the actual route. "
-    : "Prioritise an on-time airport arrival and car return. Use only the general driving lessons and rely on NZTA and on-site signs for the actual route. ";
-  const posts = isRotoruaApproach
-    ? [rentalInsurancePitfallPost, ...tekapoChristchurchVerifiedPosts.slice(0, 4)]
-    : [
-        rentalInsurancePitfallPost,
-        tekapoChristchurchVerifiedPosts[1],
-        tekapoChristchurchVerifiedPosts[2],
-        verifiedAucklandShoppingGuides[0],
-        verifiedFlightTransitGuides[1],
-      ];
+const aucklandFinalDayReferencePosts = contextualizeVerifiedPosts(verifiedAucklandShoppingGuides, {
+  excerpt: "作为退房寄存行李、奥克兰轻松半日和前往机场的已核验城市参考；原帖不是本次酒店寄存或机场接驳实测：",
+  excerptEn: "Verified city context for leaving luggage after checkout, an easy Auckland half-day and the airport transfer; the post is not a test of this hotel's storage service or this airport transfer: ",
+  tip: "先向酒店确认寄存条件，并按实时交通为国际航班留足缓冲；帖子不能证明当日营业或接驳时间。",
+  tipEn: "Confirm luggage storage with the hotel and allow ample buffer using live traffic. The post does not verify same-day opening or transfer times. ",
+});
 
-  return posts.map((post) => ({
-    ...post,
-    excerpt: `${prefixZh}${post.excerpt}`,
-    excerptEn: `${prefixEn}${post.excerptEn}`,
-    tip: `${eventTipZh}${post.tip}`,
-    tipEn: `${eventTipEn}${post.tipEn}`,
-  }));
-};
-
-// Xiaohongshu's authenticated search page exposed these post cards, but each
-// direct detail page returned “当前笔记暂时无法浏览”. The summaries therefore
-// describe only the visible card title/cover and explicitly avoid attributing
-// unseen itinerary, price or timing claims to the author.
+// Rotorua research is intentionally retained below as archived source material,
+// but no active calendar event references it after the North Island revision.
 const verifiedTePuiaSearchCardGuides = [
   verifiedXhsPost({
     title: "新西兰，罗托鲁瓦地热公园（还有毛利人村子）",
@@ -882,15 +854,17 @@ export const socialGuidesByEvent = {
   "冰川直升机": [guide({ platform: "YouTube", title: "Mount Cook Ski Planes and Helicopters · Adventure Awaits", source: "YouTube · 运营方", url: "https://www.youtube.com/watch?v=1jjOrVPxlK4", points: ["展示飞越冰川与雪地着陆的核心场景。", "可快速校准飞行内容和保暖需求。"], tip: "着陆需天气允许，官方短片不代表当天一定起飞。" }), ...mountCookPostsFor("helicopter")],
   "库克山观星夜": [guide({ platform: "YouTube", title: "Big Sky Stargazing Aoraki / Mount Cook", source: "The Hermitage 官方", url: "https://www.youtube.com/watch?v=XNQmXF6my3E", points: ["展示暗夜保护区观星主题与深空观测定位。", "可提前了解活动形式和夜间保暖需求。"], tip: "云量和月相影响很大，保留可取消备选。" }), ...mountCookPostsFor("stargazing")],
   "库克山候补安排": [guide({ platform: "YouTube", title: "Is 3 Days at Mt Cook too much?", source: "YouTube · 多项目实测", url: "https://www.youtube.com/watch?v=WS113I5hYqc", points: ["串联步道、直升机和冰川项目。", "适合天气造成改期时评估可替换的活动。"], tip: "步道查 DOC；飞行由运营方当天决定。" }), ...mountCookPostsFor("fallback")],
-  "蒂卡波到基督城": [rentalInsurancePitfallPost, ...tekapoChristchurchPostsFor("drive")],
-  "基督城城市半日": tekapoChristchurchPostsFor("city"),
-  "还车飞奥克兰": christchurchAirportReturnPosts,
-  "奥克兰购物日": verifiedAucklandShoppingGuides,
-  "取车前往霍比屯": northIslandDriveReferencePosts,
+  "蒂卡波到奥马鲁": [rentalInsurancePitfallPost, ...tekapoChristchurchPostsFor("drive")],
+  "奥马鲁企鹅与海狗": oamaruWildlifeContextPosts,
+  "奥马鲁前往基督城": [rentalInsurancePitfallPost, ...tekapoChristchurchPostsFor("drive")],
+  "按更新订单还车": christchurchAirportReturnPosts,
+  "基督城补充半日": tekapoChristchurchPostsFor("city"),
+  "前往机场飞奥克兰": christchurchAirportReturnPosts,
+  "大巴前往霍比屯": hobbitonCoachReferencePosts,
   "霍比屯游览": hobbitonVisitReferencePosts,
-  "前往罗托鲁瓦": verifiedRoadPostsFor("rotorua-approach"),
-  "Te Puia 地热文化": verifiedTePuiaSearchCardGuides,
-  "返回奥克兰机场": verifiedRoadPostsFor("auckland-airport-return"),
+  "大巴返回奥克兰": hobbitonCoachReferencePosts,
+  "奥克兰轻松半日": aucklandFinalDayReferencePosts,
+  "前往奥克兰机场": aucklandFinalDayReferencePosts,
   "办理返程值机": verifiedFlightTransitGuides,
   "返程回深圳": verifiedFlightTransitGuides,
 };

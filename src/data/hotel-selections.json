@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-28T00:00:00+08:00",
+  "updatedAt": "2026-07-29T00:00:00+08:00",
   "regions": {
     "auckland-airport": {
       "hotelId": "novotel-auckland-airport",
@@ -12,8 +12,8 @@
       "hotelId": "adina-auckland-britomart",
       "hotelName": "Adina Apartment Hotel Auckland Britomart",
       "stayDates": [
-        "2026-10-07",
-        "2026-10-08"
+        "2026-10-08",
+        "2026-10-09"
       ]
     },
     "queenstown": {
@@ -31,15 +31,15 @@
       "hotelName": "The Hermitage · Mt Cook Motel Studio Queen",
       "stayDates": ["2026-10-05"]
     },
+    "oamaru": {
+      "hotelId": "oamaru-accommodation-research-pending",
+      "hotelName": "奥马鲁住宿待调研 / 待预订",
+      "stayDates": ["2026-10-06"]
+    },
     "christchurch": {
       "hotelId": "novotel-christchurch-cathedral-square",
       "hotelName": "Novotel Christchurch Cathedral Square",
-      "stayDates": ["2026-10-06"]
-    },
-    "rotorua": {
-      "hotelId": "millennium-rotorua",
-      "hotelName": "Millennium Hotel Rotorua",
-      "stayDates": ["2026-10-09"]
+      "stayDates": ["2026-10-07"]
     }
   }
 }

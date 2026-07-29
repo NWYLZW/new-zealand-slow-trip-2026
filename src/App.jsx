@@ -89,7 +89,8 @@ export default function App() {
     }
   });
   const progress = useMemo(() => {
-    const done = Object.values(checked).filter(Boolean).length;
+    const currentItemIds = new Set(bookingItems.map(([id]) => id));
+    const done = Object.entries(checked).filter(([id, value]) => currentItemIds.has(id) && value).length;
     return {
       done,
       total: bookingItems.length,

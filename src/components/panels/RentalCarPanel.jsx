@@ -30,53 +30,28 @@ const confirmedBookings = [
     id: "south",
     island: "南岛",
     islandEn: "South Island",
-    reservation: "已私下保存",
-    reservationEn: "stored privately",
-    vehicle: "Toyota RAV4 Hybrid 或同级",
-    vehicleEn: "Toyota RAV4 Hybrid or similar",
+    reservation: "新订单是否沿用原预订号待核对",
+    reservationEn: "check whether the updated booking retains the original reference",
+    vehicle: "车型待新确认邮件核对",
+    vehicleEn: "Vehicle to verify in the updated confirmation",
     route: "皇后镇机场（ZQN）→ 基督城机场（CHC）",
     routeEn: "Queenstown Airport (ZQN) → Christchurch Airport (CHC)",
-    dates: "2026年9月29日 15:30 — 10月7日 15:30",
-    datesEn: "29 Sep 2026 15:30 — 7 Oct 2026 15:30",
-    duration: "8 × 24小时 · 异地还车 · 无限公里",
-    durationEn: "Eight 24-hour periods · one-way · unlimited kilometres",
-    total: "NZ$2,052.96",
-    protection: "LDW + Zero Excess + 道路救援",
-    protectionEn: "LDW + Zero Excess + roadside assistance",
+    dates: "2026年9月29日取车 — 10月8日还车",
+    datesEn: "Pick up 29 Sep 2026 — return 8 Oct 2026",
+    duration: "改期后计费时长待按新确认邮件核对 · 异地还车",
+    durationEn: "Updated billed duration to verify against the new confirmation · one-way",
+    total: "待按新确认邮件核对",
+    totalEn: "Pending verification from the new confirmation email",
+    protection: "待新确认邮件核对",
+    protectionEn: "Pending updated confirmation",
     counter: "皇后镇机场柜台 08:00–22:00；基督城机场柜台 06:00–次日01:30，可使用非营业时间钥匙箱。",
     counterEn: "Queenstown Airport desk 08:00–22:00; Christchurch Airport desk 06:00–01:30, with an after-hours key drop.",
-    cancellation: "Pay at Counter；确认邮件写明取消或未到店均不收费。行程有变时仍请在取车前在线取消。",
-    cancellationEn: "Pay at Counter; the confirmation states no cancellation or no-show fee. Still cancel online before pickup if plans change.",
-    payment: "主驾驶本人名下实体 Visa / Mastercard / Amex；Visa/Mastercard 2.53%，Amex 3.57%；取车时预授权。",
-    paymentEn: "Physical Visa, Mastercard or Amex in the lead driver's name; Visa/Mastercard 2.53%, Amex 3.57%; pre-authorisation at pickup.",
+    cancellation: "原确认邮件写明 Pay at Counter，取消或未到店均不收费；改期后的规则仍需按新确认邮件复核。",
+    cancellationEn: "The previous confirmation stated Pay at Counter with no cancellation or no-show fee; recheck the updated terms in the new confirmation.",
+    payment: "旧确认邮件记录主驾驶本人名下实体卡、刷卡费与取车预授权要求；改期后费率和规则须以新确认邮件为准。",
+    paymentEn: "The previous confirmation recorded a physical card in the lead driver's name, card fees and pickup pre-authorisation; verify all rates and rules in the updated confirmation.",
     coverLimit: "玻璃、轮胎、车顶、底盘、涉水和禁行道路等未确认包含；不要驶入 Skippers Canyon。",
     coverLimitEn: "Windscreen, tyres, overhead, underbody, water damage and prohibited roads are not confirmed as covered. Do not drive Skippers Canyon.",
-  },
-  {
-    id: "north",
-    island: "北岛",
-    islandEn: "North Island",
-    reservation: "已私下保存",
-    reservationEn: "stored privately",
-    vehicle: "Mazda CX-30 或同级紧凑型自动挡 SUV",
-    vehicleEn: "Mazda CX-30 or similar compact automatic SUV",
-    route: "奥克兰机场（AKL）→ 奥克兰机场（AKL）",
-    routeEn: "Auckland Airport (AKL) → Auckland Airport (AKL)",
-    dates: "2026年10月9日 08:30 — 10月10日 17:00",
-    datesEn: "9 Oct 2026 08:30 — 10 Oct 2026 17:00",
-    duration: "2个计费日 · 原地还车 · 无限公里",
-    durationEn: "Two billed days · same-location return · unlimited kilometres",
-    total: "NZ$303.03",
-    protection: "LDW + Zero Excess + 道路救援",
-    protectionEn: "LDW + Zero Excess + roadside assistance",
-    counter: "奥克兰机场航站楼内柜台，每日 05:00–次日01:30。",
-    counterEn: "Inside the Auckland Airport terminal, open daily 05:00–01:30.",
-    cancellation: "Pay at Counter；确认邮件写明取消或未到店均不收费。行程有变时仍请在取车前在线取消。",
-    cancellationEn: "Pay at Counter; the confirmation states no cancellation or no-show fee. Still cancel online before pickup if plans change.",
-    payment: "主驾驶本人名下实体 Visa / Mastercard / Amex；Visa/Mastercard 约 NZ$7.67，Amex 约 NZ$10.82；预授权通常 7–10个工作日释放。",
-    paymentEn: "Physical Visa, Mastercard or Amex in the lead driver's name; card fee about NZ$7.67 or NZ$10.82; pre-authorisation is usually released within 7–10 working days.",
-    coverLimit: "确认邮件未单列玻璃和轮胎保障，取车时向 Budget 再确认；Zero Excess 仍受租车条款限制。",
-    coverLimitEn: "Windscreen and tyre cover is not listed separately. Reconfirm it with Budget at pickup; Zero Excess remains subject to the rental terms.",
   },
 ];
 
@@ -155,8 +130,8 @@ function BookingConfirmationCard({ booking, isEnglish }) {
             </BookingFact>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <BookingFact icon={<PaymentsOutlinedIcon />} label={isEnglish ? "Confirmed total" : "确认总价"}>
-              <b>{booking.total}</b>
+            <BookingFact icon={<PaymentsOutlinedIcon />} label={isEnglish ? "Updated total" : "改期后总价"}>
+              <b>{isEnglish ? booking.totalEn : booking.total}</b>
             </BookingFact>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
@@ -204,15 +179,38 @@ export function RentalCarPanel() {
       <PanelHero
         image={assetPath("images/queenstown.webp")}
         kicker="SELF DRIVE"
-        title={isEnglish ? "Two confirmed car rentals" : "南北岛两段租车均已确认"}
+        title={isEnglish ? "South Island rental updated to 8 October" : "南岛租车已改为10月8日还车"}
         desc={isEnglish
-          ? "The reservation codes are stored privately; keep the airport times, payment card and pickup checks handy for the road trip."
-          : "预订代码已私下保存；旅行中关注机场取还车时间、现场付款和取车检查即可。"}
+          ? "The return date has been changed to 8 October. Verify the exact return time, updated total, vehicle, protection and whether the booking reference remains unchanged in the new confirmation email."
+          : "还车日期已改为10月8日；具体还车时刻、改期后总价、车型、保障及预订号是否沿用，均需按新确认邮件核对。"}
       />
+
+      <Alert severity="warning" className="rental-cover-limit">
+        <Stack spacing={1} alignItems="flex-start">
+          <Typography fontWeight={900}>
+            {isEnglish ? "North Island Budget booking: cancellation pending" : "北岛 Budget 真实订单：待你主动取消"}
+          </Typography>
+          <Typography>
+            {isEnglish
+              ? "The existing booking is still active for 9 Oct 08:30–10 Oct 17:00, Mazda CX-30 or similar, NZ$303.03; its reservation number is stored privately. Updating this itinerary does not cancel the real booking. The confirmation states Pay at Counter with no cancellation or no-show fee, but cancel online before pickup."
+              : "现有订单仍是 10月9日 08:30—10月10日 17:00、Mazda CX-30 或同级、NZ$303.03，预订号已私下保存。页面改成大巴方案不等于真实订单已取消；确认邮件写明 Pay at Counter 且取消或未到店不收费，但仍请在取车前主动在线取消。"}
+          </Typography>
+          <Button
+            href="https://www.budget.co.nz/en/reservation/view-modify-cancel"
+            target="_blank"
+            rel="noreferrer"
+            variant="outlined"
+            color="warning"
+            endIcon={<OpenInNewIcon />}
+          >
+            {isEnglish ? "Manage or cancel North Island booking" : "管理或取消北岛订单"}
+          </Button>
+        </Stack>
+      </Alert>
 
       <Grid container spacing={2}>
         {confirmedBookings.map((booking) => (
-          <Grid size={{ xs: 12, xl: 6 }} key={booking.id}>
+          <Grid size={{ xs: 12 }} key={booking.id}>
             <BookingConfirmationCard booking={booking} isEnglish={isEnglish} />
           </Grid>
         ))}

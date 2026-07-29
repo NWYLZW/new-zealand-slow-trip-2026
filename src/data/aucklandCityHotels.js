@@ -8,9 +8,9 @@ export const aucklandCityStay = {
   anchorLabel: "Britomart",
   anchorLabelEn: "Britomart",
   dates: {
-    checkIn: "2026-10-07",
-    checkOut: "2026-10-09",
-    label: "10月7日—9日",
+    checkIn: "2026-10-08",
+    checkOut: "2026-10-10",
+    label: "10月8日—10日",
   },
   selectedHotelId: "adina-auckland-britomart",
 };
@@ -22,9 +22,9 @@ export const aucklandCityHotels = [
     recommendation: "行程最匹配",
     recommendationEn: "Best itinerary fit",
     summary:
-      "22:30 左右进城仍可由 24 小时前台办理入住；第二天从 Britomart 步行去 Commercial Bay 与 Queen Street，第三天退房后去机场取车，三段动线最顺。",
+      "10 月 8 日约 23:00 进城仍可由 24 小时前台办理入住；10 月 9 日约 06:30 离店前往 SkyCity 参加霍比屯往返大巴，返回后继续住同一酒店，10 月 10 日退房并前往机场。",
     summaryEn:
-      "A 24-hour front desk supports the late arrival, while Britomart, Commercial Bay and Queen Street are walkable the next day.",
+      "The 24-hour front desk supports an arrival around 23:00 on 8 Oct. The same hotel can be kept after leaving around 06:30 for the SkyCity Hobbiton coach on 9 Oct.",
     access: "距 Britomart 站约 650 米；位置评分 9.5，距机场约 18 公里",
     accessEn: "About 650 m from Britomart Station; location score 9.5",
     parking:
@@ -61,13 +61,13 @@ export const aucklandCityHotels = [
       "24 小时前台适合晚到",
       "购物日步行动线最佳",
       "25 m² 且有小厨房",
-      "两晚含税总价明显较低",
+      "无需为霍比屯往返大巴换酒店",
     ],
     cautions: [
       "距离 Newmarket 仍需乘公交或打车",
       "停车位有限且平台未显示具体收费",
       "一室公寓只能请求 King，平台明确写床型视供应；若要锁定大床应选尊贵一室 Queen",
-      "最便宜档不可退款",
+      "10 月 8—10 日两晚精确库存、总价与退改待重新核验；旧 10 月 7—9 日两晚价格日期不同，不可用于当前行程",
     ],
     ratings: [
       { platform: "Booking.com", score: "8.7 / 10", reviews: "4,155 条" },
@@ -193,16 +193,20 @@ export const aucklandCityHotels = [
         },
       },
     },
-    officialStatus: "exact-rate-verified",
+    availabilityNote:
+      "当前住宿为 2026 年 10 月 8—10 日两晚；下方旧日期快照仅保留 10 月 7—9 日两晚的历史核验记录。虽然晚数相同，但具体日期不同，不能作为当前报价。",
+    availabilityNoteEn:
+      "The current stay is two nights, 8–10 Oct 2026. The saved 7–9 Oct two-night snapshot is historical only; the night count matches but the exact dates do not, so it is not a current quote.",
+    officialStatus: null,
     officialStatusDetail:
-      "2026-07-28 已在 Adina 官网实际操作日期控件，带入 10 月 7—9 日、2 人 1 间；Premier Studio Room 明确为 Queen，eClub 冬季套餐含税两晚 NZD 313.88，含双早、1 个停车位、12:00 延迟退房，10 月 6 日前免费取消且无需预付。",
+      "Adina 官网与房型基础信息已核验；2026-07-28 的价格记录仅对应旧行程 10 月 7—9 日两晚。当前 10 月 8—10 日两晚、2 人 1 间的精确库存、含税总价、早餐、付款和退改尚待重新打开官网核验，日期不同的旧两晚价格不会作为当前报价。",
     officialStatusEn:
-      "Verified direct for 7–9 Oct 2026, two adults and one room. The Premier Studio has a queen bed; the eClub winter package totals NZD 313.88 tax-inclusive with breakfast for two, one parking space, noon checkout and free cancellation until 6 Oct.",
+      "The Adina website and basic room information were checked, but the saved rate applies only to 7–9 Oct. Exact availability, tax-inclusive total, breakfast, payment and cancellation terms for the current two-night stay on 8–10 Oct require a fresh direct check; the old total is not a current quote because the dates differ.",
     officialVerifiedAt: "2026-07-28",
     officialUrl:
       "https://adinahotels.com/en/apartments/auckland-britomart/",
     officialBookingUrl:
-      "https://reservations.adinahotels.com/?adult=2&arrive=2026-10-07&chain=14687&child=0&config=SBE&currency=NZD&depart=2026-10-09&hotel=66054&level=hotel&locale=en-US&productcurrency=NZD&room=SPR&rooms=1&theme=ADISBE",
+      "https://reservations.adinahotels.com/?adult=2&arrive=2026-10-08&chain=14687&child=0&config=SBE&currency=NZD&depart=2026-10-10&hotel=66054&level=hotel&locale=en-US&productcurrency=NZD&room=SPR&rooms=1&theme=ADISBE",
     bookingUrl:
       "https://www.booking.com/hotel/nz/adina-apartment-auckland-britomart.html",
     agodaUrl:
@@ -216,9 +220,9 @@ export const aucklandCityHotels = [
     recommendation: "酒店型性价比",
     recommendationEn: "Hotel value",
     summary:
-      "位置评分 9.4，标准酒店服务比公寓更直接；高级大床房两晚价格接近 Adina 的可取消档。",
+      "位置评分 9.4，标准酒店服务比公寓更直接；当前 10 月 8—10 日两晚价格尚未核验，旧 10 月 7—9 日两晚快照仅用于了解历史房型与渠道情况。",
     summaryEn:
-      "A conventional hotel with a 9.4 location score and a competitive king-room total.",
+      "A conventional hotel with a 9.4 location score; the current 8–10 Oct two-night total still needs verification.",
     access:
       "CBD 步行范围；前往 Queen Street、Commercial Bay 和 Britomart 均方便",
     accessEn: "Walkable to Queen Street, Commercial Bay and Britomart",
@@ -321,19 +325,19 @@ export const aucklandCityHotels = [
       },
     },
     availabilityNote:
-      "官网与 Booking.com 出现渠道库存差异：官网精确日期查询无房，Booking.com 仍显示两种大床房可订；预订时以实际进入的渠道结算页为准。",
+      "2026-07-28 的官网无房与 Booking.com 有房记录只对应旧行程 10 月 7—9 日两晚。当前改为 10 月 8—10 日两晚，晚数相同但日期不同，所有渠道库存与总价均待重新核验。",
     availabilityNoteEn:
-      "Channel inventory differs: the direct engine has no availability for the exact stay, while Booking.com still lists both king-room categories. Treat each channel's checkout as authoritative.",
-    officialStatus: "exact-date-unavailable",
+      "The direct-unavailable and Booking.com-available records from 28 Jul apply only to 7–9 Oct. Inventory and totals for the current 8–10 Oct two-night stay must be checked again on every channel because the exact dates differ.",
+    officialStatus: null,
     officialStatusDetail:
-      "2026-07-28 已从 Hotel Grand Chancellor Auckland 官网进入官方预订引擎，查询 10 月 7—9 日、1 间、2 人；入住条件栏明确显示 1 room / 2 adults，结果页提示所选日期无房。官网首页的“Rates from”不是本次日期报价，未写入比较。",
+      "Hotel Grand Chancellor 官网与房型基础信息已核验；2026-07-28 的无房结果仅对应 10 月 7—9 日两晚。当前 10 月 8—10 日两晚、2 人 1 间的官网库存和精确总价待重新查询，不能沿用不同日期的旧结论。",
     officialStatusEn:
-      "Verified on 28 Jul 2026 through Hotel Grand Chancellor Auckland's direct booking engine for 7–9 Oct, one room and two adults. The occupancy control shows 1 room / 2 adults and the results state no availability for the selected dates. Generic homepage 'Rates from' prices were not used.",
+      "The Hotel Grand Chancellor website and room basics were checked, but the no-availability result from 28 Jul applies only to 7–9 Oct. Direct availability and the exact total for the current 8–10 Oct two-night stay, two adults and one room, require a fresh search.",
     officialVerifiedAt: "2026-07-28",
     officialUrl:
       "https://www.grandchancellorhotels.com/hotel-grand-chancellor-auckland",
     officialBookingUrl:
-      "https://www.grandchancellorhotels.com/hotel-grand-chancellor-auckland/book/accommodations?Adults=2&Children=0&DateIn=10/07/26&DateOut=10/09/26&HotelId=98773&LanguageID=1&Rooms=1",
+      "https://www.grandchancellorhotels.com/hotel-grand-chancellor-auckland/book/accommodations?Adults=2&Children=0&DateIn=10/08/26&DateOut=10/10/26&HotelId=98773&LanguageID=1&Rooms=1",
     bookingUrl:
       "https://www.booking.com/hotel/nz/grand-chancellor-auckland.html",
     agodaUrl:
@@ -347,9 +351,9 @@ export const aucklandCityHotels = [
     recommendation: "含早可取消",
     recommendationEn: "Breakfast and flexibility",
     summary:
-      "市景超大床房含早餐、可免费取消且到店付款；位置评分 9.5，适合希望条款更稳、早上不用找早餐的人。",
+      "位置评分 9.5，官网与平台均有明确 King 房型；含早、取消和到店付款记录来自 10 月 7—9 日旧快照，当前 10 月 8—10 日两晚条款需重新核验。",
     summaryEn:
-      "A city-view king room with breakfast, free cancellation and pay-at-property terms.",
+      "A 9.5 location score and clearly identified king categories; breakfast, cancellation and pay-at-property details come from the old 7–9 Oct snapshot and need rechecking for 8–10 Oct.",
     access: "Queen Street 与 Commercial Bay 步行范围；位置评分 9.5",
     accessEn: "Walkable to Queen Street and Commercial Bay; location score 9.5",
     parking: "市中心付费停车；本段无租车需求。",
@@ -381,16 +385,15 @@ export const aucklandCityHotels = [
         destinationQuery: "Newmarket Auckland",
       },
     ],
-    strengths: ["房价包含早餐", "明确免费取消", "无需预付、到店付款", "超大床"],
-    cautions: ["两晚总价高于 Adina", "最便宜大床房仅 20 m²"],
+    strengths: ["官网与平台均有明确 King 房型", "位置评分 9.5", "步行可达 Queen Street 与 Commercial Bay"],
+    cautions: ["10 月 8—10 日精确总价待重新核验，日期不同的旧两晚报价不可比较", "最便宜大床房仅 20 m²"],
     strengthsEn: [
-      "Breakfast included",
-      "Clearly stated cancellation terms",
-      "No prepayment; pay at the property",
-      "King-bed option",
+      "Clearly identified king categories on both direct and platform pages",
+      "9.5 location score",
+      "Walkable to Queen Street and Commercial Bay",
     ],
     cautionsEn: [
-      "The two-night total is higher than Adina",
+      "The exact 8–10 Oct total needs a fresh check; the old 7–9 Oct quote is not comparable",
       "The lowest-priced king room is only 20 m²",
     ],
     ratings: [
@@ -424,9 +427,9 @@ export const aucklandCityHotels = [
     ],
     hotelImages: [],
     availabilityNote:
-      "IHG 官网已按 2026 年 10 月 7—9 日、2 人 1 间核验：1 King Standard With Free Breakfast（20 m²、高楼层城市景、1 张 King 床）可订。IHG 会员 Advance Saver 两晚含税费总价 NZD 428，9 月 7 日前可更改或取消；Best Flexible 会员总价 NZD 558，10 月 6 日前可更改或取消。两档均含免费早餐、无需预付并到店付款。只有这一项可与现有 20 m² 标准 King 安全映射；Standard With Free Breakfast 与 Upgraded Standard 均不保证到店房型偏好，因此未挂到 Queen 或 28 m² 市景超级特大床房。",
+      "IHG 官网房型基础信息已核验；2026-07-28 的可订与价格记录只对应 10 月 7—9 日两晚。当前 10 月 8—10 日两晚的库存、含税总价与退改尚待重新查询，日期不同的旧两晚总价不用于当前比较。",
     availabilityNoteEn:
-      "Verified on IHG for 7–9 Oct 2026, two adults and one room: 1 King Standard With Free Breakfast (20 m², high-floor city view and one king bed) was available. The two-night tax-and-fee-inclusive IHG member total was NZD 428 on Advance Saver, changeable or cancellable through 7 Sep, or NZD 558 on Best Flexible, changeable or cancellable through 6 Oct. Both include free breakfast, require no prepayment and are payable at the property. This is the only official category that can be safely matched to the existing 20 m² standard king; Standard With Free Breakfast and Upgraded Standard do not guarantee the room preference at check-in and are not mapped to the queen or 28 m² city-view super-king categories.",
+      "The IHG website and room basics were checked, but the availability and prices saved on 28 Jul apply only to 7–9 Oct. Inventory, tax-inclusive total and terms for the current 8–10 Oct stay need a fresh search; the old total is not used because the exact dates differ.",
     rateSnapshots: {
       "2026-10-07/2026-10-09": {
         roomRates: {
@@ -494,16 +497,16 @@ export const aucklandCityHotels = [
         },
       },
     },
-    officialStatus: "exact-rate-verified",
+    officialStatus: null,
     officialStatusDetail:
-      "2026-07-28 已在 IHG 官网实际带入 10 月 7—9 日、2 人 1 间：已核验 1 King Standard With Free Breakfast 的含税费两晚总价、免费早餐、付款与取消条款。该官网房型为 20 m²，只与现有 standard-king 映射；两个不保证到店房型偏好的泛标准房未写入 Queen 或 28 m² 市景超级特大床房。",
+      "IHG 官网与 1 King Standard With Free Breakfast 房型基础信息已核验；2026-07-28 的价格、早餐、付款与取消记录仅对应 10 月 7—9 日两晚。当前 10 月 8—10 日两晚、2 人 1 间的精确官网结果待重新核验。",
     officialStatusEn:
-      "Verified on IHG on 28 Jul 2026 for 7–9 Oct 2026, two adults and one room. The tax-and-fee-inclusive totals, free breakfast, payment and cancellation terms for 1 King Standard With Free Breakfast were checked. This 20 m² official category is mapped only to the existing standard-king; the two generic standard categories that do not guarantee the room preference at check-in are not assigned to the queen or 28 m² city-view super-king rooms.",
+      "The IHG website and the 1 King Standard With Free Breakfast room basics were checked. Prices, breakfast, payment and cancellation details saved on 28 Jul apply only to 7–9 Oct. The exact direct result for the current 8–10 Oct two-night stay, two adults and one room, still needs verification.",
     officialVerifiedAt: "2026-07-28",
     officialUrl:
       "https://www.ihg.com/holidayinnexpress/hotels/us/en/auckland/aklcc/hoteldetail",
     officialBookingUrl:
-      "https://www.ihg.com/hotels/us/en/find-hotels/select-roomrate?qDest=58%20Albert%20Street%2C%20Auckland%201010%2C%20New%20Zealand&qPt=CASH&qCiD=7&qCoD=9&qCiMy=092026&qCoMy=092026&qAdlt=2&qChld=0&qRms=1&qAAR=6CBARC&qSlH=AKLCC&qAkamaiCC=CN&srb_u=1&qExpndSrch=false&qFS=false&qSrt=sAV&qBrs=6c.hi.ex.sb.ul.ic.cp.cw.in.vn.cv.rs.ki.kd.ma.sp.va.re.vx.nd.sx.we.lx.rn.sn.nu.ge.fa&qWch=0&qSmP=0&qRad=30&qRdU=mi&setPMCookies=true&qpMbw=0&qErm=false&qpMn=1&qpMbx=0&qLoSe=false&qDr=1&qSt=Holiday%20Inn%20Express%20Auckland%20City%20Centre&qRmFltr=",
+      "https://www.ihg.com/hotels/us/en/find-hotels/select-roomrate?qDest=58%20Albert%20Street%2C%20Auckland%201010%2C%20New%20Zealand&qPt=CASH&qCiD=8&qCoD=10&qCiMy=092026&qCoMy=092026&qAdlt=2&qChld=0&qRms=1&qAAR=6CBARC&qSlH=AKLCC&qAkamaiCC=CN&srb_u=1&qExpndSrch=false&qFS=false&qSrt=sAV&qBrs=6c.hi.ex.sb.ul.ic.cp.cw.in.vn.cv.rs.ki.kd.ma.sp.va.re.vx.nd.sx.we.lx.rn.sn.nu.ge.fa&qWch=0&qSmP=0&qRad=30&qRdU=mi&setPMCookies=true&qpMbw=0&qErm=false&qpMn=1&qpMbx=0&qLoSe=false&qDr=1&qSt=Holiday%20Inn%20Express%20Auckland%20City%20Centre&qRmFltr=",
     bookingUrl:
       "https://www.booking.com/hotel/nz/holiday-inn-express-auckland-city-centre-an-ihg.html",
     agodaUrl:

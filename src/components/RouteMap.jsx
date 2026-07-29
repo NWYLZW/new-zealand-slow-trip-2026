@@ -6,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
+import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import ExploreIcon from "@mui/icons-material/Explore";
 import FlightIcon from "@mui/icons-material/Flight";
@@ -19,7 +20,6 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ParkIcon from "@mui/icons-material/Park";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import TerrainIcon from "@mui/icons-material/Terrain";
-import WhatshotIcon from "@mui/icons-material/Whatshot";
 import { DirectionsRenderer, GoogleMap, InfoWindowF, MarkerF, PolylineF, useJsApiLoader } from "@react-google-maps/api";
 import { Control, DomEvent, divIcon } from "leaflet";
 import { MapContainer, Marker, Polyline, TileLayer, Tooltip as LeafletTooltip, useMap } from "react-leaflet";
@@ -33,28 +33,27 @@ import { eventTitleEn, mapStopEn, routeSegmentEn, routeText } from "../routeI18n
 import { socialGuidesByEvent } from "../socialGuides";
 import { EventRouteMap } from "./EventRouteMap";
 import { SocialGuideCard } from "./SocialGuideCard";
-import { WildlifeRouteOption } from "./WildlifeRouteOption";
 
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const googleRouteActions = {
   overview: {
     label: "在 Google 地图打开南岛自驾",
-    origin: "Queenstown New Zealand",
-    destination: "Wanaka New Zealand",
-    waypoints: ["Arrowtown New Zealand", "Crown Range Summit", "Cardrona Hotel"],
+    origin: "Budget Car Rental Queenstown Airport",
+    destination: "Budget Car Rental Christchurch Airport",
+    waypoints: ["Arrowtown New Zealand", "Wanaka New Zealand", "Aoraki Mount Cook Village", "Church of the Good Shepherd Lake Tekapo", "Oamaru Blue Penguin Colony", "Novotel Christchurch Cathedral Square"],
   },
   south: {
     label: "在 Google 地图打开南岛自驾",
-    origin: "Queenstown New Zealand",
-    destination: "Wanaka New Zealand",
-    waypoints: ["Arrowtown New Zealand", "Crown Range Summit", "Cardrona Hotel"],
+    origin: "Budget Car Rental Queenstown Airport",
+    destination: "Budget Car Rental Christchurch Airport",
+    waypoints: ["Arrowtown New Zealand", "Wanaka New Zealand", "Aoraki Mount Cook Village", "Church of the Good Shepherd Lake Tekapo", "Oamaru Blue Penguin Colony", "Novotel Christchurch Cathedral Square"],
   },
   north: {
-    label: "在 Google 地图打开北岛自驾",
-    origin: "Auckland International Airport",
-    destination: "Auckland International Airport",
-    waypoints: ["The Shire's Rest Hobbiton", "Te Puia Rotorua"],
+    label: "在 Google 地图查看奥克兰往返霍比屯大巴路线",
+    origin: "SkyCity Coach Terminal, 102 Hobson Street, Auckland 1010, New Zealand",
+    destination: "SkyCity Coach Terminal, 102 Hobson Street, Auckland 1010, New Zealand",
+    waypoints: ["Hobbiton Movie Set, 501 Buckland Road, Hinuera 3472, New Zealand"],
   },
 };
 
@@ -62,7 +61,6 @@ const stopByTag = new Map(mapStops.map((stop) => [stop.tag, stop]));
 const placePositions = {
   shenzhenAirport: { lat: 22.6393, lng: 113.8107 },
   aucklandAirport: { lat: -37.0082, lng: 174.785 },
-  aucklandCbd: { lat: -36.8509, lng: 174.7645 },
   queenstownAirport: { lat: -45.0211, lng: 168.739 },
   christchurchAirport: { lat: -43.4894, lng: 172.5322 },
   christchurchCbd: { lat: -43.5321, lng: 172.6362 },
@@ -178,49 +176,46 @@ const routeSegments = [
     modes: ["overview", "south"],
   },
   {
-    id: "aoraki-christchurch",
+    id: "aoraki-oamaru",
     sequence: 8,
     date: "10/6",
-    label: "库克山 → 基督城",
-    transport: "road",
-    from: "AOR",
-    to: "CHC",
-    toPosition: placePositions.christchurchCbd,
-    waypoints: [{ lat: -44.0047, lng: 170.4771 }],
-    modes: ["overview", "south"],
-  },
-  {
-    id: "aoraki-oamaru-option",
-    sequence: "8A",
-    colorIndex: 7,
-    date: "10/6",
-    label: "库克山 → 蒂卡波 → 奥马鲁（备选）",
+    label: "库克山 → 蒂卡波 → 奥马鲁",
     transport: "road",
     from: "AOR",
     to: "OAM",
     waypoints: [{ lat: -44.0047, lng: 170.4771 }],
     modes: ["overview", "south"],
-    optional: true,
     color: "#357b73",
   },
   {
-    id: "oamaru-christchurch-option",
-    sequence: "8B",
-    colorIndex: 7,
+    id: "oamaru-christchurch",
+    sequence: 9,
     date: "10/7",
-    label: "奥马鲁 → 基督城机场（备选）",
+    label: "奥马鲁 → 基督城",
     transport: "road",
     from: "OAM",
     to: "CHC",
-    toPosition: placePositions.christchurchAirport,
+    toPosition: placePositions.christchurchCbd,
     modes: ["overview", "south"],
-    optional: true,
     color: "#357b73",
   },
   {
+    id: "christchurch-car-return",
+    sequence: 10,
+    date: "10/8",
+    label: "基督城市中心 → 基督城机场",
+    transport: "road",
+    from: "CHC",
+    to: "CHC",
+    fromPosition: placePositions.christchurchCbd,
+    toPosition: placePositions.christchurchAirport,
+    modes: ["overview", "south"],
+    color: "#9d7f66",
+  },
+  {
     id: "chc-akl",
-    sequence: 9,
-    date: "10/7",
+    sequence: 11,
+    date: "10/8",
     label: "基督城 → 奥克兰",
     transport: "flight",
     from: "CHC",
@@ -230,66 +225,50 @@ const routeSegments = [
     modes: ["overview", "south"],
   },
   {
-    id: "akl-cbd-transfer",
-    sequence: 10,
-    date: "10/7",
-    label: "奥克兰机场 → 市中心",
-    transport: "road",
-    from: "AKL",
-    to: "AKL",
-    fromPosition: placePositions.aucklandAirport,
-    toPosition: placePositions.aucklandCbd,
-    modes: ["overview", "south", "north"],
-  },
-  {
-    id: "auckland-shopping",
-    sequence: 11,
-    date: "10/8",
-    label: "奥克兰市区购物动线",
-    transport: "road",
-    from: "AKL",
-    to: "AKL",
-    fromPosition: placePositions.aucklandCbd,
-    toPosition: placePositions.aucklandCbd,
-    waypoints: [placePositions.aucklandCbd],
-    modes: ["overview", "north"],
-  },
-  {
-    id: "akl-hobbiton",
+    id: "akl-akc-transfer",
     sequence: 12,
-    date: "10/9",
-    label: "奥克兰市中心 → 机场取车 → 霍比屯",
+    date: "10/8",
+    label: "奥克兰机场 → 奥克兰市中心",
     transport: "road",
     from: "AKL",
-    to: "HBT",
-    fromPosition: placePositions.aucklandCbd,
-    waypoints: [placePositions.aucklandAirport],
+    to: "AKC",
+    fromPosition: placePositions.aucklandAirport,
     modes: ["overview", "north"],
   },
   {
-    id: "hobbiton-rotorua",
+    id: "akc-hobbiton-coach",
     sequence: 13,
     date: "10/9",
-    label: "霍比屯 → 罗托鲁瓦",
+    label: "奥克兰市中心 → 霍比屯（大巴）",
     transport: "road",
-    from: "HBT",
-    to: "ROT",
+    from: "AKC",
+    to: "HBT",
     modes: ["overview", "north"],
   },
   {
-    id: "rotorua-akl",
+    id: "hobbiton-akc-coach",
     sequence: 14,
-    date: "10/10",
-    label: "罗托鲁瓦 → 奥克兰机场",
+    date: "10/9",
+    label: "霍比屯 → 奥克兰市中心（大巴）",
     transport: "road",
-    from: "ROT",
+    from: "HBT",
+    to: "AKC",
+    modes: ["overview", "north"],
+  },
+  {
+    id: "akc-akl-transfer",
+    sequence: 15,
+    date: "10/10",
+    label: "奥克兰市中心 → 奥克兰机场",
+    transport: "road",
+    from: "AKC",
     to: "AKL",
     toPosition: placePositions.aucklandAirport,
     modes: ["overview", "north"],
   },
   {
     id: "akl-kul",
-    sequence: 15,
+    sequence: 16,
     date: "10/11",
     label: "奥克兰 → 吉隆坡",
     transport: "flight",
@@ -300,7 +279,7 @@ const routeSegments = [
   },
   {
     id: "kul-szx",
-    sequence: 16,
+    sequence: 17,
     date: "10/11",
     label: "吉隆坡 → 深圳",
     transport: "flight",
@@ -333,13 +312,13 @@ const routeConfigs = {
     center: { lat: -44.35, lng: 169.7 },
     zoom: 6,
     stopTags: ["AKL", "ZQN", "WTP", "WKA", "AOR", "TEK", "OAM", "KAT", "CHC"],
-    calendarTitle: "南岛行程 · 9月28日—10月7日",
+    calendarTitle: "南岛行程 · 9月28日—10月8日",
   },
   north: {
-    center: { lat: -37.55, lng: 175.45 },
+    center: { lat: -37.35, lng: 175.2 },
     zoom: 7,
-    stopTags: ["AKL", "HBT", "ROT"],
-    calendarTitle: "北岛行程 · 10月8日—10月11日",
+    stopTags: ["AKL", "AKC", "HBT"],
+    calendarTitle: "北岛行程 · 10月9日—10月11日",
   },
 };
 
@@ -388,7 +367,6 @@ const eventColors = {
   christchurch: "#9d7f66",
   auckland: "#b98335",
   hobbiton: "#7f9f49",
-  rotorua: "#b46e55",
   boat: "#347e90",
   helicopter: "#6f7db8",
   stargazing: "#4b678f",
@@ -397,6 +375,7 @@ const eventIconMap = {
   calendar: CalendarTodayIcon,
   flight: FlightTakeoffIcon,
   domesticFlight: FlightIcon,
+  bus: DirectionsBusIcon,
   car: DirectionsCarIcon,
   boat: DirectionsBoatIcon,
   hotel: HotelIcon,
@@ -405,7 +384,6 @@ const eventIconMap = {
   shopping: ShoppingBagIcon,
   culture: LocalActivityIcon,
   movie: LocalMoviesIcon,
-  volcano: WhatshotIcon,
   stargazing: NightlightIcon,
 };
 const internationalFlights = {
@@ -465,42 +443,46 @@ const eventGoogleRoutes = {
     waypoints: ["Lindis Pass Viewpoint", "Omarama New Zealand", "Lake Pukaki Viewpoint"],
     travelmode: "driving",
   },
-  "蒂卡波到基督城": {
-    origin: "Mt Cook Lodge & Motels",
-    destination: "Novotel Christchurch Cathedral Square",
-    waypoints: ["Church of the Good Shepherd Lake Tekapo"],
-    travelmode: "driving",
-  },
-  "奥马鲁企鹅与海狗备选": {
+  "蒂卡波到奥马鲁": {
     origin: "Mt Cook Lodge & Motels",
     destination: "Oamaru Blue Penguin Colony",
     waypoints: ["Church of the Good Shepherd Lake Tekapo"],
     travelmode: "driving",
   },
-  "奥马鲁直达基督城机场": {
+  "奥马鲁企鹅与海狗": {
     origin: "Oamaru New Zealand",
+    destination: "Oamaru Blue Penguin Colony",
+    waypoints: ["Oamaru Harbour New Zealand"],
+    travelmode: "driving",
+  },
+  "奥马鲁前往基督城": {
+    origin: "Oamaru New Zealand",
+    destination: "Novotel Christchurch Cathedral Square",
+    waypoints: ["Caroline Bay Timaru", "Ashburton New Zealand"],
+    travelmode: "driving",
+  },
+  "前往机场飞奥克兰": {
+    origin: "Novotel Christchurch Cathedral Square",
+    destination: "Christchurch Airport Domestic Terminal",
+    travelmode: "driving",
+  },
+  "按更新订单还车": {
+    origin: "Novotel Christchurch Cathedral Square",
     destination: "Budget Car Rental Christchurch Airport",
     travelmode: "driving",
   },
-  "还车飞奥克兰": {
-    origin: "Budget Car Rental Christchurch Airport",
-    destination: "Britomart Auckland",
-    waypoints: ["Christchurch Airport", "Auckland Airport Domestic Terminal"],
-  },
-  "取车前往霍比屯": {
-    origin: "Britomart Auckland",
+  "大巴前往霍比屯": {
+    origin: "SkyCity Coach Terminal, 102 Hobson Street, Auckland 1010, New Zealand",
     destination: "The Shire's Rest Hobbiton Movie Set",
-    waypoints: ["Auckland International Airport"],
     travelmode: "driving",
   },
-  "前往罗托鲁瓦": {
+  "大巴返回奥克兰": {
     origin: "The Shire's Rest Hobbiton Movie Set",
-    destination: "Millennium Hotel Rotorua",
-    waypoints: ["Redwoods Whakarewarewa Forest Rotorua"],
+    destination: "SkyCity Coach Terminal, 102 Hobson Street, Auckland 1010, New Zealand",
     travelmode: "driving",
   },
-  "返回奥克兰机场": {
-    origin: "Millennium Hotel Rotorua",
+  "前往奥克兰机场": {
+    origin: "Adina Apartment Hotel Auckland Britomart",
     destination: "Auckland Airport International Terminal",
     travelmode: "driving",
   },
@@ -554,32 +536,35 @@ const calendarEventGroupsByDate = {
   ],
   "10月5日": [
     { title: "自驾前往库克山", time: "08:45—14:15", color: eventColors.mountCookRoad, icon: "car", drive: { distanceKm: 205, durationZh: "约 2 小时 45 分钟", durationEn: "about 2 hr 45 min" }, items: [0, 1, 2, 3, 4], segmentIds: ["wanaka-aoraki"], stopTags: ["WKA", "AOR"] },
-    { title: "冰川直升机", time: "15:30 前后", color: eventColors.helicopter, icon: "domesticFlight", items: [5], segmentIds: [], stopTags: ["AOR"] },
+    { title: "冰川直升机", time: "15:30 前后", timeEn: "around 15:30", color: eventColors.helicopter, icon: "domesticFlight", items: [5], segmentIds: [], stopTags: ["AOR"] },
     { title: "库克山观星夜", time: "17:00—21:30", color: eventColors.stargazing, icon: "stargazing", items: [6, 7, 8], segmentIds: [], stopTags: ["AOR"] },
   ],
   "10月6日": [
     { title: "库克山候补安排", time: "08:30—10:00", color: eventColors.mountCook, icon: "nature", items: [0, 1], segmentIds: [], stopTags: ["AOR"] },
-    { title: "蒂卡波到基督城", time: "11:30—17:30", color: eventColors.christchurchRoad, icon: "car", drive: { distanceKm: 330, durationZh: "约 4 小时 15 分钟", durationEn: "about 4 hr 15 min" }, items: [2, 3, 4], segmentIds: ["aoraki-christchurch"], stopTags: ["AOR", "TEK", "CHC"] },
+    { title: "蒂卡波到奥马鲁", time: "10:00—15:30", color: eventColors.wildlifeRoad, icon: "car", drive: { distanceKm: 281, durationZh: "约 3 小时 26 分钟", durationEn: "about 3 hr 26 min" }, items: [1, 2, 3, 4], segmentIds: ["aoraki-oamaru"], stopTags: ["AOR", "TEK", "OAM"] },
+    { title: "奥马鲁企鹅与海狗", time: "16:30—活动后", timeEn: "16:30—after the viewing", color: eventColors.wildlife, icon: "nature", items: [5, 6, 7, 8, 9], segmentIds: [], stopTags: ["OAM"] },
   ],
   "10月7日": [
-    { title: "基督城城市半日", time: "10:00—13:00", color: eventColors.christchurch, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["CHC"] },
-    { title: "还车飞奥克兰", calendarLabel: "JQ242", calendarLabelEn: "JQ242", isFlightTransfer: true, time: "15:30—22:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [3, 4, 5, 6], flights: [{ flightNumber: "JQ242", date: "2026-10-07", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待添加托运行李" }], segmentIds: ["chc-akl", "akl-cbd-transfer"], stopTags: ["CHC", "AKL"] },
+    { title: "奥马鲁前往基督城", time: "09:30—14:30", color: eventColors.wildlifeRoad, icon: "car", drive: { distanceKm: 250, durationZh: "约 3 小时 15 分钟", durationEn: "about 3 hr 15 min" }, items: [0, 1, 2, 3], segmentIds: ["oamaru-christchurch"], stopTags: ["OAM", "CHC"], stopOverrides: { CHC: { name: "基督城市中心", date: "10/7—10/8", desc: "市中心住1晚；租车保留至10月8日，具体还车时刻待新确认邮件", position: [-43.5321, 172.6362] } } },
+    { title: "基督城补充半日", time: "15:30—18:30", color: eventColors.christchurch, icon: "city", items: [4, 5, 6], segmentIds: [], stopTags: ["CHC"], stopOverrides: { CHC: { name: "基督城市中心", date: "10/7—10/8", desc: "市中心住1晚；租车保留至10月8日，具体还车时刻待新确认邮件", position: [-43.5321, 172.6362] } } },
   ],
   "10月8日": [
-    { title: "奥克兰购物日", time: "09:00—19:30", color: eventColors.auckland, icon: "shopping", items: [0, 1, 2, 3, 4, 5], segmentIds: ["auckland-shopping"], stopTags: ["AKL"] },
+    { title: "基督城补充半日", time: "09:00—14:15", color: eventColors.christchurch, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["CHC"], stopOverrides: { CHC: { name: "基督城市中心", date: "10/8", desc: "退房寄存行李后继续慢游，14:15取行李", position: [-43.5321, 172.6362] } } },
+    { title: "按更新订单还车", time: "下午 · 待确认", timeEn: "Afternoon · to confirm", color: eventColors.christchurchRoad, icon: "car", items: [3, 4, 5], segmentIds: ["christchurch-car-return"], stopTags: ["CHC"] },
+    { title: "前往机场飞奥克兰", calendarLabel: "JQ242", calendarLabelEn: "JQ242", isFlightTransfer: true, time: "18:30—22:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [6, 7, 8], flights: [{ flightNumber: "JQ242", date: "2026-10-08", from: "基督城 CHC", to: "奥克兰 AKL", departure: "20:30", arrival: "21:50", departureTerminal: "以出票信息为准", arrivalTerminal: "国内航站楼", cabin: "以出票信息为准", status: "待预订 / 待加行李", priceNoteZh: "Google Flights 核验：NZD 156/人起；2 人基础 NZD 312，必要税费已含，行李等可选费用另计。", priceNoteEn: "Checked on Google Flights: from NZD 156 per person; NZD 312 base fare for two, including mandatory taxes but excluding optional extras such as baggage.", reliabilityNoteZh: "Google Flights 提示该航班通常可能晚点 30 分钟以上；次日 07:00 霍比屯大巴报到，出票时需接受休息时间较短。", reliabilityNoteEn: "Google Flights notes that this service is often delayed by 30+ minutes. The Hobbiton coach check-in is at 07:00 the next morning, so this leaves a short rest window." }], segmentIds: ["chc-akl", "akl-akc-transfer"], stopTags: ["CHC", "AKL", "AKC"] },
   ],
   "10月9日": [
-    { title: "取车前往霍比屯", time: "07:30—11:20", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 186, durationZh: "纯驾驶约 2 小时 45 分钟，另留取车时间", durationEn: "about 2 hr 45 min driving, plus car pickup" }, items: [0, 1, 2, 3], segmentIds: ["akl-hobbiton"], stopTags: ["AKL", "HBT"] },
-    { title: "霍比屯游览", time: "12:00—14:30", color: eventColors.hobbiton, icon: "movie", items: [4, 5], segmentIds: [], stopTags: ["HBT"] },
-    { title: "前往罗托鲁瓦", time: "16:30—17:30", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 75, durationZh: "约 1 小时", durationEn: "about 1 hr" }, items: [6, 7], segmentIds: ["hobbiton-rotorua"], stopTags: ["HBT", "ROT"] },
+    { title: "大巴前往霍比屯", time: "07:00—09:30", color: eventColors.northRoad, icon: "bus", items: [0, 1, 2], segmentIds: ["akc-hobbiton-coach"], stopTags: ["AKC", "HBT"] },
+    { title: "霍比屯游览", time: "09:30—13:15", color: eventColors.hobbiton, icon: "movie", items: [3], segmentIds: [], stopTags: ["HBT"] },
+    { title: "大巴返回奥克兰", time: "13:15—15:45后", timeEn: "13:15—after 15:45", color: eventColors.northRoad, icon: "bus", items: [4, 5, 6], segmentIds: ["hobbiton-akc-coach"], stopTags: ["HBT", "AKC"] },
   ],
   "10月10日": [
-    { title: "Te Puia 地热文化", time: "09:00—12:00", color: eventColors.rotorua, icon: "volcano", items: [0, 1], segmentIds: [], stopTags: ["ROT"] },
-    { title: "返回奥克兰机场", time: "13:30—18:00", color: eventColors.northRoad, icon: "car", drive: { distanceKm: 230, durationZh: "约 3 小时", durationEn: "about 3 hr" }, items: [2, 3, 4], segmentIds: ["rotorua-akl"], stopTags: ["ROT", "AKL"] },
+    { title: "奥克兰轻松半日", time: "09:00—13:00", color: eventColors.auckland, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["AKC"] },
+    { title: "前往奥克兰机场", time: "15:30—16:30", color: eventColors.northRoad, icon: "bus", items: [3, 4], segmentIds: ["akc-akl-transfer"], stopTags: ["AKC", "AKL"] },
     { title: "办理返程值机", time: "21:45", color: eventColors.internationalFlight, icon: "flight", items: [5], flights: internationalFlights.inbound, flightSummary, segmentIds: [], stopTags: ["AKL"] },
   ],
   "10月11日": [
-    { title: "返程回深圳", calendarLabel: "MH0132 / MH0522", calendarLabelEn: "MH0132 / MH0522", isFlightTransfer: true, time: "00:30—次日 01:15", color: eventColors.flightTransfer, icon: "flight", items: [0, 1, 2], flights: internationalFlights.inbound, flightSummary, segmentIds: ["akl-kul", "kul-szx"], stopTags: ["AKL", "KUL", "SZX"] },
+    { title: "返程回深圳", calendarLabel: "MH0132 / MH0522", calendarLabelEn: "MH0132 / MH0522", isFlightTransfer: true, time: "00:30—次日 01:15", timeEn: "00:30—01:15 next day", color: eventColors.flightTransfer, icon: "flight", items: [0, 1, 2], flights: internationalFlights.inbound, flightSummary, segmentIds: ["akl-kul", "kul-szx"], stopTags: ["AKL", "KUL", "SZX"] },
   ],
 };
 
@@ -672,7 +657,9 @@ function eventMapData(event) {
   const segments = routeSegments
     .filter((segment) => segmentIds.has(segment.id))
     .map((segment) => ({ ...segment, path: segmentPath(segment) }));
-  const stops = mapStops.filter((stop) => stopTags.has(stop.tag));
+  const stops = mapStops
+    .filter((stop) => stopTags.has(stop.tag))
+    .map((stop) => ({ ...stop, ...(event.stopOverrides?.[stop.tag] ?? {}) }));
 
   return { segments, stops };
 }
@@ -967,13 +954,13 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                             : (event.calendarLabel ?? event.title);
                           return (
                             <Chip
-                              aria-label={`${eventLabel} · ${event.time}`}
+                              aria-label={`${eventLabel} · ${language === "en" ? (event.timeEn ?? event.time) : event.time}`}
                               data-flight-transfer={event.isFlightTransfer || undefined}
                               key={[day.date, event.title].join("-")}
                               icon={<EventIcon />}
                               label={eventLabel}
                               size="small"
-                              title={event.time}
+                              title={language === "en" ? (event.timeEn ?? event.time) : event.time}
                               onClick={(clickEvent) => {
                                 clickEvent.stopPropagation();
                                 onEventSelect?.(event);
@@ -1030,7 +1017,7 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                   </Typography>
                   <Stack className="route-dialog-metrics" direction="row" useFlexGap flexWrap="wrap">
                     <Typography className="route-dialog-range">
-                      {language === "en" ? `Event window · ${selectedEvent.time}` : `行程时段 · ${selectedEvent.time}`}
+                      {language === "en" ? `Event window · ${selectedEvent.timeEn ?? selectedEvent.time}` : `行程时段 · ${selectedEvent.time}`}
                     </Typography>
                     {selectedEvent.drive && (
                       <Typography className="route-dialog-drive">
@@ -1118,11 +1105,13 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                         <Chip label={routeText(flight.status, language)} size="small" style={{ "--event-color": selectedEvent.color }} />
                       </Stack>
                       <Typography className="route-flight-date">{flight.date} · {routeText(flight.cabin, language)}</Typography>
+                      {flight.priceNoteZh && <Typography className="route-flight-date">{language === "en" ? flight.priceNoteEn : flight.priceNoteZh}</Typography>}
                       <Box className="route-flight-route">
                         <Box><Typography className="route-flight-time">{flight.departure}</Typography><Typography>{flight.from}</Typography><Typography variant="caption">{routeText(flight.departureTerminal, language)}</Typography></Box>
                         <Typography className="route-flight-arrow">→</Typography>
                         <Box><Typography className="route-flight-time">{flight.arrival}</Typography><Typography>{flight.to}</Typography><Typography variant="caption">{routeText(flight.arrivalTerminal, language)}</Typography></Box>
                       </Box>
+                      {flight.reliabilityNoteZh && <Typography className="route-dialog-stay">{language === "en" ? flight.reliabilityNoteEn : flight.reliabilityNoteZh}</Typography>}
                     </Box>
                   ))}
                   {selectedEvent.flightSummary?.note && <Typography className="route-dialog-stay">{language === "en" ? "Both travellers are ticketed. Names, ID numbers, booking references and e-ticket numbers are not shown on this public page." : selectedEvent.flightSummary.note}</Typography>}
@@ -1441,11 +1430,7 @@ function LeafletRouteMap({ language = "zh", mode }) {
             position={toLatLng(stop.tag)}
             zIndexOffset={600}
           >
-            <LeafletTooltip
-              direction={stop.tag === "TEK" ? "right" : "top"}
-              offset={stop.tag === "TEK" ? [12, 0] : [0, -8]}
-              permanent={stop.tag === "TEK"}
-            >
+            <LeafletTooltip direction="top" offset={[0, -8]}>
               <strong>{language === "en" ? (mapStopEn[stop.tag]?.[0] ?? stop.name) : stop.name}</strong><br />
               {stop.tag} · {stop.date}<br />
               {language === "en" ? (mapStopEn[stop.tag]?.[1] ?? stop.desc) : stop.desc}
@@ -1541,34 +1526,7 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
   const baseEventById = useMemo(() => new Map(
     localizedDays.flatMap((day) => getCalendarEvents(day).map((event) => [eventUrlId(event), event])),
   ), [localizedDays]);
-  const wildlifeOptionEvent = useMemo(() => {
-    const optionDay = localizedDays.find((day) => (day.dateKey ?? day.date) === "10月6日");
-    if (!optionDay) return null;
-    return {
-      color: eventColors.wildlife,
-      day: {
-        ...optionDay,
-        alternative: null,
-        displayDate: language === "en" ? "6–7 Oct" : optionDay.displayDate,
-        highlight: null,
-        stay: language === "en" ? "Ōamaru accommodation · not selected or booked." : "住宿 · 奥马鲁住宿尚未选择、尚未预订。",
-        title: language === "en" ? "Aoraki / Mount Cook → Ōamaru → Christchurch Airport" : "库克山 → 奥马鲁 → 基督城机场",
-      },
-      drive: { distanceKm: 281, durationZh: "约 3 小时 26 分钟", durationEn: "about 3 hr 26 min" },
-      events: optionDay.events.slice(5, 9),
-      icon: "nature",
-      media: eventMediaByTitle["奥马鲁企鹅与海狗备选"],
-      segmentIds: ["aoraki-oamaru-option", "oamaru-christchurch-option"],
-      stopTags: ["AOR", "TEK", "OAM", "CHC"],
-      time: language === "en" ? "6 Oct 10:00—about 22:00; 7 Oct drive to CHC" : "10月6日 10:00—约22:00；10月7日直达基督城机场",
-      title: "奥马鲁企鹅与海狗备选",
-    };
-  }, [language, localizedDays]);
-  const eventById = useMemo(() => {
-    const events = new Map(baseEventById);
-    if (wildlifeOptionEvent) events.set(eventUrlId(wildlifeOptionEvent), wildlifeOptionEvent);
-    return events;
-  }, [baseEventById, wildlifeOptionEvent]);
+  const eventById = baseEventById;
   const [eventView, setEventView] = useState(() => readEventUrl(eventById, mode));
   const selectedEvent = eventView ? eventById.get(eventView.eventId) ?? null : null;
   const selectRegion = mode === "overview"
@@ -1646,17 +1604,6 @@ export function RouteMap({ mode = "overview", days = itineraryDays }) {
           <LeafletRouteMap language={language} mode={mapMode} />
         )}
       </Box>
-      {(mode === "overview" || mode === "south") && (
-        <WildlifeRouteOption
-          onOpenEvent={() => {
-            if (!wildlifeOptionEvent) return;
-            const view = { eventId: eventUrlId(wildlifeOptionEvent), tab: "schedule" };
-            const currentState = history.state && typeof history.state === "object" ? history.state : {};
-            setEventView(view);
-            writeEventUrl(view, "pushState", { ...currentState, routeEventDialog: true }, mode);
-          }}
-        />
-      )}
       <RouteDayCalendar
         days={localizedDays}
         dialogTab={eventView?.tab}

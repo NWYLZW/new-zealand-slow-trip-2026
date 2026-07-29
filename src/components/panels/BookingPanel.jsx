@@ -15,7 +15,7 @@ import "./BookingPanel.css";
 
 const bookingTitleEn = {
   "flight-nz619": "NZ619 Auckland → Queenstown",
-  "south-car": "Budget South Island rental car · booked",
+  "south-car": "Budget South Island rental · return changed to 8 Oct",
   "hotel-airport": "Auckland Airport hotel",
   "hotel-auckland-city": "Central Auckland accommodation",
   "hotel-queenstown": "Queenstown accommodation",
@@ -24,12 +24,41 @@ const bookingTitleEn = {
   "mount-cook-helicopter": "Mount Cook glacier helicopter",
   "mount-cook-stargazing": "Big Sky Stargazing",
   "hotel-christchurch": "Christchurch accommodation",
-  "oamaru-wildlife-option": "Ōamaru penguin and fur-seal route option",
-  "hotel-rotorua": "Rotorua accommodation",
+  "oamaru-stay-penguins": "Ōamaru accommodation and blue-penguin evening · booking pending",
   "walter-peak": "Walter Peak cruise and barbecue",
-  "flight-jq242": "JQ242 Christchurch → Auckland",
-  "north-car": "North Island rental car",
-  hobbiton: "Hobbiton Movie Set",
+  "flight-jq242": "JQ242 Christchurch → Auckland · booking pending",
+  "north-car-cancel": "North Island Budget rental · cancellation pending",
+  hobbiton: "GreatSights Hobbiton coach day tour · booking pending",
+};
+
+const bookingDescriptionEn = {
+  "flight-nz619": "29 Sep, 11:35–13:30; confirm checked baggage.",
+  "south-car": "The booking has been changed to return at Christchurch Airport on 8 Oct. Check the new confirmation email for the exact time, updated total, vehicle, protection and whether the booking reference remains unchanged; do not reuse the former eight-24-hour duration or NZD 2,052.96 total.",
+  "hotel-airport": "One night on 28 Sep only; Novotel Auckland Airport is the current first choice.",
+  "hotel-auckland-city": "Check in late on 8 Oct and check out on 10 Oct for two nights. Expect to reach the hotel around 23:00, then leave around 06:30 on 9 Oct for the SkyCity coach check-in. The former 7–9 Oct two-night total is not valid for these new exact dates.",
+  "hotel-queenstown": "Four nights from 29 Sep; Holiday Inn Queenstown Remarkables Park is the current first choice with a verified dedicated king-bed room.",
+  "hotel-wanaka": "Two nights from 3 Oct; Wanaka Luxury Apartments is the current first choice.",
+  "mount-cook": "Booked: The Hermitage · Mt Cook Motel Studio Queen for one night on 5 Oct, including breakfast for two. The confirmation number is stored privately; NZD 504 has been paid.",
+  "mount-cook-helicopter": "Around 15:30 on 5 Oct; Glacier Highlights is about 45 minutes and NZD 1,298 for two as a reference. Confirm that weather cancellation is refundable.",
+  "mount-cook-stargazing": "Choose a later session on 5 Oct; about 75–90 minutes, from NZD 318 for two. Ask whether Mandarin commentary is available.",
+  "hotel-christchurch": "One night from 7 to 8 Oct; Novotel Christchurch Cathedral Square remains the current first choice. Recheck the exact one-night total and terms for the new dates.",
+  "oamaru-stay-penguins": "Now part of the itinerary: stay in Ōamaru on 6 Oct and attend the official 20:00 blue-penguin session. General entry is NZD 100 for two and Premium is NZD 140; accommodation and penguin tickets still need to be booked.",
+  "walter-peak": "2 Oct; prefer a lunchtime or early-afternoon departure. Allow about 3.5–4 hours.",
+  "flight-jq242": "8 Oct, 20:30–21:50. Google Flights showed a base fare from NZD 156 per person / NZD 312 for two, excluding optional baggage; verify and book directly with Jetstar.",
+  "north-car-cancel": "A real Budget booking still exists. The revised itinerary no longer collects the car, but editing this page does not cancel the booking; cancel it in Budget's booking manager and save the confirmation.",
+  hobbiton: "GS10H for 9 Oct was checked as selectable: check in at SkyCity Coach Terminal at 07:00, depart 07:15 and return around 15:30. Price shown is NZD 259 per adult / NZD 518 for two; payment-page fees are unverified. Free cancellation is stated up to two hours before departure.",
+};
+
+const bookingTitleZh = {
+  "south-car": "Budget 南岛租车 · 已改为10月8日还车",
+  "hotel-christchurch": "基督城住宿 · 10月7日住1晚",
+  "oamaru-stay-penguins": "奥马鲁住宿 + 小蓝企鹅晚场 · 待预订",
+};
+
+const bookingDescriptionZh = {
+  "south-car": "订单已改为10月8日在基督城机场还车；具体时刻、改期后总价、车型、保障及预订号是否沿用，须按新确认邮件核对。旧的8 × 24小时和 NZ$2,052.96 不再作为新订单信息。",
+  "hotel-christchurch": "10月7日入住、10月8日退房，共1晚；当前首选仍是 Novotel Christchurch Cathedral Square，须按新日期复核精确总价和条款。",
+  "oamaru-stay-penguins": "已纳入主行程：10月6日住奥马鲁，参加20:00官方小蓝企鹅归巢晚场。General 2人NZD 100、Premium 2人NZD 140；住宿和企鹅票均待预订。",
 };
 
 const hotelOfficialUrls = new Map(hotelPlans.map((hotel) => [hotel.name, hotel.links[0][1]]));
@@ -43,11 +72,11 @@ const accommodationCalendar = [
   { date: "10/3", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
   { date: "10/4", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
   { date: "10/5", stayGroup: "mount-cook", hotel: "The Hermitage · Mt Cook Motel Studio Queen", place: "库克山村", placeEn: "Aoraki / Mount Cook Village", status: "已预订", statusEn: "Booked", tone: "mount-cook", position: [-43.7363846, 170.0987676], mapQuery: "Mt Cook Lodge & Motels New Zealand" },
-  { date: "10/6", stayGroup: "christchurch", hotel: "Novotel Christchurch Cathedral Square", place: "基督城", placeEn: "Christchurch", status: "入住", statusEn: "Check in", tone: "christchurch", position: [-43.5309, 172.6372], mapQuery: "Novotel Christchurch Cathedral Square" },
-  { date: "10/7", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 1 晚", statusEn: "City night 1", tone: "auckland-city", position: [-36.8462, 174.7761], mapQuery: "Adina Apartment Hotel Auckland Britomart" },
-  { date: "10/8", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "市区第 2 晚", statusEn: "City night 2", tone: "auckland-city" },
-  { date: "10/9", stayGroup: "rotorua", hotel: "Millennium Hotel Rotorua", place: "罗托鲁瓦", placeEn: "Rotorua", status: "入住", statusEn: "Check in", tone: "rotorua", position: [-38.1385, 176.2574], mapQuery: "Millennium Hotel Rotorua" },
-  { date: "10/10", place: "奥克兰机场", placeEn: "Auckland Airport", status: "夜间返程 · 无住宿", statusEn: "Overnight flight · no hotel", tone: "flight", noStay: true },
+  { date: "10/6", stayGroup: "oamaru", hotel: "奥马鲁住宿待调研 / 待预订", place: "奥马鲁", placeEn: "Ōamaru", status: "住1晚 · 20:00企鹅", statusEn: "1 night · penguins 20:00", tone: "oamaru", position: [-45.0966, 170.9714], mapQuery: "Oamaru New Zealand accommodation" },
+  { date: "10/7", stayGroup: "christchurch", hotel: "Novotel Christchurch Cathedral Square", place: "基督城", placeEn: "Christchurch", status: "住1晚", statusEn: "1 night", tone: "christchurch", position: [-43.5309, 172.6372], mapQuery: "Novotel Christchurch Cathedral Square" },
+  { date: "10/8", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "晚到 · 第 1 晚", statusEn: "Late arrival · night 1", tone: "auckland-city", position: [-36.8462, 174.7761], mapQuery: "Adina Apartment Hotel Auckland Britomart" },
+  { date: "10/9", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "第 2 晚", statusEn: "Night 2", tone: "auckland-city" },
+  { date: "10/10", place: "奥克兰市中心 → 机场", placeEn: "Central Auckland → airport", status: "退房 · 夜间返程", statusEn: "Check out · overnight flight", tone: "flight", noStay: true },
   { date: "10/11", place: "返程途中", placeEn: "In transit", status: "吉隆坡转机", statusEn: "Kuala Lumpur connection", tone: "flight", noStay: true },
 ];
 
@@ -68,6 +97,23 @@ function readSavedSelections() {
   } catch {
     return sharedHotelSelections;
   }
+}
+
+function stayDatesBetween(checkIn, checkOut) {
+  const dates = [];
+  const cursor = new Date(`${checkIn}T00:00:00Z`);
+  const end = new Date(`${checkOut}T00:00:00Z`);
+  while (cursor < end) {
+    dates.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return dates;
+}
+
+function stayDatesForRegion(region) {
+  if (region === "auckland-airport") return aucklandAirportStayDates;
+  const stay = region === "auckland-city" ? aucklandCityStay : regionalStays[region];
+  return stay ? stayDatesBetween(stay.dates.checkIn, stay.dates.checkOut) : [];
 }
 
 const airportStayByDate = {
@@ -157,7 +203,7 @@ function AccommodationCalendar({ isEnglish }) {
     return stay;
   });
   const regionalSelectedHotels = Object.entries(regionalHotels).map(([region, hotelsForRegion]) => hotelsForRegion.find((hotel) => hotel.id === regionalHotelIds[region]) ?? hotelsForRegion[0]);
-  const dynamicOfficialUrls = new Map([...hotelOfficialUrls, [airportHotel.name, airportHotel.officialUrl], [cityHotel.name, cityHotel.officialUrl], ...regionalSelectedHotels.map((hotel) => [hotel.name, hotel.officialUrl])]);
+  const dynamicOfficialUrls = new Map([...hotelOfficialUrls, [airportHotel.name, airportHotel.officialUrl], [cityHotel.name, cityHotel.officialUrl], ...regionalSelectedHotels.filter((hotel) => hotel.officialUrl).map((hotel) => [hotel.name, hotel.officialUrl])]);
   const hotels = [...new Map(
     displayedCalendar
       .filter((stay) => stay.hotel && stay.position)
@@ -238,7 +284,7 @@ function AccommodationCalendar({ isEnglish }) {
       regions: {
         ...sharedHotelSelections.regions,
         ...savedSelections.regions,
-        [region]: { hotelId: hotel.id, hotelName: hotel.name, stayDates: region === "auckland-airport" ? aucklandAirportStayDates : (regionalStays[region] ? [regionalStays[region].dates.checkIn] : ["2026-10-07", "2026-10-08"]) },
+        [region]: { hotelId: hotel.id, hotelName: hotel.name, stayDates: stayDatesForRegion(region) },
       },
     };
     if (region === "auckland-airport") setAirportHotelId(hotel.id);
@@ -303,6 +349,8 @@ function AccommodationCalendar({ isEnglish }) {
               </ButtonBase>
             );
 
+            const officialUrl = dynamicOfficialUrls.get(stay.hotel);
+
             return stay.hotel ? (
               <Box
                 className="route-day-cell accommodation-day-cell"
@@ -313,14 +361,14 @@ function AccommodationCalendar({ isEnglish }) {
               >
                 {selectorContent}
                 <Typography
-                  aria-label={`${stay.hotel} · ${isEnglish ? "official website" : "官方网站"}`}
+                  aria-label={officialUrl ? `${stay.hotel} · ${isEnglish ? "official website" : "官方网站"}` : undefined}
                   className="accommodation-hotel-name"
-                  component="a"
-                  href={dynamicOfficialUrls.get(stay.hotel)}
-                  rel="noreferrer"
-                  target="_blank"
+                  component={officialUrl ? "a" : "span"}
+                  href={officialUrl || undefined}
+                  rel={officialUrl ? "noreferrer" : undefined}
+                  target={officialUrl ? "_blank" : undefined}
                 >
-                  {stay.hotel}<OpenInNewIcon aria-hidden="true" />
+                  {stay.hotel}{officialUrl && <OpenInNewIcon aria-hidden="true" />}
                 </Typography>
               </Box>
             ) : (
@@ -362,7 +410,8 @@ function AccommodationCalendar({ isEnglish }) {
 export function BookingPanel({ checked, setChecked, storageKey }) {
   const { language } = useLanguage();
   const isEnglish = language === "en";
-  const done = Object.values(checked).filter(Boolean).length;
+  const currentItemIds = new Set(bookingItems.map(([id]) => id));
+  const done = Object.entries(checked).filter(([id, value]) => currentItemIds.has(id) && value).length;
   const percent = Math.round((done / bookingItems.length) * 100);
   const toggle = (id) => {
     setChecked((prev) => {
@@ -387,8 +436,8 @@ export function BookingPanel({ checked, setChecked, storageKey }) {
                     <Stack direction="row" spacing={1.5}>
                       <Checkbox checked={Boolean(checked[id])} tabIndex={-1} />
                       <Box>
-                        <Typography fontWeight={900}>{isEnglish ? (bookingTitleEn[id] ?? title) : title}</Typography>
-                        <Typography color="text.secondary" variant="body2">{isEnglish ? "Open this item to review the booking details and current status." : desc}</Typography>
+                        <Typography fontWeight={900}>{isEnglish ? (bookingTitleEn[id] ?? title) : (bookingTitleZh[id] ?? title)}</Typography>
+                        <Typography color="text.secondary" variant="body2">{isEnglish ? (bookingDescriptionEn[id] ?? desc) : (bookingDescriptionZh[id] ?? desc)}</Typography>
                       </Box>
                     </Stack>
                   </CardContent>

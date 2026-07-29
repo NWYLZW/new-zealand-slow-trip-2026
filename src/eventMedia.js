@@ -44,15 +44,6 @@ const hobbitonImage = {
   license: "CC BY 2.0",
 };
 
-const rotoruaImage = {
-  image: assetPath("images/rotorua.webp"),
-  alt: "罗托鲁瓦波胡图间歇泉",
-  altEn: "Pohutu Geyser in Rotorua",
-  sourceName: "Marks6651 · Wikimedia Commons",
-  sourceUrl: "https://commons.wikimedia.org/wiki/File:Pohutu_geyser.jpg",
-  license: "CC BY 4.0",
-};
-
 const official = (label, url) => ({ kind: "official", label, url });
 const mapLink = (label, url) => ({ kind: "map", label, url });
 const social = (label, url) => ({ kind: "social", label, url });
@@ -223,18 +214,13 @@ export const localNameTranslations = {
   "Budget Car Rental Christchurch Airport": "Budget 基督城机场还车点",
   "Christchurch Airport (CHC)": "基督城机场",
   "Auckland / Tāmaki Makaurau": "奥克兰",
+  "SkyCity Coach Terminal": "SkyCity 大巴总站",
   "Queen Street": "皇后街",
   "Commercial Bay": "Commercial Bay 商场",
   "Westfield Newmarket": "Westfield Newmarket 商场",
   "Auckland International Airport": "奥克兰国际机场",
   "The Shire's Rest": "夏尔休息站 / 霍比屯集合点",
   "Hobbiton Movie Set": "霍比屯电影布景地",
-  Rotorua: "罗托鲁瓦",
-  "Redwoods Whakarewarewa Forest": "红杉森林",
-  "JetPark Hotel Rotorua": "JetPark 罗托鲁瓦酒店",
-  "Te Puia": "蒂普亚地热文化中心",
-  "Pōhutu Geyser": "波胡图间歇泉",
-  "New Zealand Māori Arts and Crafts Institute": "新西兰毛利艺术与工艺学院",
   "Malaysia Airlines Check-in": "马来西亚航空值机柜台",
 };
 
@@ -317,14 +303,14 @@ export const eventMediaByTitle = {
     ...mediaGallery(aorakiImage, aorakiHelicopterImage, aorakiNightImage),
     links: [official("Glacier Highlights 直升机预订", "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/"), official("库克山步道与天气 DOC", "https://www.doc.govt.nz/parks-and-recreation/places-to-go/canterbury/places/aoraki-mount-cook-national-park/"), googleMaps("Mount Cook Airport", "库克山机场地图"), googleMaps("Aoraki Mount Cook Visitor Centre", "游客中心地图"), redbook("库克山 天气 直升机 备选")],
   },
-  "蒂卡波到基督城": {
-    route: "库克山 → 蒂卡波 → 基督城",
-    localNames: ["Mt Cook Lodge & Motels", "Lake Tekapo / Takapō", "Church of the Good Shepherd", "Christchurch / Ōtautahi", "Novotel Christchurch Cathedral Square"],
-    ...mediaGallery(tekapoImage, aorakiImage, christchurchImage),
-    links: [official("Lake Tekapo 官方旅游信息", "https://www.mackenzienz.com/visit-lake-tekapo/"), googleDirections("库克山—蒂卡波—基督城路线", "Mt Cook Lodge & Motels", "Novotel Christchurch Cathedral Square", ["Church of the Good Shepherd Lake Tekapo"]), redbook("蒂卡波 基督城 自驾")],
-  },
-  "奥马鲁企鹅与海狗备选": {
+  "蒂卡波到奥马鲁": {
     route: "库克山 → 蒂卡波 → 奥马鲁",
+    localNames: ["Mt Cook Lodge & Motels", "Lake Tekapo / Takapō", "Church of the Good Shepherd", "Ōamaru / Te Oha-a-Maru"],
+    ...mediaGallery(tekapoImage, aorakiImage, oamaruPenguinImage),
+    links: [official("Lake Tekapo 官方旅游信息", "https://www.mackenzienz.com/visit-lake-tekapo/"), googleDirections("库克山—蒂卡波—奥马鲁路线", "Mt Cook Lodge & Motels", "Oamaru New Zealand", ["Church of the Good Shepherd Lake Tekapo"]), redbook("蒂卡波 奥马鲁 自驾")],
+  },
+  "奥马鲁企鹅与海狗": {
+    location: "奥马鲁港与小蓝企鹅保护区",
     localNames: ["Ōamaru / Te Oha-a-Maru", "Ōamaru Blue Penguin Colony", "Oamaru Harbour", "New Zealand fur seal / kekeno", "Kātiki Point Walking Track"],
     ...mediaGallery(oamaruPenguinImage, oamaruFurSealImage),
     links: [
@@ -334,43 +320,42 @@ export const eventMediaByTitle = {
       official("保护区附近的海狗与其他动物", "https://www.penguins.co.nz/about/other-local-species"),
       official("Kātiki Point · DOC", "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/moeraki-area/things-to-do/katiki-point-walking-track/"),
       official("海狗观赏安全距离 · DOC", "https://www.doc.govt.nz/nature/native-animals/marine-mammals/seals/nz-fur-seal/what-to-do/"),
-      googleDirections("库克山—蒂卡波—奥马鲁路线", "Mt Cook Lodge & Motels", "Oamaru Blue Penguin Colony", ["Church of the Good Shepherd Lake Tekapo"]),
       googleMaps("Oamaru Blue Penguin Colony", "企鹅保护区地图"),
       googleMaps("Katiki Point Lighthouse", "Kātiki Point 地图"),
     ],
   },
-  "奥马鲁直达基督城机场": {
-    route: "奥马鲁 → 基督城机场",
-    localNames: ["Ōamaru / Te Oha-a-Maru", "Budget Car Rental Christchurch Airport", "Christchurch Airport (CHC)"],
-    ...christchurchImage,
+  "奥马鲁前往基督城": {
+    route: "奥马鲁 → Timaru → Ashburton → 基督城市中心",
+    localNames: ["Ōamaru / Te Oha-a-Maru", "Timaru", "Ashburton", "Christchurch / Ōtautahi"],
+    ...mediaGallery(christchurchImage, oamaruPenguinImage, tekapoImage),
     links: [
-      official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"),
-      googleDirections("奥马鲁—基督城机场路线", "Oamaru New Zealand", "Budget Car Rental Christchurch Airport"),
+      official("ChristchurchNZ 官方旅游信息", "https://www.christchurchnz.com/"),
+      googleDirections("奥马鲁—基督城市中心路线", "Oamaru New Zealand", "Christchurch Cathedral Square", ["Timaru New Zealand", "Ashburton New Zealand"]),
     ],
   },
-  "基督城城市半日": {
+  "按更新订单还车": {
+    route: "基督城市中心 → 基督城机场",
+    localNames: ["Christchurch / Ōtautahi", "Budget Car Rental Christchurch Airport", "Christchurch Airport (CHC)"],
+    ...mediaGallery(christchurchImage),
+    links: [official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"), official("基督城机场交通", "https://www.christchurchairport.co.nz/travellers/transport/"), googleMaps("Budget Car Rental Christchurch Airport", "还车点地图"), googleDirections("市中心—Budget还车点", "Christchurch Cathedral Square", "Budget Car Rental Christchurch Airport"), redbook("基督城机场 还车 攻略")],
+  },
+  "基督城补充半日": {
     location: "基督城市中心",
-    localNames: ["Christchurch / Ōtautahi", "Riverside Market", "Christchurch Botanic Gardens", "Christchurch Town Hall"],
+    localNames: ["Christchurch / Ōtautahi", "Christchurch Town Hall", "Novotel Christchurch Cathedral Square"],
     ...christchurchImage,
-    links: [official("ChristchurchNZ 官方旅游信息", "https://www.christchurchnz.com/"), official("基督城植物园官方信息", "https://ccc.govt.nz/parks-and-gardens/christchurch-botanic-gardens"), googleDirections("市中心半日步行路线", "Riverside Market Christchurch", "Christchurch Botanic Gardens", ["Christchurch Town Hall"], "walking"), redbook("基督城 半日游 攻略")],
+    links: [official("ChristchurchNZ 官方旅游信息", "https://www.christchurchnz.com/"), googleDirections("纸板教堂与市中心步行", "Novotel Christchurch Cathedral Square", "Riverside Market Christchurch", ["Cardboard Cathedral Christchurch", "Latimer Square Christchurch"], "walking"), redbook("基督城 纸板教堂 市中心 攻略")],
   },
-  "还车飞奥克兰": {
-    route: "基督城 → 奥克兰",
-    localNames: ["Budget Car Rental Christchurch Airport", "Christchurch Airport (CHC)", "Auckland Airport Domestic Terminal (AKL)"],
-    ...christchurchImage,
-    links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("基督城机场", "https://www.christchurchairport.co.nz/"), official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"), googleMaps("Budget Car Rental Christchurch Airport", "还车点地图"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), redbook("基督城机场 还车 飞奥克兰")],
+  "前往机场飞奥克兰": {
+    route: "基督城市中心 → 基督城机场 → 奥克兰市中心",
+    localNames: ["Novotel Christchurch Cathedral Square", "Christchurch Airport (CHC)", "Auckland Airport Domestic Terminal (AKL)", "Auckland / Tāmaki Makaurau"],
+    ...mediaGallery(christchurchImage, aucklandAirportImage, aucklandImage),
+    links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("基督城机场航班信息", "https://www.christchurchairport.co.nz/travellers/flights/"), official("基督城机场交通", "https://www.christchurchairport.co.nz/travellers/transport/"), googleDirections("基督城市中心—机场", "Novotel Christchurch Cathedral Square", "Christchurch Airport"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), redbook("基督城 飞 奥克兰 捷星")],
   },
-  "奥克兰购物日": {
-    location: "奥克兰 CBD 与 Newmarket",
-    localNames: ["Auckland / Tāmaki Makaurau", "Queen Street", "Commercial Bay", "Westfield Newmarket", "Auckland International Airport"],
-    ...mediaGallery(aucklandImage, aucklandAirportImage),
-    links: [official("Westfield Newmarket", "https://www.westfield.co.nz/newmarket"), official("Commercial Bay", "https://www.commercialbay.co.nz/"), official("SkyDrive 机场巴士", "https://www.skydrive.co.nz/"), googleDirections("机场—CBD—Newmarket 路线", "Auckland International Airport", "Auckland International Airport", ["Queen Street Auckland", "Commercial Bay Auckland", "Westfield Newmarket"]), redbook("奥克兰 购物 Newmarket 攻略")],
-  },
-  "取车前往霍比屯": {
-    route: "奥克兰机场 → 霍比屯",
-    localNames: ["Auckland International Airport", "The Shire's Rest", "Hobbiton Movie Set"],
-    ...mediaGallery(hobbitonImage, aucklandAirportImage),
-    links: [official("Hobbiton Movie Set 购票", "https://www.hobbitontours.com/experiences/hobbiton-movie-set-tour/"), googleDirections("奥克兰机场—霍比屯路线", "Auckland International Airport", "The Shire's Rest Hobbiton"), redbook("霍比屯 自驾 攻略")],
+  "大巴前往霍比屯": {
+    route: "奥克兰市中心 → 霍比屯",
+    localNames: ["SkyCity Coach Terminal", "The Shire's Rest", "Hobbiton Movie Set"],
+    ...mediaGallery(hobbitonImage, aucklandImage),
+    links: [official("GreatSights GS10H 官方预订", "https://www.greatsights.co.nz/new-zealand-tour-destinations/hobbiton-movie-set-tours/hobbiton-movie-set-from-auckland"), googleDirections("SkyCity—霍比屯大巴路线", "SkyCity Coach Terminal Auckland", "The Shire's Rest Hobbiton"), googleMaps("SkyCity Coach Terminal 102 Hobson Street Auckland", "报到点地图")],
   },
   "霍比屯游览": {
     location: "Hobbiton Movie Set",
@@ -378,23 +363,23 @@ export const eventMediaByTitle = {
     ...hobbitonImage,
     links: [official("Hobbiton Movie Set 购票", "https://www.hobbitontours.com/experiences/hobbiton-movie-set-tour/"), googleMaps("The Shire's Rest", "集合点地图"), redbook("霍比屯 游览 攻略"), facebook("Hobbiton Movie Set")],
   },
-  "前往罗托鲁瓦": {
-    route: "霍比屯 → 罗托鲁瓦",
-    localNames: ["Hobbiton Movie Set", "Rotorua", "Redwoods Whakarewarewa Forest", "JetPark Hotel Rotorua"],
-    ...mediaGallery(rotoruaImage, hobbitonImage),
-    links: [official("RotoruaNZ 官方旅游信息", "https://www.rotoruanz.com/"), official("Redwoods Whakarewarewa Forest", "https://redwoods.co.nz/"), googleDirections("霍比屯—罗托鲁瓦路线", "The Shire's Rest Hobbiton", "JetPark Hotel Rotorua", ["Redwoods Whakarewarewa Forest"]), redbook("罗托鲁瓦 攻略")],
+  "大巴返回奥克兰": {
+    route: "霍比屯 → 奥克兰市中心",
+    localNames: ["Hobbiton Movie Set", "The Shire's Rest", "SkyCity Coach Terminal"],
+    ...mediaGallery(hobbitonImage, aucklandImage),
+    links: [official("GreatSights GS10H 官方预订", "https://www.greatsights.co.nz/new-zealand-tour-destinations/hobbiton-movie-set-tours/hobbiton-movie-set-from-auckland"), googleDirections("霍比屯—SkyCity大巴路线", "The Shire's Rest Hobbiton", "SkyCity Coach Terminal Auckland"), googleMaps("SkyCity Coach Terminal 102 Hobson Street Auckland", "返回点地图")],
   },
-  "Te Puia 地热文化": {
-    location: "Te Puia · 罗托鲁瓦",
-    localNames: ["Te Puia", "Pōhutu Geyser", "New Zealand Māori Arts and Crafts Institute", "Rotorua"],
-    ...rotoruaImage,
-    links: [official("Te Puia 日间体验购票", "https://ecommerce.tepuia.com/te-ra-guided-experience"), googleMaps("Te Puia Rotorua"), redbook("Te Puia 罗托鲁瓦 攻略"), facebook("Te Puia Rotorua")],
+  "奥克兰轻松半日": {
+    location: "奥克兰市中心",
+    localNames: ["Auckland / Tāmaki Makaurau", "Britomart Transport Centre", "Commercial Bay"],
+    ...aucklandImage,
+    links: [official("AucklandNZ 官方旅游信息", "https://www.aucklandnz.com/"), official("Commercial Bay", "https://www.commercialbay.co.nz/"), googleDirections("奥克兰市中心轻松步行", "Britomart Transport Centre", "Commercial Bay Auckland", [], "walking")],
   },
-  "返回奥克兰机场": {
-    route: "罗托鲁瓦 → 奥克兰机场",
-    localNames: ["JetPark Hotel Rotorua", "Auckland International Airport"],
-    ...mediaGallery(aucklandAirportImage, rotoruaImage, aucklandImage),
-    links: [official("奥克兰机场", "https://www.aucklandairport.co.nz/"), googleDirections("罗托鲁瓦—奥克兰机场路线", "JetPark Hotel Rotorua", "Auckland International Airport"), redbook("罗托鲁瓦 奥克兰机场 自驾 还车")],
+  "前往奥克兰机场": {
+    route: "奥克兰市中心 → 奥克兰机场",
+    localNames: ["Auckland / Tāmaki Makaurau", "Auckland International Airport"],
+    ...mediaGallery(aucklandAirportImage, aucklandImage),
+    links: [official("奥克兰机场", "https://www.aucklandairport.co.nz/"), official("SkyDrive 机场巴士", "https://www.skydrive.co.nz/"), googleDirections("奥克兰市中心酒店—机场路线", "Adina Apartment Hotel Auckland Britomart", "Auckland Airport International Terminal", [], "transit")],
   },
   "办理返程值机": {
     location: "奥克兰国际机场",

@@ -59,6 +59,23 @@ export const regionalStays = {
     },
     selectedHotelId: "hermitage-mt-cook-motel-studio-queen",
   },
+  oamaru: {
+    id: "oamaru",
+    title: "奥马鲁住宿待调研",
+    titleEn: "Ōamaru accommodation research pending",
+    mapLabel: "奥马鲁住宿与企鹅保护区位置地图",
+    mapLabelEn: "Ōamaru accommodation and penguin-colony locations",
+    anchorPosition: [-45.1071, 170.9686],
+    anchorLabel: "小蓝企鹅保护区",
+    anchorLabelEn: "Blue Penguin Colony",
+    anchorIcon: "🐧",
+    dates: {
+      checkIn: "2026-10-06",
+      checkOut: "2026-10-07",
+      label: "10月6日—7日",
+    },
+    selectedHotelId: "oamaru-accommodation-research-pending",
+  },
   christchurch: {
     id: "christchurch",
     title: "基督城市中心住宿比选",
@@ -70,28 +87,11 @@ export const regionalStays = {
     anchorLabelEn: "Riverside Market",
     anchorIcon: "◎",
     dates: {
-      checkIn: "2026-10-06",
-      checkOut: "2026-10-07",
-      label: "10月6日—7日",
+      checkIn: "2026-10-07",
+      checkOut: "2026-10-08",
+      label: "10月7日—8日",
     },
     selectedHotelId: "novotel-christchurch-cathedral-square",
-  },
-  rotorua: {
-    id: "rotorua",
-    title: "罗托鲁瓦住宿比选",
-    titleEn: "Rotorua stay comparison",
-    mapLabel: "罗托鲁瓦住宿位置地图",
-    mapLabelEn: "Rotorua stay locations",
-    anchorPosition: [-38.1617, 176.2505],
-    anchorLabel: "Te Puia",
-    anchorLabelEn: "Te Puia",
-    anchorIcon: "♨",
-    dates: {
-      checkIn: "2026-10-09",
-      checkOut: "2026-10-10",
-      label: "10月9日—10日",
-    },
-    selectedHotelId: "millennium-rotorua",
   },
 };
 
@@ -113,14 +113,20 @@ const sharedSocial = {
   },
   christchurch: {
     verdict:
-      "社交媒体上常见市中心公寓、设计酒店和自驾 motel 三类选择；但本次只住一晚，次日上午还要步行逛 New Regent Street、Riverside Market 与植物园，再去机场还车，Cathedral Square 周边酒店比收清洁费、需要自助入住的民宿更省时间。Booking 精确日期复核后，Novotel 与 Distinction 都有纯 King 房；Rydges 停车更清楚但步行 Riverside Market 更远。",
+      "社交媒体上常见市中心公寓、设计酒店和自驾 motel 三类选择；本次 10 月 7 日仅住一晚，10 月 8 日退房后要寄存行李、到机场还车并搭乘晚班机，具体还车时刻待新确认邮件核对，因此 Cathedral Square 周边酒店更利于步行游览和寄存行李。旧报价只核验了 10 月 6—7 日，当前 10 月 7—8 日库存和总价需重新查询。",
     url: xiaohongshuSearch("基督城 住宿 推荐 酒店 民宿"),
   },
-  rotorua: {
+  oamaru: {
     verdict:
-      "社交媒体更偏爱湖景、温泉与农场体验型民宿，但本次霍比屯后才进城、只住一晚，次日 09:00 又要到 Te Puia；清洁费、自助入住和绕路会吞掉民宿优势。实际精确日期比较里，Sudima 免费停车且价格最低，Millennium 更靠近 Polynesian Spa，Pullman 房间更新但停车与早餐成本更高。",
-    url: xiaohongshuSearch("罗托鲁瓦 住宿 推荐 酒店 民宿"),
+      "10 月 6 日 20:00 要到奥马鲁小蓝企鹅保护区，住宿优先考虑晚场结束后少开夜路、可停车和次日去基督城方便；酒店、motel 与民宿仍需在官网、Booking.com 或 Airbnb 逐一核验 10 月 6—7 日、2 人 1 间的真实库存、含税总价和退改。当前卡片仅标记调研任务，不代表已找到或推荐具体房源。",
+    url: xiaohongshuSearch("奥马鲁 住宿 企鹅 推荐 酒店 民宿"),
   },
+};
+
+const archivedRotoruaSocial = {
+  verdict:
+    "此结论仅保留为旧版罗托鲁瓦方案的历史调研，不属于当前奥克兰往返霍比屯行程。社交媒体更偏爱湖景、温泉与农场体验型民宿；旧版精确日期比较中，Sudima 免费停车且价格最低，Millennium 更靠近 Polynesian Spa，Pullman 房间更新但停车与早餐成本更高。",
+  url: xiaohongshuSearch("罗托鲁瓦 住宿 推荐 酒店 民宿"),
 };
 
 export const regionalHotels = {
@@ -2959,6 +2965,61 @@ export const regionalHotels = {
       mapQuery: "Twizel New Zealand",
     },
   ],
+  oamaru: [
+    {
+      id: "oamaru-accommodation-research-pending",
+      name: "奥马鲁住宿待调研 / 待预订",
+      recommendation: "尚未选定",
+      recommendationEn: "Not selected yet",
+      summary:
+        "这是主行程的住宿调研占位卡，不是具体酒店或民宿。尚未实际核验 10 月 6—7 日的房源、房型、价格或退改，因此不展示任何报价或平台链接。",
+      summaryEn:
+        "This is a research placeholder for the confirmed itinerary, not a specific hotel or home. No listing, room, exact-date price or cancellation terms have been verified for 6–7 Oct, so no rate or platform link is shown.",
+      access: "选址目标：20:00 企鹅晚场结束后少开夜路，次日方便驶往基督城",
+      accessEn: "Location target: minimise night driving after the 20:00 penguin session and keep an easy departure for Christchurch",
+      parking: "停车条件待具体住宿核验",
+      parkingEn: "Parking requires verification for the eventual property",
+      nearbyAttractions: [
+        {
+          name: "Ōamaru Blue Penguin Colony",
+          nameEn: "Ōamaru Blue Penguin Colony",
+          distance: "具体距离待选定住宿后计算",
+          distanceEn: "Distance depends on the selected accommodation",
+          travelTime: "优先选择晚场后短程可达的住宿",
+          travelTimeEn: "Prefer a short trip after the evening session",
+          originQuery: "Oamaru New Zealand accommodation",
+          destinationQuery: "Oamaru Blue Penguin Colony",
+        },
+        {
+          name: "基督城方向出城路线",
+          nameEn: "Route towards Christchurch",
+          distance: "具体距离待选定住宿后计算",
+          distanceEn: "Distance depends on the selected accommodation",
+          travelTime: "次日需驾车前往基督城",
+          travelTimeEn: "Drive to Christchurch the following day",
+          originQuery: "Oamaru New Zealand accommodation",
+          destinationQuery: "Christchurch New Zealand",
+        },
+      ],
+      strengths: ["已在住宿日历中纳入 10 月 6 日主线", "不会用未经核验的起价或房型填充"],
+      strengthsEn: ["The 6 Oct overnight is now part of the main accommodation calendar", "No unverified teaser price or room category is presented"],
+      cautions: ["尚未选定具体住宿", "10 月 6—7 日库存、含税总价、停车与退改均待实际访问平台或官网核验"],
+      cautionsEn: ["No specific accommodation has been selected", "Exact-date inventory, tax-inclusive total, parking and cancellation terms still require a live platform or direct-site check"],
+      ratings: [
+        { platform: "调研状态", score: "待核验", reviews: "无具体住宿数据" },
+      ],
+      roomTypes: [],
+      hotelImages: [],
+      availabilityNote:
+        "10 月 6 日入住、10 月 7 日退房；当前只确认需要住奥马鲁，尚未核验或预订任何具体住宿。",
+      availabilityNoteEn:
+        "Check in on 6 Oct and check out on 7 Oct. Only the need to stay in Ōamaru is confirmed; no specific accommodation has been verified or booked.",
+      research: sharedSocial.oamaru,
+      position: [-45.0966, 170.9714],
+      mapQuery: "Oamaru New Zealand accommodation",
+      isResearchPlaceholder: true,
+    },
+  ],
   christchurch: [
     {
       id: "rydges-latimer-christchurch",
@@ -2966,9 +3027,9 @@ export const regionalHotels = {
       recommendation: "行程最匹配",
       recommendationEn: "Best itinerary fit",
       summary:
-        "长途驾驶后可直接停车入住；真实房型页显示从高级特大床到 46 m² 尊贵套房均可订。",
+        "从奥马鲁抵达后可直接停车入住；只住 10 月 7 日一晚，现有房型可参考，但保存的价格对应旧的 10 月 6—7 日。",
       summaryEn:
-        "Easy parking after the long drive, with verified king rooms from the superior room to a 46 m² suite.",
+        "Easy parking after the drive from Ōamaru. The stay is one night on 7 Oct; saved rates cover the former 6–7 Oct dates.",
       access: "Riverside Market 约 1.2 公里、步行约 15 分钟；位置评分 9.1",
       accessEn: "About 1.2 km or a 15-minute walk to Riverside Market; location score 9.1",
       parking: "私人停车约 NZD 20/天；预订前确认",
@@ -3002,10 +3063,14 @@ export const regionalHotels = {
       strengths: [
         "4 种代表性纯特大床房型",
         "市中心步行动线",
-        "10 月 5 日前免费取消",
-        "无需预付、到店付款",
+        "旧快照曾提供可取消与到店付款档",
+        "适合从奥马鲁抵达后停车入住",
       ],
-      cautions: ["停车约 NZD 20/晚，基础房含停车实际预算 NZD 346 起", "早餐另加 NZD 42/人", "单晚升级套房意义有限"],
+      cautions: ["停车费需计入总价，具体费用预订前确认", "早餐另加 NZD 42/人", "10 月 7—8 日价格待重新核验"],
+      availabilityNote:
+        "当前住宿为 2026 年 10 月 7—8 日一晚；下方 10 月 6—7 日一晚快照仅作历史参考，当前日期库存、含税总价与退改待重新核验。",
+      availabilityNoteEn:
+        "The current stay is one night, 7–8 Oct 2026. The saved 6–7 Oct one-night snapshot is historical only; current-date inventory, tax-inclusive totals and terms require a fresh check.",
       ratings: [
         { platform: "Booking.com", score: "8.5 / 10", reviews: "2,000+ 条" },
       ],
@@ -3202,7 +3267,7 @@ export const regionalHotels = {
       agodaStatusDetail:
         "已用 IAB 实际打开 Agoda 同一酒店，并正确带入 10 月 6—7 日、2 人 1 间。页面当前显示高级大床房 NZD 237 起、豪华大床房 NZD 271 起；这些仍是房型卡起价，尚未逐项核对含税总价、取消与付款条款，因此暂不作为可比较报价展示。",
       research: sharedSocial.christchurch,
-      officialStatus: "exact-rate-verified",
+      officialStatus: null,
       officialStatusDetail:
         "2026-07-28 已在 Rydges 官网实际选择 2026 年 10 月 6—7 日、2 人 1 间，并核验四种明确 King 房型。页面同时显示公开价与 EVT Stays 会员价；卡片仅把公开 Best Flexible Rate 作为主比较价，会员价单独注明。官网尚未在当前步骤明确列出税费组成与取消截止时间，因此不会补写未经核验的“含税”或免费取消日期。",
       officialStatusEn:
@@ -3218,9 +3283,9 @@ export const regionalHotels = {
       officialRateLinkLabel: "官网 · 已核验（链接不保留搜索）",
       officialRateLinkLabelEn: "Official website · verified (link does not retain search)",
       officialLinkNote:
-        "Rydges 房价链接会回到默认日期；打开后请重新选择 2026 年 10 月 6—7 日、2 位成人、1 间。页面价格来自 2026-07-28 的实际核验结果。",
+        "Rydges 房价链接会回到默认日期；打开后请重新选择 2026 年 10 月 7—8 日、2 位成人、1 间。保存的价格只来自旧的 10 月 6—7 日一晚核验，不是当前报价。",
       officialLinkNoteEn:
-        "The Rydges rates link returns to default dates. After opening, reselect 6–7 Oct 2026, two adults and one room. The recorded prices come from the live check on 28 Jul 2026.",
+        "The Rydges rates link returns to default dates. After opening, reselect 7–8 Oct 2026, two adults and one room. Saved prices come only from the former 6–7 Oct one-night check and are not current quotes.",
       bookingUrl:
         "https://www.booking.com/hotel/nz/rydges-latimer-christchurch.html",
       agodaUrl:
@@ -3234,9 +3299,9 @@ export const regionalHotels = {
       recommendation: "公寓性价比",
       recommendationEn: "Apartment value",
       summary:
-        "评分更高、带厨房洗衣；一室公寓可选双人床但要视库存，一卧室公寓则明确为纯双人床。",
+        "评分高且带厨房洗衣，但本次只住一晚；现有库存与价格记录对应旧的 10 月 6—7 日。",
       summaryEn:
-        "A highly rated apartment stay with a double-bed studio option and a confirmed one-bedroom double apartment.",
+        "A highly rated apartment with a kitchen and laundry, though this is only a one-night stay; saved inventory and rates cover the former 6–7 Oct dates.",
       access: "位置评分 9.3；市中心步行范围",
       accessEn: "Location score 9.3; walkable central location",
       parking: "私人停车约 NZD 25/天，需视供应情况",
@@ -3273,9 +3338,8 @@ export const regionalHotels = {
         "完整厨房与洗烘一体机",
       ],
       cautions: [
-        "停车约 NZD 25/晚且车位不保证；一室公寓含停车实际预算 NZD 259 起",
-        "单晚厨房价值有限",
-        "两种房型当前都只有不可退款档",
+        "停车约 NZD 25/晚且车位不保证，当前日期总成本需重新计算",
+        "旧一晚快照的房价与不可退款条款不能视为 10 月 7—8 日结果",
         "一室公寓双人床需视供应情况",
       ],
       ratings: [
@@ -3321,6 +3385,10 @@ export const regionalHotels = {
         },
       ],
       hotelImages: [],
+      availabilityNote:
+        "当前住宿为 2026 年 10 月 7—8 日一晚；官网无房和 Booking.com 有房记录均只对应 10 月 6—7 日，不能沿用为当前库存或报价。",
+      availabilityNoteEn:
+        "The current stay is one night, 7–8 Oct 2026. The direct-unavailable and Booking.com-available records apply only to the former 6–7 Oct dates and are not current inventory or quotes.",
       rateSnapshots: {
         "2026-10-06/2026-10-07": {
           roomRates: {
@@ -3357,7 +3425,7 @@ export const regionalHotels = {
       agodaStatusDetail:
         "Agoda 已带入 10 月 6—7 日并识别一卧室公寓/一室公寓；当前采集尚未取得可与 Booking 对齐的含税结算总价及取消条款，因此不把酒店介绍页或房型起价当作报价。",
       research: sharedSocial.christchurch,
-      officialStatus: "exact-date-unavailable",
+      officialStatus: null,
       officialStatusDetail:
         "2026-07-28 已在 Quest 官网进入该酒店官方预订引擎，并确认 2026 年 10 月 6—7 日、2 人 1 间；页面明确显示所选日期无库存，因此没有可比较的官网结算价。Booking 同日库存独立保留，不与官网状态混写。",
       officialStatusEn:
@@ -3366,7 +3434,7 @@ export const regionalHotels = {
       officialUrl:
         "https://www.questapartments.co.nz/properties/south-island/christchurch/quest-on-manchester/overview",
       officialBookingUrl:
-        "https://reservations.questapartments.co.nz/quest-on-manchester/book/accommodations?adults=2&children=0&datein=10/06/2026&dateout=10/07/2026&languageid=1",
+        "https://reservations.questapartments.co.nz/quest-on-manchester/book/accommodations?adults=2&children=0&datein=10/07/2026&dateout=10/08/2026&languageid=1",
       bookingUrl: "https://www.booking.com/hotel/nz/quest-on-manchester.html",
       agodaUrl:
         "https://www.agoda.com/quest-on-manchester_2/hotel/christchurch-nz.html",
@@ -3379,9 +3447,9 @@ export const regionalHotels = {
       recommendation: "市中心步行最优",
       recommendationEn: "Best central walkability",
       summary:
-        "位于 Cathedral Square，次日上午可直接步行串联 New Regent Street、Riverside Market 与植物园；精确日期有两种纯特大床房型。",
+        "位于 Cathedral Square，适合 10 月 7 日抵达后步行游览并在次日寄存行李；已核验两种纯特大床房型，但精确价格只对应旧日期。",
       summaryEn:
-        "A Cathedral Square base with verified king rooms and the best walking route for the next morning's central sights.",
+        "A Cathedral Square base for the 7 Oct night, with verified king categories and convenient next-day luggage storage; exact saved prices cover only the old dates.",
       access: "位置评分 9.6；New Regent Street 约 350 米，Riverside Market 约 700 米",
       accessEn: "Location score 9.6; about 350 m to New Regent Street and 700 m to Riverside Market",
       parking: "酒店内有私人停车；Booking 页面未公开费用，预订前需向酒店确认",
@@ -3392,8 +3460,8 @@ export const regionalHotels = {
         { name: "Christchurch Botanic Gardens", distance: "约 1.5 公里", travelTime: "步行约 20 分钟或驾车约 6 分钟", destinationQuery: "Christchurch Botanic Gardens" },
         { name: "Christchurch Airport", distance: "约 10 公里", travelTime: "驾车约 20—25 分钟", destinationQuery: "Christchurch Airport" },
       ],
-      strengths: ["市中心步行动线最强", "两种纯特大床房型", "24 小时前台", "10 月 5 日前免费取消", "无需预付、到店付款"],
-      cautions: ["停车有车位但页面未公开费用", "早餐另加 NZD 37/人", "单晚不必为套房升级"],
+      strengths: ["市中心步行动线最强", "两种纯特大床房型", "24 小时前台", "次日寄存行李方便"],
+      cautions: ["停车有车位但页面未公开费用", "早餐另加 NZD 37/人", "10 月 7—8 日价格待重新核验"],
       ratings: [{ platform: "Booking.com", score: "8.2 / 10", reviews: "984 条；位置 9.6" }],
       roomTypes: [
         {
@@ -3419,7 +3487,9 @@ export const regionalHotels = {
       ],
       hotelImages: [],
       availabilityNote:
-        "Novotel 官网已按 2026 年 10 月 6—7 日、2 人 1 间核验：5 种房型可订；高级特大床与行政特大床均有含税官网价，以下同时保留 Booking 精确日期价供比较。",
+        "Novotel 官网与 Booking.com 已按 2026 年 10 月 6—7 日核验房型和价格；当前住宿为 10 月 7—8 日一晚，旧快照仅作历史参考，当前库存与总价待重新核验。",
+      availabilityNoteEn:
+        "Novotel and Booking.com were checked for the former 6–7 Oct stay. The current stay is one night, 7–8 Oct; the old snapshot is historical only and current inventory and totals need a fresh check.",
       rateSnapshots: {
         "2026-10-06/2026-10-07": {
           roomRates: {
@@ -3434,7 +3504,7 @@ export const regionalHotels = {
       agodaStatus: "尚未取得对应房型的含税结算总价",
       agodaStatusDetail: "本轮只记录 Booking 真实详情页的精确日期价格；Agoda 在取得同房型含税结算总价前不显示报价。",
       research: sharedSocial.christchurch,
-      officialStatus: "exact-rate-verified",
+      officialStatus: null,
       officialStatusDetail: "2026-07-28 已在 Novotel 官网实际带入 10 月 6—7 日、2 人 1 间：5 种房型可订；Superior King 含税公开不可退 NZD 379、灵活价 NZD 399，退改和早餐方案已展开核验。",
       officialStatusEn: "Verified on the Novotel website for 6–7 Oct 2026, two adults and one room; five room categories were available and the Superior King rates and terms were opened.",
       officialVerifiedAt: "2026-07-28",
@@ -3451,9 +3521,9 @@ export const regionalHotels = {
       recommendation: "评分与位置兼顾",
       recommendationEn: "Best balance of rating and location",
       summary:
-        "同样位于 Cathedral Square，位置评分 9.7；经典 King 的可取消价低于同区 Novotel 行政房，适合想住得更居中又保留退改的人。",
+        "同样位于 Cathedral Square，位置评分 9.7；一晚住宿和次日寄存行李方便，但现有房价仅对应旧日期。",
       summaryEn:
-        "A highly rated Cathedral Square option with verified king inventory and flexible rates.",
+        "A highly rated Cathedral Square option for one night and next-day luggage storage; saved rates cover only the former dates.",
       access: "位置评分 9.7；Riverside Market 约 700 米，New Regent Street 约 400 米",
       accessEn: "Location score 9.7; about 700 m to Riverside Market and 400 m to New Regent Street",
       parking: "有顶棚代客停车，费用另计；Booking 页面未公开金额",
@@ -3464,8 +3534,8 @@ export const regionalHotels = {
         { name: "Christchurch Botanic Gardens", distance: "约 1.4 公里", travelTime: "步行约 18—20 分钟", destinationQuery: "Christchurch Botanic Gardens" },
         { name: "Christchurch Airport", distance: "约 10 公里", travelTime: "驾车约 20—25 分钟", destinationQuery: "Christchurch Airport" },
       ],
-      strengths: ["位置评分 9.7", "多种纯特大床房型", "经典 King 可取消价 NZD 435", "10 月 5 日前免费取消", "10 月 3 日前零付款"],
-      strengthsEn: ["9.7 location score", "Several guaranteed king-bed categories", "Classic King cancellable rate at NZD 435", "Free cancellation before 5 Oct", "No payment before 3 Oct"],
+      strengths: ["位置评分 9.7", "多种纯特大床房型", "次日寄存行李方便"],
+      strengthsEn: ["9.7 location score", "Several guaranteed king-bed categories", "Convenient for next-day luggage storage"],
       cautions: ["代客停车费用未在 Booking 页面公开", "早餐另加 NZD 38/人", "信用卡付款加收 2.5%"],
       cautionsEn: ["The valet-parking fee is not published on Booking.com", "Breakfast costs an extra NZD 38 per person", "Credit-card payments incur a 2.5% fee"],
       ratings: [{ platform: "Booking.com", score: "8.9 / 10", reviews: "577 条；位置 9.7" }],
@@ -3476,9 +3546,9 @@ export const regionalHotels = {
       ],
       hotelImages: [],
       availabilityNote:
-        "Distinction 官网已按 2026 年 10 月 6—7 日、2 人 1 间核验：Classic King 官网一晚总价为不可退 NZD 400、灵活取消 NZD 425；Classic Super King 为 NZD 425 / 450。官网结算摘要确认 Classic King 灵活档一晚总计 NZD 425；灵活档需预付全款，但抵达前 24 小时外可取消并全额退款。Classic Junior Suite 虽显示 NZD 480 / 505，但官网写明 Super King 或两张单人床，床型不保证，因此不把官网价映射到大床选项。",
+        "Distinction 官网与 Booking.com 的房型和价格只核验到 2026 年 10 月 6—7 日；当前住宿为 10 月 7—8 日一晚，旧快照仅作历史参考，当前库存、总价与退改待重新核验。",
       availabilityNoteEn:
-        "Verified direct for 6–7 Oct 2026, two adults and one room. The Classic King was NZD 400 non-refundable or NZD 425 flexible, and the Classic Super King was NZD 425 / 450. The direct booking summary confirmed the Classic King flexible one-night total at NZD 425. Flexible rates are charged in full at booking but may be cancelled more than 24 hours before arrival for a full refund. The Classic Junior Suite showed NZD 480 / 505, but its direct listing says super king or two singles, so those rates are not mapped to a guaranteed large-bed option.",
+        "Direct and Booking.com room and rate details were verified only for the former 6–7 Oct 2026 stay. The current stay is one night, 7–8 Oct; the saved snapshot is historical only and current inventory, totals and terms need a fresh check.",
       rateSnapshots: {
         "2026-10-06/2026-10-07": { roomRates: {
           "classic-king": {
@@ -3495,28 +3565,33 @@ export const regionalHotels = {
         } },
       },
       research: sharedSocial.christchurch,
-      officialStatus: "exact-rate-verified",
+      officialStatus: null,
       officialStatusDetail: "2026-07-28 已在 Distinction 官网预订引擎带入 10 月 6—7 日、2 人 1 间，核验 Classic King 与 Classic Super King 的一晚价格；并实际选择 Classic King 灵活档，结算摘要确认总价 NZD 425。床型为二选一的 Junior Suite 未映射官网价。",
       officialStatusEn: "Verified on the Distinction booking engine on 28 Jul 2026 for 6–7 Oct, two adults and one room. Exact one-night rates were checked for the Classic King and Classic Super King, and the Classic King flexible checkout summary confirmed NZD 425 total. The bed-choice Junior Suite was not mapped.",
       officialVerifiedAt: "2026-07-28",
       officialUrl: "https://www.distinctionhotelschristchurch.co.nz/",
-      officialBookingUrl: "https://www.distinctionhotelschristchurch.co.nz/bookings/bookengine.aspx?idsup=4131&tsMode=1&date=06/10/2026",
+      officialBookingUrl: "https://www.distinctionhotelschristchurch.co.nz/bookings/bookengine.aspx?idsup=4131&tsMode=1&date=07/10/2026",
       officialLinkRetainsSearch: false,
       officialLinkLabel: "打开官网预订页（请确认 2 人 1 间）",
       officialLinkLabelEn: "Open direct booking (confirm two guests, one room)",
       officialRateLinkLabel: "官网 · 已核验（人数需重新确认）",
       officialRateLinkLabelEn: "Official website · verified (reconfirm guests)",
       officialLinkNote:
-        "链接只带入 2026 年 10 月 6 日；打开后请确认退房为 10 月 7 日、2 位成人、1 间。页面价格来自 2026-07-28 的实际核验结果。",
+        "链接只带入 2026 年 10 月 7 日入住；打开后请确认退房为 10 月 8 日、2 位成人、1 间。页面保存的价格来自旧的 10 月 6—7 日核验，不是当前报价。",
       officialLinkNoteEn:
-        "The link carries only the 6 Oct 2026 arrival date. After opening, confirm checkout on 7 Oct, two adults and one room. The recorded prices come from the live check on 28 Jul 2026.",
+        "The link carries the 7 Oct 2026 arrival date. After opening, confirm checkout on 8 Oct for two adults and one room. Saved prices come from the old 6–7 Oct check and are not current quotes.",
       bookingUrl: "https://www.booking.com/hotel/nz/distinction-christchurch.zh-cn.html",
       agodaUrl: "https://www.agoda.com/distinction-christchurch-hotel/hotel/christchurch-nz.html",
       position: [-43.5306, 172.6367],
       mapQuery: "Distinction Christchurch Hotel",
     },
   ],
-  rotorua: [
+};
+
+// Retained only as an archive of the completed 2026-07-28 research. Rotorua is
+// no longer part of the active itinerary and this list is not exposed in the
+// regional comparison map or calendar.
+export const archivedRotoruaHotels = [
     {
       id: "jetpark-rotorua",
       name: "JetPark Hotel Rotorua",
@@ -3597,7 +3672,7 @@ export const regionalHotels = {
       agodaStatus: "真实详情页已打开，结算总价待核验",
       agodaStatusDetail:
         "Agoda 已正确带入 10 月 9—10 日并列出高级大床房；当前采集尚未完成含税结算总价、取消和付款条款核验，不能用酒店介绍页的历史起价代替。",
-      research: sharedSocial.rotorua,
+      research: archivedRotoruaSocial,
       rateSnapshots: {
         "2026-10-09/2026-10-10": {
           roomRates: {
@@ -3998,7 +4073,7 @@ export const regionalHotels = {
       officialStatusEn:
         "Verified on the Millennium website on 28 Jul 2026 for 9–10 Oct 2026, two adults, one room and NZD. Member Book Pay Stay rates are recorded only for three clearly matched king categories. Flexible and public prices plus breakfast and Club benefits are disclosed in notes. Tax inclusion and the exact flexible-rate cancellation deadline remain pending checkout; the non-guaranteed Twin/King balcony, weak Deluxe Spa and Twin/Double lakefacing mappings were excluded.",
       officialVerifiedAt: "2026-07-28",
-      research: sharedSocial.rotorua,
+      research: archivedRotoruaSocial,
       officialUrl:
         "https://www.millenniumhotels.com/en/rotorua/millennium-hotel-rotorua/",
       officialBookingUrl:
@@ -4050,7 +4125,7 @@ export const regionalHotels = {
           "superior-king": { booking: { source: "Booking.com · Genius", roomKey: "superior-king", room: "高级大号床 · 27 m²", nonRefundableNzd: 266, refundableNzd: 296, cancelUntil: "2026-10-08", payment: "不可退档在线付款；可取消档无需预付、到店付款", breakfast: "早餐另加 NZD 38/人；可取消含双早总价 NZD 359", quotedAt: "2026-07-28" } },
         } },
       },
-      research: sharedSocial.rotorua,
+      research: archivedRotoruaSocial,
       officialStatus: "exact-date-unavailable",
       officialStatusDetail:
         "2026-07-28 已在 Sudima 官网预订引擎选择 2026 年 10 月 9—10 日、2 人 1 间；官网结果页明确显示所选日期无库存，因此没有可比较的官网结算价。Booking 同日高级大床库存作为独立渠道保留，不会冒充官网库存或官网价。",
@@ -4108,7 +4183,7 @@ export const regionalHotels = {
           "deluxe-lake-king": { booking: { source: "Booking.com", roomKey: "deluxe-lake-king", room: "湖景豪华特大号床间 · 33 m²", nonRefundableNzd: 455, refundableNzd: 479, cancelUntil: "2026-10-08", payment: "不可退档在线付款；可取消档无需预付、到店付款", breakfast: "早餐另加 NZD 49/人；可取消含早总价 NZD 553", quotedAt: "2026-07-28" } },
         } },
       },
-      research: sharedSocial.rotorua,
+      research: archivedRotoruaSocial,
       officialStatus: "exact-rate-verified",
       officialStatusDetail: "2026-07-28 已在 Pullman 官网实际带入 10 月 9—10 日、2 人 1 间：4 种 King 房型可订；市景 King 含税公开不可退 NZD 435、灵活价 NZD 459，退改和早餐方案已展开核验。",
       officialStatusEn: "Verified on the Pullman website for 9–10 Oct 2026, two adults and one room; four king categories were available and the city-view king rates and terms were opened.",
@@ -4120,5 +4195,4 @@ export const regionalHotels = {
       position: [-38.1349, 176.2519],
       mapQuery: "Pullman Rotorua",
     },
-  ],
-};
+];

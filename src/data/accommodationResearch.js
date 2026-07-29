@@ -35,15 +35,16 @@ export const accommodationResearchMethod = {
 export const accommodationResearch = {
   "auckland-city": {
     place: "奥克兰市中心",
-    dates: "2026-10-07/2026-10-09",
+    dates: "2026-10-08/2026-10-10",
     nights: 2,
     itineraryFit: [
-      "10月7日21:50国内航班落地后能顺利进城并办理晚到入住",
-      "10月8日步行覆盖 Queen Street、Britomart 与 Commercial Bay，去 Newmarket 交通直接",
-      "10月9日退房后能在08:30前后抵达奥克兰机场取车",
+      "10月8日21:50国内航班落地，预计23:00左右进城并办理晚到入住",
+      "10月9日约06:30离开酒店，前往 SkyCity Coach Terminal 参加霍比屯往返大巴",
+      "10月9日霍比屯大巴返回后继续住同一酒店，不换房也不租车",
+      "10月10日退房后寄存行李，在奥克兰休闲活动并按国际航班时间前往机场",
     ],
     accommodationQuestion: "优先比较 Britomart / Commercial Bay 与 Newmarket 的酒店；只有核验到具体、可取消且含总价优势的整套 Airbnb 才加入。",
-    status: "pending-iab-verification",
+    status: "new-exact-dates-pending-reverification",
   },
   queenstown: {
     place: "皇后镇",
@@ -81,28 +82,28 @@ export const accommodationResearch = {
     accommodationQuestion: "同时比较库克山村、普卡基湖、Braemar Station、Ben Ohau 与 Twizel 的真实可订大床酒店/旅馆及整套民宿；酒店按大床偏好筛选，民宿不限卧室和床位数量，把 Big Sky 后夜间驾驶和次晨候补直升机时间作为核心代价。",
     status: "booked-direct-hermitage-confirmation-private",
   },
-  christchurch: {
-    place: "基督城",
+  oamaru: {
+    place: "奥马鲁",
     dates: "2026-10-06/2026-10-07",
     nights: 1,
     itineraryFit: [
-      "10月6日长途自驾后约17:30入住，需要停车和晚到便利",
-      "10月7日上午安排 Riverside Market、植物园或咖啡，市区步行效率重要",
-      "15:30前往 Budget 基督城机场网点还车并准备20:30航班，离城路线不能太绕",
+      "10月6日20:00参加奥马鲁小蓝企鹅保护区晚场，住宿要减少活动结束后的夜间驾驶",
+      "次日继续自驾去基督城，需有停车位并方便早上出城",
+      "只住一晚，不因民宿装修或额外床位牺牲位置、入住便利和退改",
     ],
-    accommodationQuestion: "比较市中心有停车的酒店与 aparthotel；单晚 Airbnb 清洁费通常不利，只有具体房源总价明显更低才纳入。",
-    status: "pending-iab-verification",
+    accommodationQuestion: "实际访问官网、Booking.com 与 Airbnb，核验10月6—7日、2人1间的具体住宿；比较到企鹅保护区的晚间车程、停车、含税总价与退改，不用未核验起价或搜索结果代替房源。",
+    status: "research-and-booking-pending",
   },
-  rotorua: {
-    place: "罗托鲁瓦",
-    dates: "2026-10-09/2026-10-10",
+  christchurch: {
+    place: "基督城",
+    dates: "2026-10-07/2026-10-08",
     nights: 1,
     itineraryFit: [
-      "10月9日霍比屯后约16:30抵达，方便停车、晚餐和可选 Redwoods 短停",
-      "10月10日09:00前往 Te Puia，退房与南侧出城动线重要",
-      "单晚不为厨房支付额外清洁费，房间翻新、隔音与免费停车更实用",
+      "10月7日从奥马鲁自驾到基督城，抵达后需停车和方便步行游览",
+      "10月8日退房后寄存行李继续逛基督城，再到机场还车；具体时刻待新确认邮件核对",
+      "还车后直接留在机场准备20:30航班，不再返回市中心住宿",
     ],
-    accommodationQuestion: "比较镇中心酒店/motel 与 Te Puia 周边酒店；具体 Airbnb 仅在停车、晚到入住和单晚含费总价均有优势时加入。",
-    status: "pending-iab-verification",
+    accommodationQuestion: "比较市中心有停车和可寄存行李的酒店与 aparthotel；按10月7—8日一晚含停车总价核验，只有具体 Airbnb 房源总价和位置明显更优才纳入。",
+    status: "new-one-night-dates-pending-reverification",
   },
 };
