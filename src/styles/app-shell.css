@@ -155,6 +155,7 @@
   color: var(--forest);
 }
 
+.page-header .MuiIconButton-root.page-header-menu,
 .page-header .MuiIconButton-root.page-header-back {
   width: 24px;
   height: 24px;
@@ -195,10 +196,38 @@
   white-space: nowrap;
 }
 
+.page-header-breadcrumb button.is-current {
+  flex: 1 1 auto;
+  color: var(--ink);
+}
+
 .page-header-breadcrumb {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 9px;
+}
+
+.page-header-breadcrumb-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+}
+
+.page-header-breadcrumb-item:last-child {
+  flex: 1 1 auto;
+}
+
+.page-header-breadcrumb-item:last-child > button {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+}
+
+.page-header-breadcrumb-separator {
+  flex: 0 0 auto;
+  color: var(--ink-soft);
 }
 
 .page-header-breadcrumb button {
@@ -215,6 +244,18 @@
   flex: 1 1 auto;
 }
 
+.page-header-breadcrumb button:hover,
+.page-header-breadcrumb button:focus-visible {
+  color: var(--forest);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.page-header-breadcrumb button.is-current:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+
 @media (max-width: 900px) {
   .page-header-breadcrumb button {
     font-size: 18px;
@@ -224,6 +265,15 @@
 @media (max-width: 600px) {
   .page-header-breadcrumb button {
     font-size: 16px;
+  }
+
+  .page-header-breadcrumb-item:not(:last-child) {
+    flex: 0 1 auto;
+    max-width: 30%;
+  }
+
+  .page-header-breadcrumb-item:not(:last-child) > button {
+    max-width: 100%;
   }
 }
 

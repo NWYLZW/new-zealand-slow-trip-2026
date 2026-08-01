@@ -3,7 +3,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import { TabIcon } from "./tabIcons";
 
-export function PageHeader({ icon, isEnglish, menuOpen = false, onBack, onMenu, parentTitle, title }) {
+export function PageHeader({ breadcrumbs, icon, isEnglish, menuOpen = false, onBack, onMenu, parentTitle, title }) {
+  const breadcrumbItems = breadcrumbs?.length
+    ? breadcrumbs
+    : parentTitle
+      ? [{ label: parentTitle, onClick: onBack }, { current: true, label: title }]
+      : null;
   return (
     <Box component="header" className="page-header">
       {onMenu && (
@@ -13,9 +18,9 @@ export function PageHeader({ icon, isEnglish, menuOpen = false, onBack, onMenu, 
           aria-expanded={menuOpen}
           className="page-header-menu"
           onClick={onMenu}
-          size="large"
+          size="small"
         >
-          <MenuIcon />
+          <MenuIcon fontSize="small" />
         </IconButton>
       )}
       {onBack && (
@@ -28,13 +33,23 @@ export function PageHeader({ icon, isEnglish, menuOpen = false, onBack, onMenu, 
           <ArrowBackIcon fontSize="small" />
         </IconButton>
       )}
-      {!parentTitle && icon && <TabIcon className="page-header-section-icon" name={icon} />}
-      <Box className="page-header-copy" component={parentTitle ? "nav" : "div"} aria-label={parentTitle ? (isEnglish ? "Breadcrumb" : "面包屑") : undefined}>
-        {parentTitle ? (
+      {!breadcrumbItems && icon && <TabIcon className="page-header-section-icon" name={icon} />}
+      <Box className="page-header-copy" component={breadcrumbItems ? "nav" : "div"} aria-label={breadcrumbItems ? (isEnglish ? "Breadcrumb" : "面包屑") : undefined}>
+        {breadcrumbItems ? (
           <Box className="page-header-breadcrumb">
-            <Typography component="button" onClick={onBack}>{parentTitle}</Typography>
-            <Typography aria-hidden="true">›</Typography>
-            <Typography aria-current="page" component="h1" title={title}>{title}</Typography>
+            {breadcrumbItems.map((item, index) => (
+              <Box className="page-header-breadcrumb-item" key={`${item.label}-${index}`}>
+                {index > 0 && <Typography aria-hidden="true" className="page-header-breadcrumb-separator">›</Typography>}
+                <Typography
+                  aria-current={item.current ? "page" : undefined}
+                  className={item.current ? "is-current" : undefined}
+                  component="button"
+                  onClick={item.onClick}
+                  title={item.label}
+                  type="button"
+                >{item.label}</Typography>
+              </Box>
+            ))}
           </Box>
         ) : (
           <Typography component="h1" title={title}>{title}</Typography>

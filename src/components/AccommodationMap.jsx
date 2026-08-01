@@ -55,7 +55,7 @@ export function AccommodationMap({ hotels, selectedHotel, isEnglish }) {
               radius={isSelected ? 11 : 7}
             >
               <Tooltip direction="top" offset={[0, -10]} permanent={isSelected}>
-                {hotel.hotel}
+                {isEnglish ? (hotel.hotelEn ?? hotel.hotel) : hotel.hotel}
               </Tooltip>
             </CircleMarker>
           );
@@ -76,7 +76,7 @@ export function AccommodationMap({ hotels, selectedHotel, isEnglish }) {
       <Stack className="accommodation-map-selected" spacing={0.2}>
         <Typography variant="caption">{isEnglish ? "Selected stay" : "当前住宿"}</Typography>
         <Typography>{isEnglish ? selected.placeEn : selected.place}</Typography>
-        <Typography variant="caption">{selected.hotel}</Typography>
+        <Typography variant="caption">{isEnglish ? (selected.hotelEn ?? selected.hotel) : selected.hotel}</Typography>
       </Stack>
     </Box>
   );

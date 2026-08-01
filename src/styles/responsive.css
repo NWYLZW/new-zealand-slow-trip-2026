@@ -28,10 +28,6 @@
     font-size: 18px;
   }
 
-  .page-header-breadcrumb button {
-    max-width: 38%;
-  }
-
   .map-frame,
   .google-route-map,
   .leaflet-route-preview,
@@ -96,11 +92,13 @@
 
 @media (max-width: 600px) {
   .page-header {
-    gap: 0;
+    gap: 4px;
   }
 
   .page-header .MuiIconButton-root {
-    padding: 8px;
+    width: 24px;
+    height: 24px;
+    padding: 2px;
   }
 
   .page-header-copy > h1,

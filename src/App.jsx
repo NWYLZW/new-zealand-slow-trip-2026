@@ -150,6 +150,18 @@ export default function App() {
   const headerDetail = detail?.label
     ? detail
     : (derivedDetailLabel ? { label: derivedDetailLabel, onBack: () => clearDetailUrl(tab) } : null);
+  const headerBreadcrumbs = headerDetail ? [
+    {
+      label: parentTitle,
+      onClick: headerDetail.onRoot ?? headerDetail.onBack ?? closeDetail,
+    },
+    ...(headerDetail.ancestors ?? []),
+    {
+      current: true,
+      label: headerDetail.label,
+      onClick: () => {},
+    },
+  ] : undefined;
   const sidebar = (
     <Sidebar
       language={language}
@@ -168,6 +180,7 @@ export default function App() {
           {!isMobile && sidebar}
           <Box component="main" className="content">
             <PageHeader
+              breadcrumbs={headerBreadcrumbs}
               icon={activeTab.icon}
               isEnglish={language === "en"}
               menuOpen={mobileNavOpen}

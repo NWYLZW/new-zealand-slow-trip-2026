@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, ButtonBase, Card, Chip, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, ButtonBase, Card, LinearProgress, Stack, Typography } from "@mui/material";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
 import sharedHotelSelections from "../../data/hotel-selections.json";
@@ -41,7 +41,7 @@ const accommodationCalendar = [
   { date: "10/3", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
   { date: "10/4", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
   { date: "10/5", bookingId: "mount-cook", stayGroup: "mount-cook", hotel: "The Hermitage · Mt Cook Motel Studio Queen", place: "库克山村", placeEn: "Aoraki / Mount Cook Village", status: "住 1 晚", statusEn: "1 night", tone: "mount-cook", confirmed: true, position: [-43.7363846, 170.0987676], mapQuery: "Mt Cook Lodge & Motels New Zealand" },
-  { date: "10/6", bookingId: "hotel-oamaru", stayGroup: "oamaru", hotel: "奥马鲁住宿待调研 / 待预订", place: "奥马鲁", placeEn: "Ōamaru", status: "住 1 晚", statusEn: "1 night", tone: "oamaru", position: [-45.0966, 170.9714], mapQuery: "Oamaru New Zealand accommodation" },
+  { date: "10/6", bookingId: "hotel-oamaru", stayGroup: "oamaru", hotel: "Mariner Suites", place: "奥马鲁", placeEn: "Ōamaru", status: "住 1 晚", statusEn: "1 night", tone: "oamaru", position: [-45.1031, 170.9687], mapQuery: "Mariner Suites Oamaru" },
   { date: "10/7", bookingId: "hotel-christchurch", stayGroup: "christchurch", hotel: "Novotel Christchurch Cathedral Square", place: "基督城", placeEn: "Christchurch", status: "住 1 晚", statusEn: "1 night", tone: "christchurch", position: [-43.5309, 172.6372], mapQuery: "Novotel Christchurch Cathedral Square" },
   { date: "10/8", bookingId: "hotel-auckland-city", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "第 1 晚", statusEn: "Night 1", tone: "auckland-city", position: [-36.8462, 174.7761], mapQuery: "Adina Apartment Hotel Auckland Britomart" },
   { date: "10/9", bookingId: "hotel-auckland-city", stayGroup: "auckland-city", hotel: "Adina Apartment Hotel Auckland Britomart", place: "奥克兰市中心", placeEn: "Central Auckland", status: "第 2 晚", statusEn: "Night 2", tone: "auckland-city" },
@@ -116,17 +116,18 @@ function readComparisonUrl() {
   const hotels = visibleComparisonHotels(region);
   if (!region || hotels.length === 0) return null;
   const requestedHotelId = url.searchParams.get("hotel");
-  const hotelId = hotels.some((hotel) => hotel.id === requestedHotelId)
-    ? requestedHotelId
-    : fallbackComparisonHotelId(region, hotels);
-  return hotelId ? { region, hotelId } : null;
+  const hotelId = hotels.some((hotel) => hotel.id === requestedHotelId) ? requestedHotelId : null;
+  return { region, hotelId };
 }
 
 function writeComparisonUrl(view, method = "replaceState", state = history.state) {
   const url = new URL(window.location.href);
   if (view) {
     url.searchParams.set("compare", view.region);
-    url.searchParams.set("hotel", view.hotelId);
+    if (view.hotelId) url.searchParams.set("hotel", view.hotelId);
+    else url.searchParams.delete("hotel");
+    url.searchParams.delete("photo");
+    url.searchParams.delete("photoIndex");
     url.hash = "booking";
   } else {
     url.searchParams.delete("compare");
@@ -200,11 +201,11 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
   const airportHotel = aucklandAirportHotels.find((hotel) => hotel.id === airportHotelId) ?? aucklandAirportHotels[0];
   const cityHotel = aucklandCityHotels.find((hotel) => hotel.id === cityHotelId) ?? aucklandCityHotels[0];
   const displayedCalendar = accommodationCalendar.map((stay) => {
-    if (stay.stayGroup === "airport-arrival" && stay.hotel) return { ...stay, hotel: airportHotel.name, position: airportHotel.position, mapQuery: airportHotel.mapQuery };
-    if (stay.stayGroup === "auckland-city" && stay.hotel) return { ...stay, hotel: cityHotel.name, position: stay.position ? cityHotel.position : undefined, mapQuery: cityHotel.mapQuery };
+    if (stay.stayGroup === "airport-arrival" && stay.hotel) return { ...stay, hotel: airportHotel.name, hotelEn: airportHotel.nameEn ?? airportHotel.name, position: airportHotel.position, mapQuery: airportHotel.mapQuery };
+    if (stay.stayGroup === "auckland-city" && stay.hotel) return { ...stay, hotel: cityHotel.name, hotelEn: cityHotel.nameEn ?? cityHotel.name, position: stay.position ? cityHotel.position : undefined, mapQuery: cityHotel.mapQuery };
     if (regionalHotels[stay.stayGroup] && stay.hotel) {
       const selected = regionalHotels[stay.stayGroup].find((hotel) => hotel.id === regionalHotelIds[stay.stayGroup]) ?? regionalHotels[stay.stayGroup][0];
-      return { ...stay, hotel: selected.name, position: stay.position ? selected.position : undefined, mapQuery: selected.mapQuery };
+      return { ...stay, hotel: selected.name, hotelEn: selected.nameEn ?? selected.name, position: stay.position ? selected.position : undefined, mapQuery: selected.mapQuery };
     }
     return stay;
   });
@@ -215,34 +216,52 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
       .map((stay) => [stay.hotel, { ...stay, onSelect: setSelectedHotel }]),
   ).values()];
 
-  const selectedHotelIdForRegion = (region) => {
-    if (region === "auckland-airport") return airportHotelId;
-    if (region === "auckland-city") return cityHotelId;
-    const visibleHotels = visibleComparisonHotels(region);
-    const candidateId = regionalHotelIds[region];
-    return visibleHotels.some((hotel) => hotel.id === candidateId)
-      ? candidateId
-      : fallbackComparisonHotelId(region, visibleHotels);
-  };
-
-  const replaceComparison = (view) => {
-    setComparisonView(view);
-    writeComparisonUrl(view);
-  };
-
   const openComparison = (region) => {
-    const hotelId = selectedHotelIdForRegion(region);
-    if (!hotelId) return;
-    const view = { region, hotelId };
+    if (visibleComparisonHotels(region).length === 0) return;
+    const view = { region, hotelId: null };
     const currentState = history.state && typeof history.state === "object" ? history.state : {};
     setComparisonView(view);
-    writeComparisonUrl(view, "pushState", { ...currentState, hotelComparison: true });
+    writeComparisonUrl(view, "pushState", {
+      ...currentState,
+      hotelComparison: "list",
+      hotelComparisonBackDepth: 1,
+      hotelComparisonBackToList: false,
+    });
   };
 
-  const closeComparison = useCallback(() => {
+  const backFromComparison = useCallback(() => {
+    if (!comparisonView) return;
+
+    if (comparisonView.hotelId) {
+      if (history.state?.hotelComparison === "detail" && history.state?.hotelComparisonBackToList) {
+        history.back();
+        return;
+      }
+      const listView = { region: comparisonView.region, hotelId: null };
+      const currentState = history.state && typeof history.state === "object" ? history.state : {};
+      setComparisonView(listView);
+      writeComparisonUrl(listView, "replaceState", {
+        ...currentState,
+        hotelComparison: "list",
+        hotelComparisonBackDepth: 0,
+        hotelComparisonBackToList: false,
+      });
+      return;
+    }
+
     setComparisonView(null);
-    if (history.state?.hotelComparison) {
+    if (history.state?.hotelComparison === "list" && history.state?.hotelComparisonBackDepth === 1) {
       history.back();
+      return;
+    }
+    writeComparisonUrl(null);
+  }, [comparisonView]);
+
+  const backToAccommodationCalendar = useCallback(() => {
+    const backDepth = history.state?.hotelComparisonBackDepth;
+    setComparisonView(null);
+    if (Number.isInteger(backDepth) && backDepth > 0) {
+      history.go(-backDepth);
       return;
     }
     writeComparisonUrl(null);
@@ -250,7 +269,20 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
 
   const changeComparisonHotel = (hotelId) => {
     if (!comparisonRegion || !visibleComparisonHotels(comparisonRegion).some((hotel) => hotel.id === hotelId)) return;
-    replaceComparison({ region: comparisonRegion, hotelId });
+    if (comparisonView?.hotelId === hotelId) return;
+    const view = { region: comparisonRegion, hotelId };
+    const currentState = history.state && typeof history.state === "object" ? history.state : {};
+    const entersFromList = !comparisonView?.hotelId;
+    const listWasOpenedFromCalendar = entersFromList
+      && currentState.hotelComparison === "list"
+      && currentState.hotelComparisonBackDepth === 1;
+    setComparisonView(view);
+    writeComparisonUrl(view, entersFromList ? "pushState" : "replaceState", {
+      ...currentState,
+      hotelComparison: "detail",
+      hotelComparisonBackDepth: listWasOpenedFromCalendar ? 2 : (currentState.hotelComparisonBackDepth ?? 0),
+      hotelComparisonBackToList: entersFromList || Boolean(currentState.hotelComparisonBackToList),
+    });
   };
 
   useEffect(() => {
@@ -259,7 +291,9 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
       setComparisonView(next);
       if (next) {
         setSelectedStayGroup(calendarGroupForRegion(next.region));
-        const selected = comparisonHotelsForRegion(next.region).find((hotel) => hotel.id === next.hotelId);
+        const selected = next.hotelId
+          ? comparisonHotelsForRegion(next.region).find((hotel) => hotel.id === next.hotelId)
+          : null;
         if (selected) setSelectedHotel(selected.name);
         const url = new URL(window.location.href);
         if (url.searchParams.get("compare") !== next.region || url.searchParams.get("hotel") !== next.hotelId) {
@@ -289,11 +323,22 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
       return;
     }
     const labels = comparisonRegionLabels[comparisonRegion];
+    const activeHotel = comparisonView?.hotelId
+      ? visibleComparisonHotels(comparisonRegion).find((hotel) => hotel.id === comparisonView.hotelId)
+      : null;
     onDetailChange({
-      label: labels?.[isEnglish ? "en" : "zh"] ?? (isEnglish ? "Accommodation comparison" : "住宿比选"),
-      onBack: closeComparison,
+      ancestors: activeHotel ? [{
+        label: labels?.[isEnglish ? "en" : "zh"] ?? (isEnglish ? "Accommodation options" : "住宿选择"),
+        onClick: backFromComparison,
+      }] : [],
+      label: activeHotel?.[isEnglish ? "nameEn" : "name"]
+        ?? activeHotel?.name
+        ?? labels?.[isEnglish ? "en" : "zh"]
+        ?? (isEnglish ? "Accommodation options" : "住宿选择"),
+      onBack: backFromComparison,
+      onRoot: backToAccommodationCalendar,
     });
-  }, [closeComparison, comparisonRegion, isEnglish, onDetailChange]);
+  }, [backFromComparison, backToAccommodationCalendar, comparisonRegion, comparisonView?.hotelId, isEnglish, onDetailChange]);
 
   useEffect(() => () => onDetailChange?.(null), [onDetailChange]);
 
@@ -312,7 +357,10 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
     if (regionalHotels[region]) setRegionalHotelIds((current) => ({ ...current, [region]: hotel.id }));
     setSelectedHotel(hotel.name);
     localStorage.setItem(AUCKLAND_AIRPORT_SELECTION_KEY, JSON.stringify(selection));
-    closeComparison();
+    const backDepth = history.state?.hotelComparisonBackDepth;
+    setComparisonView(null);
+    if (Number.isInteger(backDepth) && backDepth > 0) history.go(-backDepth);
+    else writeComparisonUrl(null);
     try {
       await fetch("/api/hotel-selection", {
         method: "POST",
@@ -327,7 +375,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
   if (comparisonRegion) {
     return (
       <HotelComparisonView
-        activeHotelId={comparisonView.hotelId}
+        activeHotelId={comparisonView.hotelId ?? null}
         comparison={comparisonRegion === "auckland-city" ? aucklandCityStay : (regionalStays[comparisonRegion] ?? undefined)}
         hotels={comparisonRegion === "auckland-city" ? aucklandCityHotels : (regionalHotels[comparisonRegion] ?? aucklandAirportHotels)}
         isEnglish={isEnglish}
@@ -381,9 +429,10 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
                 ? (segmentIsConfirmed ? "Confirmed" : "Pending")
                 : (segmentIsConfirmed ? "已确认" : "待确认");
               const segmentPlace = isEnglish ? segmentStay.placeEn : segmentStay.place;
+              const segmentHotel = isEnglish ? (segmentStay.hotelEn ?? segmentStay.hotel) : segmentStay.hotel;
               const segmentAriaLabel = segmentStay.hotel
                 ? (isEnglish
-                  ? `${segmentPlace}, ${segmentStay.hotel}, ${segmentLength} night${segmentLength > 1 ? "s" : ""}, ${segmentConfirmationLabel}`
+                  ? `${segmentPlace}, ${segmentHotel}, ${segmentLength} night${segmentLength > 1 ? "s" : ""}, ${segmentConfirmationLabel}`
                   : `${segmentPlace}，${segmentStay.hotel}，${segmentLength} 晚，${segmentConfirmationLabel}`)
                 : undefined;
               const segmentStyle = segmentIndex === 0
@@ -414,34 +463,33 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
               if (regionalHotels[stay.stayGroup] && stay.hotel) openComparison(stay.stayGroup);
             };
             const cellLabel = isEnglish
-              ? `${stay.date}, ${stay.placeEn}, ${stay.hotel}, ${segmentConfirmationLabel}. Open accommodation options`
+              ? `${stay.date}, ${stay.placeEn}, ${stay.hotelEn ?? stay.hotel}, ${segmentConfirmationLabel}. Open accommodation options`
               : `${stay.date}，${stay.place}，${stay.hotel}，${segmentConfirmationLabel}。打开住宿比选`;
 
             return stay.hotel ? (
               <CalendarDayCell
+                aria-label={cellLabel}
+                aria-pressed={stay.stayGroup === selectedStayGroup}
                 className="accommodation-day-cell"
+                component={ButtonBase}
                 data-booking-id={stay.bookingId}
                 data-date={stay.date}
                 data-tone={stay.tone}
                 date={stay.date}
                 dateHeaderClassName="accommodation-date"
                 key={stay.date}
-              >
-                <ButtonBase
-                  aria-label={cellLabel}
-                  aria-pressed={stay.stayGroup === selectedStayGroup}
-                  className="accommodation-day-cell-trigger"
-                  onClick={selectStay}
-                />
-              </CalendarDayCell>
+                onClick={selectStay}
+              />
             ) : (
               <CalendarDayCell
+                aria-label={isEnglish
+                  ? `${stay.date}, no accommodation, ${stay.placeEn}`
+                  : `${stay.date}，无住宿，${stay.place}`}
                 className="accommodation-day-cell is-no-stay"
                 data-date={stay.date}
                 data-tone={stay.tone}
                 date={stay.date}
                 dateHeaderClassName="accommodation-date"
-                dateTrailing={<Chip className="accommodation-transit-tag" label={isEnglish ? stay.statusEn : stay.status} size="small" />}
                 key={stay.date}
               >
                 <Box className="accommodation-place">
@@ -465,9 +513,9 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
                         <Typography
                           className="accommodation-hotel-name"
                           component="span"
-                          title={segmentStay.hotel}
+                          title={segmentHotel}
                         >
-                          {segmentStay.hotel}
+                          {segmentHotel}
                         </Typography>
                       </Box>
                     </Box>

@@ -9,6 +9,7 @@
     "start": "npm run dev",
     "build": "vite build",
     "audit:accommodation": "node scripts/audit-accommodation-data.mjs",
+    "audit:accommodation-visuals": "node scripts/audit-accommodation-visual-duplicates.mjs",
     "audit:event-media": "node scripts/audit-event-media.mjs",
     "audit:social-guides": "node scripts/audit-social-guides.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173"

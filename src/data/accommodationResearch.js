@@ -91,8 +91,8 @@ export const accommodationResearch = {
       "次日继续自驾去基督城，需有停车位并方便早上出城",
       "只住一晚，不因民宿装修或额外床位牺牲位置、入住便利和退改",
     ],
-    accommodationQuestion: "实际访问官网、Booking.com 与 Airbnb，核验10月6—7日、2人1间的具体住宿；比较到企鹅保护区的晚间车程、停车、含税总价与退改，不用未核验起价或搜索结果代替房源。",
-    status: "research-and-booking-pending",
+    accommodationQuestion: "已完成精品套房、公寓民宿、自助客栈与传统酒店的多类型比选，并按10月6—7日、2人1间核验精确日期库存与官网总价；Mariner Suites 当前为首选，付款前仍需复核最新库存，以及各候选未完全公开的退改、停车或晚到安排。",
+    status: "multi-type-exact-date-research-complete-booking-pending",
   },
   christchurch: {
     place: "基督城",

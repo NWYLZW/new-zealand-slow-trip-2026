@@ -1,41 +1,77 @@
+import { completeAccommodationEnglishFields } from "./accommodationEnglishFields.js";
+import { applyAccommodationRatingOverrides } from "./accommodationRatingOverrides.js";
+import { applyAccommodationGalleryEnhancements } from "./accommodationGalleryEnhancements.js";
+
 export const AUCKLAND_AIRPORT_SELECTION_KEY = "nz-trip-hotel-selections";
 
 export const aucklandAirportOvernightGuides = [
   {
     title: "奥克兰国际机场过夜攻略",
+    titleEn: "Auckland International Airport overnight guide",
     author: "吃遍新加坡的汤姆A梦",
+    authorEn: "Xiaohongshu traveller",
     url: "https://www.xiaohongshu.com/explore/679644c2000000001701c538",
     note: "国际楼能找到休息位置，但夏天夜里也冷；国际、国内航站楼距离需要预留步行时间。",
+    noteEn: "Resting spots are available in the international terminal, but nights can feel cold even in summer; allow enough time to walk between the international and domestic terminals.",
   },
   {
     title: "奥克兰机场买手机卡+携带药品+过夜攻略(二)",
+    titleEn: "Auckland Airport SIM card, medicine and overnight guide (part 2)",
     author: "在新西兰读博的小C",
+    authorEn: "Xiaohongshu traveller",
     url: "https://www.xiaohongshu.com/explore/67cfbc080000000009014ef8",
     note: "国际楼 24 小时开放，二楼木椅可充电；国内楼午夜关闭，国内楼二楼有淋浴。作者 43 小时旅程只睡约 3 小时。",
+    noteEn: "The international terminal stays open 24 hours and level-two wooden seating has charging points. The domestic terminal closes at midnight but has showers upstairs. The author slept only about three hours during a 43-hour journey.",
   },
   {
     title: "奥克兰机场过夜指南～国际入境转国内",
+    titleEn: "Overnight at Auckland Airport between international and domestic flights",
     author: "嘚嘚班",
+    authorEn: "Xiaohongshu traveller",
     url: "https://www.xiaohongshu.com/explore/66fb00e3000000002c0176b2",
     note: "国际楼二楼有躺椅和电源；凌晨沿绿色地标步行约 15 分钟到国内楼，淋浴需自备洗漱用品。",
+    noteEn: "Level two of the international terminal has reclining seats and power. The marked walk to the domestic terminal takes about 15 minutes before dawn; bring your own toiletries for the showers.",
   },
   {
     title: "奥克兰机场睡机场攻略",
+    titleEn: "Sleeping at Auckland Airport",
     author: "V理想V自由",
+    authorEn: "Xiaohongshu traveller",
     url: "https://www.xiaohongshu.com/explore/674f8505000000000202b9f2",
     note: "国际楼夜间人不少，二楼椅子可充电；摆渡车过早过晚可能没有，步行按绿色箭头约 10 分钟。",
+    noteEn: "The international terminal remains busy overnight and level-two seats have charging points. The shuttle may not run very early or late; following the green arrows takes about ten minutes on foot.",
   },
   {
     title: "奥克兰机场过夜",
+    titleEn: "Overnight at Auckland Airport",
     author: "gg",
+    authorEn: "Xiaohongshu traveller",
     url: "https://www.xiaohongshu.com/explore/65c473830000000007028bf8",
     note: "座椅没有扶手，可以横躺；国内楼 3 号门附近上楼可洗热水澡。",
+    noteEn: "Some armless seating allows travellers to lie down. Hot showers are upstairs near door 3 in the domestic terminal.",
   },
+];
+
+const reviewedHotelImage = (fileName, label, sourceUrl) => ({
+  src: `/new-zealand-slow-trip-2026/images/hotels/${fileName}`,
+  label,
+  source: sourceUrl,
+});
+
+const airportAttractions = (terminalDistance, terminalTravel, secondary) => [
+  {
+    name: "奥克兰国际航站楼",
+    distance: terminalDistance,
+    travelTime: terminalTravel,
+    destinationQuery: "Auckland Airport International Terminal",
+  },
+  secondary,
 ];
 
 export const aucklandAirportHotels = [
   {
     id: "novotel-auckland-airport",
+    stayType: "hotel",
     name: "Novotel Auckland Airport",
     recommendation: "最省心",
     recommendationEn: "Easiest arrival",
@@ -62,10 +98,24 @@ export const aucklandAirportHotels = [
       },
     ],
     strengths: ["深夜抵达最方便", "24 小时前台", "减少接驳不确定性"],
+    strengthsEn: [
+      "The international terminal is only a one-to-two-minute walk away",
+      "A 24-hour front desk suits the late international arrival",
+      "No shuttle wait or transfer uncertainty after landing",
+    ],
     cautions: ["通常不是最低价", "停车需另付费"],
+    cautionsEn: [
+      "It is usually more expensive than off-airport alternatives",
+      "Airport parking is paid separately and should be re-checked before booking",
+    ],
     ratings: [
-      { platform: "Booking.com", score: "8.8 / 10", reviews: "10,804 条" },
-      { platform: "Agoda", score: "9.0 / 10", reviews: "13,013 条" },
+      {
+        platform: "Agoda",
+        score: "8.8 / 10",
+        reviews: "1,843 条",
+        sourceUrl: "https://www.agoda.com/en-nz/novotel-auckland-airport-hotel/hotel/auckland-nz.html",
+        reviewedAt: "2026-07-31",
+      },
     ],
     roomTypes: [
       {
@@ -104,37 +154,6 @@ export const aucklandAirportHotels = [
             source: "Booking.com",
           },
         ],
-      },
-      {
-        rateKey: "executive-king-26",
-        name: "行政特大号床间",
-        size: "26 m²",
-        bed: "1 张超大号双人床",
-        facilities: [
-          "空调",
-          "私人浴室",
-          "隔音",
-          "咖啡机",
-          "迷你吧",
-          "免费 Wi-Fi",
-        ],
-        images: [],
-      },
-      {
-        rateKey: "superior-suite-52",
-        name: "高级套房",
-        size: "52 m²",
-        bed: "1 张超大号双人床",
-        facilities: [
-          "私人套房",
-          "空调",
-          "私人浴室",
-          "隔音",
-          "咖啡机",
-          "迷你吧",
-          "免费 Wi-Fi",
-        ],
-        images: [],
       },
     ],
     hotelImages: [
@@ -188,39 +207,16 @@ export const aucklandAirportHotels = [
               quotedAt: "2026-07-26",
             },
           },
-          "executive-king-26": {
-            booking: {
-              source: "Booking.com",
-              roomKey: "executive-king-26",
-              room: "行政特大号床间 · 26 m²",
-              nonRefundableNzd: 383,
-              refundableNzd: 545,
-              cancelUntil: "2026-09-27",
-              payment:
-                "可取消档在 9 月 25 日前（不含当日）零付款；可取消档包含早餐",
-              breakfast: "不可退款档早餐另加 NZD 35/人",
-              quotedAt: "2026-07-27",
-            },
-          },
-          "superior-suite-52": {
-            booking: {
-              source: "Booking.com",
-              roomKey: "superior-suite-52",
-              room: "高级套房 · 52 m²",
-              nonRefundableNzd: 525,
-              refundableNzd: 722,
-              cancelUntil: "2026-09-27",
-              payment: "可取消档在 9 月 25 日前（不含当日）零付款；当前剩 1 间",
-              breakfast: "可取消档包含早餐",
-              quotedAt: "2026-07-27",
-            },
-          },
         },
       },
     },
     officialStatus: "exact-rate-verified",
     officialStatusDetail:
       "2026-07-28 已在 Novotel 官网实际带入 2026 年 9 月 28—29 日、2 人 1 间：5 种房型可订；Superior King 的含税公开价、早餐和退改条款均已展开核验。",
+    availabilityNote:
+      "Novotel 官网已按 2026 年 9 月 28—29 日、2 人 1 间核验；Superior King 的含税公开价、早餐与退改条款均已展开，并保留 Booking 与 Agoda 的同日独立报价供比较。",
+    availabilityNoteEn:
+      "Checked on the Novotel website for 28–29 Sep 2026, two adults and one room. The Superior King tax-inclusive public rates, breakfast options and cancellation terms were opened, with separate same-date Booking.com and Agoda quotes retained for comparison.",
     officialStatusEn:
       "Verified on 28 Jul 2026 for 28–29 Sep 2026, two adults and one room; five room categories were available and the Superior King tax-inclusive rates and terms were opened.",
     officialVerifiedAt: "2026-07-28",
@@ -235,6 +231,7 @@ export const aucklandAirportHotels = [
   },
   {
     id: "pullman-auckland-airport",
+    stayType: "hotel",
     name: "Pullman Auckland Airport",
     recommendation: "舒适升级",
     recommendationEn: "Premium upgrade",
@@ -262,12 +259,17 @@ export const aucklandAirportHotels = [
       },
     ],
     strengths: ["步行入住", "四家中舒适度最高", "新酒店设施"],
-    cautions: ["通常价格最高", "代客泊车成本高"],
-    ratings: [
-      { platform: "Booking.com", score: "9.1 / 10", reviews: "5,425 条" },
-      { platform: "Agoda", score: "9.0 / 10", reviews: "258 条" },
-      { platform: "Trip.com", score: "9.2 / 10", reviews: "516 条" },
+    strengthsEn: [
+      "About a one-minute walk from the international terminal",
+      "The most premium room and facilities among the current airport shortlist",
+      "A new-build airport hotel with strong soundproofing",
     ],
+    cautions: ["通常价格最高", "代客泊车成本高"],
+    cautionsEn: [
+      "Usually the highest-priced airport option",
+      "Valet parking is expensive and should be confirmed before arrival",
+    ],
+    ratings: [],
     roomTypes: [
       {
         rateKey: "superior-king-30",
@@ -326,46 +328,22 @@ export const aucklandAirportHotels = [
           },
         ],
       },
-      {
-        rateKey: "executive-king-30",
-        name: "行政特大号床间",
-        size: "30 m²",
-        bed: "1 张超大号双人床",
-        facilities: ["景观", "空调", "私人浴室", "隔音", "咖啡机"],
-        images: [],
-      },
-      {
-        rateKey: "executive-king-suite-60",
-        name: "行政特大号床套房",
-        size: "60 m²",
-        bed: "1 张大号双人床",
-        facilities: [
-          "私人套房",
-          "景观",
-          "浴缸",
-          "空调",
-          "私人浴室",
-          "隔音",
-          "咖啡机",
-        ],
-        images: [],
-      },
     ],
     hotelImages: [
       {
         src: "/new-zealand-slow-trip-2026/images/hotels/pullman-room-1.jpg",
         label: "酒店外观",
-        source: "Booking.com",
+        source: "Pullman 官网",
       },
       {
         src: "/new-zealand-slow-trip-2026/images/hotels/pullman-room-2.jpg",
         label: "酒店大堂",
-        source: "Booking.com",
+        source: "Pullman 官网",
       },
       {
         src: "/new-zealand-slow-trip-2026/images/hotels/pullman-room-3.jpg",
         label: "酒店公共区域",
-        source: "Booking.com",
+        source: "Pullman 官网",
       },
     ],
     rateSnapshots: {
@@ -426,32 +404,6 @@ export const aucklandAirportHotels = [
               quotedAt: "2026-07-26",
             },
           },
-          "executive-king-30": {
-            booking: {
-              source: "Booking.com",
-              roomKey: "executive-king-30",
-              room: "行政特大号床间 · 30 m²",
-              nonRefundableNzd: 511,
-              refundableNzd: 717,
-              cancelUntil: "2026-09-27",
-              payment: "可取消档无需预付、到店付款；可取消档包含早餐",
-              breakfast: "不可退款档早餐另加 NZD 45/人",
-              quotedAt: "2026-07-27",
-            },
-          },
-          "executive-king-suite-60": {
-            booking: {
-              source: "Booking.com",
-              roomKey: "executive-king-suite-60",
-              room: "行政特大号床套房 · 60 m²",
-              nonRefundableNzd: 655,
-              refundableNzd: 897,
-              cancelUntil: "2026-09-27",
-              payment: "可取消档无需预付、到店付款；当前剩 1 间",
-              breakfast: "可取消档包含早餐",
-              quotedAt: "2026-07-27",
-            },
-          },
         },
       },
     },
@@ -476,6 +428,7 @@ export const aucklandAirportHotels = [
   },
   {
     id: "jetpark-auckland-airport",
+    stayType: "hotel",
     name: "JetPark Hotel Auckland Airport",
     recommendation: "性价比",
     recommendationEn: "Best value",
@@ -504,11 +457,24 @@ export const aucklandAirportHotels = [
       },
     ],
     strengths: ["免费接驳", "住客评分稳定", "通常比航站楼酒店便宜"],
+    strengthsEn: [
+      "Complimentary 24-hour airport shuttle",
+      "Consistently strong guest ratings",
+      "Usually better value than the terminal-side hotels",
+    ],
     cautions: ["深夜仍需等接驳", "往返时间不如步行可控"],
+    cautionsEn: [
+      "A late-night arrival still involves waiting for the shuttle",
+      "Transfer time is less predictable than walking from a terminal-side hotel",
+    ],
     ratings: [
-      { platform: "Booking.com", score: "8.7 / 10", reviews: "6,935 条" },
-      { platform: "Agoda", score: "8.8 / 10", reviews: "9,080 条" },
-      { platform: "Expedia", score: "9.2 / 10", reviews: "1,697 条" },
+      {
+        platform: "Agoda",
+        score: "8.5 / 10",
+        reviews: "2,014 条",
+        sourceUrl: "https://www.agoda.com/en-nz/jet-park-airport-hotel/hotel/auckland-nz.html",
+        reviewedAt: "2026-07-31",
+      },
     ],
     roomTypes: [
       {
@@ -547,45 +513,6 @@ export const aucklandAirportHotels = [
             source: "Booking.com",
           },
         ],
-      },
-      {
-        rateKey: "deluxe-king-31",
-        name: "豪华特大号床间",
-        size: "31 m²",
-        bed: "1 张超大号双人床",
-        facilities: ["空调", "私人浴室", "隔音", "免费 Wi-Fi"],
-        images: [],
-      },
-      {
-        rateKey: "executive-king-28",
-        name: "行政特大号床间",
-        size: "28 m²",
-        bed: "1 张超大号双人床",
-        facilities: [
-          "景观",
-          "空调",
-          "私人浴室",
-          "隔音",
-          "咖啡机",
-          "免费 Wi-Fi",
-        ],
-        images: [],
-      },
-      {
-        rateKey: "executive-suite-59",
-        name: "行政套房",
-        size: "59 m²",
-        bed: "1 张超大号双人床",
-        facilities: [
-          "私人套房",
-          "私人小厨房",
-          "空调",
-          "私人浴室",
-          "隔音",
-          "咖啡机",
-          "免费 Wi-Fi",
-        ],
-        images: [],
       },
     ],
     hotelImages: [
@@ -683,45 +610,6 @@ export const aucklandAirportHotels = [
               quotedAt: "2026-07-27",
             },
           },
-          "deluxe-king-31": {
-            booking: {
-              source: "Booking.com · Genius 1",
-              roomKey: "deluxe-king-31",
-              room: "豪华特大号床间 · 31 m²",
-              nonRefundableNzd: 215,
-              refundableNzd: 229,
-              cancelUntil: "2026-09-27",
-              payment: "免费取消价无需预付、到店付款",
-              breakfast: "早餐另加 NZD 34/人",
-              quotedAt: "2026-07-27",
-            },
-          },
-          "executive-king-28": {
-            booking: {
-              source: "Booking.com · Genius 1",
-              roomKey: "executive-king-28",
-              room: "行政特大号床间 · 28 m²",
-              nonRefundableNzd: 248,
-              refundableNzd: 261,
-              cancelUntil: "2026-09-27",
-              payment: "免费取消价无需预付、到店付款",
-              breakfast: "早餐另加 NZD 34/人",
-              quotedAt: "2026-07-27",
-            },
-          },
-          "executive-suite-59": {
-            booking: {
-              source: "Booking.com · Genius 1",
-              roomKey: "executive-suite-59",
-              room: "行政套房 · 59 m²",
-              nonRefundableNzd: 333,
-              refundableNzd: 347,
-              cancelUntil: "2026-09-27",
-              payment: "免费取消价无需预付、到店付款；当前剩 3 间",
-              breakfast: "早餐另加 NZD 34/人",
-              quotedAt: "2026-07-27",
-            },
-          },
         },
       },
     },
@@ -747,6 +635,7 @@ export const aucklandAirportHotels = [
   },
   {
     id: "ibis-budget-auckland-airport",
+    stayType: "hotel",
     name: "ibis budget Auckland Airport",
     recommendation: "预算优先",
     recommendationEn: "Budget choice",
@@ -774,10 +663,24 @@ export const aucklandAirportHotels = [
       },
     ],
     strengths: ["四家中预算门槛最低", "不依赖酒店接驳", "附近有餐饮超市"],
+    strengthsEn: [
+      "The lowest price threshold in the existing airport shortlist",
+      "Walkable without relying on a hotel shuttle",
+      "Food outlets and a supermarket are close by",
+    ],
     cautions: ["房间较小且配置基础", "雨天拖行李步行不轻松"],
+    cautionsEn: [
+      "The 12 m² room is compact and deliberately basic",
+      "Walking with luggage is uncomfortable in rain or after a long flight",
+    ],
     ratings: [
-      { platform: "Google", score: "3.9 / 5", reviews: "3,036 条" },
-      { platform: "Agoda", score: "8.3 / 10", reviews: "3,595 条" },
+      {
+        platform: "Agoda",
+        score: "8.3 / 10",
+        reviews: "3,498 条",
+        sourceUrl: "https://www.agoda.com/en-nz/ibis-budget-auckland-airport/hotel/auckland-nz.html",
+        reviewedAt: "2026-07-31",
+      },
     ],
     roomTypes: [
       {
@@ -808,7 +711,23 @@ export const aucklandAirportHotels = [
         ],
       },
     ],
-    hotelImages: [],
+    hotelImages: [
+      {
+        src: "/new-zealand-slow-trip-2026/images/hotels/ibis-budget-auckland-airport-exterior.jpg",
+        label: "ibis budget Auckland Airport 酒店外观",
+        source: "Accor 官网",
+      },
+      reviewedHotelImage(
+        "ibis-budget-auckland-airport-exterior-day.jpg",
+        "酒店日间外观",
+        "https://www.ahstatic.com/photos/7865_ho_03_p_1024x768.jpg",
+      ),
+      reviewedHotelImage(
+        "ibis-budget-auckland-airport-exterior-evening.jpg",
+        "酒店傍晚外观",
+        "https://www.ahstatic.com/photos/7865_ho_04_p_1024x768.jpg",
+      ),
+    ],
     rateSnapshots: {
       "2026-09-28/2026-09-29": {
         roomRates: {
@@ -867,7 +786,554 @@ export const aucklandAirportHotels = [
     position: [-37.0049, 174.7898],
     mapQuery: "ibis budget Auckland Airport",
   },
+  {
+    id: "naumi-auckland-airport",
+    stayType: "hotel",
+    name: "Naumi Hotel Auckland Airport",
+    recommendation: "设计感与停车",
+    recommendationEn: "Design-led stay with parking",
+    summary:
+      "Māngere 的设计酒店，住店期间停车免费；适合自驾抵达后想住得更有特色、又不介意搭车前往航站楼的人。",
+    summaryEn:
+      "A design-led Māngere hotel with complimentary parking during the stay, best for drivers who do not need a walkable terminal hotel.",
+    access: "153 Kirkbride Road；距国际航站楼直线约 3.6 公里，前往机场需搭车",
+    accessEn:
+      "153 Kirkbride Road; about 3.6 km straight-line from the international terminal and requires a transfer",
+    parking: "官网写明住店期间免费停车；退房后停车另有 NZD 5/天起的住客方案",
+    parkingEn:
+      "Official site states complimentary parking during the stay; post-stay guest parking starts from NZD 5/day",
+    nearbyAttractions: airportAttractions("直线约 3.6 公里", "驾车或接驳；实际时长待出发前复核", {
+      name: "Ambury Regional Park",
+      distance: "直线约 2.9 公里",
+      travelTime: "驾车前往；实际路线待地图复核",
+      destinationQuery: "Ambury Regional Park",
+    }),
+    strengths: ["住店期间免费停车", "28 m² 房间与设计感比基础机场 motel 更舒适"],
+    strengthsEn: [
+      "Complimentary parking during the stay",
+      "A 28 m² room and a more design-led environment than a basic airport motel",
+    ],
+    cautions: ["不在航站楼步行范围", "9 月 28 日精确库存、接驳方式和价格仍需在预订引擎复核"],
+    cautionsEn: [
+      "Not within walking distance of the terminals",
+      "Exact 28 Sep inventory, transfer arrangements and price still require a booking-engine recheck",
+    ],
+    ratings: [{
+      platform: "Agoda",
+      score: "8.5 / 10",
+      reviews: "2,888 条",
+      sourceUrl: "https://www.agoda.com/en-nz/naumi-auckland-airport/hotel/auckland-nz.html",
+      reviewedAt: "2026-07-31",
+    }],
+    roomTypes: [
+      {
+        rateKey: "habitat-two-queens-28",
+        name: "Habitat",
+        size: "28 m²",
+        bed: "2 张 Queen 床；本次 2 人使用",
+        photosVerified: true,
+        facilities: ["两张 Queen 床", "遮光帘", "空调", "50 英寸电视", "雨淋花洒"],
+        images: [
+          reviewedHotelImage("naumi-habitat-two-queens-1.png", "Habitat 两张 Queen 床近景", "https://d18slle4wlf9ku.cloudfront.net/naumihotels.com-1365503697/cms/cache/v2/6930deb879fe9.png/1920x1080/fit/80/aa7e35d5f58b40542cf7c9719e627ab8.png"),
+          reviewedHotelImage("naumi-habitat-two-queens-2.png", "Habitat 两张 Queen 床全景", "https://d18slle4wlf9ku.cloudfront.net/naumihotels.com-1365503697/cms/cache/v2/6930dec01c814.png/1920x1080/fit/80/ef5494ee45e5b2eeaef8359f0ea9a668.png"),
+          reviewedHotelImage("naumi-habitat-two-queens-3.png", "Habitat 电视与书桌", "https://d18slle4wlf9ku.cloudfront.net/naumihotels.com-1365503697/cms/cache/v2/68fb3c4f15509.png/1920x1080/fit/80/7c60150623fb836dd2d12bc7ea28f2ec.png"),
+        ],
+      },
+    ],
+    hotelImages: [],
+    availabilityNote:
+      "2026-07-31 已打开 Naumi 官方预订入口并带入 2026 年 9 月 28—29 日、2 位成人；服务端 HTML 不返回可复核的房型库存或结算总价，因此没有记录价格，付款前必须重新查询。",
+    availabilityNoteEn:
+      "On 31 Jul 2026 the official Naumi booking entry was opened for 28–29 Sep 2026 and two adults. Its server-rendered response did not expose reproducible room inventory or a checkout total, so no price is recorded and the stay must be rechecked before payment.",
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": { availabilityChecked: true, roomKey: "habitat-two-queens-28", quotedAt: "2026-07-31" },
+    },
+    officialStatus: "needs-recheck",
+    officialStatusDetail: "2026-07-31 已打开官方入口并带入 2026 年 9 月 28—29 日、2 位成人；服务端没有返回可重复核验的库存或总价，故保持待重查且不展示价格。",
+    officialStatusEn: "The official entry was opened on 31 Jul 2026 for 28–29 Sep and two adults, but it returned no reproducible inventory or total; the option remains needs-recheck with no displayed price.",
+    officialVerifiedAt: "2026-07-31",
+    officialUrl: "https://www.naumihotels.com/naumi-hotel-auckland-airport",
+    officialBookingUrl: "https://bookings.naumihotels.com/aucklandairport/book/accommodations?checkin=2026-09-28&checkout=2026-09-29&adults=2",
+    position: [-36.9713614, 174.7828705],
+    mapQuery: "Naumi Hotel Auckland Airport",
+  },
+  {
+    id: "sudima-auckland-airport",
+    stayType: "hotel",
+    name: "Sudima Auckland Airport",
+    recommendation: "机场区标准酒店",
+    recommendationEn: "Full-service airport hotel",
+    summary:
+      "Airpark Drive 的全服务酒店，Deluxe King 床型明确；Yellow Bus 可到门口，但停车和接驳都不是免费酒店专车方案。",
+    summaryEn:
+      "A full-service Airpark Drive hotel with an explicit Deluxe King room; Yellow Bus serves the door, but both parking and transfers are paid or independently operated.",
+    access: "18 Airpark Drive；Yellow Bus 独立接驳服务在酒店门口停靠",
+    accessEn:
+      "18 Airpark Drive; the independently operated Yellow Bus stops at the hotel",
+    parking: "官网：NZD 5 / 24 小时，抵达前联系酒店安排",
+    parkingEn: "Official site: NZD 5 per 24 hours; arrange with the hotel before arrival",
+    nearbyAttractions: airportAttractions("直线约 2.1 公里", "Yellow Bus 或驾车", {
+      name: "Butterfly Creek",
+      distance: "直线约 1.9 公里",
+      travelTime: "驾车前往；实际路线待地图复核",
+      destinationQuery: "Butterfly Creek Auckland",
+    }),
+    strengths: ["Deluxe King 明确为 1 张 King 床", "Yellow Bus 在酒店门口停靠"],
+    strengthsEn: ["The Deluxe King explicitly has one king bed", "Yellow Bus stops at the hotel entrance"],
+    cautions: ["停车收费", "Yellow Bus 为独立运营且 9 月 28 日精确库存与总价仍需复核"],
+    cautionsEn: ["Parking is charged", "Yellow Bus is independently operated and exact 28 Sep inventory and total still need rechecking"],
+    roomTypes: [
+      {
+        rateKey: "deluxe-king",
+        name: "Deluxe King",
+        size: "官网未标明",
+        bed: "1 张 King 床",
+        photosVerified: true,
+        facilities: ["独立浴室", "Wi-Fi", "迷你冰箱", "书桌", "空调"],
+        images: [
+          reviewedHotelImage("sudima-airport-deluxe-king-official.jpg", "Deluxe King 客房", "https://www.sudimahotels.com/media/c2rl14zj/sudima-auckland-airport-deluxe-king.jpg"),
+        ],
+      },
+    ],
+    hotelImages: [
+      reviewedHotelImage("sudima-airport-premium-king-official.jpg", "Premium King 客房参考（非推荐房型）", "https://www.sudimahotels.com/media/hoxkneyc/sudima-auckland-airport-premium-king.jpg?width=800&height=533&v=1dbf6b316e755c0"),
+      reviewedHotelImage("sudima-airport-exterior-official.jpg", "酒店外观", "https://www.sudimahotels.com/media/1801/akl_airport_exterior_newbrand.jpg?width=1200&height=630&v=1d86b1d71dd9400"),
+    ],
+    availabilityNote:
+      "2026-07-31 已用带日期参数的 Sudima 官方预订入口打开 2026 年 9 月 28—29 日、2 人；入口重定向回日期选择页，未得到可复现的库存或含税总价，因此不展示价格。",
+    availabilityNoteEn:
+      "On 31 Jul 2026 the official Sudima entry was opened with 28–29 Sep 2026 and two adults, but it redirected to the date-selection screen and exposed no reproducible inventory or tax-inclusive total, so no price is shown.",
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": { availabilityChecked: true, roomKey: "deluxe-king", quotedAt: "2026-07-31" },
+    },
+    officialStatus: "needs-recheck",
+    officialStatusDetail: "2026-07-31 已打开带日期参数的官方入口；入口重定向回日期选择页，未产生可重复核验的 9 月 28—29 日库存或总价，故保持待重查。",
+    officialStatusEn: "The dated official entry was opened on 31 Jul 2026, but it redirected to date selection and produced no reproducible 28–29 Sep inventory or total, so this remains needs-recheck.",
+    officialVerifiedAt: "2026-07-31",
+    officialUrl: "https://www.sudimahotels.com/en/hotels/auckland-airport/",
+    officialBookingUrl: "https://bookings.sudimahotels.com/auckland-airport/book/dates-of-stay?adults=2&checkin=2026-09-28&checkout=2026-09-29",
+    position: [-36.984863, 174.783345],
+    mapQuery: "Sudima Auckland Airport",
+  },
+  {
+    id: "heartland-auckland-airport",
+    stayType: "hotel",
+    name: "Heartland Hotel Auckland Airport",
+    recommendation: "24 小时接驳",
+    recommendationEn: "24-hour shuttle",
+    summary:
+      "官网明确提供 24 小时机场接送，Superior King 房型宽敞；适合深夜抵达、但不想承担航站楼酒店价格的人。",
+    summaryEn:
+      "The official site confirms a 24-hour airport shuttle and a spacious Superior King, suiting late arrivals who do not need a terminal-side hotel.",
+    access: "14 Airpark Drive；官网称距机场约 3 公里、接驳约 5—10 分钟",
+    accessEn: "14 Airpark Drive; official site states about 3 km and a 5–10 minute transfer from the airport",
+    parking: "住店当晚停车免费；短期与长期停车方案需按预订日期询价",
+    parkingEn: "Parking for the night of the stay is complimentary; short- and long-term options require a date-specific quote",
+    nearbyAttractions: airportAttractions("直线约 2.2 公里", "酒店 24 小时接驳约 5—10 分钟", {
+      name: "Butterfly Creek",
+      distance: "直线约 2.0 公里",
+      travelTime: "驾车前往；实际路线待地图复核",
+      destinationQuery: "Butterfly Creek Auckland",
+    }),
+    strengths: ["官网明确 24 小时机场接驳", "Superior King 为 30 m²、可选 King 床"],
+    strengthsEn: ["Officially confirmed 24-hour airport shuttle", "The 30 m² Superior category offers a king-bed configuration"],
+    cautions: ["不在航站楼步行范围", "9 月 28 日 King 床库存、停车方案与总价仍需查询"],
+    cautionsEn: ["Not within walking distance of the terminals", "King configuration, parking plan and total for 28 Sep still require a live search"],
+    ratings: [{
+      platform: "Agoda",
+      score: "8.3 / 10",
+      reviews: "853 条",
+      sourceUrl: "https://www.agoda.com/en-nz/heartland-hotel-auckland-airport/hotel/auckland-nz.html",
+      reviewedAt: "2026-07-31",
+    }],
+    roomTypes: [
+      {
+        rateKey: "superior-studio-king",
+        name: "Superior Studio · King configuration",
+        size: "30 m²",
+        bed: "该类别可选 1 张 King；下单时须确认 King 配置",
+        photosVerified: true,
+        facilities: ["独立浴室", "浴缸上方淋浴", "空调", "迷你冰箱", "24 小时客房服务"],
+        images: [
+          reviewedHotelImage("heartland-airport-superior-king-official-1.jpg", "Superior King 卧室", "https://www.scenichotelgroup.co.nz/content/uploads/2022/03/Heartland-Hotel-Auckland-Airport-SPK-Superior-King-6-regular-1-2000x1389.jpg"),
+          reviewedHotelImage("heartland-airport-superior-king-official-2.jpg", "Superior King 书桌与休息区", "https://www.scenichotelgroup.co.nz/content/uploads/2022/03/Heartland-Hotel-Auckland-Airport-SPK-Superior-King-2-regular-2000x1389.jpg"),
+          reviewedHotelImage("heartland-airport-superior-bathroom-official.jpg", "Superior 客房浴室", "https://www.scenichotelgroup.co.nz/content/uploads/2022/03/Heartland-Hotel-Auckland-Airport-All-Rooms-Bathroom-regular-2000x1389.jpg"),
+        ],
+      },
+    ],
+    hotelImages: [],
+    availabilityNote:
+      "2026-07-31 已核验官网酒店、房型、接驳和停车说明；官方预订控件未提供可由静态入口复现的 2026 年 9 月 28—29 日结果，故不记录价格。",
+    availabilityNoteEn:
+      "On 31 Jul 2026 the official hotel, room, shuttle and parking pages were verified. The booking widget did not expose a reproducible 28–29 Sep 2026 result through a static entry URL, so no price is recorded.",
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": { availabilityChecked: true, roomKey: "superior-studio-king", quotedAt: "2026-07-31" },
+    },
+    officialStatus: "needs-recheck",
+    officialStatusDetail: "2026-07-31 已核验官网房型、接驳和停车；预订控件没有提供可由静态入口复现的 9 月 28—29 日库存与总价，故保持待重查。",
+    officialStatusEn: "Official room, shuttle and parking details were checked on 31 Jul 2026, but the widget exposed no reproducible 28–29 Sep inventory or total through a static entry, so this remains needs-recheck.",
+    officialVerifiedAt: "2026-07-31",
+    officialUrl: "https://www.scenichotelgroup.co.nz/auckland/heartland-hotel-auckland-airport/",
+    position: [-36.9842645, 174.7832645],
+    mapQuery: "Heartland Hotel Auckland Airport",
+  },
+  {
+    id: "bks-pioneer-motor-lodge",
+    stayType: "motel",
+    name: "B-K's Pioneer Motor Lodge",
+    recommendation: "King 床小厨房",
+    recommendationEn: "King studio with kitchenette",
+    summary:
+      "翻新后的 King Studio 带小厨房和步入式淋浴；免费接驳覆盖下午至次日上午，适合晚到、第二天取车。",
+    summaryEn:
+      "A renovated king studio with kitchenette and walk-in shower; complimentary transfers run from afternoon through the following morning.",
+    access: "205 Kirkbride Road；官网称距机场约 5 分钟，接驳自 14:00 起运行至次日 10:00",
+    accessEn: "205 Kirkbride Road; official site states about five minutes from the airport, with shuttle service from 2 p.m. through 10 a.m.",
+    parking: "住宿当晚免费停车；长期停车另收费",
+    parkingEn: "Complimentary parking for the night of the stay; long-term parking costs extra",
+    nearbyAttractions: airportAttractions("直线约 3.5 公里", "酒店接驳或驾车", {
+      name: "Butterfly Creek",
+      distance: "直线约 3.0 公里",
+      travelTime: "驾车前往；实际路线待地图复核",
+      destinationQuery: "Butterfly Creek Auckland",
+    }),
+    strengths: ["明确 1 张 King 床并带小厨房", "机场接驳和住宿当晚停车免费"],
+    strengthsEn: ["Explicit one-king configuration with a kitchenette", "Airport shuttle and overnight parking are complimentary"],
+    cautions: ["接驳并非全天连续运行", "长期停车收费，9 月 28 日库存与价格仍需人工查询"],
+    cautionsEn: ["Shuttle service is not continuous all day", "Long-term parking is charged and 28 Sep inventory and price still require a live search"],
+    roomTypes: [
+      {
+        rateKey: "superior-king-studio",
+        name: "Superior King Studio · Shower",
+        size: "官网未标明",
+        bed: "1 张 King 床",
+        photosVerified: true,
+        facilities: ["小厨房", "微波炉", "电炉", "步入式淋浴", "空调", "智能电视"],
+        images: [
+          reviewedHotelImage("bks-pioneer-superior-king-kitchen-official.png", "Superior King Studio 小厨房", "https://webbox.imgix.net/images/boakbemabqqkmiww/9d371294-319f-4f8d-8c88-1c5f0f274abf.png"),
+          reviewedHotelImage("bks-pioneer-superior-king-room-official.jpg", "Superior King Studio 卧室与休息区", "https://webbox.imgix.net/images/boakbemabqqkmiww/dd0e40d9-860d-4265-95ee-e6bced8d6bfb.png?auto=format,compress&fit=crop&crop=entropy"),
+          reviewedHotelImage("bks-pioneer-superior-king-bed-official.jpg", "Superior King Studio King 床", "https://webbox.imgix.net/images/boakbemabqqkmiww/9a0874a7-8772-4a84-8240-1c55fef51ea2.png?auto=format,compress&fit=crop&crop=entropy&w=1600&h=600"),
+        ],
+      },
+    ],
+    hotelImages: [],
+    availabilityNote:
+      "2026-07-31 已核验官网房型、床型、接驳与停车说明；官网 Book Now 依赖动态控件，无法由静态 URL 复现 2026 年 9 月 28—29 日、2 人结果，因此未记录价格。",
+    availabilityNoteEn:
+      "On 31 Jul 2026 the official room, bed, shuttle and parking details were verified. Book Now relies on a dynamic widget and did not expose a reproducible 28–29 Sep 2026 result for two adults, so no price is recorded.",
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": { availabilityChecked: true, roomKey: "superior-king-studio", quotedAt: "2026-07-31" },
+    },
+    officialStatus: "needs-recheck",
+    officialStatusDetail: "2026-07-31 已核验官网房型、床型、接驳与停车；动态 Book Now 未提供可静态复现的 9 月 28—29 日库存或总价，故保持待重查。",
+    officialStatusEn: "Official room, bed, shuttle and parking details were checked on 31 Jul 2026, but dynamic Book Now exposed no statically reproducible 28–29 Sep inventory or total, so this remains needs-recheck.",
+    officialVerifiedAt: "2026-07-31",
+    officialUrl: "https://www.bkspioneer.com/",
+    position: [-36.9726836, 174.7870643],
+    mapQuery: "B-K's Pioneer Motor Lodge",
+  },
+  {
+    id: "auckland-airport-motel",
+    stayType: "motel",
+    name: "Auckland Airport Motel",
+    recommendation: "简易 Queen 单间",
+    recommendationEn: "Simple queen studio",
+    summary:
+      "Queen Studio 配小厨房且住店期间停车免费；主要短板是接驳仅在 09:00—16:00 运行，不适合依赖深夜接送。",
+    summaryEn:
+      "A queen studio with kitchenette and free parking during the stay; its major limitation is the 9 a.m.–4 p.m. shuttle window.",
+    access: "138 McKenzie Road；官网称距机场 4.5 公里、约 8 分钟，接驳仅 09:00—16:00",
+    accessEn: "138 McKenzie Road; official site states 4.5 km or about eight minutes from the airport, with shuttle only 9 a.m.–4 p.m.",
+    parking: "住店期间免费现场停车",
+    parkingEn: "Complimentary on-site parking during the stay",
+    nearbyAttractions: airportAttractions("直线约 4.4 公里", "白天接驳或驾车", {
+      name: "Ambury Regional Park",
+      distance: "直线约 2.4 公里",
+      travelTime: "驾车前往；实际路线待地图复核",
+      destinationQuery: "Ambury Regional Park",
+    }),
+    strengths: ["Queen Studio 带小厨房", "住店期间现场停车免费"],
+    strengthsEn: ["Queen Studio includes a kitchenette", "On-site parking is complimentary during the stay"],
+    cautions: ["接驳只在 09:00—16:00 且部分节假日停运", "不是 King 床；9 月 28 日库存与总价仍需复核"],
+    cautionsEn: ["Shuttle runs only 9 a.m.–4 p.m. and pauses on listed holidays", "Queen rather than king; exact 28 Sep inventory and total still need rechecking"],
+    ratings: [{
+      platform: "Agoda",
+      score: "8.1 / 10",
+      reviews: "448 条",
+      sourceUrl: "https://www.agoda.com/en-nz/auckland-airport-motel/hotel/auckland-nz.html",
+      reviewedAt: "2026-07-31",
+    }],
+    roomTypes: [
+      {
+        rateKey: "queen-studio",
+        name: "Queen Studio",
+        size: "官网未标明",
+        bed: "1 张 Queen 床",
+        photosVerified: true,
+        facilities: ["小厨房", "微波炉", "冰箱", "独立浴室", "空调", "休息区"],
+        images: [
+          reviewedHotelImage("auckland-airport-motel-queen-official-1.jpg", "Queen Studio 卧室正面", "https://aucklandairportmotel.co.nz/public/img/queen1.jpg"),
+          reviewedHotelImage("auckland-airport-motel-queen-official-2.jpg", "Queen Studio 卧室侧面", "https://aucklandairportmotel.co.nz/public/img/queen2.jpg"),
+          reviewedHotelImage("auckland-airport-motel-queen-official-3.jpg", "Queen Studio 休息区与小厨房", "https://aucklandairportmotel.co.nz/public/img/queen3.jpg"),
+        ],
+      },
+    ],
+    hotelImages: [],
+    availabilityNote:
+      "2026-07-31 已打开官方 Book Direct Online 入口并带入 2026 年 9 月 28—29 日、2 人；静态页面未暴露可复核库存或含税总价，故不展示价格。",
+    availabilityNoteEn:
+      "On 31 Jul 2026 the official Book Direct Online entry was opened with 28–29 Sep 2026 and two adults. Its static response exposed no reproducible inventory or tax-inclusive total, so no price is shown.",
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": { availabilityChecked: true, roomKey: "queen-studio", quotedAt: "2026-07-31" },
+    },
+    officialStatus: "needs-recheck",
+    officialStatusDetail: "2026-07-31 已打开官方 Book Direct Online 并带入 9 月 28—29 日、2 人；静态响应没有可重复核验的库存或含税总价，故保持待重查。",
+    officialStatusEn: "Official Book Direct Online was opened on 31 Jul 2026 for 28–29 Sep and two adults, but its static response exposed no reproducible inventory or tax-inclusive total, so this remains needs-recheck.",
+    officialVerifiedAt: "2026-07-31",
+    officialUrl: "https://aucklandairportmotel.co.nz/",
+    officialBookingUrl: "https://book-directonline.com/properties/aucklandairportmotel?locale=en&items%5B0%5D%5Badults%5D=2&items%5B0%5D%5Bchildren%5D=0&items%5B0%5D%5Binfants%5D=0&currency=NZD&checkInDate=2026-09-28&checkOutDate=2026-09-29",
+    position: [-36.9643389, 174.7865467],
+    mapQuery: "Auckland Airport Motel",
+  },
+  {
+    id: "holiday-inn-auckland-airport",
+    stayType: "hotel",
+    name: "Holiday Inn Auckland Airport",
+    recommendation: "深夜入住的花园酒店备选",
+    recommendationEn: "Garden hotel for a late arrival",
+    summary:
+      "位于 Māngere 的 251 间客房机场酒店，房间比多数机场 motel 更完整。Google 地图列有机场接驳，第三方房型页确认 15:00 后可入住，不设最晚入住时刻；适合 23:50 落地后预留入境与交通时间。",
+    summaryEn:
+      "A 251-room airport hotel in Māngere with fuller facilities than most airport motels. Google Maps lists an airport shuttle, while the reviewed room page allows check-in after 3 p.m. without a stated latest time, fitting a 23:50 arrival once immigration and transfer time are allowed.",
+    access: "2 Ascot Road；约 4 公里到国际航站楼，Google 地图列有机场接驳；班次与费用须付款前确认",
+    accessEn: "2 Ascot Road; about 4 km from the international terminal, with an airport shuttle listed on Google Maps; reconfirm timetable and cost before payment",
+    parking: "Google 地图列免费停车；停车条件与房价适用范围须在预订页复核",
+    parkingEn: "Google Maps lists free parking; reconfirm eligibility and rate conditions on the booking page",
+    nearbyAttractions: [{
+      name: "奥克兰国际航站楼",
+      nameEn: "Auckland International Terminal",
+      distance: "直线约 3.6 公里",
+      distanceEn: "About 3.6 km straight-line",
+      travelTime: "机场接驳或驾车；深夜班次须预先确认",
+      travelTimeEn: "Airport shuttle or car; reconfirm the late-night timetable before arrival",
+      destinationQuery: "Auckland Airport International Terminal",
+    }, {
+      name: "Ambury Regional Park",
+      distance: "直线约 2.6 公里",
+      travelTime: "驾车前往；实际路线待地图复核",
+      destinationQuery: "Ambury Regional Park",
+    }],
+    strengths: ["没有 23:59 接机截止问题", "25 m² 双人房有独立卫浴和完整房型图库", "Google 地图列机场接驳与免费停车"],
+    strengthsEn: ["No 11:59 p.m. pickup cutoff", "The 25 m² double room has a private bathroom and a verified room gallery", "Google Maps lists an airport shuttle and free parking"],
+    cautions: ["不是航站楼步行酒店", "接驳班次与费用未在当前静态页面可靠复现", "9 月 28—29 日库存和含税总价仍需重新搜索"],
+    cautionsEn: ["Not walkable from the terminal", "The current static pages do not reliably reproduce the shuttle timetable or charge", "Exact 28–29 Sep inventory and tax-inclusive total still need a live search"],
+    roomTypes: [{
+      rateKey: "standard-double-room",
+      name: "Standard Double Room",
+      nameEn: "Standard Double Room",
+      size: "25 m²",
+      sizeEn: "25 m²",
+      bed: "1 张 Double 床",
+      bedEn: "one double bed",
+      photosVerified: true,
+      facilities: ["空调", "私人浴室", "隔音", "冰箱", "书桌", "电视", "免费 Wi-Fi"],
+      facilitiesEn: ["Air conditioning", "Private bathroom", "Soundproofing", "Refrigerator", "Desk", "TV", "Free Wi-Fi"],
+      images: [
+        reviewedHotelImage("holiday-inn-auckland-airport-standard-double-room.jpg", "Standard Double Room 卧室全景", "https://cdn.worldota.net/t/1024x768/content/87/02/87026ccad9ce3d641acb6ae4e73874b419dfa32f.PNG"),
+        reviewedHotelImage("holiday-inn-auckland-airport-standard-double-bathroom.jpg", "Standard Double Room 独立浴室", "https://cdn.worldota.net/t/1024x768/content/bc/66/bc661daaaa66c47932fa920560e41cc39d1b202c.jpeg"),
+        reviewedHotelImage("holiday-inn-auckland-airport-standard-double-seating.jpg", "Standard Double Room 休息区", "https://cdn.worldota.net/t/1024x768/content/b2/0e/b20e44d690b1130567f752866222ca19042c85df.jpeg"),
+        reviewedHotelImage("holiday-inn-auckland-airport-standard-double-workspace.jpg", "Standard Double Room 工作区", "https://cdn.worldota.net/t/1024x768/content/7f/35/7f357fac211fd538ff4c35fe127a6abceb6c3ede.jpeg"),
+      ],
+    }],
+    hotelImages: [],
+    availabilityNote:
+      "2026-07-31 已核验具体物业、地址、Google 地图评分和接驳/停车设施，并在 ZenHotels 具体物业页核对 Standard Double Room 的 25 m²、Double 床、房内设施、图片及 15:00 后入住规则；该页当前起价并非 9 月 28 日结果，因此不展示。",
+    availabilityNoteEn:
+      "On 31 Jul 2026 the exact property, address, Google Maps score and shuttle/parking facilities were checked. The specific ZenHotels property page confirms the 25 m² Standard Double Room, double bed, in-room facilities, images and check-in after 3 p.m. Its current from-price is not for 28 Sep and is not shown.",
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": { availabilityChecked: true, roomKey: "standard-double-room", quotedAt: "2026-07-31" },
+    },
+    officialStatus: "needs-recheck",
+    officialStatusDetail: "酒店身份、位置、评分、代表房型和晚到适配性已于 2026-07-31 核验；9 月 28—29 日、2 人 1 间的实时库存、含税总价、接驳班次与退改仍须重查。",
+    officialStatusEn: "Identity, location, rating, representative room and late-arrival suitability were checked on 31 Jul 2026. Live inventory, tax-inclusive total, shuttle timetable and terms for 28–29 Sep, two adults and one room still require rechecking.",
+    officialVerifiedAt: "2026-07-31",
+    officialUrl: "https://www.ihg.com/holidayinn/hotels/us/en/auckland/aklap/hoteldetail",
+    officialBookingUrl: "https://www.ihg.com/holidayinn/hotels/us/en/auckland/aklap/hoteldetail",
+    bookingUrl: "https://www.booking.com/hotel/nz/holiday-inn-auckland-airport.html",
+    agodaUrl: "https://www.agoda.com/holiday-inn-auckland-airport/hotel/auckland-nz.html",
+    position: [-36.9731497, 174.7858429],
+    mapQuery: "Holiday Inn Auckland Airport 2 Ascot Road",
+  },
+  {
+    id: "proximity-apartments-manukau-airport",
+    stayType: "home",
+    name: "Proximity Apartments Manukau / Auckland Airport",
+    recommendation: "机场南侧整套公寓",
+    recommendationEn: "Self-contained apartment south of the airport",
+    summary:
+      "位于 Manukau 的 35 m² 服务式 Studio，明确容纳 2 人并配 Queen 床、完整厨房、独立浴室和房内洗烘；不是航站楼旁住宿，但适合想住公寓、次日再取车或向南出发的两人。",
+    summaryEn:
+      "A 35 m² serviced studio in Manukau for two guests, with a queen bed, full kitchen, en-suite and in-room washer/dryer. It is not terminal-side, but suits a couple wanting an apartment before collecting a car or heading south.",
+    access:
+      "17 Amersham Way, Manukau；Agoda 物业页显示距 Auckland Airport 约 8.57 公里，需驾车、出租车或网约车",
+    accessEn:
+      "17 Amersham Way, Manukau; Agoda lists Auckland Airport about 8.57 km away, requiring a car, taxi or ride-hail",
+    parking:
+      "官网：现场安全停车 NZD 12/晚/车，限高 2.1 米且必须提前预订；车位有限",
+    parkingEn:
+      "Official site: secure on-site parking costs NZD 12 per car per night, has a 2.1 m height limit and must be reserved in advance; spaces are limited",
+    nearbyAttractions: [
+      {
+        name: "奥克兰国际航站楼",
+        nameEn: "Auckland International Terminal",
+        distance: "直线约 8.6 公里",
+        distanceEn: "About 8.6 km straight-line",
+        travelTime: "驾车、出租车或网约车；出发前复核实时路况",
+        travelTimeEn: "Drive, taxi or ride-hail; recheck live traffic before departure",
+        destinationQuery: "Auckland Airport International Terminal",
+      },
+      {
+        name: "Westfield Manukau City",
+        nameEn: "Westfield Manukau City",
+        distance: "官网称位于物业对面",
+        distanceEn: "Official site states it is opposite the property",
+        travelTime: "步行前往",
+        travelTimeEn: "Walk",
+        destinationQuery: "Westfield Manukau City",
+      },
+    ],
+    strengths: [
+      "35 m² Studio 明确最多住 2 人、配 1 张 Queen 床",
+      "完整厨房、独立浴室及房内洗衣机/烘干机",
+      "Agoda 已复现 9 月 28—29 日、2 人 1 间的 Studio 库存和含税总价",
+    ],
+    strengthsEn: [
+      "The 35 m² studio explicitly sleeps two and has one queen bed",
+      "Full kitchen, en-suite bathroom and in-room washer/dryer",
+      "Agoda inventory and a tax-inclusive Studio total were reproduced for 28–29 Sep, two adults and one room",
+    ],
+    cautions: [
+      "距机场约 8.6 公里且没有核验到免费机场接驳",
+      "周一官网前台标注 07:00—22:00，晚于 22:00 抵达必须预先取得书面入住安排",
+      "官网动态预订页未返回可重复核验的同日总价，预订前仍需重查",
+    ],
+    cautionsEn: [
+      "About 8.6 km from the airport, with no verified complimentary airport shuttle",
+      "Official Monday reception hours are 7 a.m.–10 p.m.; arrivals after 10 p.m. require written arrangements in advance",
+      "The direct dynamic booking page did not return a reproducible same-date total, so recheck before booking",
+    ],
+    ratings: [
+      {
+        platform: "Agoda",
+        platformEn: "Agoda",
+        score: "8.7 / 10",
+        scoreEn: "8.7 / 10",
+        reviews: "1,036 条 Agoda 住客评价",
+        reviewsEn: "1,036 Agoda guest reviews",
+        sourceUrl:
+          "https://www.agoda.com/proximity-apartments-manukau-auckland-airport/hotel/auckland-nz.html",
+        reviewedAt: "2026-08-01",
+        verifiedPosition: [-36.9912682, 174.8791504],
+      },
+    ],
+    roomTypes: [
+      {
+        rateKey: "studio-apartment-35",
+        name: "Studio Apartment",
+        nameEn: "Studio Apartment",
+        size: "35 m²",
+        sizeEn: "35 m²",
+        bed: "1 张 Queen 床",
+        bedEn: "one queen bed",
+        photosVerified: true,
+        facilities: [
+          "完整厨房",
+          "独立浴室",
+          "洗衣机/烘干机",
+          "空调",
+          "私人阳台",
+          "免费 Wi-Fi",
+        ],
+        facilitiesEn: [
+          "Full kitchen",
+          "En-suite bathroom",
+          "Washer and dryer",
+          "Air conditioning",
+          "Private balcony",
+          "Free Wi-Fi",
+        ],
+        images: [
+          reviewedHotelImage(
+            "proximity-manukau-studio-bedroom.jpg",
+            "Studio Apartment Queen 床与客房全景",
+            "https://www.proximityapartments.co.nz/wp-content/uploads/2023/10/Proximity-Apartment_IMW-19-768x512.jpg",
+          ),
+          reviewedHotelImage(
+            "proximity-manukau-studio-kitchen.jpg",
+            "Studio Apartment Queen 床与入户方向",
+            "https://www.proximityapartments.co.nz/wp-content/uploads/2023/10/Proximity-Apartment_IMW-21-768x512.jpg",
+          ),
+          reviewedHotelImage(
+            "proximity-manukau-studio-living.jpg",
+            "Studio Apartment Queen 床、餐桌与阳台",
+            "https://www.proximityapartments.co.nz/wp-content/uploads/2019/06/IMG_1931-2-768x513.jpg",
+          ),
+          reviewedHotelImage(
+            "proximity-manukau-studio-dining.jpg",
+            "Studio Apartment 餐桌、电视与睡眠区",
+            "https://www.proximityapartments.co.nz/wp-content/uploads/2019/06/IMG_1937-1-768x512.jpg",
+          ),
+          reviewedHotelImage(
+            "proximity-manukau-studio-window.jpg",
+            "Studio Apartment 完整厨房",
+            "https://www.proximityapartments.co.nz/wp-content/uploads/2023/10/Proximity-Apartment_IMW-22-768x512.jpg",
+          ),
+          reviewedHotelImage(
+            "proximity-manukau-studio-bathroom.jpg",
+            "Studio Apartment 私人阳台与客房入口",
+            "https://www.proximityapartments.co.nz/wp-content/uploads/2019/06/IMG_1964-1-768x512.jpg",
+          ),
+          reviewedHotelImage(
+            "proximity-manukau-studio-balcony.jpg",
+            "Studio Apartment 阳台餐桌与城市景观",
+            "https://www.proximityapartments.co.nz/wp-content/uploads/2019/06/IMG_1895-1-768x512.jpg",
+          ),
+        ],
+      },
+    ],
+    hotelImages: [],
+    availabilityNote:
+      "2026-08-01 已在 Agoda 具体物业接口复现 2026 年 9 月 28—29 日、2 人 1 间的 Studio Apartment 库存；但接口无视 NZD 请求并以 USD 返回，官网 iHotelier 静态入口也未返回同日总价，因此不展示价格并保持 needs-recheck。官网通用“from NZD 165”不是本次日期报价。",
+    availabilityNoteEn:
+      "On 1 Aug 2026, Agoda's property endpoint reproduced Studio Apartment inventory for 28–29 Sep 2026, two adults and one room. However, it ignored the NZD request and returned USD, while the direct iHotelier entry returned no same-date total. No price is displayed, the property remains needs-recheck, and the website's generic “from NZD 165” is not treated as this stay's quote.",
+    rateSnapshots: {
+      "2026-09-28/2026-09-29": {
+        availabilityChecked: true,
+        roomKey: "studio-apartment-35",
+        quotedAt: "2026-08-01",
+      },
+    },
+    officialStatus: "needs-recheck",
+    officialStatusDetail:
+      "2026-08-01 已带入官网 iHotelier 的 9 月 28—29 日、Studio、2 人参数，但静态入口仅返回预订外壳，未生成可重复核验的同日库存或总价；Agoda 同日库存可复现，但服务端无视 NZD 请求并返回 USD，故不展示价格，付款前须重查官网或最终结算页。",
+    officialStatusEn:
+      "On 1 Aug 2026 the official iHotelier entry was opened with 28–29 Sep, Studio and two-adult parameters, but its static response only returned the booking shell and no reproducible same-date inventory or total. Agoda's dated inventory was reproducible, but its server ignored the NZD request and returned USD, so no price is displayed; recheck the direct or final checkout page before payment.",
+    officialVerifiedAt: "2026-08-01",
+    officialUrl: "https://www.proximityapartments.co.nz/room/studio/",
+    officialBookingUrl:
+      "https://proximityapartments.ihotelier.com/book/accommodations?Adults=2&Children=0&DateIn=09%2F28%2F2026&DateOut=09%2F29%2F2026&RoomTypeId=450712",
+    bookingUrl:
+      "https://www.booking.com/hotel/nz/proximity-apartments-manukau-auckland-airport.html",
+    agodaUrl:
+      "https://www.agoda.com/proximity-apartments-manukau-auckland-airport/hotel/auckland-nz.html",
+    position: [-36.9912682, 174.8791504],
+    mapQuery: "Proximity Apartments 17 Amersham Way Manukau",
+  },
 ];
+
+applyAccommodationGalleryEnhancements(aucklandAirportHotels);
+applyAccommodationRatingOverrides(aucklandAirportHotels);
+completeAccommodationEnglishFields(aucklandAirportHotels, { fillRates: true });
 
 export const aucklandAirportStayDates = ["2026-09-28"];
 
