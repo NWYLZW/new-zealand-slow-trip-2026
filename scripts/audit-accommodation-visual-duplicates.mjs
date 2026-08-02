@@ -6,7 +6,6 @@ import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { promisify } from "node:util";
 import process from "node:process";
-import { aucklandAirportHotels } from "../src/data/aucklandAirportHotels.js";
 import { aucklandCityHotels } from "../src/data/aucklandCityHotels.js";
 import { regionalHotels } from "../src/data/regionalHotels.js";
 
@@ -25,7 +24,6 @@ const reviewedDistinctPairs = new Set([
   ].sort().join("|"),
 ]);
 const groups = {
-  "auckland-airport": aucklandAirportHotels,
   "auckland-city": aucklandCityHotels,
   ...regionalHotels,
 };

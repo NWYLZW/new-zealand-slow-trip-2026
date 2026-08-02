@@ -157,7 +157,7 @@ const sourcedOverrides = {
   "queenstown-central-qt3-airbnb": sourcedRating({
     platform: "Airbnb",
     score: "4.93 / 5",
-    reviews: "164 条住客评价 · Guest Favourite · Superhost",
+    reviews: "165 条住客评价 · Guest Favourite · Superhost",
     sourceUrl: "https://www.airbnb.com/rooms/938494715127054681",
   }),
   "queenstown-hayes-farmstay-airbnb": sourcedRating({

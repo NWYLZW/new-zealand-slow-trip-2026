@@ -1,0 +1,568 @@
+import { additionalOamaruHotels } from "../oamaruHotels.js";
+import { oamaruHomeAdditionalHotels } from "../oamaruHomeAdditionalHotels.js";
+import { googleGuestRating, image, sharedSocial } from "./shared.js";
+
+export const oamaruHotels = [
+    {
+      id: "mariner-suites-oamaru",
+      name: "Mariner Suites",
+      stayType: "motel",
+      selectionPending: true,
+      recommendation: "精品套房首选",
+      recommendationEn: "Preferred boutique suite",
+      summary:
+        "32 m² 的精品 motel 套房，官网明确写明可步行前往企鹅保护区。精确日期有两种大床 Studio，兼顾舒适度、停车和晚场动线；但晚到取钥匙方式仍要在付款前确认。",
+      summaryEn:
+        "A boutique motel-style suite whose official site explicitly highlights walking access to the penguin colony. Two spacious king studios were available for the exact date, balancing comfort, parking and the evening itinerary; reconfirm late key collection before paying.",
+      access: "47 Tyne Street；官网称可步行前往企鹅保护区",
+      accessEn: "47 Tyne Street; the official site says the penguin colony is within walking distance",
+      parking: "免费停车",
+      parkingEn: "Free parking",
+      nearbyAttractions: [
+        {
+          name: "Ōamaru Blue Penguin Colony",
+          nameEn: "Ōamaru Blue Penguin Colony",
+          distance: "Tyne Street 至企鹅保护区短程可达",
+          distanceEn: "A short trip from Tyne Street",
+          travelTime: "官网称可步行；夜间按实际照明选择步行或短途驾车",
+          travelTimeEn: "The official site describes it as walkable; choose walking or a short drive according to lighting after the show",
+          originQuery: "Mariner Suites Oamaru",
+          destinationQuery: "Oamaru Blue Penguin Colony",
+        },
+        {
+          name: "Victorian Precinct",
+          nameEn: "Victorian Precinct",
+          distance: "Tyne Street 历史街区内",
+          distanceEn: "Within the Tyne Street heritage area",
+          travelTime: "步行可达",
+          travelTimeEn: "Walkable",
+          originQuery: "Mariner Suites Oamaru",
+          destinationQuery: "Victorian Precinct Oamaru",
+        },
+      ],
+      strengths: [
+        "10 月 6—7 日官网精确日期已核验",
+        "32 m² 大床 Studio，空间优于普通标准房",
+        "免费停车，14:00 入住、10:00 退房",
+        "抵达日前至少 2 天取消免费；少于 2 天收首晚 100%",
+      ],
+      strengthsEn: [
+        "Direct availability verified for 6–7 Oct",
+        "Spacious 32 m² king studios",
+        "Free parking; 14:00 check-in and 10:00 check-out",
+        "Free cancellation at least two days before arrival; later cancellation costs 100% of the first night",
+      ],
+      cautions: [
+        "尚未付款预订",
+        "企鹅晚场结束后的取钥匙方式仍需预订前书面确认",
+        "官网称可步行，但夜间是否步行应按天气和照明决定",
+      ],
+      cautionsEn: [
+        "Not yet booked or paid",
+        "Confirm the key-collection process in writing for arrival after the penguin session",
+        "Although described as walkable, decide whether to walk at night based on weather and lighting",
+      ],
+      ratings: googleGuestRating({ score: 5, reviews: 106, placeId: "ChIJo5MoKcmZKagR9aGIqHM_q0Y" }),
+      roomTypes: [
+        {
+          rateKey: "executive-downstairs-studio",
+          name: "Executive Downstairs Studio",
+          size: "32 m²",
+          sizeEn: "32 m²",
+          bed: "1 张 King 床",
+          bedEn: "one king bed",
+          facilities: ["独立卫浴", "地面层", "免费停车"],
+          facilitiesEn: ["En-suite bathroom", "Ground floor", "Free parking"],
+          photosVerified: true,
+          images: [
+            image("oamaru-mariner-executive-downstairs-1.jpg", "Executive Downstairs Studio 卧室", "Mariner Suites Staying With Us 页的 Executive Downstairs Studio 专属轮播 · https://www.marinersuites.nz/staying-with-us/"),
+            image("oamaru-mariner-executive-downstairs-2.jpg", "Executive Downstairs Studio 庭院方向", "Mariner Suites Staying With Us 页的 Executive Downstairs Studio 专属轮播 · https://www.marinersuites.nz/staying-with-us/"),
+            image("oamaru-mariner-executive-downstairs-3.jpg", "Executive Downstairs Studio 室内全景", "Mariner Suites Staying With Us 页的 Executive Downstairs Studio 专属轮播 · https://www.marinersuites.nz/staying-with-us/"),
+          ],
+        },
+        {
+          rateKey: "premier-upstairs-studio",
+          name: "Premier Upstairs Studio",
+          size: "32 m²",
+          sizeEn: "32 m²",
+          bed: "1 张 Super King 床",
+          bedEn: "one super king bed",
+          facilities: ["独立卫浴", "楼上房型", "免费停车"],
+          facilitiesEn: ["En-suite bathroom", "Upstairs room", "Free parking"],
+          photosVerified: true,
+          images: [
+            image("oamaru-mariner-premier-upstairs-1.jpg", "Premier Upstairs Studio Super King 卧室", "Mariner Suites Staying With Us 页的 Premier Upstairs Studio 专属轮播 · https://www.marinersuites.nz/staying-with-us/"),
+            image("oamaru-mariner-premier-upstairs-2.jpg", "Premier Upstairs Studio 室内与休息区", "Mariner Suites Staying With Us 页的 Premier Upstairs Studio 专属轮播 · https://www.marinersuites.nz/staying-with-us/"),
+            image("oamaru-mariner-premier-upstairs-3.jpg", "Premier Upstairs Studio 室内细节", "Mariner Suites Staying With Us 页的 Premier Upstairs Studio 专属轮播 · https://www.marinersuites.nz/staying-with-us/"),
+          ],
+        },
+      ],
+      hotelImages: [
+        image("oamaru-mariner-exterior-1.jpg", "Mariner Suites 客房楼外观", "Mariner Suites 官网 · https://www.marinersuites.nz/wp-content/uploads/2022/01/MS-4copy.jpg"),
+        image("oamaru-mariner-aerial-2.jpg", "Mariner Suites 与海港位置", "Mariner Suites 官网 · https://www.marinersuites.nz/wp-content/uploads/2022/11/DB7D05FD-A132-41CD-A180-0FCAA962B2BC.jpg"),
+        image("oamaru-mariner-lounge-3.jpg", "Mariner Suites 公共休息区", "Mariner Suites 官网 · https://www.marinersuites.nz/wp-content/uploads/2022/10/1marinersuites-4copy.jpg"),
+      ],
+      availabilityNote:
+        "官网已按 2026 年 10 月 6—7 日、2 人核验：Executive Downstairs Studio 含税 NZD 250，剩 3 间；Premier Upstairs Studio 含税 NZD 300，剩 4 间。两档均尚未预订。",
+      availabilityNoteEn:
+        "Verified direct for 6–7 Oct 2026 and two guests: the Executive Downstairs Studio was NZD 250 tax-inclusive with three rooms left, and the Premier Upstairs Studio was NZD 300 tax-inclusive with four rooms left. Neither has been booked.",
+      rateSnapshots: {
+        "2026-10-06/2026-10-07": {
+          roomRates: {
+            "executive-downstairs-studio": {
+              official: {
+                source: "Mariner Suites 官网",
+                roomKey: "executive-downstairs-studio",
+                room: "Executive Downstairs Studio · 32 m² · King",
+                roomEn: "Executive Downstairs Studio · 32 m² · king bed",
+                nonRefundableNzd: null,
+                refundableNzd: 250,
+                cancelUntil: "抵达日前至少 2 天",
+                cancelUntilEn: "at least two days before arrival",
+                refundableRateLabel: "10月6—7日含税总价 · 抵达日前至少2天取消免费；少于2天收首晚100%",
+                refundableRateLabelEn: "Tax-inclusive total for 6–7 Oct · free cancellation at least two days before arrival; later cancellation costs 100% of the first night",
+                payment: "信用卡仅作担保，入住前或入住时全额付款；信用卡 / Paywave 另收 2.5% 手续费",
+                paymentEn: "A card guarantee is required; the full amount is paid before or at arrival, with a 2.5% credit-card or Paywave fee",
+                breakfast: "官网报价未标明含早餐，不作推断",
+                breakfastEn: "Breakfast was not stated in the direct rate and was not inferred",
+                quotedAt: "2026-07-30",
+              },
+            },
+            "premier-upstairs-studio": {
+              official: {
+                source: "Mariner Suites 官网",
+                roomKey: "premier-upstairs-studio",
+                room: "Premier Upstairs Studio · 32 m² · Super King",
+                roomEn: "Premier Upstairs Studio · 32 m² · super king bed",
+                nonRefundableNzd: null,
+                refundableNzd: 300,
+                cancelUntil: "抵达日前至少 2 天",
+                cancelUntilEn: "at least two days before arrival",
+                refundableRateLabel: "10月6—7日含税总价 · 抵达日前至少2天取消免费；少于2天收首晚100%",
+                refundableRateLabelEn: "Tax-inclusive total for 6–7 Oct · free cancellation at least two days before arrival; later cancellation costs 100% of the first night",
+                payment: "信用卡仅作担保，入住前或入住时全额付款；信用卡 / Paywave 另收 2.5% 手续费",
+                paymentEn: "A card guarantee is required; the full amount is paid before or at arrival, with a 2.5% credit-card or Paywave fee",
+                breakfast: "官网报价未标明含早餐，不作推断",
+                breakfastEn: "Breakfast was not stated in the direct rate and was not inferred",
+                quotedAt: "2026-07-30",
+              },
+            },
+          },
+        },
+      },
+      research: sharedSocial.oamaru,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-30 已在 Mariner Suites 官方预订引擎按 2026 年 10 月 6—7 日、2 人核验：Executive Downstairs Studio 含税 NZD 250、剩 3 间；Premier Upstairs Studio 含税 NZD 300、剩 4 间。官网住宿规则另确认 14:00 入住、10:00 退房、抵达前 2 天免费取消，少于 2 天收首晚 100%；信用卡仅作担保，入住前或入住时全额付款，信用卡 / Paywave 另收 2.5% 手续费。晚到取钥匙方式仍需预订前确认。",
+      officialStatusEn:
+        "Verified on 30 Jul 2026 in the Mariner Suites direct engine for 6–7 Oct 2026 and two guests: the Executive Downstairs Studio was NZD 250 tax-inclusive with three rooms left, and the Premier Upstairs Studio was NZD 300 tax-inclusive with four rooms left. The official rules state 14:00 check-in, 10:00 check-out and free cancellation until two days before arrival; later cancellation costs 100% of the first night. A card guarantee is required, the full amount is paid before or at arrival, and credit card or Paywave payments carry a 2.5% fee. Late key collection still needs confirmation before booking.",
+      officialVerifiedAt: "2026-07-30",
+      officialUrl: "https://www.marinersuites.nz/",
+      officialBookingUrl:
+        "https://staahmax.staah.net/be/indexpackdetail?propertyId=MjEyOQ==&individual=true",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网预订页（需重新选择日期）",
+      officialLinkLabelEn: "Open direct booking page (reselect dates)",
+      officialLinkNote:
+        "官网入口不保留本次搜索；请重新选择 2026 年 10 月 6—7 日、2 人，并在付款前确认晚到取钥匙。",
+      officialLinkNoteEn:
+        "The direct link does not retain this search. Reselect 6–7 Oct 2026 and two guests, then confirm late key collection before paying.",
+      position: [-45.1031, 170.9687],
+      mapQuery: "Mariner Suites 47 Tyne Street Oamaru",
+    },
+    {
+      id: "old-confectionery-apartments-oamaru",
+      name: "The Old Confectionery Apartments",
+      stayType: "home",
+      recommendation: "整套公寓 / 民宿升级",
+      recommendationEn: "Whole-apartment upgrade",
+      summary:
+        "历史建筑内的整套精品公寓；Sea View Apartment 有两间 Queen 卧室、两间独立卫浴和完整厨房。电子门码会在入住前邮件发送，是企鹅晚场后最省心的入住方式。",
+      summaryEn:
+        "A whole boutique apartment in a heritage building. The Sea View Apartment has two queen bedrooms, two en-suites and a full kitchen. An access code is emailed before arrival, making this the easiest late return after the penguin session.",
+      access: "26 Tees Street；入住前邮件发送电子门码",
+      accessEn: "26 Tees Street; an access code is emailed before arrival",
+      parking: "院内停车；停车区有感应灯与外部监控",
+      parkingEn: "On-site parking with sensor lighting and exterior surveillance",
+      nearbyAttractions: [
+        {
+          name: "Ōamaru Blue Penguin Colony",
+          nameEn: "Ōamaru Blue Penguin Colony",
+          distance: "约 1.4 公里",
+          distanceEn: "About 1.4 km",
+          travelTime: "短途驾车；夜间步行时间以地图实况为准",
+          travelTimeEn: "A short drive; check the live map before walking at night",
+          originQuery: "The Old Confectionery Oamaru",
+          destinationQuery: "Oamaru Blue Penguin Colony",
+        },
+        {
+          name: "Victorian Precinct",
+          nameEn: "Victorian Precinct",
+          distance: "历史街区内",
+          distanceEn: "Within the heritage precinct",
+          travelTime: "步行可达",
+          travelTimeEn: "Walkable",
+          originQuery: "The Old Confectionery Oamaru",
+          destinationQuery: "Victorian Precinct Oamaru",
+        },
+      ],
+      strengths: [
+        "电子门码入住，适合企鹅晚场后返回",
+        "整套公寓、完整厨房、两卧两卫",
+        "院内停车",
+        "精确日期仅 Sea View Apartment 可订，官网结算 Total NZD 370",
+        "至少提前 14 天取消可全退",
+      ],
+      strengthsEn: [
+        "Access-code entry suits a late return from the penguin session",
+        "Whole apartment with full kitchen, two bedrooms and two en-suites",
+        "On-site parking",
+        "Only the Sea View Apartment appeared available, with a direct checkout total of NZD 370",
+        "Full refund when cancelled at least 14 days ahead",
+      ],
+      cautions: [
+        "一晚 NZD 370，高于首选套房",
+        "官网结算显示 Tax (0%) NZD 0；不要把它泛化成其他日期的税费规则",
+        "14 天内的完整分段退改文本与扣款时点仍需联系确认",
+        "尚未付款预订",
+      ],
+      cautionsEn: [
+        "NZD 370 for one night is higher than the preferred suite",
+        "Checkout showed Tax (0%) NZD 0; do not generalise this to other dates",
+        "The complete cancellation tiers within 14 days and payment timing still require confirmation",
+        "Not yet booked or paid",
+      ],
+      ratings: googleGuestRating({ score: 5, reviews: 121, placeId: "ChIJfZpTnkqZKagRzFou6B0qw_g" }),
+      roomTypes: [
+        {
+          rateKey: "sea-view-apartment",
+          name: "Sea View Apartment",
+          size: "官网未标",
+          sizeEn: "Not stated direct",
+          bed: "2 张 Queen 床（两卧室）",
+          bedEn: "two queen beds across two bedrooms",
+          facilities: ["整套公寓", "完整厨房", "2 间独立卫浴", "电子门码", "院内停车"],
+          facilitiesEn: ["Whole apartment", "Full kitchen", "Two en-suite bathrooms", "Access code", "On-site parking"],
+          photosVerified: true,
+          images: [
+            image("oamaru-old-confectionery-sea-view-1.jpg", "Sea View Apartment 卧室", "The Old Confectionery The Apartments 页的 Sea View Apartment 专属轮播 · https://www.oldconfectionery.co.nz/the-apartments"),
+          ],
+          photoNote: "官网 The Apartments 页把此图直接置于 Sea View Apartment 标题下的专属轮播中",
+          photoNoteEn: "The official Apartments page places this image directly inside the carousel headed Sea View Apartment",
+        },
+      ],
+      hotelImages: [
+        image("oamaru-old-confectionery-building-1.png", "The Old Confectionery 历史建筑", "The Old Confectionery 官网 · https://static.wixstatic.com/media/57aa66_8985497a11d4449292d92a0a088d9151~mv2.png"),
+      ],
+      availabilityNote:
+        "官网已按 2026 年 10 月 6—7 日、2 人核验：仅 Sea View Apartment 显示可订；结算页列 Subtotal NZD 370、Tax (0%) NZD 0、Total NZD 370。至少提前 14 天取消全退；14 天内的完整分段规则与扣款时点仍待确认。",
+      availabilityNoteEn:
+        "Verified direct for 6–7 Oct 2026 and two guests: only the Sea View Apartment appeared available. Checkout showed Subtotal NZD 370, Tax (0%) NZD 0 and Total NZD 370. Cancellation at least 14 days ahead is fully refundable; the complete tiers inside 14 days and payment timing remain unverified.",
+      rateSnapshots: {
+        "2026-10-06/2026-10-07": {
+          roomRates: {
+            "sea-view-apartment": {
+              official: {
+                source: "The Old Confectionery 官网",
+                roomKey: "sea-view-apartment",
+                room: "Sea View Apartment · 两卧两卫整套公寓",
+                roomEn: "Sea View Apartment · whole two-bedroom, two-bathroom apartment",
+                nonRefundableNzd: null,
+                refundableNzd: null,
+                rateOptions: [
+                  {
+                    label: "官网结算总额",
+                    labelEn: "Direct checkout total",
+                    nzd: 370,
+                    detail: "10月6—7日 · 2人 · Subtotal NZD 370 + Tax (0%) NZD 0；至少提前14天取消全退",
+                    detailEn: "6–7 Oct · two guests · NZD 370 subtotal + NZD 0 Tax (0%); fully refundable at least 14 days ahead",
+                  },
+                ],
+                memberNote: "14 天内的其余取消档位文字不完整，付款前联系住宿确认；扣款时点和押金比例也未明确",
+                memberNoteEn: "The remaining cancellation tiers inside 14 days were incomplete; contact the property before paying. Charge timing and any deposit ratio were also not stated",
+                payment: "官网结果未展开扣款时间或押金规则，结算前确认",
+                paymentEn: "The direct result did not expose charge timing or deposit rules; confirm before checkout",
+                breakfast: "整套公寓带完整厨房；官网报价未标明含早餐",
+                breakfastEn: "The whole apartment has a full kitchen; the direct rate did not state that breakfast was included",
+                quotedAt: "2026-07-30",
+              },
+            },
+          },
+        },
+      },
+      research: sharedSocial.oamaru,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-30 已在 The Old Confectionery 官方预订页按 2026 年 10 月 6—7 日、2 人核验：仅 Sea View Apartment 可订，结算页列 Subtotal NZD 370、Tax (0%) NZD 0、Total NZD 370。官网 FAQ 确认入住前邮件发送电子门码，并确认至少提前 14 天取消全退；14 天内的完整分段规则、扣款时点与押金比例仍待联系确认。",
+      officialStatusEn:
+        "Verified on 30 Jul 2026 on The Old Confectionery direct booking page for 6–7 Oct 2026 and two guests: only the Sea View Apartment was available, and checkout showed Subtotal NZD 370, Tax (0%) NZD 0 and Total NZD 370. The official FAQ confirms that an access code is emailed before arrival and cancellation at least 14 days ahead is fully refundable. The complete tiers inside 14 days, charge timing and deposit ratio remain unverified.",
+      officialVerifiedAt: "2026-07-30",
+      officialUrl: "https://www.oldconfectionery.co.nz/",
+      officialBookingUrl: "https://www.oldconfectionery.co.nz/book-your-stay",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网预订页（需重新选择日期）",
+      officialLinkLabelEn: "Open direct booking page (reselect dates)",
+      officialLinkNote:
+        "打开后请重新选择 2026 年 10 月 6—7 日、2 人，并在结算前确认税费、退改和扣款规则。",
+      officialLinkNoteEn:
+        "Reselect 6–7 Oct 2026 and two guests, then confirm taxes, cancellation and payment terms before checkout.",
+      position: [-45.1032444, 170.9680664],
+      mapQuery: "The Old Confectionery Oamaru",
+    },
+    {
+      id: "oamaru-backpackers",
+      name: "Oamaru Backpackers",
+      stayType: "home",
+      recommendation: "预算型自助客栈",
+      recommendationEn: "Budget self-check-in guesthouse",
+      summary:
+        "不是传统酒店，而是带共用空间和共用卫浴的预算型客栈。精确日期可订的 R6 有 Queen + Single 和海景；15:00 后 PIN 自助入住，很适合企鹅晚场后回来，但要接受共用卫浴。",
+      summaryEn:
+        "A budget guesthouse rather than a conventional hotel, with shared facilities and bathrooms. The available R6 has a queen plus single bed and a sea view; PIN entry after 15:00 works well after the penguin session, provided shared bathrooms are acceptable.",
+      access: "企鹅保护区附近的历史区；15:00 后可用 PIN 自助入住",
+      accessEn: "In the heritage area near the penguin colony; PIN self check-in is available after 15:00",
+      parking: "免费停车；院内车位先到先得",
+      parkingEn: "Free parking; on-site spaces are first come, first served",
+      nearbyAttractions: [
+        {
+          name: "Ōamaru Blue Penguin Colony",
+          nameEn: "Ōamaru Blue Penguin Colony",
+          distance: "短程可达",
+          distanceEn: "A short trip away",
+          travelTime: "晚场后可短途驾车返回",
+          travelTimeEn: "A short drive back after the evening session",
+          originQuery: "Oamaru Backpackers",
+          destinationQuery: "Oamaru Blue Penguin Colony",
+        },
+        {
+          name: "Victorian Precinct",
+          nameEn: "Victorian Precinct",
+          distance: "历史街区内",
+          distanceEn: "Within the heritage area",
+          travelTime: "步行可达",
+          travelTimeEn: "Walkable",
+          originQuery: "Oamaru Backpackers",
+          destinationQuery: "Victorian Precinct Oamaru",
+        },
+      ],
+      strengths: [
+        "4 个候选中价格最低",
+        "15:00 后 PIN 自助入住，适合晚场行程",
+        "Queen + Single、海景",
+        "免费停车",
+      ],
+      strengthsEn: [
+        "Lowest price of the four options",
+        "PIN self check-in after 15:00 suits the evening itinerary",
+        "Queen plus single bed and a sea view",
+        "Free parking",
+      ],
+      cautions: [
+        "共用卫浴，不是独立套房",
+        "官网核验时仅剩 1 间",
+        "必须提前付清",
+        "院内车位先到先得；停满时需使用其他停车位",
+      ],
+      cautionsEn: [
+        "Shared bathrooms rather than an en-suite",
+        "Only one room remained when checked",
+        "Full prepayment is required",
+        "On-site parking is first come, first served",
+      ],
+      ratings: googleGuestRating({ score: 4.6, reviews: 458, placeId: "ChIJhxntGNeZKagRZsRIEu0XAqc" }),
+      roomTypes: [
+        {
+          rateKey: "triple-room-r6",
+          name: "Triple Room R6",
+          size: "官网未标",
+          sizeEn: "Not stated direct",
+          bed: "1 张 Queen 床 + 1 张 Single 床",
+          bedEn: "one queen bed plus one single bed",
+          facilities: ["海景", "共用卫浴", "共用厨房和休息区", "PIN 自助入住", "免费停车"],
+          facilitiesEn: ["Sea view", "Shared bathrooms", "Shared kitchen and lounge", "PIN self check-in", "Free parking"],
+          photosVerified: true,
+          images: [
+            image("oamaru-backpackers-triple-r6-1.jpg", "Triple Room R6 的 Queen 与 Single 床", "Oamaru Backpackers 官方 Cloudbeds 房型元数据（rid=462215）· https://hotels.cloudbeds.com/en/reservation/l4I2ic?rid=462215"),
+            image("oamaru-backpackers-triple-r6-2.jpg", "Triple Room R6 的 Queen 床与海景", "Oamaru Backpackers 官方 Cloudbeds 房型元数据（rid=462215）· https://hotels.cloudbeds.com/en/reservation/l4I2ic?rid=462215"),
+          ],
+          photoNote: "官方 Cloudbeds JSON-LD 将这两图直接列在 Triple Room (R6)、rid=462215 下",
+          photoNoteEn: "The direct Cloudbeds JSON-LD lists both images under Triple Room (R6), rid=462215",
+        },
+      ],
+      hotelImages: [
+        image("oamaru-backpackers-room-1.jpg", "Oamaru Backpackers 多床客房", "Oamaru Backpackers 官网 · https://oamarubackpackers.co.nz/wp-content/uploads/2022/03/064A3881-Edit-2.jpg"),
+        image("oamaru-backpackers-room-2.jpg", "Oamaru Backpackers Queen 客房", "Oamaru Backpackers 官网 · https://oamarubackpackers.co.nz/wp-content/uploads/2022/03/064A3873.jpg"),
+        image("oamaru-backpackers-lounge-3.jpg", "Oamaru Backpackers 共用休息区", "Oamaru Backpackers 官网 · https://oamarubackpackers.co.nz/wp-content/uploads/2022/03/064A4580.jpg"),
+      ],
+      availabilityNote:
+        "Cloudbeds 官网直订已按 2026 年 10 月 6—7 日、2 人核验：Triple Room R6 一晚 NZD 179，含 GST，仅剩 1 间；须提前付清。超过 7 天取消全退，少于 7 天收首晚，3 天内取消或未入住收全额。",
+      availabilityNoteEn:
+        "Verified in the direct Cloudbeds engine for 6–7 Oct 2026 and two guests: Triple Room R6 was NZD 179 including GST, with one room left, and full prepayment required. Cancellation more than seven days ahead is fully refundable; within seven days the first night is charged, and within three days or for a no-show the full amount is charged.",
+      rateSnapshots: {
+        "2026-10-06/2026-10-07": {
+          roomRates: {
+            "triple-room-r6": {
+              official: {
+                source: "Oamaru Backpackers 官网",
+                roomKey: "triple-room-r6",
+                room: "Triple Room R6 · Queen + Single · 共用卫浴",
+                roomEn: "Triple Room R6 · queen plus single · shared bathroom",
+                nonRefundableNzd: null,
+                refundableNzd: 179,
+                cancelUntil: "入住前 7 天以上",
+                cancelUntilEn: "more than seven days before arrival",
+                refundableRateLabel: "10月6—7日含 GST 总价 · 分段取消政策",
+                refundableRateLabelEn: "GST-inclusive total for 6–7 Oct · staged cancellation policy",
+                memberNote: "少于 7 天取消收首晚；入住前 3 天内取消或未入住收全额",
+                memberNoteEn: "Cancellation within seven days costs the first night; within three days or for a no-show the full amount is charged",
+                payment: "须提前全额付款",
+                paymentEn: "Full prepayment is required",
+                breakfast: "官网未标明含早餐；有共用厨房，不作含早推断",
+                breakfastEn: "Breakfast was not stated; a shared kitchen is available, but no breakfast inclusion is inferred",
+                quotedAt: "2026-07-30",
+              },
+            },
+          },
+        },
+      },
+      research: sharedSocial.oamaru,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-30 已在 Oamaru Backpackers 的 Cloudbeds 直订页按 2026 年 10 月 6—7 日、2 人核验：Triple Room R6 含 GST 总价 NZD 179，仅剩 1 间。官网房型与条款页确认共用卫浴、15:00 后 PIN 自助入住、须提前付清，以及分段取消规则。",
+      officialStatusEn:
+        "Verified on 30 Jul 2026 in Oamaru Backpackers' direct Cloudbeds engine for 6–7 Oct 2026 and two guests: Triple Room R6 was NZD 179 including GST with one room left. The official room and policy pages confirm shared bathrooms, PIN self check-in after 15:00, full prepayment and the staged cancellation policy.",
+      officialVerifiedAt: "2026-07-30",
+      officialUrl: "https://oamarubackpackers.co.nz/rooms/",
+      officialBookingUrl:
+        "https://hotels.cloudbeds.com/en/reservation/l4I2ic#checkin=2026-10-06&checkout=2026-10-07",
+      officialLinkRetainsSearch: true,
+      position: [-45.10183334, 170.96539307],
+      mapQuery: "Oamaru Backpackers",
+    },
+    {
+      id: "brydone-hotel-oamaru",
+      name: "Brydone Hotel Oamaru",
+      stayType: "hotel",
+      recommendation: "低价传统酒店",
+      recommendationEn: "Lower-cost traditional hotel",
+      summary:
+        "市中心传统酒店备选，适合更偏好前台与酒店式服务的人。官网精确日期可订 Standard King / Queen，结算总额低于另外三项；但公开入住时段到 22:00，看完企鹅后的晚到安排必须提前联系。",
+      summaryEn:
+        "A central traditional hotel for travellers who prefer reception and hotel-style service. A Standard King / Queen was available direct for the exact date at a lower checkout total than the other three options, but the published check-in window ends at 22:00, so arrange any later arrival after the penguin session in advance.",
+      access: "115 Thames Street，奥马鲁市中心",
+      accessEn: "115 Thames Street in central Ōamaru",
+      parking: "提供停车；是否免费及具体条件需在精确日期询价时确认",
+      parkingEn: "Parking is available; confirm whether it is free and any conditions with the exact-date enquiry",
+      nearbyAttractions: [
+        {
+          name: "Ōamaru Blue Penguin Colony",
+          nameEn: "Ōamaru Blue Penguin Colony",
+          distance: "市中心至保护区短程驾车",
+          distanceEn: "A short drive from the centre",
+          travelTime: "晚场后短途驾车返回",
+          travelTimeEn: "A short drive back after the evening session",
+          originQuery: "Brydone Hotel Oamaru",
+          destinationQuery: "Oamaru Blue Penguin Colony",
+        },
+        {
+          name: "Victorian Precinct",
+          nameEn: "Victorian Precinct",
+          distance: "市中心步行范围",
+          distanceEn: "Within walking range of the centre",
+          travelTime: "步行可达",
+          travelTimeEn: "Walkable",
+          originQuery: "Brydone Hotel Oamaru",
+          destinationQuery: "Victorian Precinct Oamaru",
+        },
+      ],
+      strengths: ["传统酒店里价格较低，仅比预算客栈高 NZD 6.25", "传统酒店服务", "Thames Street 市中心位置", "官网确认提供停车", "14:00 入住、10:00 退房"],
+      strengthsEn: ["A low traditional-hotel rate, only NZD 6.25 above the budget guesthouse", "Traditional hotel service", "Central Thames Street location", "Parking confirmed on the official site", "14:00 check-in and 10:00 check-out"],
+      cautions: [
+        "公开入住时段至 22:00；晚到安排必须提前确认",
+        "停车是否免费、退改、扣款方式与最终税费都需付款前确认",
+        "尚未付款预订",
+      ],
+      cautionsEn: [
+        "The published check-in window ends at 22:00; arrange any later arrival in advance",
+        "Confirm whether parking is free, cancellation, charge method and final taxes before paying",
+        "Not yet booked or paid",
+      ],
+      ratings: googleGuestRating({ score: 4.2, reviews: 389, placeId: "ChIJ77ya49CZKagRo2glhv0qj9M" }),
+      roomTypes: [
+        {
+          rateKey: "standard-king-queen",
+          name: "Standard King / Queen",
+          size: "官网未标",
+          sizeEn: "Not stated direct",
+          bed: "King / Queen 配置以结算页最终分房说明为准",
+          bedEn: "Confirm the final king / queen configuration at checkout",
+          facilities: ["独立卫浴", "传统酒店服务", "停车"],
+          facilitiesEn: ["En-suite bathroom", "Traditional hotel service", "Parking"],
+          photosVerified: true,
+          images: [
+            image("oamaru-brydone-standard-room-1.jpg", "Brydone 标准客房概览", "Brydone Hotel 官网 · https://www.brydonehotel.co.nz/media/unonyfyh/rooms.jpg"),
+          ],
+          photoNote: "官网标准客房概览与当前 Standard King / Queen 房型标签一致；Superior King 示例和公共空间仍仅作为酒店级图片展示",
+          photoNoteEn: "The direct standard-room overview matches the displayed Standard King / Queen label. The Superior King example and shared-space image remain property-level only",
+        },
+      ],
+      hotelImages: [
+        image("oamaru-brydone-superior-room-2.jpg", "Brydone Superior King 房型示例", "Brydone Hotel 官网 · https://www.brydonehotel.co.nz/media/q2wnw2xa/superior-ks-2.jpg"),
+        image("oamaru-brydone-interior-3.jpg", "Brydone 酒店公共空间", "Brydone Hotel 官网 · https://www.brydonehotel.co.nz/media/aw1fel5z/brydone-7of56.jpg"),
+      ],
+      availabilityNote:
+        "官网预订引擎已按 2026 年 10 月 6—7 日、2 人核验：Standard King / Queen 可订，结算精确总额 NZD 185.25。结算未单列 GST，退改、即时扣款或仅担保、以及 22:00 后晚到安排均未明确。",
+      availabilityNoteEn:
+        "Verified in the direct engine for 6–7 Oct 2026 and two guests: a Standard King / Queen was available at an exact checkout total of NZD 185.25. GST was not itemised, while cancellation, immediate charge versus card guarantee, and arrival after 22:00 were not stated.",
+      rateSnapshots: {
+        "2026-10-06/2026-10-07": {
+          roomRates: {
+            "standard-king-queen": {
+              official: {
+                source: "Brydone Hotel 官网",
+                roomKey: "standard-king-queen",
+                room: "Standard King / Queen · 标准酒店客房",
+                roomEn: "Standard King / Queen · standard hotel room",
+                nonRefundableNzd: null,
+                refundableNzd: null,
+                rateOptions: [
+                  {
+                    label: "官网结算总额",
+                    labelEn: "Direct checkout total",
+                    nzd: 185.25,
+                    detail: "10月6—7日 · 2人1晚 · GST 未单列；退改与扣款方式待确认",
+                    detailEn: "6–7 Oct · two guests, one night · GST not itemised; cancellation and charge method require confirmation",
+                  },
+                ],
+                payment: "结算要求信用卡，但未明确即时扣款还是仅作担保；付款前确认",
+                paymentEn: "Checkout requires a card but does not state whether it is charged immediately or used only as a guarantee; confirm before paying",
+                breakfast: "官网结算未标明含早餐，不作推断",
+                breakfastEn: "Breakfast was not stated at checkout and was not inferred",
+                quotedAt: "2026-07-30",
+              },
+            },
+          },
+        },
+      },
+      research: sharedSocial.oamaru,
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail:
+        "2026-07-30 已在 Brydone Hotel 官方预订引擎按 2026 年 10 月 6—7 日、2 人核验：Standard King / Queen 可订，结算精确总额 NZD 185.25。官网另确认地址、14:00—22:00 入住、10:00 退房及提供停车；GST 未在结算单列，退改、即时扣款或信用卡担保、22:00 后晚到安排均需联系确认。",
+      officialStatusEn:
+        "Verified on 30 Jul 2026 in the Brydone Hotel direct engine for 6–7 Oct 2026 and two guests: a Standard King / Queen was available at an exact checkout total of NZD 185.25. The official site also confirms the address, a 14:00–22:00 check-in window, 10:00 check-out and parking. GST was not itemised, while cancellation, immediate charge versus card guarantee and arrival after 22:00 require confirmation.",
+      officialVerifiedAt: "2026-07-30",
+      officialUrl: "https://www.brydonehotel.co.nz/",
+      officialBookingUrl: "https://bookings.brydonehotel.co.nz/",
+      officialLinkRetainsSearch: false,
+      officialLinkLabel: "打开官网预订页（需重新选择日期）",
+      officialLinkLabelEn: "Open direct booking page (reselect dates)",
+      officialLinkNote:
+        "官网链接不保留入住日期；请重新输入 2026 年 10 月 6—7 日、2 人，并确认停车和晚到入住。",
+      officialLinkNoteEn:
+        "The direct link does not retain the stay dates. Re-enter 6–7 Oct 2026 and two guests, then confirm parking and late check-in.",
+      position: [-45.0988889, 170.9708333],
+      mapQuery: "Brydone Hotel Oamaru 115 Thames Street",
+    },
+    ...oamaruHomeAdditionalHotels,
+    ...additionalOamaruHotels,
+];

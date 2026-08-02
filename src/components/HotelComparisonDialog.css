@@ -352,8 +352,12 @@
 }
 
 .hotel-stay-list-index {
+  /* MUI ButtonBase injects position: relative after this stylesheet. Keep the
+     map locator pinned over the photo instead of letting it enter the grid. */
+  position: absolute !important;
   top: 12px;
   left: 12px;
+  z-index: 2;
   display: grid;
   width: 36px;
   height: 36px;

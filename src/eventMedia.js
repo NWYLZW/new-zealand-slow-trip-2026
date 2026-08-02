@@ -167,7 +167,7 @@ export const localNameTranslations = {
   "Auckland International Airport (AKL)": "奥克兰国际机场",
   "Auckland Airport Domestic Terminal (AKL)": "奥克兰机场国内航站楼",
   "Queenstown Airport (ZQN)": "皇后镇机场",
-  "Ramada by Wyndham Queenstown Central": "皇后镇华美达中央酒店",
+  "Holiday Inn Queenstown Remarkables Park": "皇后镇卓越公园假日酒店",
   "Budget Car Rental Queenstown Airport": "Budget 皇后镇机场租车点",
   "Queenstown / Tāhuna": "皇后镇",
   "Queenstown Gardens": "皇后镇花园",
@@ -233,15 +233,15 @@ export const eventMediaByTitle = {
   },
   "飞往皇后镇": {
     route: "奥克兰 → 皇后镇",
-    localNames: ["Auckland Airport Domestic Terminal (AKL)", "Queenstown Airport (ZQN)", "Ramada by Wyndham Queenstown Central"],
+    localNames: ["Auckland Airport Domestic Terminal (AKL)", "Queenstown Airport (ZQN)", "Holiday Inn Queenstown Remarkables Park"],
     ...mediaGallery(queenstownImage, aucklandAirportImage),
-    links: [official("新西兰航空管理预订", "https://flightbookings.airnewzealand.co.nz/vmanage/actions/managebookingstart"), official("皇后镇机场", "https://www.queenstownairport.co.nz/"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), googleMaps("Queenstown Airport", "皇后镇机场地图"), redbook("奥克兰 转机 皇后镇 新西兰航空")],
+    links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("皇后镇机场", "https://www.queenstownairport.co.nz/"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), googleMaps("Queenstown Airport", "皇后镇机场地图"), redbook("奥克兰 飞 皇后镇 捷星")],
   },
   "南岛取车入住": {
     location: "皇后镇",
-    localNames: ["Budget Car Rental Queenstown Airport", "Ramada by Wyndham Queenstown Central", "Queenstown / Tāhuna"],
+    localNames: ["Budget Car Rental Queenstown Airport", "Holiday Inn Queenstown Remarkables Park", "Queenstown / Tāhuna"],
     ...mediaGallery(queenstownImage, walterPeakImage, crownRangeImage),
-    links: [official("Budget 皇后镇机场网点", "https://www.budget.co.nz/en/locations/nz/queenstown-si/zqn"), official("管理 Budget 订单", "https://www.budget.co.nz/en/reservation/view-modify-cancel"), googleMaps("Budget Car Rental Queenstown Airport", "取车点地图"), googleMaps("Ramada by Wyndham Queenstown Central", "酒店地图"), redbook("皇后镇 镇中心 住宿")],
+    links: [official("Budget 皇后镇机场网点", "https://www.budget.co.nz/en/locations/nz/queenstown-si/zqn"), official("管理 Budget 订单", "https://www.budget.co.nz/en/reservation/view-modify-cancel"), googleMaps("Budget Car Rental Queenstown Airport", "取车点地图"), googleMaps("Holiday Inn Queenstown Remarkables Park", "酒店地图"), redbook("皇后镇 卓越公园 住宿")],
   },
   "皇后镇适应日": {
     location: "皇后镇",
@@ -337,7 +337,7 @@ export const eventMediaByTitle = {
     route: "基督城市中心 → 基督城机场",
     localNames: ["Christchurch / Ōtautahi", "Budget Car Rental Christchurch Airport", "Christchurch Airport (CHC)"],
     ...mediaGallery(christchurchImage),
-    links: [official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"), official("基督城机场交通", "https://www.christchurchairport.co.nz/travellers/transport/"), googleMaps("Budget Car Rental Christchurch Airport", "还车点地图"), googleDirections("市中心—Budget还车点", "Christchurch Cathedral Square", "Budget Car Rental Christchurch Airport"), redbook("基督城机场 还车 攻略")],
+    links: [official("Budget 基督城机场网点", "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"), official("基督城机场交通", "https://www.christchurchairport.co.nz/travellers/transport/"), googleMaps("Budget Car Rental Christchurch Airport", "11:00还车点地图"), googleDirections("市中心—Budget还车点", "Christchurch Cathedral Square", "Budget Car Rental Christchurch Airport"), redbook("基督城机场 还车 攻略")],
   },
   "基督城补充半日": {
     location: "基督城市中心",

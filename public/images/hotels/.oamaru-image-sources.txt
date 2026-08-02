@@ -1,0 +1,32 @@
+Reviewed 2026-07-31. Each local file was opened and visually inspected before inclusion.
+
+oamaru-poshtel-bowling-1.jpg https://poshtelnz.com/wp-content/uploads/2023/04/553A6840-scaled.jpg
+oamaru-poshtel-bowling-2.jpg https://poshtelnz.com/wp-content/uploads/2023/04/room1c-scaled-1300x667-c-default.jpg
+oamaru-poshtel-bowling-3.jpg https://poshtelnz.com/wp-content/uploads/2023/04/room1d-scaled-700x0-c-default.jpg
+oamaru-bella-vista-superior-king-1.jpg https://www.bellavista.co.nz/library/images/Motels/Oamaru/Rooms/BVOamaru_King3.jpg
+oamaru-bella-vista-superior-king-2.jpg https://www.bellavista.co.nz/library/images/Motels/Oamaru/Rooms/BVOamaru_King14.jpg
+oamaru-bella-vista-superior-king-3.jpg https://www.bellavista.co.nz/library/images/Motels/Oamaru/Rooms/BVOamaru_King7.jpg
+oamaru-motor-lodge-king-studio-1.jpg https://www.oamarumotorlodge.co.nz/assets/images/137.jpg
+oamaru-motor-lodge-king-studio-2.jpg https://www.oamarumotorlodge.co.nz/assets/images/163.jpg
+oamaru-motor-lodge-king-studio-3.jpg https://www.oamarumotorlodge.co.nz/assets/images/174.jpg
+oamaru-aaa-thames-court-executive-king-1.jpg https://aaathamescourt.co.nz/wp-content/uploads/2017/08/exectuve-king-stud.jpg
+oamaru-aaa-thames-court-executive-king-2.jpg https://aaathamescourt.co.nz/wp-content/uploads/2017/08/kitchen-for-all-superior-web.jpg
+oamaru-aaa-thames-court-executive-king-3.jpg https://aaathamescourt.co.nz/wp-content/uploads/2017/09/bathroom.jpg
+oamaru-asure-ambassador-spa-studio-1.jpg https://www.ambassadoroamaru.co.nz/assets/images/room2.jpg
+oamaru-asure-ambassador-spa-studio-2.jpg https://www.ambassadoroamaru.co.nz/assets/images/room2a.jpg
+oamaru-asure-ambassador-spa-studio-3.jpg https://www.ambassadoroamaru.co.nz/assets/images/room2b.jpg
+oamaru-colonial-family-apartment-1.jpeg https://coloniallodgemotel.co.nz/colonial/images/colonial/IMG_8302ES.jpeg
+oamaru-colonial-family-apartment-2.jpeg https://coloniallodgemotel.co.nz/colonial/images/colonial/IMG_8265ES.jpeg
+oamaru-colonial-family-apartment-3.jpeg https://coloniallodgemotel.co.nz/colonial/images/colonial/IMG_8289ES.jpeg
+oamaru-mariner-exterior-1.jpg https://www.marinersuites.nz/wp-content/uploads/2022/01/MS-4copy.jpg
+oamaru-mariner-aerial-2.jpg https://www.marinersuites.nz/wp-content/uploads/2022/11/DB7D05FD-A132-41CD-A180-0FCAA962B2BC.jpg
+oamaru-mariner-lounge-3.jpg https://www.marinersuites.nz/wp-content/uploads/2022/10/1marinersuites-4copy.jpg
+oamaru-old-confectionery-building-1.png https://static.wixstatic.com/media/57aa66_8985497a11d4449292d92a0a088d9151~mv2.png
+oamaru-old-confectionery-steampunk-2.png https://static.wixstatic.com/media/57aa66_ce09b007998a49048bd84f3476df2883~mv2.png
+oamaru-old-confectionery-region-3.png https://static.wixstatic.com/media/57aa66_2526bdf77a3944b7a25d646828eb9553~mv2.png
+oamaru-backpackers-room-1.jpg https://oamarubackpackers.co.nz/wp-content/uploads/2022/03/064A3881-Edit-2.jpg
+oamaru-backpackers-room-2.jpg https://oamarubackpackers.co.nz/wp-content/uploads/2022/03/064A3873.jpg
+oamaru-backpackers-lounge-3.jpg https://oamarubackpackers.co.nz/wp-content/uploads/2022/03/064A4580.jpg
+oamaru-brydone-standard-room-1.jpg https://www.brydonehotel.co.nz/media/unonyfyh/rooms.jpg
+oamaru-brydone-superior-room-2.jpg https://www.brydonehotel.co.nz/media/q2wnw2xa/superior-ks-2.jpg
+oamaru-brydone-interior-3.jpg https://www.brydonehotel.co.nz/media/aw1fel5z/brydone-7of56.jpg

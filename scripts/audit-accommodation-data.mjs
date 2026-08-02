@@ -5,7 +5,6 @@ import { readFile, stat } from "node:fs/promises";
 import process from "node:process";
 import {
   agodaUrlForStay,
-  aucklandAirportHotels,
   bookingUrlForStay,
 } from "../src/data/aucklandAirportHotels.js";
 import {
@@ -21,6 +20,9 @@ const dataFiles = [
   new URL("../src/data/aucklandCityHotels.js", import.meta.url),
   new URL("../src/data/aucklandCityAdditionalHotels.js", import.meta.url),
   new URL("../src/data/christchurchHotels.js", import.meta.url),
+  new URL("../src/data/christchurchHomeAdditionalHotels.js", import.meta.url),
+  new URL("../src/data/oamaruHomeAdditionalHotels.js", import.meta.url),
+  new URL("../src/data/queenstownAdditionalHotels.js", import.meta.url),
   new URL("../src/data/regionalHotels.js", import.meta.url),
   new URL("../src/components/HotelComparisonDialog.jsx", import.meta.url),
 ];
@@ -37,19 +39,17 @@ const allowedOfficialStatuses = new Set([
   "official-inquiry-only",
   "official-unreachable",
 ]);
-const minimumSelectableOptionsPerRegion = 10;
+const minimumResearchedOptionsPerRegion = 10;
 // Three images only show that a listing exists; they are not enough to compare
 // the room, bathroom and shared facilities. Five is the minimum useful gallery.
 const minimumReviewedPhotosPerProperty = 5;
 const allowedStayTypes = new Set(["hotel", "motel", "home"]);
 
 const hotelGroups = {
-  "auckland-airport": aucklandAirportHotels,
   "auckland-city": aucklandCityHotels,
   ...regionalHotels,
 };
 const officialStayRanges = {
-  "auckland-airport": "2026-09-28/2026-09-29",
   "auckland-city": `${aucklandCityStay.dates.checkIn}/${aucklandCityStay.dates.checkOut}`,
   ...Object.fromEntries(
     Object.entries(regionalStays).map(([group, stay]) => [
@@ -146,7 +146,15 @@ function isIsoDate(value) {
 
 function isNonFutureIsoDate(value) {
   if (!isIsoDate(value)) return false;
-  const today = new Date().toISOString().slice(0, 10);
+  // Research is maintained in Asia/Shanghai. UTC can still be on the previous
+  // calendar day shortly after midnight locally, which would reject a valid
+  // same-day verification date.
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
   return value.slice(0, 10) <= today;
 }
 
@@ -310,7 +318,14 @@ async function auditImage(photo, path, { propertyId, requireProvenance = false }
 }
 
 const imagePropertyIds = new Map();
-for (const hotels of Object.values(hotelGroups)) {
+// The airport comparison is archived after the itinerary changed to an
+// overnight terminal wait. Keep validating its saved image provenance without
+// treating those hotels as current stay options or current rate targets.
+const provenanceHotelGroups = {
+  "auckland-airport-archive": (await import("../src/data/aucklandAirportHotels.js")).aucklandAirportHotels,
+  ...hotelGroups,
+};
+for (const hotels of Object.values(provenanceHotelGroups)) {
   for (const hotel of hotels) {
     const photos = [
       ...(hotel.hotelImages ?? []),
@@ -349,10 +364,12 @@ for (const [group, hotels] of Object.entries(hotelGroups)) {
   const selectableHotels = visibleHotels.filter(
     (hotel) => !hotel.isResearchPlaceholder && hotel.officialStatus !== "exact-date-unavailable",
   );
-  if (selectableHotels.length < minimumSelectableOptionsPerRegion) {
-    errors.push(`${group}: requires at least ${minimumSelectableOptionsPerRegion} selectable visible options; found ${selectableHotels.length}`);
+  if (visibleHotels.length < minimumResearchedOptionsPerRegion) {
+    errors.push(`${group}: requires at least ${minimumResearchedOptionsPerRegion} researched visible options; found ${visibleHotels.length}`);
   }
-  const representedStayTypes = new Set(selectableHotels.map((hotel) => hotel.stayType).filter(Boolean));
+  const representedStayTypes = new Set(
+    selectableHotels.flatMap((hotel) => hotel.stayTypes ?? [hotel.stayType]).filter(Boolean),
+  );
   for (const requiredStayType of ["hotel", "home"]) {
     if (!representedStayTypes.has(requiredStayType)) {
       errors.push(`${group}: selectable options must include at least one ${requiredStayType}; found ${[...representedStayTypes].join(", ") || "none"}`);
@@ -387,6 +404,9 @@ for (const [group, hotels] of Object.entries(hotelGroups)) {
     }
 
     const isVisible = visibleHotels.includes(hotel);
+    if (hotel.isResearchPlaceholder && hotel.rateSnapshots != null) {
+      errors.push(`${hotelPath}: research placeholder cannot carry a selectable rate or availability snapshot`);
+    }
     if (isVisible && hotel.officialStatus !== "exact-date-unavailable") {
       for (const [field, value] of Object.entries({ name: hotel.name, mapQuery: hotel.mapQuery })) {
         if (!hasText(value)) errors.push(`${hotelPath}: visible option requires ${field}`);
@@ -427,6 +447,24 @@ for (const [group, hotels] of Object.entries(hotelGroups)) {
       }
       if (!allowedStayTypes.has(hotel.stayType)) {
         errors.push(`${hotelPath}: visible option requires an explicit stayType of hotel, motel, or home`);
+      }
+      if (hotel.stayTypes !== undefined) {
+        if (!Array.isArray(hotel.stayTypes) || hotel.stayTypes.length < 2) {
+          errors.push(`${hotelPath}: stayTypes must be an array with at least two filter categories`);
+        } else {
+          const uniqueStayTypes = new Set(hotel.stayTypes);
+          if (uniqueStayTypes.size !== hotel.stayTypes.length) {
+            errors.push(`${hotelPath}: stayTypes cannot contain duplicate categories`);
+          }
+          for (const stayType of hotel.stayTypes) {
+            if (!allowedStayTypes.has(stayType)) {
+              errors.push(`${hotelPath}: stayTypes contains unsupported category ${stayType}`);
+            }
+          }
+          if (!uniqueStayTypes.has(hotel.stayType)) {
+            errors.push(`${hotelPath}: stayTypes must include the primary stayType ${hotel.stayType}`);
+          }
+        }
       }
       if (!Array.isArray(hotel.ratings) || hotel.ratings.length === 0) {
         errors.push(`${hotelPath}: visible option requires at least one source-labelled guest rating`);

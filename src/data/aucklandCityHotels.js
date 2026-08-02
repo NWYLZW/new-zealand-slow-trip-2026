@@ -28,9 +28,9 @@ export const aucklandCityHotels = [
     recommendation: "行程最匹配",
     recommendationEn: "Best itinerary fit",
     summary:
-      "10 月 8 日约 23:00 进城仍可由 24 小时前台办理入住；10 月 9 日约 06:30 离店前往 SkyCity 参加霍比屯往返大巴，返回后继续住同一酒店，10 月 10 日退房并前往机场。",
+      "10 月 8 日 15:10 抵达奥克兰后可在傍晚前进城办理入住；10 月 9 日约 06:30 离店前往 SkyCity 参加霍比屯往返大巴，返回后继续住同一酒店，10 月 10 日退房并前往机场。",
     summaryEn:
-      "The 24-hour front desk supports an arrival around 23:00 on 8 Oct. The same hotel can be kept after leaving around 06:30 for the SkyCity Hobbiton coach on 9 Oct.",
+      "The 15:10 arrival on 8 Oct leaves time to reach the city and check in before evening. The same hotel can be kept after leaving around 06:30 for the SkyCity Hobbiton coach on 9 Oct.",
     access: "距 Britomart 站约 650 米；位置评分 9.5，距机场约 18 公里",
     accessEn: "About 650 m from Britomart Station; location score 9.5",
     parking:
@@ -64,13 +64,13 @@ export const aucklandCityHotels = [
       },
     ],
     strengths: [
-      "24 小时前台适合晚到",
+      "24 小时前台便于灵活入住",
       "购物日步行动线最佳",
       "25 m² 且有小厨房",
       "无需为霍比屯往返大巴换酒店",
     ],
     strengthsEn: [
-      "The 24-hour front desk supports the late arrival",
+      "The 24-hour front desk supports flexible check-in",
       "The most convenient walking base for the city shopping day",
       "A 25 m² studio with a kitchenette",
       "No hotel change is needed around the Hobbiton coach day",

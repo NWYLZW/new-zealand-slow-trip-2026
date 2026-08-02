@@ -16,21 +16,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { divIcon, latLngBounds } from "leaflet";
 import { MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { agodaUrlForStay, aucklandAirportHotels, aucklandAirportOvernightGuides, bookingUrlForStay, officialUrlForStay } from "../data/aucklandAirportHotels";
+import { agodaUrlForStay, bookingUrlForStay, officialUrlForStay } from "../data/aucklandAirportHotels";
+import { aucklandCityHotels, aucklandCityStay } from "../data/aucklandCityHotels";
 import "./HotelComparisonDialog.css";
 
-const airportPosition = [-37.0082, 174.785];
-const defaultComparison = {
-  id: "auckland-airport",
-  title: "奥克兰机场住宿比选",
-  titleEn: "Auckland Airport stay comparison",
-  mapLabel: "奥克兰机场住宿位置地图",
-  mapLabelEn: "Auckland Airport stay locations",
-  anchorPosition: airportPosition,
-  anchorLabel: "奥克兰机场",
-  anchorLabelEn: "Auckland Airport",
-  anchorIcon: "✈",
-};
+const defaultComparison = aucklandCityStay;
 const attractionPinsByRegion = {
   "auckland-airport": [
     { label: "奥克兰国际航站楼", labelEn: "Auckland International Terminal", position: [-37.0040146, 174.7856948] },
@@ -118,6 +108,84 @@ function currentRoomQuotes(hotel, dates) {
   return { quotesByRoom, snapshot };
 }
 
+function recordedRateHasPrice(rate) {
+  return Number.isFinite(rate?.refundableNzd)
+    || Number.isFinite(rate?.nonRefundableNzd)
+    || (rate?.rateOptions ?? []).some((option) => Number.isFinite(option?.nzd));
+}
+
+function snapshotHasRecordedPrice(snapshot) {
+  return recordedRateHasPrice(snapshot)
+    || recordedRateHasPrice(snapshot?.agoda)
+    || Object.values(snapshot?.roomRates ?? {}).some((channels) =>
+      Object.values(channels ?? {}).some(recordedRateHasPrice));
+}
+
+function snapshotQuotedAt(snapshot) {
+  const dates = [snapshot?.quotedAt, snapshot?.agoda?.quotedAt];
+  Object.values(snapshot?.roomRates ?? {}).forEach((channels) => {
+    Object.values(channels ?? {}).forEach((rate) => dates.push(rate?.quotedAt));
+  });
+  return dates.filter(Boolean).sort().at(-1) ?? null;
+}
+
+function displayCheckedDate(value, isEnglish) {
+  if (!value) return null;
+  const [year, month, day] = value.split("-");
+  if (!year || !month || !day) return value;
+  return isEnglish ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
+}
+
+function needsRecheckKind(hotel) {
+  if (hotel.isResearchPlaceholder) return "target-search-pending";
+  return Object.values(hotel.rateSnapshots ?? {}).some(snapshotHasRecordedPrice)
+    ? "stale-quote"
+    : "checked-no-price";
+}
+
+function needsRecheckPresentation(hotel, isEnglish) {
+  const kind = needsRecheckKind(hotel);
+  const presentations = {
+    "stale-quote": {
+      tone: "is-unavailable",
+      title: isEnglish ? "Previous quote recorded · refresh required" : "已有旧报价 · 待刷新",
+      roomLabel: isEnglish ? "Previous quote · refresh required" : "已有旧报价 · 待刷新",
+      roomNote: isEnglish
+        ? "A recorded price exists, but it must be refreshed before it is treated as current."
+        : "已有历史报价，但刷新前不能作为当前价格使用。",
+      linkLabel: isEnglish ? "Open booking entry to refresh the quote" : "打开预订入口刷新报价",
+      listNote: isEnglish
+        ? "The recorded amount remains a reference only until it is refreshed."
+        : "刷新前，已记录金额仅作历史参考。",
+    },
+    "checked-no-price": {
+      tone: "is-unreachable",
+      title: isEnglish ? "Target dates checked · no reproducible price" : "已查目标日期 · 无可复现价格",
+      roomLabel: isEnglish ? "Booking entry checked · price not reproducible" : "已查预订入口 · 价格不可复现",
+      roomNote: isEnglish
+        ? "The target-date entry was checked, but no reproducible tax-inclusive total was obtained."
+        : "已检查目标日期入口，但尚未取得可复现的含税总价。",
+      linkLabel: isEnglish ? "Open booking entry to retry" : "打开预订入口重试",
+      listNote: isEnglish
+        ? "The target dates were checked, but no reproducible tax-inclusive total was obtained."
+        : "已检查目标日期，但尚未取得可复现的含税总价。",
+    },
+    "target-search-pending": {
+      tone: "is-unreachable",
+      title: isEnglish ? "Target-date search not yet completed" : "尚未完成目标日期查询",
+      roomLabel: isEnglish ? "Target-date search pending" : "目标日期待查询",
+      roomNote: isEnglish
+        ? "Inventory and a reproducible total still need to be checked; this option is not selectable yet."
+        : "库存与可复现总价仍待查询；当前暂不可选择。",
+      linkLabel: isEnglish ? "Open booking entry to start the check" : "打开预订入口开始查询",
+      listNote: isEnglish
+        ? "Research reference only; inventory and price still need to be checked."
+        : "仅作调研参考，库存与价格仍待查询。",
+    },
+  };
+  return { kind, ...presentations[kind] };
+}
+
 function reviewedAccommodationImages(hotel) {
   const images = [
     ...(hotel.hotelImages ?? []),
@@ -194,9 +262,13 @@ function getFeaturedStay(hotel, dates) {
       ? (fallbackIsPropertyImage ? "hotel" : "other-room")
       : null,
     price,
+    quotedAt: snapshotQuotedAt(snapshot),
+    recheckKind: hotel.officialStatus === "needs-recheck" ? needsRecheckKind(hotel) : null,
     priceStatus: hotel.officialStatus === "exact-date-unavailable"
       ? "unavailable"
-      : snapshot && price ? "verified" : "needs-recheck",
+      : hotel.officialStatus === "needs-recheck"
+        ? "needs-recheck"
+        : snapshot && price ? "verified" : "needs-recheck",
     room: preferredRoom,
   };
 }
@@ -297,6 +369,16 @@ function directionsUrl(hotel, attraction) {
 }
 
 function officialStatusPresentation(hotel, isEnglish) {
+  if (hotel.officialStatus === "needs-recheck") {
+    const presentation = needsRecheckPresentation(hotel, isEnglish);
+    return {
+      ...presentation,
+      linkLabel: isEnglish
+        ? (hotel.officialLinkLabelEn ?? presentation.linkLabel)
+        : (hotel.officialLinkLabel ?? presentation.linkLabel),
+    };
+  }
+
   if (hotel.isAirbnb && hotel.isVerifiedListing) {
     return {
       tone: "is-verified",
@@ -308,15 +390,6 @@ function officialStatusPresentation(hotel, isEnglish) {
   }
 
   const presentations = {
-    "needs-recheck": {
-      tone: "",
-      title: isEnglish ? "Dates changed · recheck official price" : "行程日期已变 · 官网价格待复核",
-      roomLabel: isEnglish ? "Official website · recheck required" : "官网入口 · 需重新核价",
-      roomNote: isEnglish
-        ? "The previous quote was for the old stay dates and must not be used for this itinerary."
-        : "旧报价对应原住宿日期，不能用于当前行程。",
-      linkLabel: isEnglish ? "Open official website to recheck" : "打开官网重新核价",
-    },
     "exact-rate-verified": {
       tone: "is-verified",
       title: isEnglish ? "Official exact-date rates verified" : "官网精确日期已核验",
@@ -491,7 +564,7 @@ function comparisonMapIcon(label, type, selected = false) {
 }
 
 function HotelComparisonMap({ activeHotelId, comparison, focusRequestKey, focusedHotelId, hotels, isEnglish, onHotelChange }) {
-  const anchorPosition = comparison.anchorPosition ?? airportPosition;
+  const anchorPosition = comparison.anchorPosition ?? aucklandCityStay.anchorPosition;
   const attractions = attractionPinsByRegion[comparison.id] ?? [{
     label: comparison.anchorLabel,
     labelEn: comparison.anchorLabelEn,
@@ -556,24 +629,12 @@ function HotelComparisonMap({ activeHotelId, comparison, focusRequestKey, focuse
 
 function hotelStayType(hotel) {
   if (hotel.stayType) return hotel.stayType;
-  const explicitTypes = {
-    "adina-auckland-britomart": "home",
-    "the-rees-queenstown": "hotel",
-    "wanaka-luxury-apartments": "home",
-    "west-meadows-wanaka": "home",
-    "hermitage-mt-cook-motel-studio-queen": "motel",
-    "omahau-down": "home",
-    "simons-hill-dark-sky": "home",
-    "mount-cook-station-huts": "home",
-    "ben-ohau-vista": "home",
-    "mariner-suites-oamaru": "motel",
-    "old-confectionery-apartments-oamaru": "home",
-    "oamaru-backpackers": "home",
-    "quest-manchester-christchurch": "home",
-  };
-  if (explicitTypes[hotel.id]) return explicitTypes[hotel.id];
   if (hotel.isAirbnb) return "home";
   return "hotel";
+}
+
+function hotelFilterStayTypes(hotel) {
+  return hotel.stayTypes ?? [hotelStayType(hotel)];
 }
 
 function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onFiltersChange, onHotelChange, selectedHotelId }) {
@@ -585,10 +646,10 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
     featured: getFeaturedStay(hotel, dates),
     hotel,
     markerNumber: index + 1,
-    type: hotelStayType(hotel),
+    types: hotelFilterStayTypes(hotel),
   })), [cards, dates]);
   const normalizedQuery = query.trim().toLocaleLowerCase();
-  const filteredCards = featuredCards.filter(({ featured, hotel, type }) => {
+  const filteredCards = featuredCards.filter(({ featured, hotel, types }) => {
     const searchText = [
       isEnglish ? (hotel.nameEn ?? hotel.name) : hotel.name,
       hotel.recommendation,
@@ -601,12 +662,13 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
       ...(hotel.strengths ?? []),
     ].filter(Boolean).join(" ").toLocaleLowerCase();
     return (!normalizedQuery || searchText.includes(normalizedQuery))
-      && (stayType === "all" || type === stayType)
+      && (stayType === "all" || types.includes(stayType))
       && (priceStatus === "all" || featured.priceStatus === priceStatus);
   });
   const mapCards = filteredCards.map(({ hotel, markerNumber }) => ({ ...hotel, markerNumber }));
-  const selectableCount = cards.filter((hotel) => hotel.officialStatus !== "exact-date-unavailable").length;
-  const unavailableCount = cards.length - selectableCount;
+  const selectableCount = filteredCards.filter(({ hotel }) => !hotel.isResearchPlaceholder && hotel.officialStatus !== "exact-date-unavailable").length;
+  const unavailableCount = filteredCards.filter(({ hotel }) => hotel.officialStatus === "exact-date-unavailable").length;
+  const researchCount = filteredCards.filter(({ hotel }) => hotel.isResearchPlaceholder).length;
   const filterOptions = [
     { value: "all", zh: "全部住宿", en: "All stays" },
     { value: "hotel", zh: "酒店", en: "Hotels" },
@@ -652,19 +714,22 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
           <Box aria-label={isEnglish ? "Filter by price status" : "按报价状态过滤"} className="hotel-stay-filter-group hotel-stay-price-filters" role="group">
             <Button aria-pressed={priceStatus === "all"} onClick={() => onFiltersChange({ ...filters, priceStatus: "all" })} size="small" variant={priceStatus === "all" ? "contained" : "outlined"}>{isEnglish ? "Any price status" : "全部报价"}</Button>
             <Button aria-pressed={priceStatus === "verified"} onClick={() => onFiltersChange({ ...filters, priceStatus: "verified" })} size="small" variant={priceStatus === "verified" ? "contained" : "outlined"}>{isEnglish ? "Exact-date price" : "有精确日期价"}</Button>
-            <Button aria-pressed={priceStatus === "needs-recheck"} onClick={() => onFiltersChange({ ...filters, priceStatus: "needs-recheck" })} size="small" variant={priceStatus === "needs-recheck" ? "contained" : "outlined"}>{isEnglish ? "Needs recheck" : "待重新核价"}</Button>
+            <Button aria-pressed={priceStatus === "needs-recheck"} onClick={() => onFiltersChange({ ...filters, priceStatus: "needs-recheck" })} size="small" variant={priceStatus === "needs-recheck" ? "contained" : "outlined"}>{isEnglish ? "Price follow-up" : "报价待处理"}</Button>
             {unavailableCount > 0 && <Button aria-pressed={priceStatus === "unavailable"} onClick={() => onFiltersChange({ ...filters, priceStatus: "unavailable" })} size="small" variant={priceStatus === "unavailable" ? "contained" : "outlined"}>{isEnglish ? "Unavailable reference" : "指定日期无房"}</Button>}
           </Box>
           <Typography aria-live="polite" className="hotel-stay-result-count">
             {isEnglish
-              ? `${filteredCards.length} shown · ${selectableCount} selectable${unavailableCount ? ` + ${unavailableCount} unavailable reference` : ""}`
-              : `显示 ${filteredCards.length} 家 · 可选 ${selectableCount} 家${unavailableCount ? ` + 无房参考 ${unavailableCount} 家` : ""}`}
+              ? `${filteredCards.length} shown · ${selectableCount} selectable${unavailableCount ? ` + ${unavailableCount} unavailable reference` : ""}${researchCount ? ` + ${researchCount} research reference` : ""}`
+              : `显示 ${filteredCards.length} 家 · 可选 ${selectableCount} 家${unavailableCount ? ` + 无房参考 ${unavailableCount} 家` : ""}${researchCount ? ` + 待调研参考 ${researchCount} 家` : ""}`}
           </Typography>
         </Box>
       </Box>
       <Box aria-label={isEnglish ? "Accommodation options" : "住宿候选列表"} className="hotel-stay-list" role="list">
         {filteredCards.map(({ featured, hotel, markerNumber }) => {
           const selected = hotel.id === selectedHotelId && !hotel.isResearchPlaceholder;
+          const recheckPresentation = featured.recheckKind
+            ? needsRecheckPresentation(hotel, isEnglish)
+            : null;
           return (
             <Box className="hotel-stay-list-item" key={hotel.id} role="listitem">
               <Box
@@ -701,13 +766,13 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
                 <ButtonBase
                   aria-label={isEnglish ? `Open details for ${hotel.nameEn ?? hotel.name}` : `查看 ${hotel.name} 详情`}
                   className="hotel-stay-list-heading hotel-stay-list-heading-link"
-                  disabled={hotel.isResearchPlaceholder}
                   onClick={() => onHotelChange(hotel.id)}
                 >
                   <Box>
                     <Stack alignItems="center" direction="row" flexWrap="wrap" gap={0.7}>
                       <Typography className="hotel-stay-list-name">{isEnglish ? (hotel.nameEn ?? hotel.name) : hotel.name}</Typography>
                       {selected && <Chip color={hotel.selectionPending ? "warning" : "success"} label={isEnglish ? "Current choice" : "当前首选"} size="small" />}
+                      {hotel.isResearchPlaceholder && <Chip color="warning" label={isEnglish ? "Target-date search pending" : "目标日期待查询"} size="small" variant="outlined" />}
                     </Stack>
                     <Typography className="hotel-stay-list-recommendation">{isEnglish ? (hotel.recommendationEn ?? hotel.recommendation) : hotel.recommendation}</Typography>
                   </Box>
@@ -721,9 +786,20 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
                   </Typography>}
                 </Box>
                 <Box className={`hotel-stay-list-price ${featured.priceStatus}`}>
-                  {featured.priceStatus === "unavailable" ? <>
+                  {hotel.isResearchPlaceholder ? <>
+                    <Typography className="hotel-stay-list-price-value">{recheckPresentation.title}</Typography>
+                    <Typography color="text.secondary">{recheckPresentation.listNote}</Typography>
+                  </> : featured.priceStatus === "unavailable" ? <>
                     <Typography className="hotel-stay-list-price-value">{isEnglish ? "Unavailable for these dates" : "指定日期无连续库存"}</Typography>
                     <Typography color="text.secondary">{isEnglish ? "Reference only; cannot be selected." : "仅作位置与类型参考，不可选择。"}</Typography>
+                  </> : featured.recheckKind === "stale-quote" ? <>
+                    <Typography className="hotel-stay-list-price-value">{featured.price ? currencyLabel(featured.price.amount, isEnglish) : recheckPresentation.title}</Typography>
+                    {featured.price && <Typography color="text.secondary">{isEnglish ? "Target-date total recorded" : `${dates.label}已记录住宿总价`} · {priceSourceLabel(featured.price, isEnglish)}</Typography>}
+                    {featured.quotedAt && <Typography color="text.secondary">{isEnglish ? "Checked" : "核验日期"}：{displayCheckedDate(featured.quotedAt, isEnglish)} · {isEnglish ? "refresh before payment" : "付款前刷新"}</Typography>}
+                    <Typography color="text.secondary">{recheckPresentation.listNote}</Typography>
+                  </> : featured.recheckKind === "checked-no-price" ? <>
+                    <Typography className="hotel-stay-list-price-value">{recheckPresentation.title}</Typography>
+                    <Typography color="text.secondary">{recheckPresentation.listNote}</Typography>
                   </> : featured.price ? <>
                     <Typography className="hotel-stay-list-price-value">{currencyLabel(featured.price.amount, isEnglish)}</Typography>
                     <Typography color="text.secondary">{isEnglish ? "Exact-date total for the stay" : `${dates.label}精确日期住宿总价`} · {priceSourceLabel(featured.price, isEnglish)}</Typography>
@@ -751,13 +827,13 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
   );
 }
 
-export function HotelComparisonView({ activeHotelId, comparison = defaultComparison, hotels = aucklandAirportHotels, isEnglish, onActiveHotelChange, onSelect, selectedHotelId, stay }) {
+export function HotelComparisonView({ activeHotelId, comparison = defaultComparison, hotels = aucklandCityHotels, isEnglish, onActiveHotelChange, onSelect, selectedHotelId, stay }) {
   const visibleHotels = useMemo(() => hotels.filter((hotel) => !hotel.excludedByPreference && (!hotel.isAirbnb || hotel.isVerifiedListing)), [hotels]);
   const [gallery, setGallery] = useState(null);
   const [hotelSlideIndex, setHotelSlideIndex] = useState(0);
   const [copyResult, setCopyResult] = useState(null);
   const [listFilters, setListFilters] = useState({ priceStatus: "all", query: "", stayType: "all" });
-  const dates = stay ?? comparison.dates ?? { checkIn: "2026-09-28", checkOut: "2026-09-29", label: "9月28日—29日" };
+  const dates = stay ?? comparison.dates ?? aucklandCityStay.dates;
   const nights = stayNightCount(dates.checkIn, dates.checkOut);
   const cards = useMemo(() => visibleHotels.map((hotel, index) => ({
     ...hotel,
@@ -1280,32 +1356,6 @@ export function HotelComparisonView({ activeHotelId, comparison = defaultCompari
                     {(isEnglish ? (hotel.cautionsEn ?? hotel.cautions) : hotel.cautions).map((item) => <Typography key={item}>− {item}</Typography>)}
                   </Box>
                 </Box>
-                {hotel.id === "novotel-auckland-airport" && (
-                  <Box className="airport-overnight-alternative">
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <NightShelterIcon aria-hidden="true" />
-                      <Box>
-                        <Typography fontWeight={900}>{isEnglish ? "Alternative: sleep in the airport" : "省钱备选：直接留宿机场"}</Typography>
-                        <Typography color="text.secondary">{isEnglish ? "Possible, but not recommended before the next day's flight." : "可以过夜，但不建议作为这次深夜落地后的首选。"}</Typography>
-                      </Box>
-                    </Stack>
-                    <Box className="airport-overnight-verdict">
-                      <Typography><b>{isEnglish ? "Where" : "能睡哪里"}：</b>{isEnglish ? "International terminal level 2; the domestic terminal closes around midnight." : "国际航站楼 24 小时开放，二楼有无扶手木椅、薄软椅和少量充电；国内航站楼午夜关闭，不能过夜。"}</Typography>
-                      <Typography><b>{isEnglish ? "Comfort" : "实际舒适度"}：</b>{isEnglish ? "Cold, bright and noisy. Several travellers reported very limited sleep." : "夜里冷、灯光和环境声持续，店铺大多关闭；有作者 43 小时行程只睡约 3 小时。"}</Typography>
-                      <Typography><b>{isEnglish ? "Useful" : "可利用设施"}：</b>{isEnglish ? "Showers are in the domestic terminal; walk 10–15 minutes following the green line." : "国内楼 3 号门附近二楼有淋浴，需自备洗漱用品；两楼沿绿色指引线步行约 10—15 分钟。"}</Typography>
-                      <Typography><b>{isEnglish ? "Verdict" : "建议"}：</b>{isEnglish ? "Only for a very tight budget and if poor sleep is acceptable." : "若只是极限省钱且能接受几乎睡不好，可以考虑；你们第二天还要飞皇后镇，住 Novotel 更稳妥。"}</Typography>
-                    </Box>
-                    <Box className="airport-overnight-guides">
-                      {aucklandAirportOvernightGuides.map((guide, index) => (
-                        <Box component="a" href={guide.url} key={guide.url} rel="noreferrer" target="_blank">
-                          <Typography variant="caption">{isEnglish ? "Xiaohongshu" : "小红书"} · {index + 1}/5 · {isEnglish ? guide.authorEn : guide.author}</Typography>
-                          <Typography fontWeight={900}>{isEnglish ? guide.titleEn : guide.title}<OpenInNewIcon /></Typography>
-                          <Typography color="text.secondary">{isEnglish ? guide.noteEn : guide.note}</Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                )}
                 <Button
                   className="hotel-select-button"
                   disabled={selected || hotel.isResearchPlaceholder || hotel.officialStatus === "exact-date-unavailable"}
@@ -1316,7 +1366,7 @@ export function HotelComparisonView({ activeHotelId, comparison = defaultCompari
                   {hotel.officialStatus === "exact-date-unavailable"
                     ? (isEnglish ? "Unavailable for these dates · reference only" : "指定日期无房 · 仅作参考")
                     : hotel.isResearchPlaceholder
-                    ? (isEnglish ? "No specific accommodation selected" : "尚未选定具体住宿")
+                    ? (isEnglish ? "Target-date search pending · not selectable" : "目标日期待查询 · 暂不可选")
                     : selected
                       ? hotel.selectionPending
                         ? (isEnglish ? "Preferred option · booking pending" : "首选方案 · 仍待预订")

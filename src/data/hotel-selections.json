@@ -1,13 +1,6 @@
 {
   "updatedAt": "2026-07-30T00:00:00+08:00",
   "regions": {
-    "auckland-airport": {
-      "hotelId": "novotel-auckland-airport",
-      "hotelName": "Novotel Auckland Airport",
-      "stayDates": [
-        "2026-09-28"
-      ]
-    },
     "auckland-city": {
       "hotelId": "adina-auckland-britomart",
       "hotelName": "Adina Apartment Hotel Auckland Britomart",

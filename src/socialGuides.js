@@ -695,8 +695,8 @@ const christchurchAirportReturnPosts = contextualizeVerifiedPosts([
   rentalInsurancePitfallPost,
   ...tekapoChristchurchVerifiedPosts.slice(1),
 ], {
-  excerpt: "作为基督城机场还车或前往机场的通用参考；原帖并非本次 Budget 订单或 JQ242 航班实测：",
-  excerptEn: "General context for returning a car or travelling to Christchurch Airport; the post is not a review of this Budget booking or JQ242 flight: ",
+  excerpt: "作为基督城机场还车或前往机场的通用参考；原帖并非本次 Budget 订单或 JQ236 航班实测：",
+  excerptEn: "General context for returning a car or travelling to Christchurch Airport; the post is not a review of this Budget booking or JQ236 flight: ",
   tip: "先服从 Budget 还车截止时间、机场指引和 Jetstar 实时通知；",
   tipEn: "Prioritise Budget's return deadline, airport directions and live Jetstar notices. ",
 });

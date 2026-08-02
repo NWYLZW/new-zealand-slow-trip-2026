@@ -3,8 +3,8 @@ const googleDestination = (query) => `https://www.google.com/maps/dir/?api=1&des
 export const flightLinks = {
   MH0523: "https://www.flightaware.com/live/flight/MAS523",
   MH0133: "https://www.flightaware.com/live/flight/MAS133",
-  NZ619: "https://www.flightaware.com/live/flight/ANZ619",
-  JQ242: "https://www.flightaware.com/live/flight/JST242",
+  JQ295: "https://www.flightaware.com/live/flight/JST295",
+  JQ236: "https://www.flightaware.com/live/flight/JST236",
   MH0132: "https://www.flightaware.com/live/flight/MAS132",
   MH0522: "https://www.flightaware.com/live/flight/MAS522",
 };
@@ -22,7 +22,7 @@ const placeAliases = [
   ["奥克兰市中心酒店", "Britomart Auckland"],
   ["市中心酒店", "Britomart Auckland"],
   ["SkyCity Coach Terminal", "SkyCity Coach Terminal 102 Hobson Street Auckland"],
-  ["机场酒店", "Novotel Auckland Airport"],
+  ["奥克兰机场过夜候机", "Auckland Airport Domestic Terminal"],
   ["Budget 取车", "Budget Car Rental Queenstown Airport"],
   ["Budget 还车", "Budget Car Rental Christchurch Airport"],
   ["Ramada by Wyndham Queenstown Central", "Ramada by Wyndham Queenstown Central"],

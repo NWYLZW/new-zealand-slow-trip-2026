@@ -21,7 +21,6 @@ const hotelPopupSearchParams = ["compare", "hotel", "photo", "photoIndex"];
 const eventPopupSearchParams = ["event", "eventTab"];
 const bookingItemIds = bookingItems.map(([id]) => id);
 const comparisonLabels = {
-  "auckland-airport": ["奥克兰机场", "Auckland Airport"],
   "auckland-city": ["奥克兰市中心", "Central Auckland"],
   queenstown: ["皇后镇", "Queenstown"],
   wanaka: ["瓦纳卡", "Wānaka"],

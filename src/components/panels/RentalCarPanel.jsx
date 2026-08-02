@@ -30,26 +30,26 @@ const confirmedBookings = [
     id: "south",
     island: "南岛",
     islandEn: "South Island",
-    reservation: "新订单是否沿用原预订号待核对",
-    reservationEn: "check whether the updated booking retains the original reference",
-    vehicle: "车型待新确认邮件核对",
-    vehicleEn: "Vehicle to verify in the updated confirmation",
+    reservation: "已私下保存",
+    reservationEn: "stored privately",
+    vehicle: "Mazda CX-30 或同级 · 自动挡 · 不限里程",
+    vehicleEn: "Mazda CX-30 or similar · automatic · unlimited kilometres",
     route: "皇后镇机场（ZQN）→ 基督城机场（CHC）",
     routeEn: "Queenstown Airport (ZQN) → Christchurch Airport (CHC)",
-    dates: "2026年9月29日取车 — 10月8日还车",
-    datesEn: "Pick up 29 Sep 2026 — return 8 Oct 2026",
-    duration: "改期后计费时长待按新确认邮件核对 · 异地还车",
-    durationEn: "Updated billed duration to verify against the new confirmation · one-way",
-    total: "待按新确认邮件核对",
-    totalEn: "Pending verification from the new confirmation email",
-    protection: "待新确认邮件核对",
-    protectionEn: "Pending updated confirmation",
+    dates: "2026年9月29日 11:00取车 — 10月8日 11:00还车",
+    datesEn: "Pick up 11:00 on 29 Sep 2026 — return 11:00 on 8 Oct 2026",
+    duration: "9 × 24小时 · 异地还车",
+    durationEn: "9 × 24 hours · one-way",
+    total: "NZD 1,685.98 · 已预付",
+    totalEn: "NZD 1,685.98 · prepaid",
+    protection: "订单截图未显示，取车前复核",
+    protectionEn: "Not shown in the booking screenshot; verify before pickup",
     counter: "皇后镇机场柜台 08:00–22:00；基督城机场柜台 06:00–次日01:30，可使用非营业时间钥匙箱。",
     counterEn: "Queenstown Airport desk 08:00–22:00; Christchurch Airport desk 06:00–01:30, with an after-hours key drop.",
-    cancellation: "原确认邮件写明 Pay at Counter，取消或未到店均不收费；改期后的规则仍需按新确认邮件复核。",
-    cancellationEn: "The previous confirmation stated Pay at Counter with no cancellation or no-show fee; recheck the updated terms in the new confirmation.",
-    payment: "旧确认邮件记录主驾驶本人名下实体卡、刷卡费与取车预授权要求；改期后费率和规则须以新确认邮件为准。",
-    paymentEn: "The previous confirmation recorded a physical card in the lead driver's name, card fees and pickup pre-authorisation; verify all rates and rules in the updated confirmation.",
+    cancellation: "订单截图未显示退改规则；如需变更或取消，先在 Budget 管理订单页核对费用。",
+    cancellationEn: "Cancellation terms are not shown in the booking screenshot; check fees in Manage Booking before making any change.",
+    payment: "订单总额 NZD 1,685.98 已预付；取车押金、预授权与刷卡要求仍需按 Budget 条款复核。",
+    paymentEn: "The NZD 1,685.98 total is prepaid; verify Budget's deposit, pre-authorisation and card requirements before pickup.",
     coverLimit: "玻璃、轮胎、车顶、底盘、涉水和禁行道路等未确认包含；不要驶入 Skippers Canyon。",
     coverLimitEn: "Windscreen, tyres, overhead, underbody, water damage and prohibited roads are not confirmed as covered. Do not drive Skippers Canyon.",
   },
@@ -130,7 +130,7 @@ function BookingConfirmationCard({ booking, isEnglish }) {
             </BookingFact>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <BookingFact icon={<PaymentsOutlinedIcon />} label={isEnglish ? "Updated total" : "改期后总价"}>
+            <BookingFact icon={<PaymentsOutlinedIcon />} label={isEnglish ? "Prepaid total" : "预付总额"}>
               <b>{isEnglish ? booking.totalEn : booking.total}</b>
             </BookingFact>
           </Grid>
@@ -179,10 +179,10 @@ export function RentalCarPanel() {
       <PanelHero
         image={assetPath("images/queenstown.webp")}
         kicker="SELF DRIVE"
-        title={isEnglish ? "South Island rental updated to 8 October" : "南岛租车已改为10月8日还车"}
+        title={isEnglish ? "South Island rental confirmed" : "南岛租车已确认"}
         desc={isEnglish
-          ? "The return date has been changed to 8 October. Verify the exact return time, updated total, vehicle, protection and whether the booking reference remains unchanged in the new confirmation email."
-          : "还车日期已改为10月8日；具体还车时刻、改期后总价、车型、保障及预订号是否沿用，均需按新确认邮件核对。"}
+          ? "Pick up at Queenstown Airport at 11:00 on 29 September and return at Christchurch Airport at 11:00 on 8 October. The Mazda CX-30 or similar is automatic with unlimited kilometres; the NZD 1,685.98 total is prepaid."
+          : "9月29日11:00在皇后镇机场取车，10月8日11:00在基督城机场还车；Mazda CX-30或同级、自动挡、不限里程，NZD 1,685.98已预付。"}
       />
 
       <Alert severity="warning" className="rental-cover-limit">
