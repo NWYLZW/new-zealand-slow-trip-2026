@@ -92,9 +92,9 @@ export const wanakaHotels = [
         image("wanaka-hotel-2.jpg", "公寓建筑与泳池"),
       ],
       availabilityNote:
-        "官网预订引擎已按 2026 年 10 月 3—5 日、2 人核验：符合需求的 One Bedroom Apartment（最多 2 人、1 张 Queen 床）可订，展开 Nightly rate 后两晚总价 NZD 620；结算显示应付押金 NZD 155，余款 NZD 465 按条款在入住日从留档信用卡自动扣款。10 月 3 日不在官网特殊季节范围内，适用普通直订条款：入住前 72 小时内取消不可退款，未入住收取全部住宿费。Booking 同房型可取消档为 NZD 660。日历上的 10 月 3 日、4 日“from NZD 290”只是起价，不代替精确结果。Twin、两卧室、三卧室与 Loft 在本次日期均不可订；官网未说明税费或含早餐，均不作推断。",
+        "已确认 Booking.com 订单：2026 年 10 月 3—5 日、2 位成人、1 间 One Bedroom Apartment，两晚 NZD 660；确认页显示已付 NZD 0、待付 NZD 660，Booking.com 表示将在扣款成功后通知。9 月 18 日 23:59 前可全额退款（页面未标注时区），之后不可退款；不含早餐。官网预订引擎曾于 2026-07-28 按相同日期和人数核验：符合需求的 One Bedroom Apartment（最多 2 人、1 张 Queen 床）两晚 NZD 620；这是历史直订报价，不替代已确认订单。日历上的 10 月 3 日、4 日“from NZD 290”只是起价。",
       availabilityNoteEn:
-        "Verified in the direct booking engine for 3–5 Oct 2026 and two guests: the matching One Bedroom Apartment (maximum two guests, one queen bed) was available, and its expanded Nightly rate showed NZD 620 for two nights. Checkout showed a NZD 155 deposit, leaving NZD 465 to be charged automatically to the card on file on arrival day under the direct terms. As 3 Oct falls outside the property's special seasonal windows, the standard direct policy applies: cancellations within 72 hours of arrival are non-refundable, and no-shows are charged the full accommodation total. Booking.com's cancellable rate for the same category is NZD 660. The calendar's ‘from NZD 290’ labels on 3 and 4 Oct are starting prices and do not replace the exact result. The Twin, Two Bedroom, Three Bedroom and Loft categories were unavailable. Tax and breakfast inclusion were not stated and are not inferred.",
+        "A Booking.com order is confirmed for 3–5 Oct 2026: two adults in one One Bedroom Apartment for NZD 660 total. Its confirmation showed NZD 0 paid and NZD 660 outstanding; Booking.com says it will notify after a successful charge. It is fully refundable before 23:59 on 18 Sep (the page did not state a time zone), then non-refundable; breakfast is not included. The direct booking engine had previously been checked on 28 Jul 2026 for the same dates and guests: the matching One Bedroom Apartment (maximum two guests, one queen bed) totalled NZD 620. That is a historical direct quote and does not replace the confirmed booking. The ‘from NZD 290’ labels on 3 and 4 Oct are starting prices only.",
       rateSnapshots: {
         "2026-10-03/2026-10-05": {
           roomRates: {
@@ -131,15 +131,20 @@ export const wanakaHotels = [
                 quotedAt: "2026-07-28",
               },
               booking: {
-                source: "Booking.com",
+                source: "Booking.com 确认页",
+                sourceEn: "Booking.com confirmation page",
                 roomKey: "one-bedroom-queen",
-                room: "一卧室公寓 · 59 m²",
+                room: "一卧室公寓 · 2 位成人 · 2 晚",
+                roomEn: "One Bedroom Apartment · two adults · two nights",
                 nonRefundableNzd: null,
                 refundableNzd: 660,
-                cancelUntil: "2026-09-19",
-                payment: "9 月 17 日前（不含当日）零付款",
-                breakfast: "带厨房，不含早餐",
-                quotedAt: "2026-07-27",
+                cancelUntil: "2026-09-18 23:59（页面未标注时区）",
+                cancelUntilEn: "2026-09-18 23:59 (time zone not stated on the page)",
+                payment: "确认页显示已付 NZD 0、待付 NZD 660；Booking.com 表示将在扣款成功后通知",
+                paymentEn: "The confirmation showed NZD 0 paid and NZD 660 outstanding; Booking.com says it will notify after a successful charge",
+                breakfast: "不含早餐",
+                breakfastEn: "Breakfast not included",
+                quotedAt: "2026-08-04",
               },
             },
           },

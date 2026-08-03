@@ -5,6 +5,7 @@ import LuggageIcon from "@mui/icons-material/Luggage";
 import sharedHotelSelections from "../../data/hotel-selections.json";
 import { AUCKLAND_AIRPORT_SELECTION_KEY } from "../../data/aucklandAirportHotels";
 import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHotels";
+import { confirmedAccommodationBookings } from "../../data/confirmedAccommodationBookings";
 import { regionalHotels, regionalStays } from "../../data/regionalHotels";
 import { useLanguage } from "../../LanguageContext";
 import { AccommodationMap } from "../AccommodationMap";
@@ -30,14 +31,17 @@ const comparisonRegionLabels = {
   christchurch: { en: "Christchurch", zh: "基督城" },
 };
 
+const queenstownBooking = confirmedAccommodationBookings["hotel-queenstown"];
+const wanakaBooking = confirmedAccommodationBookings["hotel-wanaka"];
+
 const accommodationCalendar = [
   { date: "9/28", stayGroup: "airport-transit", place: "奥克兰机场过夜候机", placeEn: "Overnight at Auckland Airport", status: "不住酒店", statusEn: "No hotel", tone: "flight", noStay: true },
-  { date: "9/29", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 1 晚", statusEn: "Night 1", tone: "queenstown", position: [-45.0154, 168.7366], mapQuery: "Holiday Inn Queenstown Remarkables Park" },
-  { date: "9/30", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 2 晚", statusEn: "Night 2", tone: "queenstown" },
-  { date: "10/1", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 3 晚", statusEn: "Night 3", tone: "queenstown" },
-  { date: "10/2", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: "Holiday Inn Queenstown Remarkables Park", place: "皇后镇", placeEn: "Queenstown", status: "第 4 晚", statusEn: "Night 4", tone: "queenstown" },
-  { date: "10/3", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
-  { date: "10/4", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: "Wanaka Luxury Apartments", place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka" },
+  { date: "9/29", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: queenstownBooking.listingName, hotelEn: queenstownBooking.listingNameEn, place: "皇后镇", placeEn: "Queenstown", status: "第 1 晚", statusEn: "Night 1", tone: "queenstown", confirmed: true, bookedStay: true },
+  { date: "9/30", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: queenstownBooking.listingName, hotelEn: queenstownBooking.listingNameEn, place: "皇后镇", placeEn: "Queenstown", status: "第 2 晚", statusEn: "Night 2", tone: "queenstown", confirmed: true, bookedStay: true },
+  { date: "10/1", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: queenstownBooking.listingName, hotelEn: queenstownBooking.listingNameEn, place: "皇后镇", placeEn: "Queenstown", status: "第 3 晚", statusEn: "Night 3", tone: "queenstown", confirmed: true, bookedStay: true },
+  { date: "10/2", bookingId: "hotel-queenstown", stayGroup: "queenstown", hotel: queenstownBooking.listingName, hotelEn: queenstownBooking.listingNameEn, place: "皇后镇", placeEn: "Queenstown", status: "第 4 晚", statusEn: "Night 4", tone: "queenstown", confirmed: true, bookedStay: true },
+  { date: "10/3", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: wanakaBooking.listingName, hotelEn: wanakaBooking.listingNameEn, place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", confirmed: true, position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
+  { date: "10/4", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: wanakaBooking.listingName, hotelEn: wanakaBooking.listingNameEn, place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka", confirmed: true },
   { date: "10/5", bookingId: "mount-cook", stayGroup: "mount-cook", hotel: "The Hermitage · Mt Cook Motel Studio Queen", place: "库克山村", placeEn: "Aoraki / Mount Cook Village", status: "住 1 晚", statusEn: "1 night", tone: "mount-cook", confirmed: true, position: [-43.7363846, 170.0987676], mapQuery: "Mt Cook Lodge & Motels New Zealand" },
   { date: "10/6", bookingId: "hotel-oamaru", stayGroup: "oamaru", hotel: "Mariner Suites", place: "奥马鲁", placeEn: "Ōamaru", status: "住 1 晚", statusEn: "1 night", tone: "oamaru", position: [-45.1031, 170.9687], mapQuery: "Mariner Suites Oamaru" },
   { date: "10/7", bookingId: "hotel-christchurch", stayGroup: "christchurch", hotel: "Novotel Christchurch Cathedral Square", place: "基督城", placeEn: "Christchurch", status: "住 1 晚", statusEn: "1 night", tone: "christchurch", position: [-43.5309, 172.6372], mapQuery: "Novotel Christchurch Cathedral Square" },
@@ -189,6 +193,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
 
   const cityHotel = aucklandCityHotels.find((hotel) => hotel.id === cityHotelId) ?? aucklandCityHotels[0];
   const displayedCalendar = accommodationCalendar.map((stay) => {
+    if (stay.bookedStay) return stay;
     if (stay.stayGroup === "auckland-city" && stay.hotel) return { ...stay, hotel: cityHotel.name, hotelEn: cityHotel.nameEn ?? cityHotel.name, position: stay.position ? cityHotel.position : undefined, mapQuery: cityHotel.mapQuery };
     if (regionalHotels[stay.stayGroup] && stay.hotel) {
       const selected = regionalHotels[stay.stayGroup].find((hotel) => hotel.id === regionalHotelIds[stay.stayGroup]) ?? regionalHotels[stay.stayGroup][0];
