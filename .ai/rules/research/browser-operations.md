@@ -1,3 +1,13 @@
+---
+kind: rule
+id: research.browser-operations
+scope: research
+triggers: [operate-authenticated-browser, handle-dynamic-or-risk-controlled-page]
+outputs: [read-only-browser-evidence, safe-recovery-report]
+verification: [requested-browser-boundary-is-respected, no-final-form-or-payment-is-submitted]
+last_reviewed: 2026-08-03
+---
+
 # 登录态浏览器与 IAB 操作
 
 在访问 Booking、Agoda、Airbnb、小红书或动态官方预订页时阅读本页。实际操作前还必须加载当前环境的浏览器控制 skill。

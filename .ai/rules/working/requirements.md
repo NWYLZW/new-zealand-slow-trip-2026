@@ -1,3 +1,13 @@
+---
+kind: rule
+id: working.requirements
+scope: working
+triggers: [new-or-ambiguous-request, scope-or-feedback-change]
+outputs: [executable-requirement-contract, acceptance-evidence-map]
+verification: [authorization-is-explicit, requirements-map-to-evidence]
+last_reviewed: 2026-08-03
+---
+
 # 需求建模与授权边界
 
 在新需求、模糊反馈、截图批注、范围变化或准备大改前阅读本页。

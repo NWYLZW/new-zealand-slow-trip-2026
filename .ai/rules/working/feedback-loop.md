@@ -1,3 +1,13 @@
+---
+kind: rule
+id: working.feedback-loop
+scope: working
+triggers: [visual-review-feedback, user-correction]
+outputs: [feedback-to-change-matrix, verified-consistency-fix]
+verification: [every-feedback-item-has-evidence, same-root-cause-components-are-checked]
+last_reviewed: 2026-08-03
+---
+
 # 用户反馈与视觉评审闭环
 
 在处理浏览器批注、截图参考、选中元素评论、多条设计意见或用户纠正早先理解时阅读本页。

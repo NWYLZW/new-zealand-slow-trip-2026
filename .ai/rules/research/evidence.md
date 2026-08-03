@@ -1,3 +1,13 @@
+---
+kind: rule
+id: research.evidence
+scope: research
+triggers: [evaluate-source, write-research-conclusion]
+outputs: [traceable-evidence-record, confidence-aware-conclusion]
+verification: [source-query-and-date-are-recorded, unknown-is-not-presented-as-fact]
+last_reviewed: 2026-08-03
+---
+
 # 证据、调研与分析方法
 
 所有外部事实调研先读本页，再进入住宿、社交或浏览器专项规则。

@@ -1,3 +1,13 @@
+---
+kind: rule
+id: verification.quality-gates
+scope: verification
+triggers: [validate-change, prepare-delivery]
+outputs: [validation-evidence, residual-risk-report]
+verification: [affected-automated-gates-pass, representative-user-path-is-checked]
+last_reviewed: 2026-08-03
+---
+
 # 质量门禁与完成审计
 
 实现完成后按受影响范围阅读本页。命令通过只是证据的一部分，不能替代视觉和事实验收。

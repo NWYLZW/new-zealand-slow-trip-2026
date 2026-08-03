@@ -1,3 +1,13 @@
+---
+kind: rule
+id: research.accommodation
+scope: research
+triggers: [research-accommodation, update-rate-or-availability]
+outputs: [qualified-accommodation-comparison, reproducible-rate-record]
+verification: [stay-and-occupancy-conditions-match, status-and-image-semantics-are-checked]
+last_reviewed: 2026-08-03
+---
+
 # 住宿调研与报价数据
 
 在新增/核验酒店、民宿、公寓、B&B、房型、价格、库存、评分或图片时阅读本页，并先遵守 [`evidence.md`](evidence.md)。

@@ -1,3 +1,13 @@
+---
+kind: rule
+id: knowledge.experience-catalog
+scope: knowledge
+triggers: [locate-authoritative-experience, audit-historical-coverage]
+outputs: [experience-to-rule-mapping, uncovered-pattern-list]
+verification: [catalog-does-not-duplicate-rule-bodies, every-link-resolves]
+last_reviewed: 2026-08-03
+---
+
 # 历史经验覆盖目录
 
 本页用于证明长期协作中反复出现的经验已进入权威规则。它只做映射，不复制规则正文，也不保存原始对话、账号或订单隐私。

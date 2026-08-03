@@ -1,3 +1,13 @@
+---
+kind: rule
+id: design.localization
+scope: design
+triggers: [bilingual-content-change, locale-format-change]
+outputs: [consistent-bilingual-content, locale-safe-formatting]
+verification: [shared-facts-do-not-drift, official-names-and-fallbacks-are-checked]
+last_reviewed: 2026-08-03
+---
+
 # 双语与本地化
 
 在新增中英文案、官方名称、日期时间、价格或语言切换行为时阅读本页。

@@ -1,3 +1,13 @@
+---
+kind: rule
+id: working.diagnostics
+scope: working
+triggers: [unexpected-failure, tool-or-service-timeout]
+outputs: [evidence-backed-root-cause, safe-recovery-path]
+verification: [observations-and-hypotheses-are-separated, original-symptom-is-retested]
+last_reviewed: 2026-08-03
+---
+
 # 分层诊断与失败恢复
 
 在白屏、构建失败、服务停止、浏览器/IAB 超时、网页无数据、工具卡住或审计失败时阅读本页。

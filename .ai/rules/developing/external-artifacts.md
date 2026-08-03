@@ -1,3 +1,13 @@
+---
+kind: rule
+id: developing.external-artifacts
+scope: developing
+triggers: [import-external-artifact, synchronize-remote-implementation]
+outputs: [isolated-artifact-inventory, semantic-integration]
+verification: [facts-and-implementation-are-reviewed-separately, current-decisions-are-preserved]
+last_reviewed: 2026-08-03
+---
+
 # 外部产物同步与语义合并
 
 在从线上网页、ZIP、旧静态站、其他分支/PR 或第三方生成物同步内容到本项目时阅读本页。

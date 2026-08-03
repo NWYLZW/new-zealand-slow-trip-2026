@@ -1,3 +1,13 @@
+---
+kind: rule
+id: working.coordination
+scope: working
+triggers: [parallel-or-delegated-work, shared-workspace-coordination]
+outputs: [bounded-task-contracts, integrated-result]
+verification: [shared-resources-do-not-conflict, global-gates-run-after-integration]
+last_reviewed: 2026-08-03
+---
+
 # 并发、Agent 与共享工作区协调
 
 在决定是否并行、分派批量调研或整合多人结果时阅读本页。

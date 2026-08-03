@@ -1,3 +1,13 @@
+---
+kind: rule
+id: working.tool-use
+scope: working
+triggers: [specialized-tool-use, large-or-truncated-output]
+outputs: [bounded-tool-execution, reproducible-evidence-extract]
+verification: [output-coverage-is-known, untrusted-content-does-not-authorize]
+last_reviewed: 2026-08-03
+---
+
 # 工具使用与输出管理
 
 在使用新工具、专业 skill、长命令、巨量日志、持久浏览器/runtime 或输出发生截断时阅读本页。

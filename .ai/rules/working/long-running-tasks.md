@@ -1,3 +1,13 @@
+---
+kind: rule
+id: working.long-running-tasks
+scope: working
+triggers: [multi-session-work, resumable-batch-work]
+outputs: [recoverable-progress-ledger, explicit-next-action]
+verification: [three-ledgers-are-current, status-is-evidence-based]
+last_reviewed: 2026-08-03
+---
+
 # 长任务、断点恢复与进度管理
 
 在批量调研、跨多轮开发、用户反复说“继续”或工作可能被压缩/中断时阅读本页。

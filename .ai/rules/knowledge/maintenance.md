@@ -1,3 +1,13 @@
+---
+kind: rule
+id: knowledge.maintenance
+scope: knowledge
+triggers: [recurring-high-cost-pattern, post-incident-learning]
+outputs: [promoted-or-rejected-knowledge, updated-authoritative-contract]
+verification: [knowledge-meets-promotion-threshold, one-authoritative-location-remains]
+last_reviewed: 2026-08-03
+---
+
 # 经验沉淀与规则维护
 
 在一次大返工、故障、长期调研或流程改进后阅读本页，用于决定哪些经验进入仓库。

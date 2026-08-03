@@ -1,3 +1,13 @@
+---
+kind: rule
+id: travel.itinerary-data
+scope: travel
+triggers: [update-itinerary-or-transport, update-booking-fact]
+outputs: [consistent-trip-facts, synchronized-consumer-updates]
+verification: [all-fact-consumers-are-checked, sensitive-fields-are-excluded]
+last_reviewed: 2026-08-03
+---
+
 # 行程、交通与活动数据
 
 在更新日期、路线、航班、租车、住宿段、活动或用户订单截图时阅读本页。

@@ -1,3 +1,13 @@
+---
+kind: rule
+id: design.interface
+scope: design
+triggers: [ui-or-interaction-change, responsive-layout-change]
+outputs: [decision-oriented-interface, responsive-interaction]
+verification: [representative-viewports-are-checked, interaction-and-url-state-are-verified]
+last_reviewed: 2026-08-03
+---
+
 # 界面与交互设计标准
 
 在调整布局、视觉层级、地图、日历、详情、筛选或响应式行为时阅读本页。

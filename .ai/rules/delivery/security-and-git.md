@@ -1,3 +1,13 @@
+---
+kind: rule
+id: delivery.security-and-git
+scope: delivery
+triggers: [handle-sensitive-information, commit-push-or-deploy]
+outputs: [privacy-safe-change, traceable-delivery]
+verification: [secrets-and-private-identifiers-are-absent, remote-and-deployment-state-are-verified]
+last_reviewed: 2026-08-03
+---
+
 # 隐私、Git 与 GitHub Pages
 
 只有在处理敏感信息、提交、推送或部署时阅读本页。

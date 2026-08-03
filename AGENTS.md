@@ -29,28 +29,13 @@
 
 ## 任务路由
 
-- 需求建模、授权边界、范围变化与验收：[`working/requirements.md`](.ai/rules/working/requirements.md)
-- 候选比较、权衡、主备方案与建议表达：[`working/decision-making.md`](.ai/rules/working/decision-making.md)
-- 长任务、断点恢复、进度账本与汇报：[`working/long-running-tasks.md`](.ai/rules/working/long-running-tasks.md)
-- 故障分层、假设验证与工具恢复：[`working/diagnostics.md`](.ai/rules/working/diagnostics.md)
-- 工具选择、长命令、输出截断与不可信内容：[`working/tool-use.md`](.ai/rules/working/tool-use.md)
-- 并发/agent 使用与共享工作区协调：[`working/coordination.md`](.ai/rules/working/coordination.md)
-- 截图批注、视觉评审、用户纠错与反馈闭环：[`working/feedback-loop.md`](.ai/rules/working/feedback-loop.md)
-- 仓库结构、开发方式、数据拆分：[`developing/architecture.md`](.ai/rules/developing/architecture.md)
-- 来源数据、schema、派生数据与迁移：[`developing/data-pipelines.md`](.ai/rules/developing/data-pipelines.md)
-- 从网页、ZIP、旧项目或远端分支同步成果：[`developing/external-artifacts.md`](.ai/rules/developing/external-artifacts.md)
-- 图片/视频的来源、语义、许可、优化与去重：[`developing/media-assets.md`](.ai/rules/developing/media-assets.md)
-- 旅行 UI、地图、日历、弹窗与响应式：[`design/interface.md`](.ai/rules/design/interface.md)
-- 中英文案、官方专名、格式和回退：[`design/localization.md`](.ai/rules/design/localization.md)
-- 行程、航班、租车、活动事实更新：[`travel/itinerary-data.md`](.ai/rules/travel/itinerary-data.md)
-- 通用证据等级与分析写法：[`research/evidence.md`](.ai/rules/research/evidence.md)
-- 酒店/民宿、房型、报价与图片调研：[`research/accommodation.md`](.ai/rules/research/accommodation.md)
-- 小红书等社交攻略核验：[`research/social-guides.md`](.ai/rules/research/social-guides.md)
-- IAB、登录态网站和安全浏览器操作：[`research/browser-operations.md`](.ai/rules/research/browser-operations.md)
-- 测试、审计与浏览器验收：[`verification/quality-gates.md`](.ai/rules/verification/quality-gates.md)
-- 隐私、GitHub Pages、提交和推送：[`delivery/security-and-git.md`](.ai/rules/delivery/security-and-git.md)
-- 经验提炼、规则维护与防止知识腐化：[`knowledge/maintenance.md`](.ai/rules/knowledge/maintenance.md)
-- 历史经验覆盖与权威规则映射：[`knowledge/experience-catalog.md`](.ai/rules/knowledge/experience-catalog.md)
+- 功能、代码或数据变更：[`scenarios/change-and-implementation.md`](.ai/rules/scenarios/change-and-implementation.md)
+- 住宿调研、核价与图片：[`scenarios/accommodation-research.md`](.ai/rules/scenarios/accommodation-research.md)
+- 截图批注、视觉或交互返工：[`scenarios/ui-feedback.md`](.ai/rules/scenarios/ui-feedback.md)
+- 跨多轮/多日批量任务：[`scenarios/long-running-work.md`](.ai/rules/scenarios/long-running-work.md)
+- 报错、白屏、超时或工具异常：[`scenarios/incident-diagnosis.md`](.ai/rules/scenarios/incident-diagnosis.md)
+- commit、push、部署或敏感信息：[`scenarios/delivery.md`](.ai/rules/scenarios/delivery.md)
+- 其他专项任务或需要组合规则：进入 [`.ai/rules/README.md`](.ai/rules/README.md#专项规则) 选择一条主规则。
 
 ## 最小验证
 

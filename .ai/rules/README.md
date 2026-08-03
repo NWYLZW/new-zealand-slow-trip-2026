@@ -1,13 +1,26 @@
 # 项目规则索引
 
-本目录是 `AGENTS.md` 的渐进式披露层。先识别任务类型，只打开必需规则；跨域任务再组合读取。
+本目录是 `AGENTS.md` 的渐进式披露层。常见任务优先进入场景阅读包；场景只编排规则，不复制规则正文。没有匹配场景时再选择一条专项主规则。
 
 ## 读取顺序
 
 1. 先读仓库根 [`AGENTS.md`](../../AGENTS.md)。
-2. 从下表选择一份主规则。
-3. 仅在主规则的“关联规则”或任务范围要求时继续读取其他文件。
+2. 优先从“常见场景”选择一个阅读包；没有匹配项时从“专项规则”选择一份主规则。
+3. 只按场景的有序路径或主规则的“关联规则”继续读取。
 4. 实现完成后读取 [`verification/quality-gates.md`](verification/quality-gates.md)。只有提交、推送、部署或处理敏感信息时才读交付规则。
+
+## 常见场景
+
+| 当前任务 | 阅读包 |
+| --- | --- |
+| 新功能、代码/数据修改、跨消费者同步 | [`scenarios/change-and-implementation.md`](scenarios/change-and-implementation.md) |
+| 住宿比较、核价、库存、政策或图片调研 | [`scenarios/accommodation-research.md`](scenarios/accommodation-research.md) |
+| 截图批注、视觉评审、交互反馈或纠错 | [`scenarios/ui-feedback.md`](scenarios/ui-feedback.md) |
+| 跨多轮/多日批量工作、需要断点恢复 | [`scenarios/long-running-work.md`](scenarios/long-running-work.md) |
+| 构建/页面/服务/浏览器/工具异常 | [`scenarios/incident-diagnosis.md`](scenarios/incident-diagnosis.md) |
+| 敏感信息、commit、push 或部署 | [`scenarios/delivery.md`](scenarios/delivery.md) |
+
+## 专项规则
 
 | 当前任务 | 主规则 | 通常追加 |
 | --- | --- | --- |
@@ -38,8 +51,10 @@
 ## 文档边界
 
 - `AGENTS.md`：所有任务都必须知道的短规则、入口和最小门禁。
+- `scenarios/`：高频任务的有序阅读包，只定义触发、路径、产出、停止点和完成门槛。
 - `project/context.md`：产品定位、目录地图、稳定事实边界；初次接手或范围不清时读取。
 - 专项规则：具体工作法、证据模型和验收标准。
+- `.ai/docs/`：AI 信息架构、路线图和设计决策；不作为每次任务的必读执行规则。
 - 当前行程、价格、候选数量等可变事实不复制到规则中；从源码、审计和实时来源读取。
 - `working/`：跨领域执行方法，解决范围、进度、诊断和协调问题。
 - `knowledge/`：规定什么经验值得沉淀、放在哪里、如何防止陈旧。
@@ -48,5 +63,6 @@
 
 - 只沉淀下次大概率复用的经验，不记录一次性命令噪声、临时 PID、过期 URL 或未经证实的故障归因。
 - 一条规则只保留一个权威位置；根文件用链接路由，不复制全文。
+- 每个规则/场景保留可审计元数据；字段契约和演进计划见 [`../docs/渐进式披露与长期知识沉淀方案.md`](../docs/渐进式披露与长期知识沉淀方案.md)。
 - 项目结构、审计命令或数据状态发生变化时，同步更新对应规则和索引。
 - 新规则优先归入现有分类；只有形成独立职责、证据模型或验证门槛时才新增文件。

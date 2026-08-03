@@ -1,3 +1,13 @@
+---
+kind: rule
+id: working.decision-making
+scope: working
+triggers: [compare-candidates, choose-primary-and-fallback]
+outputs: [evidence-backed-recommendation, fallback-with-switch-trigger]
+verification: [hard-constraints-precede-ranking, tradeoffs-are-explicit]
+last_reviewed: 2026-08-03
+---
+
 # 决策分析与推荐
 
 在比较技术方案、住宿、路线、活动或交付路径，并需要给出主方案/备选时阅读本页。

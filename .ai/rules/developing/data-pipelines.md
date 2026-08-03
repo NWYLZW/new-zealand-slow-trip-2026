@@ -1,3 +1,13 @@
+---
+kind: rule
+id: developing.data-pipelines
+scope: developing
+triggers: [schema-or-source-change, batch-import-or-migration]
+outputs: [traceable-data-pipeline, executable-data-contract]
+verification: [data-layers-are-separated, affected-data-audits-pass]
+last_reviewed: 2026-08-03
+---
+
 # 数据管线、Schema 与迁移
 
 在新增来源、批量录入、调整数据结构、拆分大文件、生成派生字段或强化审计时阅读本页。

@@ -1,3 +1,13 @@
+---
+kind: rule
+id: developing.media-assets
+scope: developing
+triggers: [add-or-replace-media, audit-media-source-or-duplication]
+outputs: [attributable-media-record, optimized-nonduplicate-asset]
+verification: [source-semantics-and-license-are-checked, media-audits-pass]
+last_reviewed: 2026-08-03
+---
+
 # 媒体资产治理
 
 在下载、生成、替换、压缩或展示图片/视频时阅读本页。

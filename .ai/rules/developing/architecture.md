@@ -1,3 +1,13 @@
+---
+kind: rule
+id: developing.architecture
+scope: developing
+triggers: [component-or-module-change, state-or-data-boundary-change]
+outputs: [bounded-implementation, stable-consumer-contract]
+verification: [responsibilities-remain-separated, url-and-state-contracts-are-preserved]
+last_reviewed: 2026-08-03
+---
+
 # 开发架构与数据维护
 
 在新增组件、拆分大文件、调整状态/URL 或修改数据模型时阅读本页。

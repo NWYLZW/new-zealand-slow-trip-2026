@@ -1,3 +1,13 @@
+---
+kind: rule
+id: research.social-guides
+scope: research
+triggers: [research-social-guides, update-post-evidence]
+outputs: [post-level-guide-record, balanced-actionable-summary]
+verification: [real-posts-are-verified, media-and-claims-map-to-source]
+last_reviewed: 2026-08-03
+---
+
 # 社交攻略调研
 
 在新增或更新小红书等真实体验证据时阅读本页，并先遵守 [`evidence.md`](evidence.md)。

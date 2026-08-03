@@ -1,3 +1,13 @@
+---
+kind: rule
+id: project.context
+scope: project
+triggers: [first-repository-task, unclear-fact-source-or-boundary]
+outputs: [repository-responsibility-map, authoritative-source-selection]
+verification: [current-code-and-scripts-support-the-map, dynamic-facts-are-not-copied]
+last_reviewed: 2026-08-03
+---
+
 # 项目上下文与目录地图
 
 在首次接手、任务范围不清或需要判断事实来源时阅读本页。
