@@ -15,6 +15,7 @@
     "audit:accommodation-visuals": "node scripts/audit-accommodation-visual-duplicates.mjs",
     "audit:event-media": "node scripts/audit-event-media.mjs",
     "audit:social-guides": "node scripts/audit-social-guides.mjs",
+    "audit:ai-rules": "node scripts/audit-ai-rules.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173"
   },
   "dependencies": {
