@@ -2,6 +2,12 @@ import { christchurchAdditionalHotels } from "../christchurchHotels.js";
 import { christchurchHomeAdditionalHotels } from "../christchurchHomeAdditionalHotels.js";
 import { googleGuestRating, image, sharedSocial } from "./shared.js";
 
+const distinctionSuperiorKingImage = (fileName, label, labelEn) => ({
+  ...image(fileName, label, "Distinction Christchurch 官网预订页"),
+  labelEn,
+  sourceEn: "Distinction Christchurch official booking page",
+});
+
 export const christchurchHotels = [
     ...christchurchHomeAdditionalHotels,
     ...christchurchAdditionalHotels,
@@ -12,9 +18,9 @@ export const christchurchHotels = [
       recommendation: "行程最匹配",
       recommendationEn: "Best itinerary fit",
       summary:
-        "从奥马鲁抵达后可直接停车入住；只住 10 月 7 日一晚，现有房型可参考，但保存的价格对应旧的 10 月 6—7 日。",
+        "从奥马鲁抵达后可直接停车入住；官网已复现 10 月 7 日一晚 Superior King 的公开报价，适合将市中心停车与步行动线一起比较。",
       summaryEn:
-        "Easy parking after the drive from Ōamaru. The stay is one night on 7 Oct; saved rates cover the former 6–7 Oct dates.",
+        "Easy parking after the drive from Ōamaru. The direct site reproduced a public Superior King rate for the 7 Oct night, making it possible to compare parking and the central walking route together.",
       access: "Riverside Market 约 1.2 公里、步行约 15 分钟；位置评分 9.1",
       accessEn: "About 1.2 km or a 15-minute walk to Riverside Market; location score 9.1",
       parking: "私人停车约 NZD 20/天；预订前确认",
@@ -48,21 +54,21 @@ export const christchurchHotels = [
       strengths: [
         "4 种代表性纯特大床房型",
         "市中心步行动线",
-        "旧快照曾提供可取消与到店付款档",
+        "Superior King 已复现目标日公开价 NZD 361",
         "适合从奥马鲁抵达后停车入住",
       ],
       strengthsEn: [
         "Four representative guaranteed king-bed categories",
         "Walkable central-city route",
-        "The historical snapshot included cancellable pay-at-property options",
+        "The Superior King public NZD 361 rate was reproduced for the target date",
         "Easy to park after arriving from Oamaru",
       ],
-      cautions: ["停车费需计入总价，具体费用预订前确认", "早餐另加 NZD 42/人", "10 月 7—8 日价格待重新核验"],
-      cautionsEn: ["Parking must be added to the stay total and reconfirmed", "Breakfast costs an extra NZD 42 per person", "Rates for 7–8 Oct require a fresh check"],
+      cautions: ["停车费需计入总价，具体费用预订前确认", "官网结果未展开税费拆分、取消截止或实际扣款时间", "会员价与公开价不同，不将会员价作为通用报价"],
+      cautionsEn: ["Parking must be added to the stay total and reconfirmed", "The direct result did not expand a tax breakdown, cancellation deadline or actual charge timing", "Member and public prices differ, so the member price is not presented as a general quote"],
       availabilityNote:
-        "当前住宿为 2026 年 10 月 7—8 日一晚；下方 10 月 6—7 日一晚快照仅作历史参考，当前日期库存、含税总价与退改待重新核验。",
+        "2026-08-03 已在 Rydges 官方房价页按 10 月 7—8 日、2 位成人、1 间核验：Superior King（28 m²、1 张 King 床）显示 Rydges Escape Sale 公开价 NZD 361、一晚；同页 Best Flexible Rate 公开价也为 NZD 361，Bed and Breakfast 为 NZD 425。页面把对应会员价单列为 NZD 259、NZD 324 和 NZD 382，未混为公开价。所有结果显示 pay now or pay later；税费拆分、取消截止与实际扣款时间未展开。",
       availabilityNoteEn:
-        "The current stay is one night, 7–8 Oct 2026. The saved 6–7 Oct one-night snapshot is historical only; current-date inventory, tax-inclusive totals and terms require a fresh check.",
+        "Verified on Rydges' direct rates page on 3 Aug 2026 for 7–8 Oct, two adults and one room: the Superior King (28 m², one king bed) showed the public Rydges Escape Sale at NZD 361 for one night; the public Best Flexible Rate was also NZD 361, and Bed and Breakfast was NZD 425. The corresponding member prices were separately shown as NZD 259, NZD 324 and NZD 382 and are not mixed with public prices. Every result said pay now or pay later; the tax breakdown, cancellation deadline and actual charge timing were not expanded.",
       ratings: [
         { platform: "Booking.com", score: "8.5 / 10", reviews: "2,000+ 条" },
       ],
@@ -132,9 +138,47 @@ export const christchurchHotels = [
       ],
       rateSnapshots: {
         "2026-10-07/2026-10-08": {
-          availabilityChecked: true,
-          roomKey: "superior-king",
-          quotedAt: "2026-07-31",
+          roomRates: {
+            "superior-king": {
+              official: {
+                source: "Rydges 官网目标日期房价页",
+                sourceEn: "Rydges official target-date rates page",
+                roomKey: "superior-king",
+                room: "Superior King · 28 m² · 1 张 King 床",
+                roomEn: "Superior King · 28 m² · one king bed",
+                payment: "所有可见档位标示 pay now or pay later；实际扣款时间未展开",
+                paymentEn: "Every visible plan was labelled pay now or pay later; the actual charge timing was not expanded",
+                breakfast: "Rydges Escape Sale 与 Best Flexible Rate 未显示早餐；Bed and Breakfast NZD 425 明确含每日早餐",
+                breakfastEn: "Breakfast was not shown for Rydges Escape Sale or Best Flexible Rate; Bed and Breakfast at NZD 425 explicitly includes daily breakfast",
+                memberNote: "结果同时展示 EVT Stays 会员价：Escape Sale NZD 259、Best Flexible NZD 324、含早 NZD 382；仅将 NZD 361 与 NZD 425 作为未登录公开价。",
+                memberNoteEn: "The page also showed EVT Stays member prices: NZD 259 for Escape Sale, NZD 324 for Best Flexible and NZD 382 including breakfast; only NZD 361 and NZD 425 are presented as public logged-out prices.",
+                rateOptions: [
+                  {
+                    label: "公开 Rydges Escape Sale",
+                    labelEn: "Public Rydges Escape Sale",
+                    nzd: 361,
+                    detail: "10 月 7—8 日、2 人 1 间的一晚价格；促销说明含每日 NZD 25 餐饮额度。页面未展开税费、取消或实际扣款细则。",
+                    detailEn: "One-night price for 7–8 Oct, two adults and one room; the promotion states a daily NZD 25 dining credit. The page did not expand tax, cancellation or actual charge details.",
+                  },
+                  {
+                    label: "公开 Best Flexible Rate",
+                    labelEn: "Public Best Flexible Rate",
+                    nzd: 361,
+                    detail: "10 月 7—8 日、2 人 1 间的一晚价格；页面称为灵活价，但未在结果卡中展示取消截止。",
+                    detailEn: "One-night price for 7–8 Oct, two adults and one room; the page calls this flexible, but its result card did not display a cancellation deadline.",
+                  },
+                  {
+                    label: "公开 Bed and Breakfast",
+                    labelEn: "Public Bed and Breakfast",
+                    nzd: 425,
+                    detail: "10 月 7—8 日、2 人 1 间的一晚价格；促销说明含每日早餐和 NZD 25 餐饮额度。",
+                    detailEn: "One-night price for 7–8 Oct, two adults and one room; the promotion states daily breakfast and a NZD 25 dining credit are included.",
+                  },
+                ],
+                quotedAt: "2026-08-03",
+              },
+            },
+          },
         },
         "2026-10-06/2026-10-07": {
           roomRates: {
@@ -282,12 +326,12 @@ export const christchurchHotels = [
       agodaStatusDetail:
         "已用 IAB 实际打开 Agoda 同一酒店，并正确带入 10 月 6—7 日、2 人 1 间。页面当前显示高级大床房 NZD 237 起、豪华大床房 NZD 271 起；这些仍是房型卡起价，尚未逐项核对含税总价、取消与付款条款，因此暂不作为可比较报价展示。",
       research: sharedSocial.christchurch,
-      officialStatus: "needs-recheck",
+      officialStatus: "exact-rate-verified",
       officialStatusDetail:
-        "2026-07-28 只核验了旧行程的 2026 年 10 月 6—7 日、2 人 1 间和四种明确 King 房型；公开价、EVT Stays 会员价及 Booking.com 价格仅作为历史快照。当前入住日已改为 10 月 7—8 日，尚未完成同样的库存、含税总价、取消截止时间与扣款核验，因此保持待重查。",
+        "2026-08-03 已在 Rydges 官网按 10 月 7—8 日、2 位成人、1 间查询。Superior King（28 m²、1 张 King 床）公开 Rydges Escape Sale 为 NZD 361；公开 Best Flexible Rate 同为 NZD 361；公开 Bed and Breakfast 为 NZD 425。页面另列 EVT Stays 会员价 NZD 259、NZD 324 与 NZD 382，已与公开价分开。结果标示 pay now or pay later，但未展开税费、取消截止或实际扣款时间。",
       officialStatusEn:
-        "Only the former 6–7 Oct 2026 itinerary was checked on 28 Jul 2026 for two adults and one room across four clearly identified king categories. Its public, EVT Stays member and Booking.com rates remain historical snapshots. The current stay is 7–8 Oct and still needs a fresh inventory, tax-inclusive total, cancellation-deadline and charge-timing check, so the status remains needs-recheck.",
-      officialVerifiedAt: "2026-07-28",
+        "Rydges' official page was queried on 3 Aug 2026 for 7–8 Oct, two adults and one room. The Superior King (28 m², one king bed) showed the public Rydges Escape Sale at NZD 361; the public Best Flexible Rate was also NZD 361; and public Bed and Breakfast was NZD 425. EVT Stays member prices of NZD 259, NZD 324 and NZD 382 were listed separately and remain separate from public prices. The results said pay now or pay later, but did not expand tax, cancellation-deadline or actual-charge details.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl:
         "https://www.rydges.com/accommodation/new-zealand/latimer-christchurch/",
       officialBookingUrl:
@@ -298,9 +342,9 @@ export const christchurchHotels = [
       officialRateLinkLabel: "官网 · 已核验（链接不保留搜索）",
       officialRateLinkLabelEn: "Official website · verified (link does not retain search)",
       officialLinkNote:
-        "Rydges 房价链接会回到默认日期；打开后请重新选择 2026 年 10 月 7—8 日、2 位成人、1 间。保存的价格只来自旧的 10 月 6—7 日一晚核验，不是当前报价。",
+        "Rydges 房价链接会回到默认日期。已核验 2026 年 10 月 7—8 日、2 位成人、1 间的 Superior King 公开价（Escape Sale 与 Best Flexible 均 NZD 361；含早 NZD 425）。付款前仍须重新选择日期，并核对税费、取消截止和实际扣款时间。",
       officialLinkNoteEn:
-        "The Rydges rates link returns to default dates. After opening, reselect 7–8 Oct 2026, two adults and one room. Saved prices come only from the former 6–7 Oct one-night check and are not current quotes.",
+        "The Rydges rates link returns to default dates. The Superior King's public 7–8 Oct 2026 rate for two adults and one room was verified at NZD 361 for Escape Sale and Best Flexible, or NZD 425 including breakfast. Reselect the dates before payment and reconfirm tax, the cancellation deadline and actual charge timing.",
       bookingUrl:
         "https://www.booking.com/hotel/nz/rydges-latimer-christchurch.html",
       agodaUrl:
@@ -312,12 +356,12 @@ export const christchurchHotels = [
       id: "quest-manchester-christchurch",
       stayType: "home",
       name: "Quest on Manchester Serviced Apartments",
-      recommendation: "公寓性价比",
-      recommendationEn: "Apartment value",
+      recommendation: "已核验一卧公寓",
+      recommendationEn: "Verified one-bedroom apartment",
       summary:
-        "评分高且带厨房洗衣，但本次只住一晚；现有库存与价格记录对应旧的 10 月 6—7 日。",
+        "评分高且带厨房洗衣，适合一晚公寓式停留；官网已在目标日期复现一卧公寓的含税费一晚价格。",
       summaryEn:
-        "A highly rated apartment with a kitchen and laundry, though this is only a one-night stay; saved inventory and rates cover the former 6–7 Oct dates.",
+        "A highly rated apartment with a kitchen and laundry for a one-night apartment-style stay; the direct site reproduced an all-fees one-night price for its one-bedroom on the target date.",
       access: "位置评分 9.3；市中心步行范围",
       accessEn: "Location score 9.3; walkable central location",
       parking: "私人停车约 NZD 25/天，需视供应情况",
@@ -325,26 +369,38 @@ export const christchurchHotels = [
       nearbyAttractions: [
         {
           name: "Riverside Market",
+          nameEn: "Riverside Market",
           distance: "约 1 公里",
+          distanceEn: "About 1 km",
           travelTime: "步行约 12—15 分钟",
+          travelTimeEn: "About 12–15 minutes on foot",
           destinationQuery: "Riverside Market Christchurch",
         },
         {
           name: "Christchurch Botanic Gardens",
+          nameEn: "Christchurch Botanic Gardens",
           distance: "约 1.8 公里",
+          distanceEn: "About 1.8 km",
           travelTime: "驾车约 7 分钟或步行约 25 分钟",
+          travelTimeEn: "About 7 minutes by car or 25 minutes on foot",
           destinationQuery: "Christchurch Botanic Gardens",
         },
         {
           name: "New Regent Street",
+          nameEn: "New Regent Street",
           distance: "约 1.3 公里",
+          distanceEn: "About 1.3 km",
           travelTime: "步行约 16 分钟",
+          travelTimeEn: "About 16 minutes on foot",
           destinationQuery: "New Regent Street Christchurch",
         },
         {
           name: "Christchurch Airport",
+          nameEn: "Christchurch Airport",
           distance: "约 11 公里",
+          distanceEn: "About 11 km",
           travelTime: "驾车约 20—25 分钟",
+          travelTimeEn: "About 20–25 minutes by car",
           destinationQuery: "Christchurch Airport",
         },
       ],
@@ -355,11 +411,11 @@ export const christchurchHotels = [
       ],
       strengthsEn: ["9.0 rating", "Official room details and photo matched to the 50 m² One Bedroom Apartment", "Full kitchen and washer-dryer"],
       cautions: [
-        "停车约 NZD 25/晚且车位不保证，当前日期总成本需重新计算",
-        "旧一晚快照的房价与不可退款条款不能视为 10 月 7—8 日结果",
+        "停车约 NZD 25/晚且车位不保证，入住前仍须直接确认",
+        "页面列出的 Advanced Purchase 取消、付款和早餐细则未在结果卡中展开",
         "一室公寓双人床需视供应情况",
       ],
-      cautionsEn: ["Parking is about NZD 25/night and is not guaranteed", "The old non-refundable snapshot is not a 7–8 Oct result", "Studio double bedding is subject to availability"],
+      cautionsEn: ["Parking is about NZD 25/night and is not guaranteed", "The result card did not expand Advanced Purchase cancellation, payment or breakfast terms", "Studio double bedding is subject to availability"],
       ratings: [
         { platform: "Booking.com", score: "9.0 / 10", reviews: "1,000+ 条" },
       ],
@@ -367,8 +423,11 @@ export const christchurchHotels = [
         {
           rateKey: "one-bedroom-double",
           name: "一卧室公寓",
+          nameEn: "One Bedroom Apartment",
           size: "50 m²",
+          sizeEn: "50 m²",
           bed: "1 张 Queen 床",
+          bedEn: "one queen bed",
           photosVerified: true,
           facilities: [
             "完整厨房",
@@ -377,6 +436,14 @@ export const christchurchHotels = [
             "私人浴室",
             "空调",
             "免费 Wi-Fi",
+          ],
+          facilitiesEn: [
+            "Full kitchen",
+            "Washer and dryer",
+            "Separate living area",
+            "Private bathroom",
+            "Air conditioning",
+            "Free Wi-Fi",
           ],
           images: [
             image(
@@ -388,32 +455,61 @@ export const christchurchHotels = [
         },
       ],
       availabilityNote:
-        "当前住宿为 2026 年 10 月 7—8 日一晚；官网无房和 Booking.com 有房记录均只对应 10 月 6—7 日，不能沿用为当前库存或报价。",
+        "2026-08-03 已通过 Quest 官网直订页按 10 月 7—8 日、2 位成人、1 间、NZD 核验：50 m² One Bedroom Apartment（1 张 Queen 床）显示 Advanced Purchase 当前价 NZD 273，页面明确为一晚均价且含税费；本段恰为一晚，所以该数字等于本次整段价格。页面同时显示仅余 3 间。取消、实际扣款和早餐细则未在结果卡中展开，付款前须复核。",
       availabilityNoteEn:
-        "The current stay is one night, 7–8 Oct 2026. The direct-unavailable and Booking.com-available records apply only to the former 6–7 Oct dates and are not current inventory or quotes.",
+        "Verified on Quest's direct booking page on 3 Aug 2026 for 7–8 Oct, two adults, one room and NZD: the 50 m² One Bedroom Apartment with one queen bed showed an Advanced Purchase current price of NZD 273 per night including taxes and fees. This is a one-night stay, so the displayed nightly price equals this stay's total. The page also showed only three rooms left. Cancellation, actual charge timing and breakfast details were not expanded in the result card and must be rechecked before payment.",
       hotelImages: [
         image("christchurch-quest-manchester-exterior.jpg", "Quest on Manchester 外观", "Quest Apartments 官网"),
         image("christchurch-quest-manchester-lobby.jpg", "Quest on Manchester 大堂", "ICE Portal · 酒店分发图库"),
         image("christchurch-quest-studio.jpg", "Studio 其他房型参考", "Quest Apartments 官网 Studio 房型图"),
         image("christchurch-quest-two-bedroom.jpg", "Two Bedroom Interconnecting Apartment 其他房型参考", "Quest Apartments 官网 Two Bedroom 房型图"),
       ],
-      rateSnapshots: {
-        "2026-10-07/2026-10-08": {
-          availabilityChecked: true,
-          roomKey: "one-bedroom-double",
-          quotedAt: "2026-07-31",
-        },
-      },
       agodaStatus: "真实详情页已打开，结算总价待核验",
       agodaStatusDetail:
         "Agoda 已带入 10 月 6—7 日并识别一卧室公寓/一室公寓；当前采集尚未取得可与 Booking 对齐的含税结算总价及取消条款，因此不把酒店介绍页或房型起价当作报价。",
       research: sharedSocial.christchurch,
-      officialStatus: "needs-recheck",
+      rateSnapshots: {
+        "2026-10-07/2026-10-08": {
+          roomRates: {
+            "one-bedroom-double": {
+              official: {
+                source: "Quest on Manchester 官网直订结果",
+                sourceEn: "Quest on Manchester direct booking result",
+                roomKey: "one-bedroom-double",
+                room: "一卧室公寓 · 50 m² · 1 张 Queen 床",
+                roomEn: "One Bedroom Apartment · 50 m² · one queen bed",
+                payment: "结果卡未显示实际扣款时间；付款前在官网下一步确认",
+                paymentEn: "The result card did not show the actual charge timing; confirm it on the direct site's next step before payment",
+                breakfast: "结果卡未显示早餐包含情况",
+                breakfastEn: "The result card did not show whether breakfast is included",
+                rateOptions: [
+                  {
+                    label: "Advanced Purchase",
+                    labelEn: "Advanced Purchase",
+                    nzd: 273,
+                    detail: "10 月 7—8 日一晚、2 人 1 间的当前价格；页面标示为平均每晚，含税费。该行程仅一晚，故等于本段总价；取消细则未展开。",
+                    detailEn: "Current price for 7–8 Oct, two adults and one room; the page labels it as the average nightly price including taxes and fees. This stay is one night, so it equals the stay total; cancellation terms were not expanded.",
+                  },
+                ],
+                quotedAt: "2026-08-03",
+              },
+            },
+          },
+        },
+      },
+      officialStatus: "exact-rate-verified",
       officialStatusDetail:
-        "2026-07-28 已在 Quest 官网进入该酒店官方预订引擎，并确认 2026 年 10 月 6—7 日、2 人 1 间；页面明确显示所选日期无库存，因此没有可比较的官网结算价。Booking 同日库存独立保留，不与官网状态混写。",
+        "2026-08-03 已在 Quest 官网直订页按 10 月 7—8 日、2 位成人、1 间、NZD 核验：50 m² One Bedroom Apartment（1 张 Queen 床）显示 Advanced Purchase NZD 273，标示为一晚平均价且含税费；本段仅一晚，故为整段总价。页面显示仅余 3 间。Advanced Purchase 的取消、实际扣款及早餐细则未在结果卡中展开，付款前须复核。",
       officialStatusEn:
-        "The official Quest booking engine was opened on 28 Jul 2026 for 6–7 Oct 2026, two adults and one room. It explicitly showed no availability for the selected dates, so there is no direct checkout rate to compare; Booking.com inventory remains a separate source.",
-      officialVerifiedAt: "2026-07-28",
+        "Quest's direct booking page was verified on 3 Aug 2026 for 7–8 Oct, two adults, one room and NZD. The 50 m² One Bedroom Apartment with one queen bed showed Advanced Purchase at NZD 273, labelled as an average nightly price including taxes and fees; because this stay is one night, it is the full stay total. The page showed only three rooms left. Advanced Purchase cancellation, actual charge timing and breakfast details were not expanded in the result card and must be rechecked before payment.",
+      officialVerifiedAt: "2026-08-03",
+      officialLinkRetainsSearch: true,
+      officialLinkLabel: "打开已带入日期与人数的 Quest 官网查询",
+      officialLinkLabelEn: "Open the Quest direct search with dates and guests",
+      officialLinkNote:
+        "入口带入 2026 年 10 月 7—8 日、2 位成人、1 间和 NZD；已核验一卧公寓 Advanced Purchase NZD 273（该段一晚，含税费）。付款前仍须确认取消截止、实际扣款、早餐、停车和晚到取钥匙。",
+      officialLinkNoteEn:
+        "The entry carries 7–8 Oct 2026, two adults, one room and NZD. The One Bedroom Apartment's Advanced Purchase NZD 273 was verified for this one-night, tax-inclusive stay. Before payment, confirm the cancellation deadline, actual charge timing, breakfast, parking and late key collection.",
       officialUrl:
         "https://www.questapartments.co.nz/properties/south-island/christchurch/quest-on-manchester/overview",
       officialBookingUrl:
@@ -532,9 +628,9 @@ export const christchurchHotels = [
       recommendation: "评分与位置兼顾",
       recommendationEn: "Best balance of rating and location",
       summary:
-        "同样位于 Cathedral Square，位置评分 9.7；一晚住宿和次日寄存行李方便，但现有房价仅对应旧日期。",
+        "同样位于 Cathedral Square，位置评分 9.7；适合一晚住宿和次日寄存行李。官网已按 10 月 7—8 日、2 人核验 Superior King 的公开总价 NZD 369（不可退）或 NZD 394（灵活）。",
       summaryEn:
-        "A highly rated Cathedral Square option for one night and next-day luggage storage; saved rates cover only the former dates.",
+        "A highly rated Cathedral Square option for one night and next-day luggage storage. Direct public Superior King totals were verified for 7–8 Oct and two adults at NZD 369 non-refundable or NZD 394 flexible.",
       access: "位置评分 9.7；Riverside Market 约 700 米，New Regent Street 约 400 米",
       accessEn: "Location score 9.7; about 700 m to Riverside Market and 400 m to New Regent Street",
       parking: "有顶棚代客停车，费用另计；Booking 页面未公开金额",
@@ -547,10 +643,30 @@ export const christchurchHotels = [
       ],
       strengths: ["位置评分 9.7", "多种纯特大床房型", "次日寄存行李方便"],
       strengthsEn: ["9.7 location score", "Several guaranteed king-bed categories", "Convenient for next-day luggage storage"],
-      cautions: ["代客停车费用未在 Booking 页面公开", "早餐另加 NZD 38/人", "信用卡付款加收 2.5%"],
-      cautionsEn: ["The valet-parking fee is not published on Booking.com", "Breakfast costs an extra NZD 38 per person", "Credit-card payments incur a 2.5% fee"],
+      cautions: ["代客停车费用未在 Booking 页面公开", "公开纯房两档均为预订时全额收费", "官网未展示税费拆分；付款前复核总额与银行卡附加费"],
+      cautionsEn: ["The valet-parking fee is not published on Booking.com", "Both public room-only rates are charged in full at booking", "The direct page did not show a tax breakdown; reconfirm the final total and any card surcharge before payment"],
       ratings: [{ platform: "Booking.com", score: "8.9 / 10", reviews: "577 条；位置 9.7" }],
       roomTypes: [
+        {
+          rateKey: "superior-king",
+          name: "高级特大号床房",
+          nameEn: "Superior King Room",
+          size: "官网未公开",
+          sizeEn: "Not published by the official page",
+          bed: "1 张特大号床",
+          bedEn: "one king bed",
+          photosVerified: true,
+          photoNote: "Distinction 官网预订页将以下图片明确归入 Superior King Room；已人工核对为同一房型的卧室、起居角度和步入式淋浴间。",
+          photoNoteEn: "Distinction's official booking page explicitly groups these images under Superior King Room; the bedroom, living-area angle and walk-in shower were manually checked as this room type.",
+          facilities: ["空调", "步入式淋浴间", "双花洒", "55 英寸智能电视（含 SKY 频道）", "免费无限 Wi-Fi"],
+          facilitiesEn: ["Air conditioning", "Walk-in shower", "Double shower heads", "55-inch Smart TV with SKY channels", "Free unlimited Wi-Fi"],
+          images: [
+            distinctionSuperiorKingImage("christchurch-distinction-superior-king-1.jpeg", "Superior King 卧室与书桌", "Superior King bedroom and desk"),
+            distinctionSuperiorKingImage("christchurch-distinction-superior-king-2.jpeg", "Superior King 另一侧卧室与起居角度", "Superior King reverse bedroom and living-area angle"),
+            distinctionSuperiorKingImage("christchurch-distinction-superior-king-3.jpeg", "Superior King 卧室、扶手椅与迷你吧区", "Superior King bedroom, armchair and minibar area"),
+            distinctionSuperiorKingImage("christchurch-distinction-superior-king-4.jpeg", "Superior King 步入式淋浴间与浴室", "Superior King walk-in shower and bathroom"),
+          ],
+        },
         {
           rateKey: "classic-king",
           name: "经典特大号床",
@@ -566,36 +682,87 @@ export const christchurchHotels = [
         },
       ],
       availabilityNote:
-        "Distinction 官网与 Booking.com 的房型和价格只核验到 2026 年 10 月 6—7 日；当前住宿为 10 月 7—8 日一晚，旧快照仅作历史参考，当前库存、总价与退改待重新核验。",
+        "2026-08-03 已在 Distinction 官网按 2026 年 10 月 7—8 日、2 位成人、1 间和 NZD 核验 Superior King：公开纯房不可退总价 NZD 369、灵活总价 NZD 394；含早不可退/灵活总价分别为 NZD 433 / 458。Classic King 某一日期格的 X 仅表示该房型在该格不可选，不代表全酒店无房；本次以实际可见的 Superior King 为准。",
       availabilityNoteEn:
-        "Direct and Booking.com room and rate details were verified only for the former 6–7 Oct 2026 stay. The current stay is one night, 7–8 Oct; the saved snapshot is historical only and current inventory, totals and terms need a fresh check.",
+        "On 3 Aug 2026, Distinction's direct engine was checked for 7–8 Oct 2026, two adults, one room and NZD. The Superior King public room-only totals were NZD 369 non-refundable or NZD 394 flexible; breakfast-inclusive non-refundable/flexible totals were NZD 433/458. An X in a Classic King date cell only makes that room unavailable for that cell; it does not mean the whole hotel is sold out. This record therefore uses the actually visible Superior King.",
       hotelImages: [
         image("christchurch-distinction-exterior.jpeg", "Distinction Christchurch 外观与电车", "Distinction Christchurch 官网"),
         image("christchurch-distinction-dining.jpeg", "酒店餐厅", "Distinction Christchurch 官网"),
       ],
       rateSnapshots: {
         "2026-10-07/2026-10-08": {
-          availabilityChecked: true,
-          roomKey: "classic-king",
-          quotedAt: "2026-07-31",
+          roomRates: {
+            "superior-king": {
+              official: {
+                source: "Distinction Christchurch 官网预订页",
+                sourceEn: "Distinction Christchurch official booking page",
+                roomKey: "superior-king",
+                room: "Superior King Room · 1 张 King 床 · 面积官网未公开",
+                roomEn: "Superior King Room · one king bed · size not published by the official page",
+                nonRefundableNzd: 369,
+                refundableNzd: 394,
+                cancelUntil: "到店前 24 小时",
+                cancelUntilEn: "24 hours before arrival",
+                rateLabel: "公开 Best Available Non Refundable · 纯房 · 一晚总价",
+                rateLabelEn: "Public Best Available Non Refundable · room only · one-night total",
+                refundableRateLabel: "公开 Flexi Cancellation Rate · 纯房 · 一晚总价",
+                refundableRateLabelEn: "Public Flexi Cancellation Rate · room only · one-night total",
+                payment: "公开纯房不可退与 Flexi 两档均在预订时收取全额；不可退档不可取消，Flexi 可在到店前 24 小时免费取消或改期。",
+                paymentEn: "Both public room-only non-refundable and Flexi rates are charged in full at booking. The non-refundable rate cannot be cancelled; Flexi can be cancelled or amended free until 24 hours before arrival.",
+                breakfast: "纯房两档不含早餐；官网同时列出含早不可退 NZD 433 与含早 Flexi NZD 458。",
+                breakfastEn: "The two room-only rates exclude breakfast. The direct page also lists breakfast-inclusive NZD 433 non-refundable and NZD 458 Flexi totals.",
+                rateOptions: [
+                  {
+                    label: "公开 Best Available Non Refundable · 纯房",
+                    labelEn: "Public Best Available Non Refundable · room only",
+                    nzd: 369,
+                    detail: "一晚总价；预订即全额收费且不可退；页面未展示税费拆分。",
+                    detailEn: "One-night total; charged in full at booking and non-refundable; the page did not show a tax breakdown.",
+                  },
+                  {
+                    label: "公开 Flexi Cancellation Rate · 纯房",
+                    labelEn: "Public Flexi Cancellation Rate · room only",
+                    nzd: 394,
+                    detail: "一晚总价；预订即全额收费；到店前 24 小时可免费取消或改期；页面未展示税费拆分。",
+                    detailEn: "One-night total; charged in full at booking; free cancellation or amendment until 24 hours before arrival; the page did not show a tax breakdown.",
+                  },
+                  {
+                    label: "公开 Bed & Breakfast Non Refundable · 含早",
+                    labelEn: "Public Bed & Breakfast Non Refundable · breakfast included",
+                    nzd: 433,
+                    detail: "一晚含早餐总价；不可退；页面未单列付款时点或税费拆分。",
+                    detailEn: "One-night breakfast-inclusive total; non-refundable; the page did not separately show payment timing or a tax breakdown.",
+                  },
+                  {
+                    label: "公开 Bed & Breakfast Flexi Cancellation · 含早",
+                    labelEn: "Public Bed & Breakfast Flexi Cancellation · breakfast included",
+                    nzd: 458,
+                    detail: "一晚含早餐总价；可在到店前 24 小时免费取消或改期；页面未单列付款时点或税费拆分。",
+                    detailEn: "One-night breakfast-inclusive total; free cancellation or amendment until 24 hours before arrival; the page did not separately show payment timing or a tax breakdown.",
+                  },
+                ],
+                quotedAt: "2026-08-03",
+              },
+            },
+          },
         },
       },
       research: sharedSocial.christchurch,
-      officialStatus: "needs-recheck",
-      officialStatusDetail: "2026-07-28 已在 Distinction 官网预订引擎带入 10 月 6—7 日、2 人 1 间，核验 Classic King 与 Classic Super King 的一晚价格；并实际选择 Classic King 灵活档，结算摘要确认总价 NZD 425。床型为二选一的 Junior Suite 未映射官网价。",
-      officialStatusEn: "Verified on the Distinction booking engine on 28 Jul 2026 for 6–7 Oct, two adults and one room. Exact one-night rates were checked for the Classic King and Classic Super King, and the Classic King flexible checkout summary confirmed NZD 425 total. The bed-choice Junior Suite was not mapped.",
-      officialVerifiedAt: "2026-07-28",
+      officialStatus: "exact-rate-verified",
+      officialStatusDetail: "2026-08-03 已在 Distinction 官网按 10 月 7—8 日、2 位成人、1 间和 NZD 核验 Superior King：公开纯房不可退/灵活一晚总价为 NZD 369 / 394；公开含早不可退/灵活为 NZD 433 / 458。公开纯房两档均预订即全额收费；非退档不可取消，Flexi 可在到店前 24 小时免费取消或改期。页面未展示税费拆分。",
+      officialStatusEn: "Verified directly on Distinction on 3 Aug 2026 for 7–8 Oct, two adults, one room and NZD: Superior King public room-only non-refundable/Flexi one-night totals were NZD 369/394, and public breakfast-inclusive non-refundable/Flexi totals were NZD 433/458. Both public room-only rates are charged in full at booking; the non-refundable rate cannot be cancelled, while Flexi can be cancelled or amended free until 24 hours before arrival. The page did not show a tax breakdown.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl: "https://www.distinctionhotelschristchurch.co.nz/",
       officialBookingUrl: "https://www.distinctionhotelschristchurch.co.nz/bookings/bookengine.aspx?idsup=4131&tsMode=1&date=07/10/2026",
       officialLinkRetainsSearch: false,
-      officialLinkLabel: "打开官网预订页（请确认 2 人 1 间）",
-      officialLinkLabelEn: "Open direct booking (confirm two guests, one room)",
-      officialRateLinkLabel: "官网 · 已核验（人数需重新确认）",
-      officialRateLinkLabelEn: "Official website · verified (reconfirm guests)",
+      officialLinkLabel: "打开官网预订页（重新确认 2 人 1 间）",
+      officialLinkLabelEn: "Open direct booking (reconfirm two adults, one room)",
+      officialRateLinkLabel: "官网 · Superior King 已核验（需确认人数）",
+      officialRateLinkLabelEn: "Official · Superior King verified (reconfirm guests)",
       officialLinkNote:
-        "链接只带入 2026 年 10 月 7 日入住；打开后请确认退房为 10 月 8 日、2 位成人、1 间。页面保存的价格来自旧的 10 月 6—7 日核验，不是当前报价。",
+        "链接只带入 2026 年 10 月 7 日入住；打开后请确认退房为 10 月 8 日、2 位成人、1 间与 NZD。已保存的是 Superior King 的目标日期报价；付款前请重新核对最终总额、税费拆分、早餐和银行卡附加费。",
       officialLinkNoteEn:
-        "The link carries the 7 Oct 2026 arrival date. After opening, confirm checkout on 8 Oct for two adults and one room. Saved prices come from the old 6–7 Oct check and are not current quotes.",
+        "The link carries the 7 Oct 2026 arrival. After opening, confirm checkout on 8 Oct for two adults, one room and NZD. The saved prices are current-date Superior King quotes; before payment, recheck the final total, tax breakdown, breakfast and any card surcharge.",
       bookingUrl: "https://www.booking.com/hotel/nz/distinction-christchurch.zh-cn.html",
       agodaUrl: "https://www.agoda.com/distinction-christchurch-hotel/hotel/christchurch-nz.html",
       position: [-43.5306, 172.6367],

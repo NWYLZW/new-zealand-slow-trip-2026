@@ -143,6 +143,10 @@ function needsRecheckKind(hotel) {
     : "checked-no-price";
 }
 
+function isSelectableHotel(hotel) {
+  return !hotel.isResearchPlaceholder && hotel.officialStatus === "exact-rate-verified";
+}
+
 function needsRecheckPresentation(hotel, isEnglish) {
   const kind = needsRecheckKind(hotel);
   const presentations = {
@@ -666,7 +670,7 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
       && (priceStatus === "all" || featured.priceStatus === priceStatus);
   });
   const mapCards = filteredCards.map(({ hotel, markerNumber }) => ({ ...hotel, markerNumber }));
-  const selectableCount = filteredCards.filter(({ hotel }) => !hotel.isResearchPlaceholder && hotel.officialStatus !== "exact-date-unavailable").length;
+  const selectableCount = filteredCards.filter(({ hotel }) => isSelectableHotel(hotel)).length;
   const unavailableCount = filteredCards.filter(({ hotel }) => hotel.officialStatus === "exact-date-unavailable").length;
   const researchCount = filteredCards.filter(({ hotel }) => hotel.isResearchPlaceholder).length;
   const filterOptions = [
@@ -726,7 +730,7 @@ function HotelComparisonList({ cards, comparison, dates, filters, isEnglish, onF
       </Box>
       <Box aria-label={isEnglish ? "Accommodation options" : "住宿候选列表"} className="hotel-stay-list" role="list">
         {filteredCards.map(({ featured, hotel, markerNumber }) => {
-          const selected = hotel.id === selectedHotelId && !hotel.isResearchPlaceholder;
+          const selected = hotel.id === selectedHotelId && isSelectableHotel(hotel);
           const recheckPresentation = featured.recheckKind
             ? needsRecheckPresentation(hotel, isEnglish)
             : null;
@@ -970,7 +974,7 @@ export function HotelComparisonView({ activeHotelId, comparison = defaultCompari
         <Box className="hotel-comparison-tabs-panel hotel-comparison-detail-panel">
           <Box className="hotel-comparison-grid">
           {[activeHotel].map((hotel) => {
-            const selected = hotel.id === selectedHotelId && !hotel.isResearchPlaceholder;
+            const selected = hotel.id === selectedHotelId && isSelectableHotel(hotel);
             const officialPresentation = officialStatusPresentation(hotel, isEnglish);
             const accommodationImages = reviewedAccommodationImages(hotel);
             return (
@@ -1358,7 +1362,7 @@ export function HotelComparisonView({ activeHotelId, comparison = defaultCompari
                 </Box>
                 <Button
                   className="hotel-select-button"
-                  disabled={selected || hotel.isResearchPlaceholder || hotel.officialStatus === "exact-date-unavailable"}
+                  disabled={selected || !isSelectableHotel(hotel)}
                   fullWidth
                   onClick={() => onSelect(hotel)}
                   variant={selected ? "outlined" : "contained"}
@@ -1367,6 +1371,8 @@ export function HotelComparisonView({ activeHotelId, comparison = defaultCompari
                     ? (isEnglish ? "Unavailable for these dates · reference only" : "指定日期无房 · 仅作参考")
                     : hotel.isResearchPlaceholder
                     ? (isEnglish ? "Target-date search pending · not selectable" : "目标日期待查询 · 暂不可选")
+                    : !isSelectableHotel(hotel)
+                    ? (isEnglish ? "Current exact-date total required · reference only" : "需当前精确日期总价 · 仅作参考")
                     : selected
                       ? hotel.selectionPending
                         ? (isEnglish ? "Preferred option · booking pending" : "首选方案 · 仍待预订")

@@ -16,7 +16,6 @@ export const queenstownAdditionalHotels = [
   {
     id: "villa-del-lago-queenstown",
     stayType: "home",
-    isResearchPlaceholder: true,
     name: "Villa del Lago Queenstown",
     recommendation: "湖滨一卧整套公寓",
     recommendationEn: "Lakefront one-bedroom apartment",
@@ -70,12 +69,12 @@ export const queenstownAdditionalHotels = [
       "The official site explicitly confirms free parking",
     ],
     cautions: [
-      "尚未取得 2026 年 9 月 29 日—10 月 3 日的可重复库存和总价证据",
+      "官网当前仅提供电话／联系表单的预订咨询，无法在线取得目标四晚库存和总价",
       "到 Steamer Wharf 步行距离比镇中心公寓长",
       "晚到取钥匙、取消条款和实际车位需付款前确认",
     ],
     cautionsEn: [
-      "Reproducible inventory and a total for 29 Sep–3 Oct 2026 have not yet been obtained",
+      "The current official site offers reservation enquiries by phone/contact form only, not online target-stay inventory or a total",
       "The walk to Steamer Wharf is longer than from a central apartment",
       "Confirm late key collection, cancellation terms and the actual parking space before payment",
     ],
@@ -115,24 +114,23 @@ export const queenstownAdditionalHotels = [
       },
     ],
     availabilityNote:
-      "2026-08-02 已核对官网具体房型、设施、地址和六张对应图片；尚未在官网预订引擎取得 2026 年 9 月 29 日—10 月 3 日、2 人 1 套的可重复库存、含税总价和退改结果，因此仅作为调研参考，暂不可选择。",
+      "2026-08-03 已核对官网具体房型、设施、地址和六张对应图片。此前保存的官网 /book-direct/ 入口现返回 404；首页、房型页和预订政策页均未提供日期／库存／报价引擎，官网 Contact 页面明确将预订归为电话或联系表单的 Reservations & Enquiries。因此无法在线取得 2026 年 9 月 29 日—10 月 3 日、2 人 1 套的库存、含税总价或退改结果；这不是无房，且不能作为可直接选择的住宿。",
     availabilityNoteEn:
-      "The exact official category, facilities, address and six matching images were checked on 2 Aug 2026. Reproducible inventory, a tax-inclusive total and cancellation terms for 29 Sep–3 Oct 2026 and two guests have not yet been obtained, so this remains a research reference and is not selectable.",
-    officialStatus: "needs-recheck",
+      "The exact official category, facilities, address and six matching images were checked on 3 Aug 2026. The previously saved official /book-direct/ entry now returns a 404; the home, room and reservation-policy pages expose no date, inventory or quote engine, while the Contact page explicitly routes reservations and enquiries to a phone/contact form. An online inventory result, tax-inclusive total and cancellation terms for 29 Sep–3 Oct 2026 and two guests are therefore not obtainable. This is not sold-out evidence and the option is not directly selectable.",
+    officialStatus: "official-inquiry-only",
     officialStatusDetail:
-      "2026-08-02 已核对 1 Bedroom Lakefront 为两人、一床、一浴室，并确认完整厨房、私人洗衣、免费停车和六张对应房型图；目标四晚库存与价格仍待官网动态查询。",
+      "2026-08-03 已核对 1 Bedroom Lakefront 为两人、一床、一浴室，并确认完整厨房、私人洗衣、免费停车和六张对应房型图。此前保存的 /book-direct/ 官网入口现为 404；首页、房型页和预订政策页没有日期选择或库存引擎，官网 Contact 页面将预订列为电话／联系表单的 Reservations & Enquiries。目标四晚库存与价格只能向酒店询问，当前无法在线复现；这不是目标日期无房的证据。",
     officialStatusEn:
-      "Checked on 2 Aug 2026: the 1 Bedroom Lakefront is for two guests with one bed and one bathroom, and the official pages confirm a full kitchen, private laundry, free parking and six matching category images. Exact four-night inventory and pricing still require a live direct search.",
-    officialVerifiedAt: "2026-08-02",
+      "Checked on 3 Aug 2026: the 1 Bedroom Lakefront is for two guests with one bed and one bathroom, and the official pages confirm a full kitchen, private laundry, free parking and six matching category images. The previously saved /book-direct/ entry now returns a 404; the home, room and reservation-policy pages have no date-selectable booking engine, and the official Contact page directs reservations and enquiries to a phone/contact form. Exact four-night inventory and pricing can only be requested from the property, and this is not evidence that the target dates are sold out.",
+    officialVerifiedAt: "2026-08-03",
     officialLinkRetainsSearch: false,
-    officialLinkLabel: "打开一卧湖滨房型官网并重新选择日期",
-    officialLinkLabelEn: "Open the official one-bedroom lakefront page and reselect dates",
+    officialLinkLabel: "打开官网联系页，询问目标日期库存",
+    officialLinkLabelEn: "Open official contact page to enquire about target-date availability",
     officialLinkNote:
-      "请在官网重新选择 2026 年 9 月 29 日—10 月 3 日、2 人、1 套，并在付款前确认含税总价、取消截止时间、晚到取钥匙和停车位。",
+      "官网当前没有线上预订引擎，Contact 页面将预订列为 Reservations & Enquiries。若自行向酒店询问，请提供 2026 年 9 月 29 日—10 月 3 日、2 人、1 套，并在付款前取得含税总价、取消截止、晚到取钥匙和停车位的书面确认。",
     officialLinkNoteEn:
-      "Reselect 29 Sep–3 Oct 2026 for two guests and one apartment, then confirm the tax-inclusive total, cancellation deadline, late key collection and parking space before payment.",
-    officialUrl: roomPage,
-    officialBookingUrl: "https://villadellago.nz/book-direct/",
+      "The official site currently has no online booking engine and its Contact page directs reservations to Reservations & Enquiries. If you contact the property, ask for 29 Sep–3 Oct 2026 for two guests and one apartment, then obtain written confirmation of the tax-inclusive total, cancellation deadline, late key collection and parking space before paying.",
+    officialUrl: "https://villadellago.nz/contact-us/",
     position: [-45.0334722, 168.6821944],
     mapQuery: "Villa del Lago 249 Frankton Road Queenstown",
   },

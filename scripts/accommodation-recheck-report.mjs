@@ -62,11 +62,40 @@ function evidenceType(hotel, dateRange) {
     return "current-official-price";
   }
   if (rates.some(([, rate]) => hasPositivePrice(rate))) return "current-platform-price";
+  if (snapshot?.availabilityScope === "recommended-room-starting-prices") {
+    return "current-room-starting-prices";
+  }
+  if (snapshot?.availabilityScope === "recommended-room-unavailable-alternative-available") {
+    return "current-alternative-room-available";
+  }
+  if (snapshot?.availabilityScope === "unmatched-room-result") {
+    return "current-unmatched-room-result";
+  }
   if (snapshot?.availabilityChecked === true || snapshot?.roomKey) {
     return "current-availability-only";
   }
   if (Object.keys(hotel.rateSnapshots ?? {}).length > 0) return "stale-date-snapshot";
   return "no-current-date-evidence";
+}
+
+function isSelectable(hotel) {
+  return hotel.isResearchPlaceholder !== true
+    && hotel.officialStatus === "exact-rate-verified";
+}
+
+function nextAction(hotel, evidence) {
+  if (hotel.isResearchPlaceholder) return "replace-or-complete-target-search";
+  if (hotel.officialStatus === "exact-rate-verified") return "complete";
+  if (hotel.officialStatus === "exact-date-unavailable") return "complete-unavailable";
+  if (hotel.officialStatus === "official-unreachable") return "complete-unreachable";
+  if (hotel.officialStatus === "official-inquiry-only") return "complete-inquiry-only";
+  if (hotel.officialStatus === "no-independent-official-found") return "complete-no-independent-official";
+  if (evidence === "current-platform-price") return "refresh-platform-total-before-selection";
+  if (evidence === "current-room-starting-prices") return "obtain-stay-total-not-starting-prices";
+  if (evidence === "current-alternative-room-available") return "add-matching-room-evidence-or-retire-alternative";
+  if (evidence === "current-unmatched-room-result") return "confirm-room-mapping-and-terms";
+  if (evidence === "current-availability-only") return "obtain-matching-stay-total";
+  return "retry-target-date-engine";
 }
 
 function entryUrl(hotel) {
@@ -102,6 +131,7 @@ function engineFor(host) {
   if (host === "www.swiftbook.io") return "SwiftBook";
   if (host === "app.thebookingfactory.com") return "The Booking Factory";
   if (host === "book.roommanager.com.au") return "RoomManager";
+  if (host.endsWith("freeonlinebooking.com")) return "FreeOnlineBooking";
   if (host.endsWith("booking.com")) return "Booking.com";
   if (host.endsWith("agoda.com")) return "Agoda";
   return host;
@@ -149,6 +179,8 @@ const rows = regionOrder.flatMap((region) => (
       searchRetained: searchRetained(hotel),
       evidenceType: evidenceType(hotel, dateRange),
       lastChecked: quotedDates(hotel),
+      selectable: isSelectable(hotel),
+      nextAction: nextAction(hotel, evidenceType(hotel, dateRange)),
     };
   })
 ));
@@ -171,8 +203,13 @@ function summarize(data, key) {
       placeholders: 0,
       exactRateVerified: 0,
       needsRecheck: 0,
+      selectable: 0,
+      requiresAction: 0,
       currentOfficialPrice: 0,
       currentPlatformPrice: 0,
+      startingPricesOnly: 0,
+      alternativeRoomAvailable: 0,
+      unmatchedRoomResult: 0,
       availabilityOnly: 0,
       staleOrMissing: 0,
     };
@@ -180,8 +217,14 @@ function summarize(data, key) {
     if (row.placeholder) summary.placeholders += 1;
     if (row.status === "exact-rate-verified") summary.exactRateVerified += 1;
     if (row.status === "needs-recheck") summary.needsRecheck += 1;
+    if (row.selectable) summary.selectable += 1;
+    if (row.nextAction !== "complete"
+      && !row.nextAction.startsWith("complete-")) summary.requiresAction += 1;
     if (row.evidenceType === "current-official-price") summary.currentOfficialPrice += 1;
     if (row.evidenceType === "current-platform-price") summary.currentPlatformPrice += 1;
+    if (row.evidenceType === "current-room-starting-prices") summary.startingPricesOnly += 1;
+    if (row.evidenceType === "current-alternative-room-available") summary.alternativeRoomAvailable += 1;
+    if (row.evidenceType === "current-unmatched-room-result") summary.unmatchedRoomResult += 1;
     if (row.evidenceType === "current-availability-only") summary.availabilityOnly += 1;
     if (["stale-date-snapshot", "no-current-date-evidence"].includes(row.evidenceType)) {
       summary.staleOrMissing += 1;
@@ -204,14 +247,21 @@ const queueColumns = [
   "searchRetained",
   "evidenceType",
   "lastChecked",
+  "selectable",
+  "nextAction",
 ];
 const summaryMetricColumns = [
   "total",
   "placeholders",
   "exactRateVerified",
   "needsRecheck",
+  "selectable",
+  "requiresAction",
   "currentOfficialPrice",
   "currentPlatformPrice",
+  "startingPricesOnly",
+  "alternativeRoomAvailable",
+  "unmatchedRoomResult",
   "availabilityOnly",
   "staleOrMissing",
 ];

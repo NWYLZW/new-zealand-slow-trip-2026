@@ -23,7 +23,7 @@ const dyersImage = (fileName, sourcePath, label, labelEn) => ({
   reviewedAt: "2026-08-02",
 });
 
-const orariImage = (fileName, sourceUrl, label, labelEn, sourceSection = "Gallery") => ({
+const orariImage = (fileName, sourceUrl, label, labelEn, sourceSection = "Gallery", reviewedAt = "2026-08-02") => ({
   src: `${imagePrefix}${fileName}`,
   label,
   labelEn,
@@ -31,7 +31,7 @@ const orariImage = (fileName, sourceUrl, label, labelEn, sourceSection = "Galler
   sourceEn: `Orari official site · ${sourceSection}`,
   sourceUrl,
   propertyId: "orari-bed-and-breakfast-christchurch",
-  reviewedAt: "2026-08-02",
+  reviewedAt,
 });
 
 const maplesImage = (fileName, sourceUrl, label, labelEn, sourceSection = "Official booking gallery") => ({
@@ -211,7 +211,6 @@ export const christchurchHomeAdditionalHotels = [
     id: "west-fitzroy-apartments-christchurch",
     name: "West Fitzroy Apartments",
     stayType: "home",
-    isResearchPlaceholder: true,
     recommendation: "市中心独立一卧公寓",
     recommendationEn: "Central self-contained one-bedroom apartment",
     summary:
@@ -264,13 +263,13 @@ export const christchurchHomeAdditionalHotels = [
       "Agoda combined rating of 8.9/10 from 1,283 reviews",
     ],
     cautions: [
-      "未取得 2026 年 10 月 7—8 日、2 人 1 套的可重复库存与总价，暂不可选",
+      "官网在 2026 年 10 月 7—8 日、2 人的查询中明确返回无房；所有列出的公寓类别均标为至少住 2 晚，因此本次 1 晚行程不可选",
       "官网写明 14:00 起入住；办公时间外取钥匙方式以确认邮件为准",
       "48 小时内取消或修改会收取全额",
       "官网没有明确列出房内洗衣机，不能把完整厨房误写成含洗衣",
     ],
     cautionsEn: [
-      "Reproducible inventory and a total for 7–8 Oct 2026, two guests and one apartment have not been obtained, so it is not selectable yet",
+      "The official search explicitly returned no availability for 7–8 Oct 2026 and two guests; every listed apartment category has a two-night minimum, so this one-night stay is not selectable",
       "Official check-in starts at 14:00; after-hours key collection follows the booking confirmation",
       "Cancellations or changes inside 48 hours are charged in full",
       "The official page does not explicitly list an in-room washer, so a full kitchen is not presented as laundry",
@@ -311,20 +310,20 @@ export const christchurchHomeAdditionalHotels = [
       },
     ],
     availabilityNote:
-      "2026-08-02 已核对官网 Standard One Bedroom Apartment、具体房型图、完整厨房、停车、入退房和取消规则；官方 RMS 预订入口未返回可保存的 2026 年 10 月 7—8 日、2 人库存、含税总价和扣款结果，因此仅作调研参考。",
+      "2026-08-03 已在 West Fitzroy 官方 RMS 预订页按 2026 年 10 月 7 日入住、10 月 8 日退房、2 位住客查询。页面明确显示“所选日期无可用房”；列出的 Studio Apartment、Standard One Bed、Superior One Bedroom Apartment 及所有其他类别均标示至少住 2 晚。因本行程仅 1 晚，未返回可选房型、总价、税费、早餐、取消或扣款条款；这是目标日期一晚无房的官方结果，而不是加载失败。",
     availabilityNoteEn:
-      "The official Standard One Bedroom Apartment, exact-category imagery, full kitchen, parking, check-in/out and cancellation rules were checked on 2 Aug 2026. The direct RMS entry did not expose a reproducible result for 7–8 Oct 2026, two guests, including inventory, tax-inclusive total and charge timing, so this remains a research reference only.",
-    officialStatus: "needs-recheck",
+      "On 3 Aug 2026, West Fitzroy's official RMS booking page was searched for 7 Oct check-in, 8 Oct check-out and two guests. It explicitly displayed “No availability for your selected dates”; Studio Apartment, Standard One Bed, Superior One Bedroom Apartment and every other listed category each showed a two-night minimum. As this itinerary is one night, no selectable room, total, tax, breakfast, cancellation or charge terms were returned. This is an official no-availability result for the target one-night stay, not a loading failure.",
+    officialStatus: "exact-date-unavailable",
     officialStatusDetail:
-      "2026-08-02 已核对官网房型和设施，但目标日期的直接库存、总价与付款结果无法复现；未展示任何推测价格，也未将它标为可选。",
+      "2026-08-03 已在 West Fitzroy 官方 RMS 预订页按 10 月 7—8 日、2 位住客查询。页面明确返回“所选日期无可用房”；所有列出类别均为至少住 2 晚，包括 Standard One Bed。此行程只住 1 晚，故本次目标条件无房；未把这项结论外推到其他日期或更长住宿。",
     officialStatusEn:
-      "The official category and facilities were checked on 2 Aug 2026, but direct target-date inventory, total and payment results were not reproducible. No inferred price is displayed and the property is not selectable.",
-    officialVerifiedAt: "2026-08-02",
+      "On 3 Aug 2026, West Fitzroy's official RMS booking page was searched for 7–8 Oct and two guests. It explicitly returned “No availability for your selected dates”; every listed category, including Standard One Bed, has a two-night minimum. This itinerary is one night, so it is unavailable for the target conditions only; this conclusion is not extended to other dates or longer stays.",
+    officialVerifiedAt: "2026-08-03",
     officialLinkRetainsSearch: false,
     officialLinkLabel: "打开官网预订并重新选择日期",
     officialLinkLabelEn: "Open direct booking and reselect the dates",
-    officialLinkNote: "请重新选择 2026 年 10 月 7—8 日、2 人、1 套 Standard One Bedroom Apartment，付款前确认含税总价、取消、扣款和办公时间外取钥匙。",
-    officialLinkNoteEn: "Reselect 7–8 Oct 2026 for two guests and one Standard One Bedroom Apartment, then confirm the tax-inclusive total, cancellation, charge timing and after-hours key collection before paying.",
+    officialLinkNote: "请重新选择 2026 年 10 月 7—8 日、2 人；2026-08-03 官方结果为无房，且所有类别至少住 2 晚。若改为更长住宿，须重新确认房型、含税总价、取消、扣款和办公时间外取钥匙。",
+    officialLinkNoteEn: "Reselect 7–8 Oct 2026 for two guests. The direct result on 3 Aug was unavailable and every category has a two-night minimum. If considering a longer stay, recheck room type, tax-inclusive total, cancellation, charge timing and after-hours key collection.",
     officialUrl: "https://westfitzroy.co.nz/accommodation/",
     officialBookingUrl: "https://bookings12.rmscloud.com/Search/Index/9CA9380C93C232FC/53/",
     position: [-43.526095, 172.631149],
@@ -334,13 +333,12 @@ export const christchurchHomeAdditionalHotels = [
     id: "orari-bed-and-breakfast-christchurch",
     name: "Orari Bed & Breakfast",
     stayType: "home",
-    isResearchPlaceholder: true,
-    recommendation: "十客房市中心历史宅邸 B&B",
-    recommendationEn: "Ten-room central heritage B&B",
+    recommendation: "目标日期可订的含早 Superior Queen",
+    recommendationEn: "Bookable breakfast-included Superior Queen",
     summary:
-      "42 Gloucester Street 的 1893 年 heritage-listed villa，只设十间客房，并以 Bed & Breakfast 运营。推荐二楼（官网 First Floor）的 Room 9 Superior King Ensuite：一张 King 床、最多 2 人，带大型独立卫浴、独立浴缸和淋浴；官网明确全房空调和免费早餐。",
+      "42 Gloucester Street 的 1893 年 heritage-listed villa，只设十间客房，并以 Bed & Breakfast 运营。目标日期实际可订的是二楼 Room 6 Superior Queen：Queen 床、最多 2 人、独立卫浴，官方预订页显示含早餐。原先研究的 Room 9 Superior King 是独立 King 房型，但本次结果没有出现它的名称，故只保留为未匹配参考。",
     summaryEn:
-      "A ten-room Bed & Breakfast in an 1893 heritage-listed villa at 42 Gloucester Street. The recommended first-floor Room 9 Superior King Ensuite sleeps two in one king bed and has a large private en-suite with a separate bath and shower. The official site explicitly confirms air conditioning in every room and complimentary breakfast.",
+      "A ten-room Bed & Breakfast in an 1893 heritage-listed villa at 42 Gloucester Street. The actually bookable room for these dates is first-floor Room 6 Superior Queen: one queen bed for two, an en-suite and breakfast shown in the direct engine. The previously researched Room 9 Superior King is a distinct king room, but its name did not appear in this result, so it remains an unmatched reference only.",
     access: "42 Gloucester Street；官网称距 Riverside Market 与 The Terrace 约 650 米，植物园和 Arts Centre 步行约 3 分钟；官网仅公布周一至周五 08:00—18:30 联系时间",
     accessEn: "42 Gloucester Street; the official site places Riverside Market and The Terrace about 650 m away and the Botanic Gardens and Arts Centre about three minutes on foot. It only publishes contact hours of 08:00–18:30, Monday to Friday",
     parking: "Orari 官网未明确公布停车位、费用或预留方式；第三方页面虽列停车，但在直接确认前不把它作为已核实设施",
@@ -376,33 +374,59 @@ export const christchurchHomeAdditionalHotels = [
     ],
     strengths: [
       "1893 年历史宅邸内仅十间客房的真正 B&B，不是 Motel 或大型酒店换标签",
-      "Room 9 明确是一张 King 床、最多 2 人，并有大型独立卫浴、独立浴缸和淋浴",
-      "官网明确所有客房有空调，并提供免费早餐",
+      "Room 6 Superior Queen 在目标日期官方结果中可订，剩 1 间，最多 2 人",
+      "Room 6 官方资料明确为二楼 Queen 床和独立卫浴；预订引擎说明有空调与地暖",
+      "本次 Base Rate 明确标示 Bed and breakfast",
       "HotelsCombined 当前汇总评分 9.3 / 10，共 1,489 条评价",
       "市中心步行位置优越，植物园、Arts Centre 与 Riverside Market 都很近",
     ],
     strengthsEn: [
       "A genuine ten-room B&B in an 1893 heritage home rather than a motel or large hotel relabelled as a home stay",
-      "Room 9 explicitly has one king bed for up to two guests and a large en-suite with separate bath and shower",
-      "The official site confirms air conditioning in every room and complimentary breakfast",
+      "Room 6 Superior Queen is bookable in the direct target-date result, with one room remaining and a maximum of two guests",
+      "Official Room 6 details confirm a first-floor queen bed and en-suite; the engine states air conditioning and heated floors",
+      "The displayed Base Rate explicitly says Bed and breakfast",
       "Current HotelsCombined aggregate rating of 9.3/10 from 1,489 reviews",
       "Excellent central walking location near the Botanic Gardens, Arts Centre and Riverside Market",
     ],
     cautions: [
-      "官方预订入口未返回可复现的 2026 年 10 月 7—8 日 Room 9 库存、含税总价和退改，暂不可选",
-      "官网未公布 Room 9 面积，不能用第三方估值补写",
+      "本次可订的是 Room 6 Superior Queen，不是原研究的 Room 9 Superior King；两者不混用",
+      "Base Rate 未展开税费、取消截止或付款时点，付款前必须确认",
       "官网没有明确停车信息；自驾入住前必须直接确认是否有车位、是否收费以及能否预留",
       "官网没有公布最晚入住或晚到取钥匙方式，且 location 页面只列周一至周五 08:00—18:30；晚到必须提前协调",
       "Room 9 位于二楼（官网 First Floor）；官网未说明电梯或无障碍到达方式",
     ],
     cautionsEn: [
-      "The direct booking entry did not expose reproducible Room 9 inventory, a tax-inclusive total or matching terms for 7–8 Oct 2026, so this option is not selectable yet",
-      "The official site does not publish the floor area of Room 9, so no third-party estimate is substituted",
+      "The bookable room is Room 6 Superior Queen, not the previously researched Room 9 Superior King; the two are not conflated",
+      "The Base Rate did not expand tax, cancellation deadline or charge timing, all of which need confirmation before payment",
       "The official site gives no parking information; drivers must confirm space, price and reservation arrangements direct",
       "No latest check-in or late-key procedure is published, and the contact page only lists Monday–Friday 08:00–18:30 hours; late arrival requires advance coordination",
       "Room 9 is on the first floor; the official site does not state lift or step-free access",
     ],
     roomTypes: [
+      {
+        rateKey: "room-6-superior-queen",
+        name: "Room 6 · Superior Queen Room Ensuite",
+        nameEn: "Room 6 · Superior Queen Room Ensuite",
+        size: "官网未公布",
+        sizeEn: "Not published by the official site",
+        bed: "1 张 Queen 床 · 最多 2 人",
+        bedEn: "One queen bed · maximum two guests",
+        photosVerified: true,
+        photoNote: "客房图来自 Orari 官网 Rooms 页中明确标为 Room 6 bedroom 的图片；不把 Room 9 的独立 King 房图套用给本次可订房。",
+        photoNoteEn: "The room photo is explicitly labelled Room 6 bedroom on Orari's official Rooms page; the distinct Room 9 king-room photo is not assigned to this bookable room.",
+        facilities: ["独立卫浴", "空调", "地暖", "电热毯", "平板电视", "茶与咖啡设施", "Base Rate 含早餐"],
+        facilitiesEn: ["En-suite", "Air conditioning", "Heated floors", "Electric blankets", "Flat-screen TV", "Tea and coffee facilities", "Breakfast included in the Base Rate"],
+        images: [
+          orariImage(
+            "christchurch-orari-room-6.jpg",
+            "https://images.squarespace-cdn.com/content/v1/5ebe64d262a43c35a06e0f3f/1594781496744-ABMDU4DDS8M14BLCA9O6/room+6+bedroom.jpg?format=1500w",
+            "Room 6 Superior Queen 的 Queen 床、窗边座位与空调",
+            "Room 6 Superior Queen with queen bed, window seat and air conditioning",
+            "Rooms · Room 6",
+            "2026-08-04",
+          ),
+        ],
+      },
       {
         rateKey: "room-9-superior-king-ensuite",
         name: "Room 9 · Superior King Ensuite",
@@ -412,6 +436,8 @@ export const christchurchHomeAdditionalHotels = [
         bed: "1 张 King 床 · 最多 2 人",
         bedEn: "One king bed · maximum two guests",
         photosVerified: true,
+        photoNote: "Room 9 是官网独立命名的 King 房型，但未在本次目标日期结果出现；其图只作未匹配房型参考。",
+        photoNoteEn: "Room 9 is a separately named king room on the official site, but did not appear in this target-date result; its photo is an unmatched room reference only.",
         facilities: ["大型独立卫浴", "独立浴缸和淋浴", "空调", "电热毯", "平板电视", "茶与咖啡设施", "免费早餐"],
         facilitiesEn: ["Large private en-suite", "Separate bath and shower", "Air conditioning", "Electric blankets", "Flat-screen TV", "Tea and coffee facilities", "Complimentary breakfast"],
         images: [
@@ -445,20 +471,51 @@ export const christchurchHomeAdditionalHotels = [
       },
     ],
     availabilityNote:
-      "2026-08-02 已核对官网 Room 9、全房空调、免费早餐、地址与位置；官方 The Booking Factory 入口目前无法返回可保存的 2026 年 10 月 7—8 日、2 人房型库存、含税总价和对应条款，因此不展示推测价格。",
+      "2026-08-04 已在 Orari 官方 The Booking Factory 选择 2026 年 10 月 7—8 日（一晚）并进入房型与费率页：Room 6 Superior Queen Room（最多 2 人）剩 1 间，Base Rate 为 NZD 349、一晚，明确标示 Bed and breakfast。官方静态 Rooms 页将其对应为二楼的 Room 6、Queen 床和独立卫浴，预订页另写有空调与地暖。结果没有展开税费、取消截止或付款时点，均不推断。Room 9 Superior King 是官网独立 King 房型，但没有出现在此目标结果，不把 Room 6 的库存、价格、图片或条款套给它。",
     availabilityNoteEn:
-      "On 2 Aug 2026 the official Room 9, property-wide air conditioning, complimentary breakfast, address and location were checked. The direct The Booking Factory entry did not return a reproducible result for 7–8 Oct 2026 and two guests with room inventory, a tax-inclusive total and matching terms, so no inferred price is displayed.",
-    officialStatus: "needs-recheck",
+      "On 4 Aug 2026, Orari's official The Booking Factory was queried for 7–8 Oct 2026 (one night) through its room and rate pages: Room 6 Superior Queen Room (maximum two guests) had one room remaining, and its Base Rate was NZD 349 for one night, explicitly labelled Bed and breakfast. The official static Rooms page maps this to first-floor Room 6 with a queen bed and en-suite; the booking page also states air conditioning and heated floors. Tax, cancellation deadline and charge timing were not expanded, so none is inferred. Room 9 Superior King is a distinct named king room on the official site but did not appear in this target result; Room 6 availability, pricing, images and terms are not assigned to it.",
+    rateSnapshots: {
+      "2026-10-07/2026-10-08": {
+        roomRates: {
+          "room-6-superior-queen": {
+            official: {
+              source: "Orari 官方 The Booking Factory 预订引擎",
+              sourceEn: "Orari official The Booking Factory booking engine",
+              roomKey: "room-6-superior-queen",
+              room: "Room 6 · Superior Queen Room · 1 张 Queen 床 · 一晚",
+              roomEn: "Room 6 · Superior Queen Room · one queen bed · one night",
+              refundableNzd: null,
+              nonRefundableNzd: null,
+              rateOptions: [{
+                label: "官网 Base Rate · 含早餐一晚展示总价",
+                labelEn: "Direct Base Rate · breakfast-included displayed one-night total",
+                nzd: 349,
+                detail: "2026 年 10 月 7—8 日 · 1 晚 · 最多 2 人 · 剩 1 间。页面标示 Bed and breakfast；税费、取消截止和付款时点未展开。",
+                detailEn: "7–8 Oct 2026 · one night · maximum two guests · one room remaining. The page states Bed and breakfast; tax, cancellation deadline and charge timing were not expanded.",
+              }],
+              payment: "Base Rate 页未显示付款或担保时点。",
+              paymentEn: "The Base Rate page did not display charge or guarantee timing.",
+              breakfast: "Base Rate 明确标示 Bed and breakfast。",
+              breakfastEn: "The Base Rate explicitly states Bed and breakfast.",
+              memberNote: "Room 6 Superior Queen 在结果中显示 Available: 1。",
+              memberNoteEn: "Room 6 Superior Queen displayed Available: 1 in the result.",
+              quotedAt: "2026-08-04",
+            },
+          },
+        },
+      },
+    },
+    officialStatus: "exact-rate-verified",
     officialStatusDetail:
-      "2026-08-02 已核验 Orari 官网及 Room 9；官方预订入口仍可打开，但目标日期库存、总价、扣款和退改无法复现，故仅作不可选调研参考。",
+      "2026-08-04 已在 Orari 官方 The Booking Factory 按 2026 年 10 月 7—8 日取得一晚可复现结果：Room 6 Superior Queen Room 最多 2 人、剩 1 间，Base Rate NZD 349，明确含早餐。静态官网确认其为二楼 Room 6、Queen 床和独立卫浴。税费、取消截止和付款时点没有在此步骤展开。原 Room 9 Superior King 未出现在结果中，保留为未匹配参考，不承载这份报价。",
     officialStatusEn:
-      "The Orari site and Room 9 were verified on 2 Aug 2026. The direct booking entry still opens, but target-date inventory, total, charge timing and cancellation terms were not reproducible, so this remains a non-selectable research reference.",
-    officialVerifiedAt: "2026-08-02",
+      "On 4 Aug 2026, Orari's official The Booking Factory produced a reproducible one-night result for 7–8 Oct: Room 6 Superior Queen Room, maximum two guests, one remaining, Base Rate NZD 349 with breakfast explicitly included. The official static site identifies it as first-floor Room 6 with a queen bed and en-suite. Tax, cancellation deadline and charge timing were not expanded at this step. The originally researched Room 9 Superior King did not appear and remains an unmatched reference rather than carrying this quote.",
+    officialVerifiedAt: "2026-08-04",
     officialLinkRetainsSearch: false,
     officialLinkLabel: "打开官网预订并重新选择日期",
     officialLinkLabelEn: "Open direct booking and reselect the dates",
-    officialLinkNote: "请重新选择 2026 年 10 月 7—8 日、2 人并确认 Room 9；付款前核对库存、含税总价、取消、停车和晚到安排。",
-    officialLinkNoteEn: "Reselect 7–8 Oct 2026 for two guests and confirm Room 9, then verify inventory, the tax-inclusive total, cancellation, parking and late-arrival arrangements before paying.",
+    officialLinkNote: "请重新选择 2026 年 10 月 7—8 日并确认 Room 6 Superior Queen；付款前核对税费、取消、付款时点、停车和晚到安排。",
+    officialLinkNoteEn: "Reselect 7–8 Oct 2026 and confirm Room 6 Superior Queen, then verify tax, cancellation, charge timing, parking and late-arrival arrangements before paying.",
     officialUrl: "https://www.orari.co.nz/rooms",
     officialBookingUrl: "https://app.thebookingfactory.com/orari-bed-and-breakfast-and-apartments/book#/choose-dates",
     position: [-43.5299893, 172.6303408],

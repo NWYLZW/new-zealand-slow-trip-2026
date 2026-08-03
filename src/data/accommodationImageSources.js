@@ -39,6 +39,9 @@ export const accommodationImageSources = Object.fromEntries([
     "christchurch-orari-dining-room.webp": "https://images.squarespace-cdn.com/content/v1/5ebe64d262a43c35a06e0f3f/1589919890156-YGFMVPEVZGOIIGCVCHB5/Diningroom2.jpg?format=1500w",
     "christchurch-orari-living-room.webp": "https://images.squarespace-cdn.com/content/v1/5ebe64d262a43c35a06e0f3f/1589920272958-NFKLMFLRL5XWT1RQSJ9A/Living+Room.jpg?format=1500w",
   }, "2026-08-02"),
+  ...entries("orari-bed-and-breakfast-christchurch", {
+    "christchurch-orari-room-6.jpg": "https://images.squarespace-cdn.com/content/v1/5ebe64d262a43c35a06e0f3f/1594781496744-ABMDU4DDS8M14BLCA9O6/room+6+bedroom.jpg?format=1500w",
+  }, "2026-08-04"),
   ...entries("maples-on-harewood-christchurch", {
     "christchurch-maples-pool-studio-living.jpg": "https://images.bookeasy.com.au/website/images/bookeasylite/room103881.jpg",
     "christchurch-maples-velvet-suite-bathroom.jpg": "https://static.wixstatic.com/media/84e4d4_407856d7e119448db073171f7a0700f4~mv2.jpg",
@@ -308,11 +311,14 @@ export const accommodationImageSources = Object.fromEntries([
     "wanaka-moorings-exterior.jpg": "https://www.themoorings.co.nz/site/wp-content/uploads/the-moorings-wanaka-studio-accommodation-2.jpg",
   }),
   ...entries("clearbrook-motels-wanaka", {
-    "clearbrook-1.jpg": "https://www.clearbrook.co.nz/studioapartment",
     "clearbrook-2.jpg": "https://www.clearbrook.co.nz/studioapartment",
     "clearbrook-3.jpg": "https://www.clearbrook.co.nz/studioapartment",
     "wanaka-clearbrook-studio-kitchen.jpg": "https://static.wixstatic.com/media/b65291_50cd2daa249e4f8eb325ca171fe04980~mv2.jpg/v1/fit/w_1000,h_605,q_90,enc_avif,quality_auto/b65291_50cd2daa249e4f8eb325ca171fe04980~mv2.jpg",
     "wanaka-clearbrook-studio-laundry.jpg": "https://static.wixstatic.com/media/b65291_a8df1e18e9c1421a946eac67d18a0581~mv2.jpg/v1/fit/w_1000,h_605,q_90,enc_avif,quality_auto/b65291_a8df1e18e9c1421a946eac67d18a0581~mv2.jpg",
+    "wanaka-clearbrook-superior-bedroom.jpg": "https://book-directonline.com/properties/clearbrookdirect?locale=zh-CN&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=NZD&checkInDate=2026-10-03&checkOutDate=2026-10-05&trackPage=no",
+    "wanaka-clearbrook-superior-kitchen.jpg": "https://book-directonline.com/properties/clearbrookdirect?locale=zh-CN&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=NZD&checkInDate=2026-10-03&checkOutDate=2026-10-05&trackPage=no",
+    "wanaka-clearbrook-superior-bathroom.jpg": "https://book-directonline.com/properties/clearbrookdirect?locale=zh-CN&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=NZD&checkInDate=2026-10-03&checkOutDate=2026-10-05&trackPage=no",
+    "wanaka-clearbrook-superior-living.jpg": "https://book-directonline.com/properties/clearbrookdirect?locale=zh-CN&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=NZD&checkInDate=2026-10-03&checkOutDate=2026-10-05&trackPage=no",
   }),
   ...entries("alpine-motel-wanaka", {
     "wanaka-alpine-superior-king-overview.jpg": "https://www.alpinemotelwanaka.co.nz/assets/images/room4.jpg",
@@ -491,6 +497,7 @@ export const accommodationImageSources = Object.fromEntries([
     "christchurch-sudima-balcony-apartment.jpg": "https://www.sudimahotels.com/media/1911/sudima-city-040619-18_executive_apartment.jpg",
   }),
   ...entries("hotel-montreal-christchurch", {
+    "christchurch-hotel-montreal-superior-room.jpg": "https://static.travelclick.com/be/v2/114705/media/room/image/superior_.jpg?impolicy=tcimpolicy_v1&cropH=500&cropW=750&cropX=0&cropY=0&outH=300&outW=400",
     "christchurch-hotel-montreal-suite-wide.png": "https://www.hotelmontreal.co.nz/imager/assets/20300/SS2_2022-12-07-201813_jxjm_1b935df1669d1aafd7f451548bbb93a8.png",
     "christchurch-hotel-montreal-suite-bed.png": "https://www.hotelmontreal.co.nz/imager/assets/20299/SS_bedc6275b8108f69a70b655e926387f6.png",
     "christchurch-hotel-montreal-suite-bath.png": "https://www.hotelmontreal.co.nz/imager/assets/20297/SS1_0a9fa582e80fb610921b3a6a7f2433f4.png",
@@ -544,13 +551,18 @@ export const accommodationImageSources = Object.fromEntries([
     "christchurch-novotel-fitness.jpg": "https://www.ahstatic.com/photos/6592_fi_00_p_2048x1536.jpg",
   }),
   ...entries("distinction-christchurch", {
+    "christchurch-distinction-superior-king-1.jpeg": "https://dbijapkm3o6fj.cloudfront.net/resources/11900,3,1,6,4,0/-4619-/20181213143436/superior-king-room-distinction-christchurch-hotel.jpeg",
+    "christchurch-distinction-superior-king-2.jpeg": "https://dbijapkm3o6fj.cloudfront.net/resources/11992,3,1,6,4,0/-4619-/20181218145355/superior-king-room-distinction-christchurch-hotel.jpeg",
+    "christchurch-distinction-superior-king-3.jpeg": "https://dbijapkm3o6fj.cloudfront.net/resources/11993,3,1,6,4,0/-4619-/20181218145357/superior-king-room-distinction-christchurch-hotel.jpeg",
+    "christchurch-distinction-superior-king-4.jpeg": "https://dbijapkm3o6fj.cloudfront.net/resources/11994,3,1,6,4,0/-4619-/20181218145359/superior-king-room-distinction-christchurch-hotel.jpeg",
     "christchurch-distinction-classic-king-1.jpg": "https://dbijapkm3o6fj.cloudfront.net/resources/11972,1004,1,6,4,0,600,450/-4619-/20181218133218/classic-king-room.jpeg",
     "christchurch-distinction-classic-king-2.jpg": "https://dbijapkm3o6fj.cloudfront.net/resources/11973,1004,1,6,4,0,600,450/-4619-/20181218133220/classic-king-room.jpeg",
     "christchurch-distinction-classic-king-3.jpg": "https://dbijapkm3o6fj.cloudfront.net/resources/11974,1004,1,6,4,0,600,450/-4619-/20181218133223/classic-king-room.jpeg",
     "christchurch-distinction-exterior.jpeg": "https://d37j6posq2fmgz.cloudfront.net/resources/6964,3,1,6,3,0/-4619-/20181213170051/dh-christchurch-exterior-aerial-with-tram-rl1.jpeg",
     "christchurch-distinction-dining.jpeg": "https://d37j6posq2fmgz.cloudfront.net/resources/6983,3,1,6,3,0/-4619-/20181220141140/dh-christchurch-dining-rl221.jpeg",
-  }),
+  }, "2026-08-03"),
   ...entries("poshtel-oamaru", {
+    "oamaru-poshtel-king-room.jpg": "https://static.staah.net/images/roomImage/large_4_36631_Bot67RIrdD__DSC8671.jpg",
     "oamaru-poshtel-bowling-1.jpg": "https://poshtelnz.com/wp-content/uploads/2023/04/553A6840-scaled.jpg",
     "oamaru-poshtel-bowling-2.jpg": "https://poshtelnz.com/wp-content/uploads/2023/04/room1c-scaled-1300x667-c-default.jpg",
     "oamaru-poshtel-bowling-3.jpg": "https://poshtelnz.com/wp-content/uploads/2023/04/room1d-scaled-700x0-c-default.jpg",
@@ -572,6 +584,7 @@ export const accommodationImageSources = Object.fromEntries([
     "oamaru-motor-lodge-two-bedroom-reference.jpg": "https://www.oamarumotorlodge.co.nz/assets/images/146.jpg",
   }, oamaruReviewedAt),
   ...entries("aaa-thames-court-motel", {
+    "oamaru-aaa-thames-court-superior-studio.jpeg": "https://aaathamescourt.co.nz/wp-content/uploads/2017/08/superior-studio-600_400.jpeg",
     "oamaru-aaa-thames-court-executive-king-1.jpg": "https://aaathamescourt.co.nz/wp-content/uploads/2017/08/exectuve-king-stud.jpg",
     "oamaru-aaa-thames-court-executive-king-2.jpg": "https://aaathamescourt.co.nz/wp-content/uploads/2017/08/kitchen-for-all-superior-web.jpg",
     "oamaru-aaa-thames-court-executive-king-3.jpg": "https://aaathamescourt.co.nz/wp-content/uploads/2017/09/bathroom.jpg",
@@ -579,6 +592,8 @@ export const accommodationImageSources = Object.fromEntries([
     "oamaru-aaa-thames-court-garden.jpg": "https://aaathamescourt.co.nz/wp-content/uploads/2017/09/aaathames_garden.jpg",
   }, oamaruReviewedAt),
   ...entries("asure-ambassador-oamaru", {
+    "oamaru-asure-ambassador-basic-studio-1.jpg": "https://www.ambassadoroamaru.co.nz/assets/images/room1.jpg",
+    "oamaru-asure-ambassador-basic-studio-2.jpg": "https://www.ambassadoroamaru.co.nz/assets/images/room1a.jpg",
     "oamaru-asure-ambassador-spa-studio-1.jpg": "https://www.ambassadoroamaru.co.nz/assets/images/room2.jpg",
     "oamaru-asure-ambassador-spa-studio-2.jpg": "https://www.ambassadoroamaru.co.nz/assets/images/room2a.jpg",
     "oamaru-asure-ambassador-spa-studio-3.jpg": "https://www.ambassadoroamaru.co.nz/assets/images/room2b.jpg",

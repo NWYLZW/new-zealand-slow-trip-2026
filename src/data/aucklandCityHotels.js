@@ -66,26 +66,26 @@ export const aucklandCityHotels = [
     strengths: [
       "24 小时前台便于灵活入住",
       "购物日步行动线最佳",
-      "25 m² 且有小厨房",
+      "当前可复现的 Premier Studio 为 36 m²、Queen 床",
       "无需为霍比屯往返大巴换酒店",
     ],
     strengthsEn: [
       "The 24-hour front desk supports flexible check-in",
       "The most convenient walking base for the city shopping day",
-      "A 25 m² studio with a kitchenette",
+      "A currently reproducible 36 m² Premier Studio with a queen bed",
       "No hotel change is needed around the Hobbiton coach day",
     ],
     cautions: [
       "距离 Newmarket 仍需乘公交或打车",
       "停车位有限且平台未显示具体收费",
-      "一室公寓只能请求 King，平台明确写床型视供应；若要锁定大床应选尊贵一室 Queen",
-      "10 月 8—10 日两晚精确库存、总价与退改待重新核验；旧 10 月 7—9 日两晚价格日期不同，不可用于当前行程",
+      "当前可复现的官方 Rate of The Day 要求预付；取消窗口未在加入预订前的页面展开",
+      "早餐为 NZD 25/人/日加购，停车为 NZD 35 加购且抵达时仍视供应；旧 10 月 7—9 日两晚价格日期不同，不可用于当前行程",
     ],
     cautionsEn: [
       "Newmarket still requires a bus or taxi",
       "On-site parking is limited and the current guest price needs confirmation",
-      "The standard studio only accepts a king-bed request subject to availability; choose the premier queen studio to lock in one large bed",
-      "Availability, total price and terms for 8–10 Oct remain to be re-checked; the old 7–9 Oct quote cannot be reused",
+      "The currently reproducible direct Rate of The Day requires prepayment; its cancellation window was not expanded before the booking step",
+      "Breakfast is a NZD 25 per-person, per-day add-on and parking is a NZD 35 add-on subject to availability on arrival; the old 7–9 Oct quote cannot be reused",
     ],
     ratings: [
       {
@@ -98,28 +98,30 @@ export const aucklandCityHotels = [
     ],
     roomTypes: [
       {
-        rateKey: "studio-king-25",
-        name: "一室公寓 · King 请求项",
-        size: "25 m²",
-        bed: "1 张超大号双人床或 2 张单人床（选择床型，需视供应情况）",
+        rateKey: "premier-studio-queen",
+        name: "尊贵一室公寓 · Queen 床",
+        nameEn: "Premier Studio Room · queen bed",
+        size: "36 m²",
+        sizeEn: "36 m²",
+        bed: "1 张 Queen 大号床",
+        bedEn: "One queen bed",
         photosVerified: true,
         facilities: [
-          "私人小厨房",
-          "私人浴室",
-          "空调",
-          "隔音",
-          "平板电视",
+          "书桌",
+          "客房保险箱",
+          "宽敞衣柜",
           "免费 Wi-Fi",
         ],
+        facilitiesEn: ["Work desk", "In-room safe", "Spacious wardrobe", "Free Wi-Fi"],
         images: [
           {
             src: "/new-zealand-slow-trip-2026/images/hotels/adina-britomart-room-1.jpg",
-            label: "一室公寓大床与书桌",
+            label: "一室公寓睡眠与起居区",
             source: "Booking.com",
           },
           {
             src: "/new-zealand-slow-trip-2026/images/hotels/adina-britomart-room-2.jpg",
-            label: "一室公寓特大床",
+            label: "一室公寓大床",
             source: "Booking.com",
           },
           {
@@ -159,48 +161,57 @@ export const aucklandCityHotels = [
     ],
     rateSnapshots: {
       "2026-10-08/2026-10-10": {
-        availabilityChecked: true,
-        roomKey: "studio-king-25",
-        quotedAt: "2026-08-01",
-      },
-      "2026-10-07/2026-10-09": {
         roomRates: {
-          "studio-king-25": {
-            booking: {
-              source: "Booking.com · Genius 1",
-              roomKey: "studio-king-25",
-              room: "一室公寓 · 超大床选项 · 25 m²",
-              roomEn: "Studio · king-bed option · 25 m²",
-              nonRefundableNzd: 299,
-              refundableNzd: 398,
-              cancelUntil: "2026-10-06",
-              payment: "免费取消档在 10 月 4 日前（不含当日）零付款",
-              paymentEn: "Nothing is charged before 4 Oct on the free-cancellation plan",
-              breakfast: "早餐另加 NZD 30/人",
-              breakfastEn: "Breakfast costs an additional NZD 30 per person",
-              quotedAt: "2026-07-28",
+          "premier-studio-queen": {
+            official: {
+              source: "Adina Auckland Britomart 官方预订引擎",
+              sourceEn: "Adina Auckland Britomart official booking engine",
+              roomKey: "premier-studio-queen",
+              room: "Premier Studio Room · Queen 床 · 36 m² · 2 晚",
+              roomEn: "Premier Studio Room · queen bed · 36 m² · two nights",
+              nonRefundableNzd: null,
+              refundableNzd: null,
+              rateOptions: [
+                {
+                  label: "官网 Rate of The Day · 两晚总价",
+                  labelEn: "Direct Rate of The Day · two-night total",
+                  nzd: 589.5,
+                  detail:
+                    "2026 年 10 月 8—10 日 · 2 位成人 · 1 间；结算前摘要显示 NZD 589.50，含税费；价格卡明确要求预付，但取消窗口未在此步骤展开。",
+                  detailEn:
+                    "8–10 Oct 2026 · two adults · one room; the pre-booking summary showed NZD 589.50 including taxes and fees. The rate card explicitly requires prepayment, while its cancellation window was not expanded at this step.",
+                },
+              ],
+              cancelUntil: null,
+              payment: "Rate of The Day 明确要求预付；未进入支付或最终预订步骤",
+              paymentEn: "Rate of The Day explicitly requires prepayment; no payment or final booking step was opened",
+              breakfast: "不含早餐；可加购每日自助早餐 NZD 25/人/日",
+              breakfastEn: "Breakfast is not included; daily buffet breakfast is offered as a NZD 25 per-person, per-day add-on",
+              memberNote: "eClub Exclusive - Winter Getaway 显示 NZD 274.12 平均每晚，含早餐、一个车位、12:00 延迟退房、10 月 7 日前免费取消且无需预付；选择后要求登录或免费加入 eClub，因此没有把该会员门槛价当作公开可订总价。停车加购显示 NZD 35，抵达时仍视供应。",
+              memberNoteEn: "The eClub Exclusive - Winter Getaway displayed NZD 274.12 average nightly with breakfast, one car space, 12pm late checkout, free cancellation until 7 Oct and no prepayment; selecting it required sign-in or free eClub enrolment, so it is not presented as a public bookable total. The parking add-on displayed NZD 35 and remains subject to availability on arrival.",
+              quotedAt: "2026-08-03",
             },
           },
         },
       },
     },
     availabilityNote:
-      "2026-08-01 已打开带入 10 月 8—10 日、2 人 1 间的 Adina 官方入口，但被 Incapsula 拦截，未返回可复现的库存、总价或条款。下方 10 月 7—9 日两晚记录仅是历史快照，日期不同，不能作为当前报价。",
+      "2026-08-03 已在 Adina 官方预订引擎按 10 月 8—10 日、2 人 1 间核验：Premier Studio Room（36 m²、Queen 床）可订。公开 Rate of The Day 的结算前两晚总价为 NZD 589.50，含税费、要求预付；取消窗口未在该步骤展开。早餐另加 NZD 25/人/日，停车加购 NZD 35 且抵达时仍视供应。另有 eClub Exclusive - Winter Getaway 显示 NZD 274.12 平均每晚并含早餐、一个车位、12:00 延迟退房、10 月 7 日前免费取消与无需预付，但选择时要求登录或免费加入 eClub，不当作公开价。",
     availabilityNoteEn:
-      "The Adina direct entry was opened on 1 Aug 2026 with 8–10 Oct, two adults and one room, but Incapsula blocked it before reproducible inventory, totals or terms were returned. The saved 7–9 Oct snapshot is historical only and cannot be treated as a current quote.",
-    officialStatus: "needs-recheck",
+      "Adina's official booking engine was checked on 3 Aug 2026 for 8–10 Oct and two guests: a Premier Studio Room (36 m², queen bed) was available. The public Rate of The Day pre-booking total was NZD 589.50 including taxes and fees and requires prepayment; its cancellation window was not expanded at this step. Breakfast is a NZD 25 per-person, per-day add-on, and the NZD 35 parking add-on remains subject to availability on arrival. An eClub Exclusive - Winter Getaway showed NZD 274.12 average nightly with breakfast, one car space, 12pm late checkout, free cancellation until 7 Oct and no prepayment, but selecting it required sign-in or free eClub enrolment, so it is not presented as a public price.",
+    officialStatus: "exact-rate-verified",
     officialStatusDetail:
-      "Adina 官网与 25 m² Studio 房型基础信息已核验。2026-08-01 打开已带入 10 月 8—10 日、2 人 1 间的官方预订入口时，Incapsula 在库存与房价出现前拦截请求；因此精确库存、含税总价、早餐、付款和退改仍未核验，日期不同的旧两晚价格不会作为当前报价。",
+      "2026-08-03 已在 Adina 官网按 10 月 8—10 日、2 人 1 间核验 Premier Studio Room（36 m²、Queen 床）：公开 Rate of The Day 结算前两晚总价 NZD 589.50，含税费、要求预付；取消窗口未在此步骤展开。eClub Exclusive - Winter Getaway 显示较低平均每晚价和含早、停车、可取消权益，但选择时要求登录或免费加入 eClub，因此未作为公开精确总价。",
     officialStatusEn:
-      "The Adina site and the basic 25 m² Studio details were checked. On 1 Aug 2026 the direct entry carrying 8–10 Oct, two adults and one room was blocked by Incapsula before inventory or rates appeared. Exact availability, tax-inclusive total, breakfast, payment and cancellation terms therefore remain unverified; the old two-night total is not current because its dates differ.",
-    officialVerifiedAt: "2026-08-01",
+      "Verified on Adina on 3 Aug 2026 for a Premier Studio Room (36 m², queen bed), 8–10 Oct and two guests: the public Rate of The Day pre-booking total was NZD 589.50 including taxes and fees and requires prepayment; its cancellation window was not expanded at this step. The lower eClub Exclusive - Winter Getaway displayed breakfast, parking and cancellation benefits but required sign-in or free eClub enrolment when selected, so it is not used as a public exact total.",
+    officialVerifiedAt: "2026-08-03",
     officialLinkRetainsSearch: true,
     officialLinkLabel: "打开已带入当前日期与人数的 Adina 入口",
     officialLinkLabelEn: "Open the Adina entry with current dates and guests",
     officialLinkNote:
-      "入口带入 2026 年 10 月 8—10 日、2 位成人、1 间；若能通过安全校验，请在付款前核对含税总价、床型、早餐、取消截止时间和扣款规则。",
+      "入口带入 2026 年 10 月 8—10 日、2 位成人、1 间；当前公开 Rate of The Day 要求预付，付款前请复核取消窗口；eClub 价格须先确认会员资格。",
     officialLinkNoteEn:
-      "The entry carries 8–10 Oct 2026, two adults and one room. If the security check completes, verify the tax-inclusive total, bedding, breakfast, cancellation deadline and charge terms before payment.",
+      "The entry carries 8–10 Oct 2026, two adults and one room. The current public Rate of The Day requires prepayment, so verify its cancellation window before payment; confirm eClub eligibility before relying on its prices.",
     officialUrl:
       "https://adinahotels.com/en/apartments/auckland-britomart/",
     officialBookingUrl:
@@ -219,9 +230,9 @@ export const aucklandCityHotels = [
     recommendation: "酒店型性价比",
     recommendationEn: "Hotel value",
     summary:
-      "位置评分 9.4，标准酒店服务比公寓更直接；当前 10 月 8—10 日两晚价格尚未核验，旧 10 月 7—9 日两晚快照仅用于了解历史房型与渠道情况。",
+      "位置评分 9.4，标准酒店服务比公寓更直接；官方已明确 10 月 8—10 日、2 人 1 间无房。旧 10 月 7—9 日两晚快照仅用于了解历史房型与渠道情况，不代表当前可订。",
     summaryEn:
-      "A conventional hotel with a 9.4 location score; the current 8–10 Oct two-night total still needs verification.",
+      "A conventional hotel with a 9.4 location score. The official result is unavailable for 8–10 Oct and one room for two; the old 7–9 Oct snapshot is historical room-and-channel context only, not current availability.",
     access:
       "CBD 步行范围；前往 Queen Street、Commercial Bay 和 Britomart 均方便",
     accessEn: "Walkable to Queen Street, Commercial Bay and Britomart",
@@ -302,11 +313,6 @@ export const aucklandCityHotels = [
       },
     ],
     rateSnapshots: {
-      "2026-10-08/2026-10-10": {
-        availabilityChecked: true,
-        roomKey: "deluxe-harbour-king",
-        quotedAt: "2026-08-01",
-      },
       "2026-10-07/2026-10-09": {
         roomRates: {
           "deluxe-harbour-king": {
@@ -329,22 +335,22 @@ export const aucklandCityHotels = [
       },
     },
     availabilityNote:
-      "2026-08-01 已打开带入 10 月 8—10 日、2 人 1 间的官网入口；静态响应确认 Deluxe King Harbour View 名称、8—11 层、King 床与港景，但动态库存、总价和退改没有写入可保存响应。旧官网/Booking 记录只对应 10 月 7—9 日，不能沿用。",
+      "2026-08-03 已在官网按 10 月 8—10 日、2 人 1 间重新打开入口。短暂加载后，官方结果页显示“Sorry, we don’t have any availability for the dates selected”，并显示 1 room | 2 adults；未返回房型、总价或退改条款。此前静态页面确认 Deluxe King Harbour View 名称、8—11 层、King 床与港景；旧官网/Booking 记录只对应 10 月 7—9 日，不能沿用。该无房结论只适用于本次目标日期和人数。",
     availabilityNoteEn:
-      "The dated direct entry was opened on 1 Aug 2026. Its static response confirms the Deluxe King Harbour View name, floors 8–11, king bed and harbour view, but dynamic inventory, total and cancellation terms were not embedded in a reproducible response. The old direct and Booking.com records cover only 7–9 Oct and cannot be reused.",
-    officialStatus: "needs-recheck",
+      "The official entry was reopened on 3 Aug 2026 for 8–10 Oct, one room and two adults. After a short load, the official results page stated “Sorry, we don’t have any availability for the dates selected” and displayed “1 room | 2 adults”; it returned no room, total or cancellation terms. Earlier static content confirms the Deluxe King Harbour View name, floors 8–11, king bed and harbour view; old direct and Booking.com records cover only 7–9 Oct and cannot be reused. This unavailable conclusion applies only to the target dates and guest count.",
+    officialStatus: "exact-date-unavailable",
     officialStatusDetail:
-      "Hotel Grand Chancellor 官网与 Deluxe King Harbour View 房型基础信息已核验。2026-08-01 打开已带入 10 月 8—10 日、2 人 1 间的入口后，页面只返回酒店与房型静态数据，动态 TravelClick 库存、精确总价、早餐、付款和取消条款未在可保存响应中出现，因此仍需动态复查。",
+      "2026-08-03 在带入 10 月 8—10 日、1 间、2 人的 Hotel Grand Chancellor 官方入口上，短暂加载后结果页明确显示“Sorry, we don’t have any availability for the dates selected”。此为该精确条件的官方无房结果；未外推至其他日期、人数或房型。",
     officialStatusEn:
-      "The Hotel Grand Chancellor site and Deluxe King Harbour View basics were checked. On 1 Aug 2026 the entry carrying 8–10 Oct, two adults and one room returned hotel and room content, but the dynamic TravelClick inventory, exact total, breakfast, payment and cancellation terms were not embedded in a reproducible response and still require a live check.",
-    officialVerifiedAt: "2026-08-01",
+      "On 3 Aug 2026, the Hotel Grand Chancellor official entry carrying 8–10 Oct, one room and two adults finished loading and explicitly displayed “Sorry, we don’t have any availability for the dates selected”. This is an official unavailable result for the exact conditions only; it is not extended to other dates, guest counts or room types.",
+    officialVerifiedAt: "2026-08-03",
     officialLinkRetainsSearch: true,
     officialLinkLabel: "打开已带入当前日期与人数的酒店官网入口",
     officialLinkLabelEn: "Open the hotel entry with current dates and guests",
     officialLinkNote:
-      "入口带入 2026 年 10 月 8—10 日、2 位成人、1 间；动态房价加载后，须核对总价是否含税、早餐、取消截止时间及扣款规则。",
+      "入口带入 2026 年 10 月 8—10 日、2 位成人、1 间；2026-08-03 官方结果为无房。若改日期或人数，须重新核对库存、总价、早餐、取消截止时间及扣款规则。",
     officialLinkNoteEn:
-      "The entry carries 8–10 Oct 2026, two adults and one room. Once live rates load, verify whether the total includes taxes, breakfast, the cancellation deadline and charge terms.",
+      "The entry carries 8–10 Oct 2026, two adults and one room; the official result on 3 Aug was unavailable. If dates or guests change, recheck inventory, total, breakfast, the cancellation deadline and charge terms.",
     officialUrl:
       "https://www.grandchancellorhotels.com/hotel-grand-chancellor-auckland",
     officialBookingUrl:
@@ -363,9 +369,9 @@ export const aucklandCityHotels = [
     recommendation: "含早可取消",
     recommendationEn: "Breakfast and flexibility",
     summary:
-      "位置评分 9.5，当前推荐 Standard Queen 房型适合 2 人；含早、取消和到店付款记录来自 10 月 7—9 日旧快照，当前 10 月 8—10 日两晚条款需重新核验。",
+      "位置评分 9.5，当前推荐的 1 Queen Standard with Free Breakfast 适合 2 人；IHG 官网已复现 10 月 8—10 日的会员可取消套餐，总价 NZD 530.10（含税与早餐）。该价要求 IHG One Rewards 会员资格，不能当作所有访客的公开报价。",
     summaryEn:
-      "A 9.5 location score and a Standard Queen category suited to two guests; breakfast, cancellation and pay-at-property details come from the old 7–9 Oct snapshot and need rechecking for 8–10 Oct.",
+      "A 9.5 location score and a 1 Queen Standard with Free Breakfast suited to two guests. IHG reproduced a cancellable member rate of NZD 530.10 including tax and breakfast for 8–10 Oct; it requires IHG One Rewards membership and is not presented as a public rate for every traveller.",
     access: "Queen Street 与 Commercial Bay 步行范围；位置评分 9.5",
     accessEn: "Walkable to Queen Street and Commercial Bay; location score 9.5",
     parking: "市中心付费停车；本段无租车需求。",
@@ -398,14 +404,14 @@ export const aucklandCityHotels = [
       },
     ],
     strengths: ["Standard Queen 明确适合 2 人", "位置评分 9.5", "步行可达 Queen Street 与 Commercial Bay"],
-    cautions: ["10 月 8—10 日精确总价待重新核验，日期不同的旧两晚报价不可比较", "最便宜大床房仅 20 m²"],
+    cautions: ["10 月 8—10 日的精确总价为 IHG One Rewards 会员专属价；非会员公开总价未在结算前复现", "最便宜大床房仅 20 m²"],
     strengthsEn: [
       "A clearly identified Standard Queen category for two guests",
       "9.5 location score",
       "Walkable to Queen Street and Commercial Bay",
     ],
     cautionsEn: [
-      "The exact 8–10 Oct total needs a fresh check; the old 7–9 Oct quote is not comparable",
+      "The exact 8–10 Oct total is an IHG One Rewards member rate; a public non-member total was not reproduced before checkout",
       "The recommended Standard Queen room is compact at 20 m²",
     ],
     ratings: [
@@ -447,14 +453,35 @@ export const aucklandCityHotels = [
       },
     ],
     availabilityNote:
-      "2026-08-01 已打开带入 10 月 8—10 日、2 人 1 间的 IHG 入口，但当前网络响应被 IHG 边缘服务拒绝，未返回可复现库存、总价或条款。10 月 7—9 日的旧快照日期不同，不用于当前比较。",
+      "2026-08-03 已在 IHG 官网按 2026 年 10 月 8—10 日、2 人 1 间核验 1 Queen Standard With Free Breakfast：IHG One Rewards 会员专享 Best Flexible Rate 含税总价 NZD 530.10，含早餐；10 月 7 日当地时间 18:00 前可免费取消，未要求预付。页面还列出抵达时全额住宿预付款（Security Deposit）；因此“无预付”只指订房时无订金，不等于入住时不会扣款。该精确总价要求免费加入 IHG One Rewards，不能当作非会员公开价；非会员总价未在结算前复现。",
     availabilityNoteEn:
-      "The IHG entry carrying 8–10 Oct, two adults and one room was opened on 1 Aug 2026, but the current network response was rejected by IHG's edge service before reproducible inventory, a total or terms were returned. The old 7–9 Oct snapshot has different dates and is not used for the current comparison.",
+      "IHG was checked on 3 Aug 2026 for the 1 Queen Standard With Free Breakfast, 8–10 Oct 2026 and two guests. Its IHG One Rewards member-only Best Flexible Rate totalled NZD 530.10 including tax and breakfast; it is free to cancel before 6:00 pm local hotel time on 7 Oct, with no booking-time deposit required. The page also lists full accommodation prepayment on arrival as a security deposit, so no booking-time deposit does not mean no charge at arrival. This exact total requires free IHG One Rewards enrolment and is not presented as a public non-member price; a non-member total was not reproduced before checkout.",
     rateSnapshots: {
       "2026-10-08/2026-10-10": {
-        availabilityChecked: true,
-        roomKey: "standard-queen",
-        quotedAt: "2026-08-01",
+        roomRates: {
+          "standard-queen": {
+            official: {
+              source: "IHG 官网 · IHG One Rewards 会员价",
+              sourceEn: "IHG direct website · IHG One Rewards member rate",
+              roomKey: "standard-queen",
+              room: "1 Queen Standard With Free Breakfast · 2 晚",
+              roomEn: "1 Queen Standard With Free Breakfast · two nights",
+              nonRefundableNzd: null,
+              refundableNzd: 530.1,
+              cancelUntil: "2026-10-07 18:00 前（酒店当地时间）免费取消",
+              cancelUntilEn: "Free cancellation before 6:00 pm local hotel time on 7 Oct 2026",
+              refundableRateLabel: "IHG One Rewards 会员专享 Best Flexible Rate · 含税与早餐",
+              refundableRateLabelEn: "IHG One Rewards member-only Best Flexible Rate · tax and breakfast included",
+              payment: "订房时无需订金；页面另列抵达时全额住宿预付款（Security Deposit）",
+              paymentEn: "No booking-time deposit; the page separately lists full accommodation prepayment on arrival as a security deposit",
+              breakfast: "含早餐",
+              breakfastEn: "Breakfast included",
+              memberNote: "该精确总价要求免费加入 IHG One Rewards；非会员公开总价未在结算前复现。",
+              memberNoteEn: "This exact total requires free IHG One Rewards enrolment; a public non-member total was not reproduced before checkout.",
+              quotedAt: "2026-08-03",
+            },
+          },
+        },
       },
       "2026-10-07/2026-10-09": {
         roomRates: {
@@ -477,17 +504,17 @@ export const aucklandCityHotels = [
         },
       },
     },
-    officialStatus: "needs-recheck",
+    officialStatus: "exact-rate-verified",
     officialStatusDetail:
-      "IHG 官网与 Standard Queen 房型基础信息已核验。2026-08-01 打开已带入 10 月 8—10 日、2 人 1 间的 IHG 入口，但当前网络响应被 IHG 边缘服务拒绝，未取得可复现的库存、含税总价、早餐、付款或取消条款；旧记录仅对应 10 月 7—9 日。",
+      "2026-08-03 已在 IHG 官网按 2026 年 10 月 8—10 日、2 人 1 间核验 1 Queen Standard With Free Breakfast：IHG One Rewards 会员专享 Best Flexible Rate 含税总价 NZD 530.10，含早餐，10 月 7 日当地时间 18:00 前可免费取消。订房时无需订金，但页面另列抵达时全额住宿预付款。该精确总价要求免费加入 IHG One Rewards；非会员公开总价未在结算前复现。",
     officialStatusEn:
-      "The IHG site and Standard Queen basics were checked. On 1 Aug 2026 the entry carrying 8–10 Oct, two adults and one room was opened, but the current network response was rejected by IHG's edge service before reproducible inventory, a tax-inclusive total, breakfast, payment or cancellation terms were returned. The old record covers only 7–9 Oct.",
-    officialVerifiedAt: "2026-08-01",
+      "Verified on IHG on 3 Aug 2026 for the 1 Queen Standard With Free Breakfast, 8–10 Oct 2026 and two guests: the IHG One Rewards member-only Best Flexible Rate totalled NZD 530.10 including tax and breakfast, and is free to cancel before 6:00 pm local hotel time on 7 Oct. No booking-time deposit is required, but the page separately lists full accommodation prepayment on arrival. This exact total requires free IHG One Rewards enrolment; a public non-member total was not reproduced before checkout.",
+    officialVerifiedAt: "2026-08-03",
     officialLinkRetainsSearch: true,
     officialLinkLabel: "打开已带入当前日期与人数的 IHG 入口",
     officialLinkLabelEn: "Open the IHG entry with current dates and guests",
     officialLinkNote:
-      "入口带入 2026 年 10 月 8—10 日、2 位成人、1 间；若页面正常加载，请核对 Standard Queen 的两晚含税总价、早餐、取消截止时间和扣款规则。",
+      "入口带入 2026 年 10 月 8—10 日、2 位成人、1 间；显示的精确总价为会员价，付款前请复核会员资格、取消截止与抵达时的扣款规则。",
     officialLinkNoteEn:
       "The entry carries 8–10 Oct 2026, two adults and one room. If it loads normally, verify the Standard Queen two-night tax-inclusive total, breakfast, cancellation deadline and charge terms.",
     officialUrl:

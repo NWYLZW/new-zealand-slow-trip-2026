@@ -362,17 +362,21 @@ for (const [group, hotels] of Object.entries(hotelGroups)) {
     (hotel) => !hotel.excludedByPreference && (!hotel.isAirbnb || hotel.isVerifiedListing),
   );
   const selectableHotels = visibleHotels.filter(
-    (hotel) => !hotel.isResearchPlaceholder && hotel.officialStatus !== "exact-date-unavailable",
+    (hotel) => !hotel.isResearchPlaceholder && hotel.officialStatus === "exact-rate-verified",
   );
   if (visibleHotels.length < minimumResearchedOptionsPerRegion) {
     errors.push(`${group}: requires at least ${minimumResearchedOptionsPerRegion} researched visible options; found ${visibleHotels.length}`);
   }
+  // A required type may genuinely be unavailable for the target dates. Count all
+  // researched options here, while the UI separately excludes exact-date-unavailable
+  // stays from the selectable set. This preserves category coverage without forcing
+  // a stale or fabricated available hotel.
   const representedStayTypes = new Set(
-    selectableHotels.flatMap((hotel) => hotel.stayTypes ?? [hotel.stayType]).filter(Boolean),
+    visibleHotels.flatMap((hotel) => hotel.stayTypes ?? [hotel.stayType]).filter(Boolean),
   );
   for (const requiredStayType of ["hotel", "home"]) {
     if (!representedStayTypes.has(requiredStayType)) {
-      errors.push(`${group}: selectable options must include at least one ${requiredStayType}; found ${[...representedStayTypes].join(", ") || "none"}`);
+      errors.push(`${group}: researched options must include at least one ${requiredStayType}; found ${[...representedStayTypes].join(", ") || "none"}`);
     }
   }
 

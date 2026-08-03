@@ -57,13 +57,13 @@ export const mountCookHotels = [
       cautions: [
         "明确位于 Lake Tekapo，不在 Aoraki / Mount Cook Village",
         "到 Mount Cook Airport 约 99 公里，到 Hooker Valley 起点约 105 公里",
-        "2026 年 10 月 5—6 日、2 人的实时库存、含税总价、早餐、付款和退改尚未复现",
+        "2026 年 10 月 5—6 日、2 人的官方结果为无房；若改日期或人数，须重新查询实时库存、含税总价、早餐、付款和退改",
         "官网 TripAdvisor schema 当前仅 3.5 / 5，需结合 4,573 条评价阅读具体反馈",
       ],
       cautionsEn: [
         "It is explicitly in Lake Tekapo, not Aoraki / Mount Cook Village",
         "Mount Cook Airport is about 99 km away and the Hooker Valley trailhead about 105 km away",
-        "Live inventory, tax-inclusive total, breakfast, payment and cancellation terms for 5–6 Oct 2026 and two guests were not reproduced",
+        "The official result for 5–6 Oct 2026 and two guests is sold out; if dates or guests change, recheck live inventory, the tax-inclusive total, breakfast, payment and cancellation terms",
         "The official-site TripAdvisor schema currently shows only 3.5 / 5, so read the detail behind its 4,573 reviews",
       ],
       ratings: [
@@ -139,30 +139,24 @@ export const mountCookHotels = [
       ],
       hotelImages: [],
       availabilityNote:
-        "2026-08-02 已核验 Peppers 官网住宿身份、Lake Tekapo 地址、Deluxe Hotel Room 房型资料、设施、图片、免费停车和官网 TripAdvisor schema；但未能复现 2026 年 10 月 5—6 日、2 位成人的可订房、含税总价、早餐、付款与退改条件，状态诚实保留为 needs-recheck。",
+        "2026-08-03 已核验 Peppers 官网住宿身份、Lake Tekapo 地址、Deluxe Hotel Room 房型资料、设施、图片、免费停车和官网 TripAdvisor schema；随后在官网搜索表单选择 Lake Tekapo 的 Peppers Bluewater Resort、2026 年 10 月 5—6 日、2 位成人、0 名儿童和 0 名婴儿。结果页正常返回房型列表且均明确标为“Sold Out”；列表末尾的 Deluxe Lake View Hotel Room（最多 2 人、22 平方米）亦为 Sold Out。故本次精确一晚条件下官方无房；未返回总价、早餐、付款或退改条款，也不将此结论外推到其他日期、人数或房型。",
       availabilityNoteEn:
-        "On 2 Aug 2026 the Peppers site was checked for property identity, its Lake Tekapo address, Deluxe Hotel Room details, facilities, imagery, free parking and the embedded TripAdvisor schema. Exact inventory, a tax-inclusive total, breakfast, payment and cancellation terms for two adults on 5–6 Oct 2026 could not be reproduced, so the status remains needs-recheck.",
-      rateSnapshots: {
-        "2026-10-05/2026-10-06": {
-          availabilityChecked: true,
-          roomKey: "deluxe-hotel-room",
-          quotedAt: "2026-08-02",
-        },
-      },
+        "On 3 Aug 2026 the Peppers site was checked for property identity, its Lake Tekapo address, Deluxe Hotel Room details, facilities, imagery, free parking and the embedded TripAdvisor schema. The official search form was then set to Peppers Bluewater Resort in Lake Tekapo, 5–6 Oct 2026, two adults, zero children and zero infants. Its results page loaded normally and every returned room category was explicitly marked “Sold Out”; the final Deluxe Lake View Hotel Room (maximum two guests, 22 square metres) was also sold out. The official result is therefore unavailable for this exact one-night condition. No total, breakfast, payment or cancellation terms were returned, and this conclusion is not extended to other dates, guest counts or room types.",
+      rateSnapshots: {},
       research: sharedSocial.mountCook,
-      officialStatus: "needs-recheck",
+      officialStatus: "exact-date-unavailable",
       officialStatusDetail:
-        "2026-08-02 官网静态页面与房型 API 可核验酒店、地址、房型和设施，但官网搜索没有提供可保存并独立复现的 2026 年 10 月 5—6 日、2 人库存或报价；因此不声称可订或有精确价格，付款前必须重新查询。",
+        "2026-08-03 已在 Peppers 官方预订页选择 Lake Tekapo 的 Peppers Bluewater Resort、2026 年 10 月 5—6 日、2 位成人、0 名儿童和 0 名婴儿。结果页正常加载，所有返回房型均明确显示“Sold Out”；含可住 2 人、22 平方米的 Deluxe Lake View Hotel Room。故该精确一晚条件官方无房；未外推至其他日期、人数或房型。",
       officialStatusEn:
-        "The official static pages and room API confirmed the property, address, room type and facilities on 2 Aug 2026, but the official search did not expose independently reproducible inventory or a quote for two guests on 5–6 Oct 2026. No availability or exact price is claimed; recheck before payment.",
-      officialVerifiedAt: "2026-08-02",
+        "On 3 Aug 2026, Peppers' official booking page was set to Peppers Bluewater Resort in Lake Tekapo, 5–6 Oct 2026, two adults, zero children and zero infants. The results page loaded normally and every returned room category explicitly showed “Sold Out”, including the 22-square-metre Deluxe Lake View Hotel Room for up to two guests. The official result is unavailable for this exact one-night condition only; it is not extended to other dates, guest counts or room types.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl: "https://www.peppers.co.nz/bluewater/",
-      officialBookingUrl: "https://www.peppers.co.nz/bluewater/?buildingid=4466&arrivaldate=2026-10-05&nights=1",
+      officialBookingUrl: "https://www.peppers.com.au/availability/?clr=1",
       officialLinkRetainsSearch: false,
-      officialLinkLabel: "打开官网并重选日期",
-      officialLinkLabelEn: "Open official site and reselect dates",
-      officialLinkNote: "官网链接含酒店和到店日期参数，但不能稳定保留 2 位成人及完整搜索结果；打开后请重选 2026 年 10 月 5—6 日、2 位成人、1 间。",
-      officialLinkNoteEn: "The official link carries the property and arrival date but does not reliably retain two adults or the complete results. Reselect 5–6 Oct 2026 for two adults and one room after opening.",
+      officialLinkLabel: "打开 Peppers 官方预订入口并重选条件",
+      officialLinkLabelEn: "Open the Peppers official booking entry and reselect the stay",
+      officialLinkNote: "2026-08-03 已确认原官网链接中的酒店／到店日期参数会被页面重置为默认 8 月条件；此处改为官网导航实际指向的 Peppers 官方预订入口。打开后请选择 Lake Tekapo 的 Peppers Bluewater Resort、2026 年 10 月 5—6 日、2 位成人、1 间，再核对结果页的库存、含税总价、早餐、付款与退改。",
+      officialLinkNoteEn: "On 3 Aug 2026, the old property/arrival-date parameters were confirmed to reset to the site's default August search. This link now uses the Peppers booking entry linked from the official navigation. Select Peppers Bluewater Resort, Lake Tekapo; 5–6 Oct 2026; two adults; and one room, then verify inventory, the tax-inclusive total, breakfast, payment and cancellation terms on the results page.",
       position: [-44.0031256720704, 170.47399520874],
       mapQuery: "Peppers Bluewater Resort Lake Tekapo",
     },
@@ -260,26 +254,27 @@ export const mountCookHotels = [
       ],
       hotelImages: [],
       availabilityNote:
-        "已在冬宫官网预订成功：确认号已私下保存；2026 年 10 月 5 日入住、10 月 6 日退房，2 位成人；Special Bed and Breakfast Save $10 套餐，总价 NZD 504（含税），早餐在 The Hermitage 主楼 Alpine Restaurant。",
+        "2026-08-03 冬宫官网预订引擎已按 2026 年 10 月 5—6 日、2 位成人、BBSAVE10 搜索：Mt Cook Motel Studio Queen 可订，页面显示仅余 4 间、1 晚平均价 NZD 504；由于本段仅 1 晚，整段总额按 1 × NZD 504 计为 NZD 504。取消政策窗明确要求预订时全额支付 NZD 504，入住前 48 小时前可取消、2026-10-03 后取消收 NZD 504。公开搜索页未拆分税费或单独展示早餐；本已订订单的 2026-07-28 官方确认列总价含税且含 2 位成人早餐，确认号已私下保存。",
       availabilityNoteEn:
-        "Booked successfully on The Hermitage website for 5–6 Oct 2026 and two adults; the confirmation number is stored privately. The Special Bed and Breakfast Save $10 package totals NZD 504 including tax, with breakfast served at Alpine Restaurant in The Hermitage main building.",
+        "On 3 Aug 2026, The Hermitage official booking engine was searched for 5–6 Oct 2026, two adults and BBSAVE10: Mt Cook Motel Studio Queen was available, with four rooms left and an average nightly rate of NZD 504. As this is a one-night stay, the stay total is calculated as 1 × NZD 504 = NZD 504. Its policy window states full payment of NZD 504 at booking, cancellation up to 48 hours before arrival, and an NZD 504 charge after 3 Oct 2026. The public search did not itemise tax or separately state breakfast; the official confirmation for the existing booking on 28 Jul 2026 records a tax-inclusive total and breakfast for two, with its confirmation number stored privately.",
       rateSnapshots: {
         "2026-10-05/2026-10-06": {
           roomRates: {
             "mt-cook-motel-studio-queen": {
               official: {
-                source: "冬宫官网",
+                source: "冬宫官网预订引擎",
+                sourceEn: "The Hermitage official booking engine",
                 roomKey: "mt-cook-motel-studio-queen",
                 room: "Mt Cook Motel Studio Queen · 20 m²",
                 roomEn: "Mt Cook Motel Studio Queen · 20 m²",
                 refundableNzd: 504,
                 nonRefundableNzd: null,
-                cancelUntil: "入住前 48 小时（酒店当地时间）",
-                payment: "已全额支付；确认号已私下保存；进入入住前 48 小时后取消收 NZD 504",
-                paymentEn: "Paid in full; the confirmation number is stored privately; cancellation within 48 hours of arrival incurs the full NZD 504 charge",
-                breakfast: "含 2 位成人自助早餐；在 The Hermitage 主楼 Alpine Restaurant 用餐",
-                breakfastEn: "Buffet breakfast for two adults included, served at Alpine Restaurant in The Hermitage main building",
-                quotedAt: "2026-07-28",
+                cancelUntil: "入住前 48 小时；官方政策窗写明 2026-10-03 后取消收 NZD 504，未给出具体时刻",
+                payment: "公开结果：预订时全额支付 NZD 504（2026-08-03 政策窗）；已订订单的官方确认显示已全额支付，确认号私下保存",
+                paymentEn: "Public result: full payment of NZD 504 at booking (policy window checked 3 Aug 2026); the official confirmation for the existing booking records full payment, with its confirmation number stored privately",
+                breakfast: "已订订单的 2026-07-28 官方确认：含 2 位成人自助早餐，在 The Hermitage 主楼 Alpine Restaurant；2026-08-03 公开搜索页未单独展示早餐条款",
+                breakfastEn: "Official confirmation for the existing booking on 28 Jul 2026: buffet breakfast for two at Alpine Restaurant in The Hermitage main building; the public search page on 3 Aug 2026 did not state breakfast separately",
+                quotedAt: "2026-08-03",
               },
             },
           },
@@ -288,12 +283,13 @@ export const mountCookHotels = [
       research: sharedSocial.mountCook,
       officialStatus: "exact-rate-verified",
       officialStatusDetail:
-        "冬宫官网订单已完成：2026 年 10 月 5—6 日、2 位成人、Mt Cook Motel Studio Queen、含双人早餐，含税总价 NZD 504；确认号已私下保存。",
+        "2026-08-03 冬宫官网预订引擎已复现 2026 年 10 月 5—6 日、2 位成人、Mt Cook Motel Studio Queen、BBSAVE10 的 1 晚平均价 NZD 504；本段为 1 晚，因此整段总额按 1 × NZD 504 计为 NZD 504；页面显示仅余 4 间。政策窗明确为预订时全额支付、入住前 48 小时前可取消，2026-10-03 后取消收 NZD 504。公开页未拆分税费或早餐；已订订单的 2026-07-28 官方确认另列总价含税、含双人早餐，确认号私下保存。",
       officialStatusEn:
-        "Booked direct for 5–6 Oct 2026, two adults, Mt Cook Motel Studio Queen with breakfast for two, NZD 504 tax-inclusive; confirmation number stored privately.",
-      officialVerifiedAt: "2026-07-28",
+        "On 3 Aug 2026, The Hermitage official booking engine reproduced an average nightly rate of NZD 504 for 5–6 Oct 2026, two adults, Mt Cook Motel Studio Queen and BBSAVE10. As the stay is one night, the total is calculated as 1 × NZD 504 = NZD 504; it showed four rooms left. Its policy window states full payment at booking, cancellation up to 48 hours before arrival, and an NZD 504 charge after 3 Oct 2026. The public page did not itemise tax or breakfast; the official confirmation for the existing booking on 28 Jul 2026 separately records a tax-inclusive total and breakfast for two, with the confirmation number stored privately.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl:
         "https://book.hermitage.co.nz/onecart/wbe/room/20104/hermitage/2026-10-05/2026-10-06/BBSAVE10/2",
+      officialLinkRetainsSearch: true,
       position: [-43.7363846, 170.0987676],
       mapQuery: "Mt Cook Lodge & Motels New Zealand",
     },
@@ -989,8 +985,8 @@ export const mountCookHotels = [
       id: "airbnb-aoraki-aurora-holiday-home",
       stayType: "home",
       name: "Aoraki Aurora Holiday Home · Airbnb",
-      recommendation: "Airbnb 整栋舒适度 · 已核验",
-      recommendationEn: "Verified whole-home Airbnb comfort",
+      recommendation: "Airbnb 整栋舒适度 · 目标日期无房",
+      recommendationEn: "Whole-home comfort · unavailable for the target dates",
       summary:
         "Twizel 镇中心门口的整栋三卧室民居；民宿不限制床位数量，因此两张 King 床和额外双层床不构成排除条件。两人可享完整厨房、洗衣烘干、两间浴室和更大公共空间，代价是价格高于独立客房，且 Big Sky 后仍需夜间开回 Twizel。",
       summaryEn:
@@ -1022,35 +1018,31 @@ export const mountCookHotels = [
         },
       ],
       strengths: [
-        "10 月 5 日精确日期、2 人已核验可订",
         "整栋三卧室；两间 King 卧室",
-        "4.98 分、82 条评价、房客推荐、超赞房东",
+        "4.98 分、86 条评价、房客推荐、超赞房东",
         "完整厨房、洗衣机、烘干机和两间浴室",
         "密码钥匙盒自助入住",
-        "9 月 30 日前免费取消、现在付 NZD 0",
       ],
       strengthsEn: [
-        "The exact 5 October stay for two guests was checked as available",
         "A whole three-bedroom home with two king bedrooms",
-        "Rated 4.98 from 82 reviews, with Guest Favourite and Superhost badges",
+        "Rated 4.98 from 86 reviews, with Guest Favourite and Superhost badges",
         "Full kitchen, washer, dryer and two bathrooms",
         "Self check-in through a lockbox",
-        "The checked offer allowed free cancellation until 30 September with NZD 0 due immediately",
       ],
       cautions: [
-        "含全部费用一晚 NZD 362，高于低价独立客房",
+        "Airbnb 于 2026-08-03 明确显示目标日期 2 人不可出租，不能作为当前可选项",
         "Big Sky 后需夜间驾驶约 50—55 分钟",
         "次晨直升机候补需提前近 1 小时出发",
         "房源未报告一氧化碳报警器",
       ],
       cautionsEn: [
-        "The checked all-in total was NZD 362 for one night, above the lower-cost private-room options",
+        "Airbnb explicitly showed the listing unavailable for two guests on the target dates on 3 Aug 2026, so it is not currently selectable",
         "The return after Big Sky is about a 50–55-minute night drive",
         "A next-morning helicopter backup requires leaving nearly an hour early",
         "The listing did not report a carbon-monoxide alarm",
       ],
       ratings: [
-        { platform: "Airbnb", score: "4.98 / 5", reviews: "82 条 · Guest favourite · Superhost" },
+        { platform: "Airbnb", score: "4.98 / 5", reviews: "86 条 · Guest favourite · Superhost" },
       ],
       roomTypes: [
         {
@@ -1082,31 +1074,26 @@ export const mountCookHotels = [
       ],
       hotelImages: [],
       availabilityNote:
-        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：含全部费用总价 NZD 362；现在付 NZD 0，9 月 30 日前免费取消。",
+        "2026-08-03 Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：具体房源页明确显示“该房源在指定日期不可出租”。不再展示旧报价；可改看其他房源或换日期。",
       availabilityNoteEn:
-        "Checked on Airbnb for 5–6 Oct 2026 and two guests: NZD 362 all-in, NZD 0 due immediately, with free cancellation until 30 September. Recheck live inventory and the final checkout total before booking.",
-      rateSnapshots: {
-        "2026-10-05/2026-10-06": {
-          source: "Airbnb",
-          roomKey: "whole-three-bedroom-home",
-          room: "整栋三卧室民居 · 2 张 King 床 + 双层床",
-          nonRefundableNzd: null,
-          refundableNzd: 362,
-          cancelUntil: "2026-09-30",
-          payment: "现在付 NZD 0；Airbnb 页面提示暂不会扣款",
-          breakfast: "带完整厨房，不含早餐",
-          quotedAt: "2026-07-27",
-        },
-      },
+        "Checked on the concrete Airbnb listing for 5–6 Oct 2026 and two guests on 3 Aug 2026: it explicitly stated that the listing is unavailable for the selected dates. The old price is no longer shown; choose another listing or dates.",
+      rateSnapshots: {},
       research: sharedSocial.mountCook,
-      officialStatus: "needs-recheck",
+      officialStatus: "exact-date-unavailable",
       officialStatusDetail:
-        "2026-07-27 已在 Airbnb 具体房源页按 2026 年 10 月 5—6 日、2 人核验，结算页显示含全部费用 NZD 362、现在付 NZD 0、9 月 30 日前免费取消。Airbnb 库存与价格会动态变化，付款前必须重新核对。",
+        "2026-08-03 已在 Airbnb 具体房源页核验 2026 年 10 月 5—6 日、2 人；页面明确显示“该房源在指定日期不可出租”。这是目标条件下的明确无库存信号，不是加载失败或未取得报价。",
       officialStatusEn:
-        "Checked on the concrete Airbnb listing on 27 Jul 2026 for 5–6 Oct 2026 and two guests. Checkout showed NZD 362 all-in, NZD 0 due immediately and free cancellation until 30 September. Airbnb inventory and pricing are dynamic and must be rechecked before payment.",
-      officialVerifiedAt: "2026-07-27",
+        "The concrete Airbnb listing was checked on 3 Aug 2026 for 5–6 Oct 2026 and two guests. It explicitly stated that the listing is unavailable for the selected dates. This is an explicit target-condition inventory signal, not a load failure or an absent quote.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl:
         "https://zh.airbnb.com/rooms/1509743820199528739?adults=2&check_in=2026-10-05&check_out=2026-10-06",
+      officialLinkRetainsSearch: true,
+      officialLinkLabel: "打开 Airbnb · 目标日期无房",
+      officialLinkLabelEn: "Open Airbnb · unavailable for target dates",
+      officialLinkNote:
+        "链接保留 2026 年 10 月 5—6 日及 2 位客人的查询条件；2026-08-03 该具体房源明确显示目标日期不可出租。",
+      officialLinkNoteEn:
+        "The link preserves the 5–6 Oct 2026 and two-guest query; this concrete listing explicitly showed unavailable for the target dates on 3 Aug 2026.",
       isAirbnb: true,
       isVerifiedListing: true,
       position: [-44.258, 170.098],
@@ -1117,12 +1104,12 @@ export const mountCookHotels = [
       stayType: "home",
       name: "Pukaki Air Lodge 高级客房 · Airbnb",
       nameEn: "Pukaki Air Lodge Superior Room · Airbnb",
-      recommendation: "Pukaki 景观与取消政策 · 已核验",
-      recommendationEn: "Verified Pukaki stay with flexible cancellation",
+      recommendation: "Pukaki 景观独立客房 · 目标日期无房",
+      recommendationEn: "Pukaki-view private room · unavailable for target dates",
       summary:
-        "Airbnb 精确日期搜索中真实可订的 Pukaki 独立客房。位置比 Twizel 更靠近进山公路，4.93 分且 10 月 4 日前仍可免费取消，适合把天气风险留到最后；但它仍不在库克山村，Big Sky 后需要夜间驾驶。",
+        "Pukaki Airfield 的独立客房，位置比 Twizel 更靠近进山公路，4.93 分且有 58 条评价；但 Airbnb 在 2026 年 10 月 5—6 日、2 人条件下明确显示不可出租，不能作为本段可订候选。它仍不在库克山村，Big Sky 后需要夜间驾驶。",
       summaryEn:
-        "A verified private room in Pukaki with a strong rating and unusually late free cancellation, but still outside Mount Cook Village.",
+        "A private room at Pukaki Airfield with a strong rating, but Airbnb explicitly reports it unavailable for the 5–6 October stay for two guests. It also remains outside Mount Cook Village.",
       access: "Pukaki；Airbnb 预订前只公开大致位置",
       accessEn: "Pukaki; Airbnb shows only an approximate location before booking",
       parking: "房源内免费停车；下单前复核准确入口",
@@ -1150,18 +1137,12 @@ export const mountCookHotels = [
         },
       ],
       strengths: [
-        "10 月 5—6 日、2 人精确日期已核验可订",
         "4.93 分、58 条评价、房客推荐、超赞房东",
-        "含全部费用 NZD 386",
-        "10 月 4 日前免费取消、现在付 NZD 0",
         "Pukaki 区域比 Twizel 更靠近库克山进山方向",
         "Mount Cook 山景、完整共用厨房、客用洗衣房和自助早餐",
       ],
       strengthsEn: [
-        "The exact 5–6 October stay for two guests was checked as available",
         "Rated 4.93 from 58 reviews, with Guest Favourite and Superhost badges",
-        "The checked all-in total was NZD 386",
-        "The checked offer allowed free cancellation until 4 October with NZD 0 due immediately",
         "Pukaki is closer to the Mount Cook access road than central Twizel",
         "Mount Cook views, a full shared kitchen, guest laundry and self-service breakfast",
       ],
@@ -1206,31 +1187,26 @@ export const mountCookHotels = [
       ],
       hotelImages: [],
       availabilityNote:
-        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：含全部费用总价 NZD 386；现在付 NZD 0，10 月 4 日前免费取消。",
+        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：该房源明确显示“指定日期不可出租”，因此没有可复现报价。",
       availabilityNoteEn:
-        "Checked on Airbnb for 5–6 Oct 2026 and two guests: NZD 386 all-in, NZD 0 due immediately, with free cancellation until 4 October. Recheck live inventory and the final checkout total before booking.",
-      rateSnapshots: {
-        "2026-10-05/2026-10-06": {
-          source: "Airbnb",
-          roomKey: "pukaki-air-lodge-private-room",
-          room: "Pukaki Air Lodge 高级独立客房",
-          nonRefundableNzd: null,
-          refundableNzd: 386,
-          cancelUntil: "2026-10-04",
-          payment: "现在付 NZD 0",
-          breakfast: "含自助早餐；住客反馈有鸡蛋、酸奶、麦片与面包等，具体供应下单前复核",
-          quotedAt: "2026-07-27",
-        },
-      },
+        "Checked on Airbnb for 5–6 Oct 2026 and two guests: the concrete listing explicitly reports it unavailable for the selected dates, so no reproducible quote is available.",
+      rateSnapshots: {},
       research: sharedSocial.mountCook,
-      officialStatus: "needs-recheck",
+      officialStatus: "exact-date-unavailable",
       officialStatusDetail:
-        "2026-07-27 已在 Airbnb 具体房源页按 2026 年 10 月 5—6 日、2 人核验，结算页显示含全部费用 NZD 386、现在付 NZD 0、10 月 4 日前免费取消。Airbnb 库存与价格会动态变化，付款前必须重新核对。",
+        "2026-08-03 已在 Airbnb 具体房源页按 2026 年 10 月 5—6 日、2 人核验；页面明确显示“该房源在指定日期不可出租”。这是目标条件下的无房结论，不是加载失败。",
       officialStatusEn:
-        "Checked on the concrete Airbnb listing on 27 Jul 2026 for 5–6 Oct 2026 and two guests. Checkout showed NZD 386 all-in, NZD 0 due immediately and free cancellation until 4 October. Airbnb inventory and pricing are dynamic and must be rechecked before payment.",
-      officialVerifiedAt: "2026-07-27",
+        "Checked on the concrete Airbnb listing on 3 Aug 2026 for 5–6 Oct 2026 and two guests. The page explicitly states that the listing is unavailable for the selected dates. This is a target-condition no-availability result, not a loading failure.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl:
         "https://zh.airbnb.com/rooms/49906407?adults=2&check_in=2026-10-05&check_out=2026-10-06",
+      officialLinkRetainsSearch: true,
+      officialLinkLabel: "打开 Airbnb · 目标日期无房",
+      officialLinkLabelEn: "Open Airbnb · unavailable for target dates",
+      officialLinkNote:
+        "链接保留 2026 年 10 月 5—6 日及 2 位客人的查询条件；2026-08-03 该具体房源明确显示目标日期不可出租。",
+      officialLinkNoteEn:
+        "The link preserves the 5–6 Oct 2026 and two-guest query; this concrete listing explicitly showed unavailable for the target dates on 3 Aug 2026.",
       isAirbnb: true,
       isVerifiedListing: true,
       position: [-44.16, 170.12],
@@ -1241,12 +1217,12 @@ export const mountCookHotels = [
       stayType: "home",
       name: "Ben Ohau 现代乡村度假屋 · Airbnb",
       nameEn: "Modern Ben Ohau Rural Retreat · Airbnb",
-      recommendation: "山景乡村民宿 · 已核验",
-      recommendationEn: "Verified Ben Ohau rural retreat",
+      recommendation: "山景乡村民宿 · 目标日期无房",
+      recommendationEn: "Ben Ohau rural retreat · unavailable for target dates",
       summary:
-        "小红书偏爱的 Ben Ohau / Twizel 山景乡村型民宿中，一套已在 Airbnb 真实详情页核验当日可订的整套客房。评价量明显高于一般景观新房源，额外卧室不作为排除条件；代价是本次 Big Sky 与次晨直升机都要长距离往返。",
+        "Ben Ohau / Twizel 山景乡村型民宿中的一套具体 Airbnb 整套客房；评价量明显高于一般景观新房源，额外卧室不作为排除条件。2026 年 10 月 5—6 日、2 人在 Airbnb 已明确显示不可出租；代价本来还包括 Big Sky 与次晨直升机的长距离往返。",
       summaryEn:
-        "A verified whole guesthouse in rural Ben Ohau with strong reviews and mountain-country appeal, but a long drive for the evening and next-morning plans.",
+        "A concrete whole-guesthouse listing in rural Ben Ohau with strong reviews and mountain-country appeal. Airbnb explicitly shows it unavailable for 5–6 Oct 2026 for two guests; it would also require a long drive for the evening and next-morning plans.",
       access: "Ben Ohau 乡村区域；Airbnb 预订前只公开大致位置",
       accessEn: "Rural Ben Ohau; Airbnb shows only an approximate location before booking",
       parking: "房源内免费停车；下单前复核入口与夜间照明",
@@ -1274,20 +1250,14 @@ export const mountCookHotels = [
         },
       ],
       strengths: [
-        "10 月 5—6 日、2 人精确日期已核验可订",
         "整套两卧室客房；民宿不限制床位数量",
         "4.86 分、236 条评价、房客推荐、超赞房东",
-        "含全部费用 NZD 528",
-        "9 月 30 日前免费取消、现在付 NZD 0",
         "Ben Ohau 乡村景观和私密性强",
         "完整厨房、洗衣机、热泵供暖、空调和密码盒自助入住",
       ],
       strengthsEn: [
-        "The exact 5–6 October stay for two guests was checked as available",
         "A whole two-bedroom guesthouse; extra beds are acceptable for a homestay option",
         "Rated 4.86 from 236 reviews, with Guest Favourite and Superhost badges",
-        "The checked all-in total was NZD 528",
-        "The checked offer allowed free cancellation until 30 September with NZD 0 due immediately",
         "Strong privacy and rural Ben Ohau scenery",
         "Full kitchen, washer, heat-pump heating, air conditioning and lockbox self check-in",
       ],
@@ -1333,31 +1303,26 @@ export const mountCookHotels = [
       ],
       hotelImages: [],
       availabilityNote:
-        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：含全部费用总价 NZD 528；现在付 NZD 0，9 月 30 日前免费取消。",
+        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：该房源明确显示“指定日期不可出租”，因此没有可复现报价。此前 7 月报价不再代表当前库存。",
       availabilityNoteEn:
-        "Checked on Airbnb for 5–6 Oct 2026 and two guests: NZD 528 all-in, NZD 0 due immediately, with free cancellation until 30 September. Recheck live inventory and the final checkout total before booking.",
-      rateSnapshots: {
-        "2026-10-05/2026-10-06": {
-          source: "Airbnb",
-          roomKey: "ben-ohau-two-bedroom-guesthouse",
-          room: "整套两卧室乡村客房",
-          nonRefundableNzd: null,
-          refundableNzd: 528,
-          cancelUntil: "2026-09-30",
-          payment: "现在付 NZD 0",
-          breakfast: "不含早餐",
-          quotedAt: "2026-07-27",
-        },
-      },
+        "Checked on Airbnb for 5–6 Oct 2026 and two guests: the concrete listing explicitly reports it unavailable for the selected dates, so no reproducible quote is available. The July quote no longer represents current inventory.",
+      rateSnapshots: {},
       research: sharedSocial.mountCook,
-      officialStatus: "needs-recheck",
+      officialStatus: "exact-date-unavailable",
       officialStatusDetail:
-        "2026-07-27 已在 Airbnb 具体房源页按 2026 年 10 月 5—6 日、2 人核验，结算页显示含全部费用 NZD 528、现在付 NZD 0、9 月 30 日前免费取消。Airbnb 库存与价格会动态变化，付款前必须重新核对。",
+        "2026-08-03 已在 Airbnb 具体房源页按 2026 年 10 月 5—6 日、2 人核验；页面明确显示“该房源在指定日期不可出租”。这是目标条件下的无房结论，不是加载失败。",
       officialStatusEn:
-        "Checked on the concrete Airbnb listing on 27 Jul 2026 for 5–6 Oct 2026 and two guests. Checkout showed NZD 528 all-in, NZD 0 due immediately and free cancellation until 30 September. Airbnb inventory and pricing are dynamic and must be rechecked before payment.",
-      officialVerifiedAt: "2026-07-27",
+        "Checked on the concrete Airbnb listing on 3 Aug 2026 for 5–6 Oct 2026 and two guests. The page explicitly states that the listing is unavailable for the selected dates. This is a target-condition no-availability result, not a loading failure.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl:
         "https://zh.airbnb.com/rooms/35975390?adults=2&check_in=2026-10-05&check_out=2026-10-06",
+      officialLinkRetainsSearch: true,
+      officialLinkLabel: "打开 Airbnb · 目标日期无房",
+      officialLinkLabelEn: "Open Airbnb · unavailable for target dates",
+      officialLinkNote:
+        "链接保留 2026 年 10 月 5—6 日及 2 位客人的查询条件；2026-08-03 该具体房源明确显示目标日期不可出租。",
+      officialLinkNoteEn:
+        "The link preserves the 5–6 Oct 2026 and two-guest query; this concrete listing explicitly showed unavailable for the target dates on 3 Aug 2026.",
       isAirbnb: true,
       isVerifiedListing: true,
       position: [-44.22, 170.03],
@@ -1442,7 +1407,7 @@ export const mountCookHotels = [
         {
           platform: "Airbnb",
           score: "4.87 / 5",
-          reviews: "488 条 · Guest favourite",
+          reviews: "489 条 · Guest favourite",
         },
       ],
       roomTypes: [
@@ -1465,34 +1430,46 @@ export const mountCookHotels = [
             image("cosy-twizel-room-1.jpg", "Queen 床卧室", "Airbnb"),
             image("cosy-twizel-room-2.jpg", "独立客房休息区", "Airbnb"),
             image("cosy-twizel-room-3.jpg", "独立客房浴室", "Airbnb"),
+            image("cosy-twizel-room-refreshments.jpg", "独立客房的茶点与微波炉角", "Airbnb"),
+            image("cosy-twizel-room-exterior.jpg", "独立客房外观与抵达空间", "Airbnb"),
           ],
         },
       ],
       hotelImages: [],
       availabilityNote:
-        "Airbnb IAB 已按 2026 年 10 月 5—6 日、2 人核验：页面显示含全部费用总价 NZD 182；现在付 NZD 0，9 月 30 日前免费取消。",
+        "2026-08-03 已在 Airbnb IAB 按 2026 年 10 月 5—6 日、2 人核验：页面显示 1 晚含全部费用总价 NZD 182；现在付 NZD 0，9 月 30 日前免费取消。",
       availabilityNoteEn:
-        "Checked on Airbnb for 5–6 Oct 2026 and two guests: NZD 182 all-in, NZD 0 due immediately, with free cancellation until 30 September. Recheck live inventory and the final checkout total before booking.",
+        "Checked on Airbnb on 3 Aug 2026 for 5–6 Oct 2026 and two guests: NZD 182 all-in for one night, NZD 0 due immediately, with free cancellation until 30 September. Recheck live inventory and the final checkout total before booking.",
       rateSnapshots: {
         "2026-10-05/2026-10-06": {
-          source: "Airbnb",
-          roomKey: "entire-queen-guesthouse",
-          room: "整套独立客房 · 1 张 Queen 床",
-          nonRefundableNzd: null,
-          refundableNzd: 182,
-          cancelUntil: "2026-09-30",
-          payment: "现在付 NZD 0；Airbnb 页面提示暂不会扣款",
-          breakfast: "不含早餐；提供微波炉、小冰箱、烤面包机和水壶",
-          quotedAt: "2026-07-27",
+          roomRates: {
+            "entire-queen-guesthouse": {
+              official: {
+                source: "Airbnb 具体房源页",
+                sourceEn: "Airbnb concrete listing",
+                roomKey: "entire-queen-guesthouse",
+                room: "整套独立客房 · 1 晚 · 1 张 Queen 床",
+                roomEn: "Entire private guesthouse · one night · one queen bed",
+                nonRefundableNzd: null,
+                refundableNzd: 182,
+                cancelUntil: "2026-09-30",
+                payment: "现在付 NZD 0；Airbnb 页面提示暂不会扣款",
+                paymentEn: "NZD 0 was shown due immediately; Airbnb stated that no charge would be taken yet",
+                breakfast: "不含早餐；提供微波炉、小冰箱、烤面包机和水壶",
+                breakfastEn: "No breakfast shown; a microwave, small refrigerator, toaster and kettle are provided",
+                quotedAt: "2026-08-03",
+              },
+            },
+          },
         },
       },
       research: sharedSocial.mountCook,
-      officialStatus: "needs-recheck",
+      officialStatus: "exact-rate-verified",
       officialStatusDetail:
-        "2026-07-27 已在 Airbnb 具体房源页按 2026 年 10 月 5—6 日、2 人核验，结算页显示含全部费用 NZD 182、现在付 NZD 0、9 月 30 日前免费取消。Airbnb 库存与价格会动态变化，付款前必须重新核对。",
+        "2026-08-03 已在 Airbnb 具体房源页按 2026 年 10 月 5—6 日、2 人核验：页面显示 1 晚含全部费用总价 NZD 182、现在付 NZD 0，且 9 月 30 日前免费取消。该报价来自具体 Airbnb 房源；库存、价格和付款计划会动态变化，付款前仍须以结算页刷新确认。",
       officialStatusEn:
-        "Checked on the concrete Airbnb listing on 27 Jul 2026 for 5–6 Oct 2026 and two guests. Checkout showed NZD 182 all-in, NZD 0 due immediately and free cancellation until 30 September. Airbnb inventory and pricing are dynamic and must be rechecked before payment.",
-      officialVerifiedAt: "2026-07-27",
+        "The concrete Airbnb listing was checked on 3 Aug 2026 for 5–6 Oct 2026 and two guests. The page showed a NZD 182 all-fees total for one night, NZD 0 due immediately and free cancellation until 30 September. Airbnb inventory, pricing and payment schedules are dynamic, so refresh the checkout before paying.",
+      officialVerifiedAt: "2026-08-03",
       officialUrl:
         "https://www.airbnb.com.sg/rooms/46121304?adults=2&check_in=2026-10-05&check_out=2026-10-06&currency=NZD",
       isAirbnb: true,
