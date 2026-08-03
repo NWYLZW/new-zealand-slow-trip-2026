@@ -233,15 +233,15 @@ export const eventMediaByTitle = {
   },
   "飞往皇后镇": {
     route: "奥克兰 → 皇后镇",
-    localNames: ["Auckland Airport Domestic Terminal (AKL)", "Queenstown Airport (ZQN)", "Holiday Inn Queenstown Remarkables Park"],
+    localNames: ["Auckland Airport Domestic Terminal (AKL)", "Queenstown Airport (ZQN)", "Queenstown / Tāhuna"],
     ...mediaGallery(queenstownImage, aucklandAirportImage),
     links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("皇后镇机场", "https://www.queenstownairport.co.nz/"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), googleMaps("Queenstown Airport", "皇后镇机场地图"), redbook("奥克兰 飞 皇后镇 捷星")],
   },
   "南岛取车入住": {
     location: "皇后镇",
-    localNames: ["Budget Car Rental Queenstown Airport", "Holiday Inn Queenstown Remarkables Park", "Queenstown / Tāhuna"],
+    localNames: ["Budget Car Rental Queenstown Airport", "Queenstown / Tāhuna"],
     ...mediaGallery(queenstownImage, walterPeakImage, crownRangeImage),
-    links: [official("Budget 皇后镇机场网点", "https://www.budget.co.nz/en/locations/nz/queenstown-si/zqn"), official("管理 Budget 订单", "https://www.budget.co.nz/en/reservation/view-modify-cancel"), googleMaps("Budget Car Rental Queenstown Airport", "取车点地图"), googleMaps("Holiday Inn Queenstown Remarkables Park", "酒店地图"), redbook("皇后镇 卓越公园 住宿")],
+    links: [official("Budget 皇后镇机场网点", "https://www.budget.co.nz/en/locations/nz/queenstown-si/zqn"), official("管理 Budget 订单", "https://www.budget.co.nz/en/reservation/view-modify-cancel"), googleMaps("Budget Car Rental Queenstown Airport", "取车点地图"), redbook("皇后镇 住宿")],
   },
   "皇后镇适应日": {
     location: "皇后镇",
@@ -341,15 +341,15 @@ export const eventMediaByTitle = {
   },
   "基督城补充半日": {
     location: "基督城市中心",
-    localNames: ["Christchurch / Ōtautahi", "Christchurch Town Hall", "Novotel Christchurch Cathedral Square"],
+    localNames: ["Christchurch / Ōtautahi", "Christchurch Town Hall"],
     ...christchurchImage,
-    links: [official("ChristchurchNZ 官方旅游信息", "https://www.christchurchnz.com/"), googleDirections("纸板教堂与市中心步行", "Novotel Christchurch Cathedral Square", "Riverside Market Christchurch", ["Cardboard Cathedral Christchurch", "Latimer Square Christchurch"], "walking"), redbook("基督城 纸板教堂 市中心 攻略")],
+    links: [official("ChristchurchNZ 官方旅游信息", "https://www.christchurchnz.com/"), googleDirections("纸板教堂与市中心步行", "Christchurch New Zealand", "Riverside Market Christchurch", ["Cardboard Cathedral Christchurch", "Latimer Square Christchurch"], "walking"), redbook("基督城 纸板教堂 市中心 攻略")],
   },
   "前往机场飞奥克兰": {
     route: "基督城市中心 → 基督城机场 → 奥克兰市中心",
-    localNames: ["Novotel Christchurch Cathedral Square", "Christchurch Airport (CHC)", "Auckland Airport Domestic Terminal (AKL)", "Auckland / Tāmaki Makaurau"],
+    localNames: ["Christchurch / Ōtautahi", "Christchurch Airport (CHC)", "Auckland Airport Domestic Terminal (AKL)", "Auckland / Tāmaki Makaurau"],
     ...mediaGallery(christchurchImage, aucklandAirportImage, aucklandImage),
-    links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("基督城机场航班信息", "https://www.christchurchairport.co.nz/travellers/flights/"), official("基督城机场交通", "https://www.christchurchairport.co.nz/travellers/transport/"), googleDirections("基督城市中心—机场", "Novotel Christchurch Cathedral Square", "Christchurch Airport"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), redbook("基督城 飞 奥克兰 捷星")],
+    links: [official("Jetstar 管理预订", "https://booking.jetstar.com/mmb/#/login?culture=en-nz"), official("基督城机场航班信息", "https://www.christchurchairport.co.nz/travellers/flights/"), official("基督城机场交通", "https://www.christchurchairport.co.nz/travellers/transport/"), googleDirections("基督城市中心—机场", "Christchurch New Zealand", "Christchurch Airport"), googleMaps("Auckland Airport Domestic Terminal", "奥克兰国内航站楼"), redbook("基督城 飞 奥克兰 捷星")],
   },
   "大巴前往霍比屯": {
     route: "奥克兰市中心 → 霍比屯",
@@ -379,7 +379,7 @@ export const eventMediaByTitle = {
     route: "奥克兰市中心 → 奥克兰机场",
     localNames: ["Auckland / Tāmaki Makaurau", "Auckland International Airport"],
     ...mediaGallery(aucklandAirportImage, aucklandImage),
-    links: [official("奥克兰机场", "https://www.aucklandairport.co.nz/"), official("SkyDrive 机场巴士", "https://www.skydrive.co.nz/"), googleDirections("奥克兰市中心酒店—机场路线", "Adina Apartment Hotel Auckland Britomart", "Auckland Airport International Terminal", [], "transit")],
+    links: [official("奥克兰机场", "https://www.aucklandairport.co.nz/"), official("SkyDrive 机场巴士", "https://www.skydrive.co.nz/"), googleDirections("奥克兰市中心酒店—机场路线", "Hotel Grand Chancellor Auckland", "Auckland Airport International Terminal", [], "transit")],
   },
   "办理返程值机": {
     location: "奥克兰国际机场",

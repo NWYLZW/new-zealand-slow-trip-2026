@@ -335,9 +335,9 @@ export const aucklandCityHotels = [
       },
     },
     availabilityNote:
-      "2026-08-03 已在官网按 10 月 8—10 日、2 人 1 间重新打开入口。短暂加载后，官方结果页显示“Sorry, we don’t have any availability for the dates selected”，并显示 1 room | 2 adults；未返回房型、总价或退改条款。此前静态页面确认 Deluxe King Harbour View 名称、8—11 层、King 床与港景；旧官网/Booking 记录只对应 10 月 7—9 日，不能沿用。该无房结论只适用于本次目标日期和人数。",
+      "用户的 Booking.com 订单已确认入住 2026 年 10 月 8—10 日；当前订单视图仅显示入住 14:00—00:00、退房 00:00—11:00，未显示总价、取消或付款状态，均不作推断。官网曾于 2026-08-03 按同日期、2 人 1 间显示无房；这是历史官网结果，不否定已确认的用户订单。此前静态页面确认 Deluxe King Harbour View 名称、8—11 层、King 床与港景；旧官网/Booking 记录只对应 10 月 7—9 日，不能沿用。",
     availabilityNoteEn:
-      "The official entry was reopened on 3 Aug 2026 for 8–10 Oct, one room and two adults. After a short load, the official results page stated “Sorry, we don’t have any availability for the dates selected” and displayed “1 room | 2 adults”; it returned no room, total or cancellation terms. Earlier static content confirms the Deluxe King Harbour View name, floors 8–11, king bed and harbour view; old direct and Booking.com records cover only 7–9 Oct and cannot be reused. This unavailable conclusion applies only to the target dates and guest count.",
+      "The user's Booking.com order is confirmed for 8–10 Oct 2026. The current order view shows only check-in from 14:00 to 00:00 and check-out from 00:00 to 11:00; it did not show the total, cancellation or payment status, so none is inferred. The official site had shown no availability for the same dates and two adults on 3 Aug 2026; that historical direct result does not negate the confirmed user order. Earlier static content confirms the Deluxe King Harbour View name, floors 8–11, king bed and harbour view; old direct and Booking.com records cover only 7–9 Oct and cannot be reused.",
     officialStatus: "exact-date-unavailable",
     officialStatusDetail:
       "2026-08-03 在带入 10 月 8—10 日、1 间、2 人的 Hotel Grand Chancellor 官方入口上，短暂加载后结果页明确显示“Sorry, we don’t have any availability for the dates selected”。此为该精确条件的官方无房结果；未外推至其他日期、人数或房型。",

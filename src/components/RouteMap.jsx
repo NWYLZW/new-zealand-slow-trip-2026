@@ -44,13 +44,13 @@ const googleRouteActions = {
     label: "在 Google 地图打开南岛自驾",
     origin: "Budget Car Rental Queenstown Airport",
     destination: "Budget Car Rental Christchurch Airport",
-    waypoints: ["Arrowtown New Zealand", "Wanaka New Zealand", "Aoraki Mount Cook Village", "Church of the Good Shepherd Lake Tekapo", "Oamaru Blue Penguin Colony", "Novotel Christchurch Cathedral Square"],
+    waypoints: ["Arrowtown New Zealand", "Wanaka New Zealand", "Aoraki Mount Cook Village", "Church of the Good Shepherd Lake Tekapo", "Oamaru Blue Penguin Colony", "Christchurch New Zealand"],
   },
   south: {
     label: "在 Google 地图打开南岛自驾",
     origin: "Budget Car Rental Queenstown Airport",
     destination: "Budget Car Rental Christchurch Airport",
-    waypoints: ["Arrowtown New Zealand", "Wanaka New Zealand", "Aoraki Mount Cook Village", "Church of the Good Shepherd Lake Tekapo", "Oamaru Blue Penguin Colony", "Novotel Christchurch Cathedral Square"],
+    waypoints: ["Arrowtown New Zealand", "Wanaka New Zealand", "Aoraki Mount Cook Village", "Church of the Good Shepherd Lake Tekapo", "Oamaru Blue Penguin Colony", "Christchurch New Zealand"],
   },
   north: {
     label: "在 Google 地图查看奥克兰往返霍比屯大巴路线",
@@ -425,7 +425,7 @@ const eventGoogleRoutes = {
   },
   "南岛取车入住": {
     origin: "Budget Car Rental Queenstown Airport",
-    destination: "Holiday Inn Queenstown Remarkables Park",
+    destination: "Queenstown New Zealand",
     travelmode: "driving",
   },
   "格林诺奇湖岸公路": {
@@ -464,17 +464,17 @@ const eventGoogleRoutes = {
   },
   "奥马鲁前往基督城": {
     origin: "Oamaru New Zealand",
-    destination: "Novotel Christchurch Cathedral Square",
+    destination: "Christchurch New Zealand",
     waypoints: ["Caroline Bay Timaru", "Ashburton New Zealand"],
     travelmode: "driving",
   },
   "前往机场飞奥克兰": {
-    origin: "Novotel Christchurch Cathedral Square",
+    origin: "Christchurch New Zealand",
     destination: "Christchurch Airport Domestic Terminal",
     travelmode: "driving",
   },
   "按更新订单还车": {
-    origin: "Novotel Christchurch Cathedral Square",
+    origin: "Christchurch New Zealand",
     destination: "Budget Car Rental Christchurch Airport",
     travelmode: "driving",
   },
@@ -489,7 +489,7 @@ const eventGoogleRoutes = {
     travelmode: "driving",
   },
   "前往奥克兰机场": {
-    origin: "Adina Apartment Hotel Auckland Britomart",
+    origin: "Hotel Grand Chancellor Auckland",
     destination: "Auckland Airport International Terminal",
     travelmode: "driving",
   },
