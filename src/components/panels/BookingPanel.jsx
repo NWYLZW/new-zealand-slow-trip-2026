@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, ButtonBase, Card, IconButton, LinearProgress, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, ButtonBase, Card, IconButton, LinearProgress, Stack, Tab, Tabs, Tooltip, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import DirectionsOutlinedIcon from "@mui/icons-material/DirectionsOutlined";
+import MyLocationOutlinedIcon from "@mui/icons-material/MyLocationOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import sharedHotelSelections from "../../data/hotel-selections.json";
 import { AUCKLAND_AIRPORT_SELECTION_KEY } from "../../data/aucklandAirportHotels";
 import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHotels";
 import { confirmedAccommodationBookings } from "../../data/confirmedAccommodationBookings";
+import { confirmedStayMedia } from "../../data/confirmedStayMedia";
 import { regionalHotels, regionalStays } from "../../data/regionalHotels";
 import { useLanguage } from "../../LanguageContext";
 import { usePrivateVault } from "../../PrivateVaultContext";
@@ -611,18 +614,31 @@ function privateFacts(privateStay, isEnglish, fields) {
     .filter(Boolean);
 }
 
-function stayImages(hotel, privateStay) {
+function stayImages(hotel, privateStay, bookingId) {
   const privateImages = Array.isArray(privateStay?.media) ? privateStay.media : [];
+  const confirmedImages = confirmedStayMedia[bookingId] ?? [];
   const hotelImages = [
     ...(hotel?.hotelImages ?? []),
     ...(hotel?.roomTypes?.flatMap((room) => room.images ?? []) ?? []),
   ];
   const seen = new Set();
-  return [...privateImages, ...hotelImages].filter((image) => {
+  return [...confirmedImages, ...privateImages, ...hotelImages].filter((image) => {
     if (!image || typeof image.src !== "string" || !image.src || seen.has(image.src)) return false;
     seen.add(image.src);
     return true;
   });
+}
+
+function StayImageGallery({ imageAlt, images }) {
+  const galleryImages = images.slice(0, 3);
+  if (galleryImages.length === 0) return null;
+  return (
+    <Box aria-label={imageAlt} className={`confirmed-stay-gallery gallery-count-${galleryImages.length}`}>
+      {galleryImages.map((image, index) => (
+        <Box alt={image.label ?? `${imageAlt} · ${index + 1}`} component="img" key={image.src} src={image.src} />
+      ))}
+    </Box>
+  );
 }
 
 function propertyLinkLabel({ booking, isEnglish, privateStay }) {
@@ -630,19 +646,6 @@ function propertyLinkLabel({ booking, isEnglish, privateStay }) {
     return isEnglish ? "View Airbnb listing" : "查看 Airbnb 房源";
   }
   return isEnglish ? "View property page" : "查看酒店详情";
-}
-
-function mediaSourceLabel(image, isEnglish) {
-  const source = image?.source;
-  if (typeof source !== "string" || !source) return isEnglish ? "Verified property image" : "已核验的房源图片";
-  if (!/^https?:\/\//.test(source)) return source;
-  try {
-    const hostname = new URL(source).hostname;
-    if (hostname.includes("hermitage.co.nz")) return isEnglish ? "The Hermitage official image" : "The Hermitage 官网图片";
-    return isEnglish ? `Image source: ${hostname}` : `图片来源：${hostname}`;
-  } catch {
-    return isEnglish ? "Verified property image" : "已核验的房源图片";
-  }
 }
 
 function StayHeaderActions({ isEnglish, privateStay, stay }) {
@@ -664,7 +667,9 @@ function StayHeaderActions({ isEnglish, privateStay, stay }) {
             rel="noreferrer"
             target="_blank"
           >
-            <HomeOutlinedIcon fontSize="small" />
+            {privateStay?.platform === "Airbnb" || booking?.source?.includes("Airbnb")
+              ? <Box alt="Airbnb" className="stay-header-airbnb-logo" component="img" src="https://cdn.simpleicons.org/airbnb/FF385C" />
+              : <OpenInNewIcon fontSize="small" />}
           </IconButton>
         </Tooltip>
       )}
@@ -684,17 +689,16 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   const hotel = bookedHotel(stay, booking);
   const title = confirmedStayName(stay, isEnglish, privateStay);
   const dates = booking ? `${booking.checkIn} — ${booking.checkOut}` : "—";
-  const images = stayImages(hotel, privateStay);
-  const coverImage = images[0];
-  const stayFacts = [
+  const images = stayImages(hotel, privateStay, stay.bookingId);
+  const primaryStayFacts = [
     [isEnglish ? "Location" : "地点", isEnglish ? stay.placeEn : stay.place],
     [isEnglish ? "Dates" : "日期", dates],
-    booking?.guests && [isEnglish ? "Guests" : "同行者", isEnglish ? booking.guestsEn : booking.guests],
     booking?.checkInTime && [isEnglish ? "Check-in / out" : "入住 / 退房", isEnglish ? `${booking.checkInTimeEn} / ${booking.checkOutTimeEn}` : `${booking.checkInTime} / ${booking.checkOutTime}`],
-    ...privateFacts(privateStay, isEnglish, [
-      ["房东", "房东", "Host"],
-      ["准确地址", "准确地址", "Exact address"],
-    ]),
+  ].filter(Boolean);
+  const secondaryStayFacts = [
+    booking?.guests && [isEnglish ? "Guests" : "同行者", isEnglish ? booking.guestsEn : booking.guests],
+    privateStay?.房东 && [isEnglish ? "Host" : "房东", privateStay.房东],
+    privateStay?.准确地址 && [isEnglish ? "Exact address" : "准确地址", privateStay.准确地址, { copy: true }],
   ].filter(Boolean);
   const bookingFacts = [
     booking?.total && [isEnglish ? "Verified total" : "已核验总价", isEnglish ? booking.totalEn : booking.total],
@@ -715,9 +719,9 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   return (
     <Box className="confirmed-stay-detail">
       <Box className="confirmed-stay-detail-grid">
-        <DetailSection facts={stayFacts} title={isEnglish ? "Stay" : "入住"} />
-        <DetailSection evidence={booking?.source ? (isEnglish ? booking.sourceEn : booking.source) : ""} facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
-        <ConfirmedStayLocation coverImage={coverImage} imageAlt={title} isEnglish={isEnglish} privateStay={privateStay} stay={stay} />
+        <StayDetailSection isEnglish={isEnglish} primaryFacts={primaryStayFacts} secondaryFacts={secondaryStayFacts} title={isEnglish ? "Stay" : "入住"} />
+        <DetailSection facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
+        <ConfirmedStayLocation imageAlt={title} images={images} isEnglish={isEnglish} privateStay={privateStay} stay={stay} />
       </Box>
     </Box>
   );
@@ -746,15 +750,81 @@ function mapDirectionsUrl(origin, destination) {
   return url.toString();
 }
 
-function MapViewport({ position, zoom }) {
+function mapNavigationUrl(destination) {
+  const url = new URL("https://www.google.com/maps/dir/");
+  url.searchParams.set("api", "1");
+  url.searchParams.set("destination", destination);
+  url.searchParams.set("travelmode", "driving");
+  return url.toString();
+}
+
+function MapViewport({ onMapReady, position, zoom }) {
   const map = useMap();
   useEffect(() => {
     map.setView(position, zoom);
-  }, [map, position, zoom]);
+    onMapReady?.(map);
+  }, [map, onMapReady, position, zoom]);
   return null;
 }
 
-function ConfirmedStayLocation({ coverImage, imageAlt, isEnglish, privateStay, stay }) {
+function CopyAddressButton({ isEnglish, value }) {
+  const [copied, setCopied] = useState(false);
+  const copyAddress = async () => {
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+      else {
+        const textarea = document.createElement("textarea");
+        textarea.value = value;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.append(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
+  return (
+    <Tooltip title={copied ? (isEnglish ? "Copied" : "已复制") : (isEnglish ? "Copy address" : "复制地址")}>
+      <IconButton aria-label={isEnglish ? "Copy address" : "复制地址"} className="stay-copy-address" onClick={copyAddress} size="small">
+        <ContentCopyOutlinedIcon fontSize="inherit" />
+      </IconButton>
+    </Tooltip>
+  );
+}
+
+function StayDetailSection({ isEnglish, primaryFacts, secondaryFacts, title }) {
+  const [expanded, setExpanded] = useState(false);
+  const visibleFacts = expanded ? [...primaryFacts, ...secondaryFacts] : primaryFacts;
+  if (visibleFacts.length === 0) return null;
+  return (
+    <Box className="confirmed-stay-section">
+      <Typography component="h3" fontWeight={900} variant="h6">{title}</Typography>
+      <Box component="dl">
+        {visibleFacts.map(([label, value, options]) => (
+          <Box key={label}>
+            <Typography component="dt" variant="caption">{label}</Typography>
+            <Box className="confirmed-stay-value">
+              <Typography component="dd">{value}</Typography>
+              {options?.copy && <CopyAddressButton isEnglish={isEnglish} value={value} />}
+            </Box>
+          </Box>
+        ))}
+      </Box>
+      {secondaryFacts.length > 0 && (
+        <ButtonBase className="confirmed-stay-expand" onClick={() => setExpanded((current) => !current)}>
+          {expanded ? (isEnglish ? "Show less" : "收起") : (isEnglish ? `More details (${secondaryFacts.length})` : `更多信息（${secondaryFacts.length}）`)}
+        </ButtonBase>
+      )}
+    </Box>
+  );
+}
+
+function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay }) {
   const booking = confirmedAccommodationBookings[stay.bookingId];
   const comparison = stayComparison(stay);
   const hotel = bookedHotel(stay, booking);
@@ -765,6 +835,8 @@ function ConfirmedStayLocation({ coverImage, imageAlt, isEnglish, privateStay, s
   const preciseLocation = Boolean(privatePosition || hotel?.position || calendarPosition);
   const mapAttractions = attractionPinsByRegion[stay.stayGroup] ?? [];
   const nearby = hotel?.nearbyAttractions ?? mapAttractions;
+  const [activeTab, setActiveTab] = useState("map");
+  const [mapInstance, setMapInstance] = useState(null);
   const arrivalFacts = privateFacts(privateStay, isEnglish, [
     ["行车与停车", "行车与停车", "Driving & parking"],
     ["行车说明（截图可见部分）", "行车说明", "Driving notes"],
@@ -775,22 +847,14 @@ function ConfirmedStayLocation({ coverImage, imageAlt, isEnglish, privateStay, s
   if (!position) return null;
   return (
     <Box className="confirmed-stay-location">
-      <Box>
-        <Typography component="h3" fontWeight={900} variant="h6">{isEnglish ? "Map & nearby places" : "地图与附近景点"}</Typography>
-        <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">
-          {preciseLocation
-            ? (isEnglish ? "The map is centred on this confirmed stay." : "地图已定位到这处已确认住宿。")
-            : (isEnglish ? "The public page uses the trip-area anchor. An unlocked private address or coordinates will replace it with the exact stay location." : "公开页暂以行程区域锚点定位；解锁后的私密地址或坐标会替换为准确住宿位置。")}
-        </Typography>
-      </Box>
-      <Box className="confirmed-stay-media-map">
-        {coverImage && (
-          <Box className="confirmed-stay-cover" component="figure">
-            <Box alt={coverImage.label ?? imageAlt} component="img" src={coverImage.src} />
-            <Typography component="figcaption" variant="caption">{mediaSourceLabel(coverImage, isEnglish)}</Typography>
-          </Box>
-        )}
-        <Box className="confirmed-stay-map-wrap">
+      <Tabs aria-label={isEnglish ? "Confirmed stay details" : "已确认住宿详情"} className="confirmed-stay-tabs" onChange={(_, nextTab) => setActiveTab(nextTab)} value={activeTab}>
+        <Tab label={isEnglish ? "Map & nearby" : "地图与附近景点"} value="map" />
+        {arrivalFacts.length > 0 && <Tab label={isEnglish ? "Arrival & entry" : "到达与入住"} value="arrival" />}
+      </Tabs>
+      {activeTab === "map" && <>
+        <Box className="confirmed-stay-media-map">
+          <StayImageGallery imageAlt={imageAlt} images={images} />
+          <Box className="confirmed-stay-map-wrap">
           <MapContainer
             aria-label={isEnglish ? "Confirmed stay and nearby itinerary places" : "已确认住宿与附近行程景点地图"}
             center={position}
@@ -799,7 +863,7 @@ function ConfirmedStayLocation({ coverImage, imageAlt, isEnglish, privateStay, s
             zoom={preciseLocation ? 14 : 13}
             zoomControl
           >
-            <MapViewport position={position} zoom={preciseLocation ? 14 : 13} />
+            <MapViewport onMapReady={setMapInstance} position={position} zoom={preciseLocation ? 14 : 13} />
             <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <CircleMarker center={position} pathOptions={{ color: "#123f36", fillColor: "#f28c5b", fillOpacity: 1, weight: 4 }} radius={10}>
               <LeafletTooltip direction="top" offset={[0, -10]} permanent>{preciseLocation ? (isEnglish ? "Confirmed stay" : "已确认住宿") : (isEnglish ? "Trip area" : "行程区域")}</LeafletTooltip>
@@ -810,9 +874,19 @@ function ConfirmedStayLocation({ coverImage, imageAlt, isEnglish, privateStay, s
               </CircleMarker>
             ))}
           </MapContainer>
+            <Tooltip title={isEnglish ? "Centre on stay" : "定位到住宿"}>
+              <IconButton aria-label={isEnglish ? "Centre on stay" : "定位到住宿"} className="confirmed-stay-map-locate" disabled={!mapInstance} onClick={() => mapInstance?.setView(position, preciseLocation ? 15 : 14)} size="small">
+                <MyLocationOutlinedIcon fontSize="inherit" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={isEnglish ? "Open Google Maps directions" : "在 Google 地图中导航"}>
+              <IconButton aria-label={isEnglish ? "Open Google Maps directions" : "在 Google 地图中导航"} className="confirmed-stay-map-navigate" component="a" href={mapNavigationUrl(mapQuery)} rel="noreferrer" target="_blank" size="small">
+                <DirectionsOutlinedIcon fontSize="inherit" />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-      </Box>
-      <Box className="confirmed-stay-nearby-grid">
+        <Box className="confirmed-stay-nearby-grid">
         {nearby.map((attraction) => {
           const label = isEnglish ? (attraction.nameEn ?? attraction.labelEn ?? attraction.name ?? attraction.label) : (attraction.name ?? attraction.label);
           const distance = isEnglish ? (attraction.distanceEn ?? attraction.distance) : attraction.distance;
@@ -825,17 +899,18 @@ function ConfirmedStayLocation({ coverImage, imageAlt, isEnglish, privateStay, s
             </Box>
           );
         })}
-      </Box>
-      {arrivalFacts.length > 0 && <Box className="confirmed-stay-arrival"><DetailSection facts={arrivalFacts} title={isEnglish ? "Arrival & entry" : "到达与入住"} /></Box>}
+        </Box>
+      </>}
+      {activeTab === "arrival" && arrivalFacts.length > 0 && <Box className="confirmed-stay-arrival"><DetailSection facts={arrivalFacts} title="" /></Box>}
     </Box>
   );
 }
 
-function DetailSection({ evidence = "", facts, title }) {
+function DetailSection({ facts, title }) {
   if (facts.length === 0) return null;
   return (
     <Box className="confirmed-stay-section">
-      <Typography component="h3" fontWeight={900} variant="h6">{title}</Typography>
+      {title && <Typography component="h3" fontWeight={900} variant="h6">{title}</Typography>}
       <Box component="dl">
         {facts.map(([label, value]) => (
           <Box key={label}>
@@ -844,7 +919,6 @@ function DetailSection({ evidence = "", facts, title }) {
           </Box>
         ))}
       </Box>
-      {evidence && <Typography className="confirmed-stay-evidence-note" color="text.secondary" variant="caption">{evidence}</Typography>}
     </Box>
   );
 }

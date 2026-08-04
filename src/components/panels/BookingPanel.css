@@ -422,22 +422,35 @@
   margin-top: 16px;
 }
 
-.confirmed-stay-cover {
+.confirmed-stay-gallery {
+  display: grid;
   min-width: 0;
-  margin: 0;
+  height: 320px;
+  gap: 6px;
 }
 
-.confirmed-stay-cover img {
+.confirmed-stay-gallery.gallery-count-1 {
+  grid-template-columns: 1fr;
+}
+
+.confirmed-stay-gallery.gallery-count-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.confirmed-stay-gallery.gallery-count-3 {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.confirmed-stay-gallery.gallery-count-3 img:first-child {
+  grid-row: 1 / -1;
+}
+
+.confirmed-stay-gallery img {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
   border-radius: var(--radius-inner);
   object-fit: cover;
-}
-
-.confirmed-stay-cover figcaption {
-  display: block;
-  margin-top: 8px;
 }
 
 .stay-header-actions .MuiIconButton-root {
@@ -450,6 +463,12 @@
 .stay-header-actions .MuiIconButton-root.stay-header-action-airbnb {
   border-color: rgba(255, 56, 92, 0.42);
   color: #e84365;
+}
+
+.stay-header-airbnb-logo {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 .stay-header-actions .MuiIconButton-root:hover {
@@ -485,10 +504,70 @@
   border-top: 1px solid rgba(18, 63, 54, 0.18);
 }
 
+.confirmed-stay-tabs {
+  min-height: 44px;
+}
+
+.confirmed-stay-tabs .MuiTab-root {
+  min-height: 44px;
+  padding: 0 12px;
+  font-weight: 800;
+}
+
 .confirmed-stay-map-wrap {
+  position: relative;
   overflow: hidden;
   border: 1px solid rgba(18, 63, 54, 0.16);
   border-radius: var(--radius-inner);
+}
+
+.confirmed-stay-map-locate,
+.confirmed-stay-map-navigate {
+  position: absolute !important;
+  z-index: 500;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(18, 63, 54, 0.22) !important;
+  border-radius: 8px !important;
+  background: rgba(255, 253, 248, 0.96) !important;
+  box-shadow: 0 2px 8px rgba(18, 63, 54, 0.16);
+  color: var(--forest) !important;
+}
+
+.confirmed-stay-map-locate {
+  bottom: 30px;
+  left: 8px;
+}
+
+.confirmed-stay-map-navigate {
+  top: 8px;
+  right: 8px;
+}
+
+.confirmed-stay-value {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.confirmed-stay-value > dd {
+  flex: 1 1 auto;
+}
+
+.stay-copy-address {
+  flex: 0 0 auto;
+  margin-top: -3px !important;
+  color: var(--forest) !important;
+}
+
+.confirmed-stay-expand {
+  margin-top: 16px;
+  color: var(--forest);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .confirmed-stay-map {
@@ -525,14 +604,7 @@
 }
 
 .confirmed-stay-arrival {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(18, 63, 54, 0.14);
-}
-
-.confirmed-stay-evidence-note {
-  display: block;
-  margin-top: 14px;
+  padding-top: 24px;
 }
 
 @media (max-width: 700px) {
@@ -550,6 +622,11 @@
     grid-template-columns: 1fr;
     gap: 16px;
     margin-top: 12px;
+  }
+
+  .confirmed-stay-gallery,
+  .confirmed-stay-map {
+    height: 280px;
   }
 
   .confirmed-stay-section dl > div {
