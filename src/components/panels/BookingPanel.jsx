@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, ButtonBase, Card, Chip, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Card, Chip, LinearProgress, Stack, Typography } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import HotelIcon from "@mui/icons-material/Hotel";
@@ -585,6 +585,13 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
 function confirmedStayName(stay, isEnglish, privateStay) {
   const privateName = privateStay?.propertyName ?? privateStay?.propertyNameEn ?? privateStay?.住宿名称;
   if (typeof privateName === "string" && privateName.trim()) return privateName.trim();
+  const host = privateStay?.房东;
+  const source = confirmedAccommodationBookings[stay.bookingId]?.source ?? "";
+  if (typeof host === "string" && host.trim() && source.includes("Airbnb")) {
+    return isEnglish
+      ? `${stay.placeEn ?? stay.place} Airbnb home · host ${host.trim()}`
+      : `${stay.place} · ${host.trim()} 的 Airbnb 房源`;
+  }
   return isEnglish ? (stay.hotelEn ?? stay.hotel) : stay.hotel;
 }
 
@@ -600,10 +607,49 @@ function privateFacts(privateStay, isEnglish, fields) {
     .filter(Boolean);
 }
 
+function stayImages(hotel, privateStay) {
+  const privateImages = Array.isArray(privateStay?.media) ? privateStay.media : [];
+  const hotelImages = [
+    ...(hotel?.hotelImages ?? []),
+    ...(hotel?.roomTypes?.flatMap((room) => room.images ?? []) ?? []),
+  ];
+  const seen = new Set();
+  return [...privateImages, ...hotelImages].filter((image) => {
+    if (!image || typeof image.src !== "string" || !image.src || seen.has(image.src)) return false;
+    seen.add(image.src);
+    return true;
+  });
+}
+
+function propertyLinkLabel({ booking, isEnglish, privateStay }) {
+  if (privateStay?.platform === "Airbnb" || booking?.source?.includes("Airbnb")) {
+    return isEnglish ? "View Airbnb listing" : "查看 Airbnb 房源";
+  }
+  return isEnglish ? "View property page" : "查看酒店详情";
+}
+
+function mediaSourceLabel(image, isEnglish) {
+  const source = image?.source;
+  if (typeof source !== "string" || !source) return isEnglish ? "Verified property image" : "已核验的房源图片";
+  if (!/^https?:\/\//.test(source)) return source;
+  try {
+    const hostname = new URL(source).hostname;
+    if (hostname.includes("hermitage.co.nz")) return isEnglish ? "The Hermitage official image" : "The Hermitage 官网图片";
+    return isEnglish ? `Image source: ${hostname}` : `图片来源：${hostname}`;
+  } catch {
+    return isEnglish ? "Verified property image" : "已核验的房源图片";
+  }
+}
+
 function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   const booking = confirmedAccommodationBookings[stay.bookingId];
+  const hotel = bookedHotel(stay, booking);
   const title = confirmedStayName(stay, isEnglish, privateStay);
   const dates = booking ? `${booking.checkIn} — ${booking.checkOut}` : "—";
+  const images = stayImages(hotel, privateStay);
+  const coverImage = images[0];
+  const propertyUrl = privateStay?.propertyUrl ?? hotel?.officialUrl ?? hotel?.bookingUrl;
+  const orderUrl = privateStay?.orderUrl;
   const stayFacts = [
     [isEnglish ? "Location" : "地点", isEnglish ? stay.placeEn : stay.place],
     [isEnglish ? "Dates" : "日期", dates],
@@ -620,6 +666,7 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
     booking?.breakfast && [isEnglish ? "Breakfast" : "早餐", isEnglish ? booking.breakfastEn : booking.breakfast],
     booking?.cancellation && [isEnglish ? "Cancellation" : "取消政策", isEnglish ? booking.cancellationEn : booking.cancellation],
     ...privateFacts(privateStay, isEnglish, [
+      ["订单总额", "订单总额", "Booking total"],
       ["确认码", "确认码", "Confirmation code"],
       ["订单确认号", "订单确认号", "Booking confirmation"],
       ["PIN 码", "PIN 码", "PIN"],
@@ -638,6 +685,33 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
         </Box>
         <Chip color="success" icon={<CheckCircleOutlineIcon />} label={isEnglish ? "Confirmed" : "已确认"} />
       </Stack>
+      {(coverImage || propertyUrl || orderUrl) && (
+        <Box className="confirmed-stay-hero">
+          {coverImage && (
+            <Box className="confirmed-stay-cover" component="figure">
+              <Box alt={coverImage.label ?? title} component="img" src={coverImage.src} />
+              <Typography component="figcaption" variant="caption">
+                {mediaSourceLabel(coverImage, isEnglish)}
+              </Typography>
+            </Box>
+          )}
+          {(propertyUrl || orderUrl) && (
+            <Stack alignItems="flex-start" className="confirmed-stay-links" spacing={1}>
+              {propertyUrl && (
+                <Button component="a" endIcon={<OpenInNewIcon />} href={propertyUrl} rel="noreferrer" target="_blank" variant="outlined">
+                  {propertyLinkLabel({ booking, isEnglish, privateStay })}
+                </Button>
+              )}
+              {orderUrl && (
+                <Button component="a" endIcon={<OpenInNewIcon />} href={orderUrl} rel="noreferrer" target="_blank" variant="outlined">
+                  {isEnglish ? "Open booking details" : "打开订单详情"}
+                </Button>
+              )}
+              {orderUrl && <Typography color="text.secondary" variant="caption">{isEnglish ? "Your private booking link is only available after local unlock." : "订单链接仅在本设备解锁私密资料后显示。"}</Typography>}
+            </Stack>
+          )}
+        </Box>
+      )}
       <Box className="confirmed-stay-detail-grid">
         <DetailSection facts={stayFacts} title={isEnglish ? "Stay" : "入住"} />
         <DetailSection evidence={booking?.source ? (isEnglish ? booking.sourceEn : booking.source) : ""} facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
@@ -683,9 +757,10 @@ function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
   const comparison = stayComparison(stay);
   const hotel = bookedHotel(stay, booking);
   const privatePosition = coordinatePair(privateStay?.coordinates);
-  const position = privatePosition ?? hotel?.position ?? comparison?.anchorPosition;
-  const mapQuery = privateStay?.address ?? privateStay?.["准确地址"] ?? hotel?.mapQuery ?? `${isEnglish ? stay.placeEn : stay.place}, New Zealand`;
-  const preciseLocation = Boolean(privatePosition || hotel?.position);
+  const calendarPosition = coordinatePair(stay.position);
+  const position = privatePosition ?? hotel?.position ?? calendarPosition ?? comparison?.anchorPosition;
+  const mapQuery = privateStay?.address ?? privateStay?.["准确地址"] ?? hotel?.mapQuery ?? stay.mapQuery ?? `${isEnglish ? stay.placeEn : stay.place}, New Zealand`;
+  const preciseLocation = Boolean(privatePosition || hotel?.position || calendarPosition);
   const mapAttractions = attractionPinsByRegion[stay.stayGroup] ?? [];
   const nearby = hotel?.nearbyAttractions ?? mapAttractions;
   const arrivalFacts = privateFacts(privateStay, isEnglish, [

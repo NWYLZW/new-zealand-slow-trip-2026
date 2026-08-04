@@ -573,7 +573,7 @@ export const bookingItems = [
   ["hotel-auckland-city", "奥克兰市中心住宿 · 已预订", "Hotel Grand Chancellor Auckland 已确认10月8日入住、10月10日退房；入住14:00—00:00，退房00:00—11:00。当前订单页未展示总价、取消或付款状态，不作推断。"],
   ["hotel-queenstown", "皇后镇住宿 · 已预订", "已确认9月29日入住4晚、2位客人；9月24日14:00前可免费取消。具体地址、房东和入户信息私下保存。"],
   ["hotel-wanaka", "瓦纳卡住宿 · 已预订", "Wanaka Luxury Apartments 已确认10月3日入住2晚、2位成人、一卧室公寓；NZD 660，确认时待扣款。"],
-  ["mount-cook", "库克山住宿", "已预订：The Hermitage · Mt Cook Motel Studio Queen，10月5日1晚，含双人早餐，确认号已私下保存，已支付 NZD 504。"],
+  ["mount-cook", "库克山住宿", "已确认：The Hermitage · Mt Cook Motel Studio Queen，10月5日1晚，含早餐包；官方确认页列示含税总价 NZD 504。确认号仅私下保存。"],
   ["mount-cook-helicopter", "库克山直升机", "10月5日15:30前后；Glacier Highlights 约45分钟，2人参考 NZ$1,298，确认天气取消可退款。"],
   ["mount-cook-stargazing", "Big Sky Stargazing 观星", "10月5日晚较晚场；约75—90分钟，2人 NZ$318 起，可询问中文讲解。"],
   ["hotel-christchurch", "基督城住宿 · 已预订", "已确认10月7日入住、10月8日退房、2位客人；15:00 后入住、10:00 前退房，10月2日15:00前可免费取消。具体地址、房东和入户信息私下保存。"],
