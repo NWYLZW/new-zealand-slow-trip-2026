@@ -63,7 +63,7 @@ export function PrivateVaultDialog({ onClose, open }) {
     <Dialog className="private-vault-dialog" fullWidth maxWidth="sm" onClose={close} open={open}>
         <DialogTitle>
           {isEnglish ? "Private details" : "私密资料"}
-          <IconButton aria-label={isEnglish ? "Close private details" : "关闭私密资料"} onClick={close} sx={{ position: "absolute", right: 12, top: 12 }}>
+          <IconButton aria-label={isEnglish ? "Close private details" : "关闭私密资料"} onClick={close} onPointerDown={close} sx={{ position: "absolute", right: 12, top: 12 }}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -120,7 +120,7 @@ export function PrivateVaultDialog({ onClose, open }) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button color="inherit" onClick={close}>{isEnglish ? "Continue trip" : "继续查看行程"}</Button>
+          <Button onClick={close} onPointerDown={close} variant="contained">{isEnglish ? "Continue trip" : "继续查看行程"}</Button>
           {vault.isUnlocked && <Button onClick={lockAndClose} startIcon={<LockIcon />}>{isEnglish ? "Lock now" : "立即锁定"}</Button>}
           {vault.trusted && <Button color="inherit" onClick={forgetAndClose} startIcon={<DeleteOutlineIcon />}>{isEnglish ? "Forget this device" : "移除此设备"}</Button>}
           {vault.isConfigured && !vault.isUnlocked && (
