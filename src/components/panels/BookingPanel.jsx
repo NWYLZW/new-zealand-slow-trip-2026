@@ -14,8 +14,7 @@ import { usePrivateVault } from "../../PrivateVaultContext";
 import { AccommodationMap } from "../AccommodationMap";
 import { attractionPinsByRegion, HotelComparisonView } from "../HotelComparisonDialog";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "../calendar/CalendarPrimitives";
-import { PrivateDetailSection } from "../PrivateVaultAccess";
-import { CircleMarker, MapContainer, TileLayer, Tooltip } from "react-leaflet";
+import { CircleMarker, MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./BookingPanel.css";
 
@@ -589,24 +588,45 @@ function confirmedStayName(stay, isEnglish, privateStay) {
   return isEnglish ? (stay.hotelEn ?? stay.hotel) : stay.hotel;
 }
 
+function privateFact(privateStay, key, label) {
+  const value = privateStay?.[key];
+  if (value === undefined || value === null || value === "") return null;
+  return [label, value];
+}
+
+function privateFacts(privateStay, isEnglish, fields) {
+  return fields
+    .map(([key, zhLabel, enLabel]) => privateFact(privateStay, key, isEnglish ? (enLabel ?? zhLabel) : zhLabel))
+    .filter(Boolean);
+}
+
 function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   const booking = confirmedAccommodationBookings[stay.bookingId];
   const title = confirmedStayName(stay, isEnglish, privateStay);
   const dates = booking ? `${booking.checkIn} — ${booking.checkOut}` : "—";
-  const publicNote = booking?.privateNoteEn && isEnglish
-    ? booking.privateNoteEn
-    : booking?.privateNote;
   const stayFacts = [
     [isEnglish ? "Location" : "地点", isEnglish ? stay.placeEn : stay.place],
     [isEnglish ? "Dates" : "日期", dates],
     booking?.guests && [isEnglish ? "Guests" : "同行者", isEnglish ? booking.guestsEn : booking.guests],
     booking?.checkInTime && [isEnglish ? "Check-in / out" : "入住 / 退房", isEnglish ? `${booking.checkInTimeEn} / ${booking.checkOutTimeEn}` : `${booking.checkInTime} / ${booking.checkOutTime}`],
+    ...privateFacts(privateStay, isEnglish, [
+      ["房东", "房东", "Host"],
+      ["准确地址", "准确地址", "Exact address"],
+    ]),
   ].filter(Boolean);
   const bookingFacts = [
     booking?.total && [isEnglish ? "Verified total" : "已核验总价", isEnglish ? booking.totalEn : booking.total],
     booking?.payment && [isEnglish ? "Payment" : "付款", isEnglish ? booking.paymentEn : booking.payment],
     booking?.breakfast && [isEnglish ? "Breakfast" : "早餐", isEnglish ? booking.breakfastEn : booking.breakfast],
     booking?.cancellation && [isEnglish ? "Cancellation" : "取消政策", isEnglish ? booking.cancellationEn : booking.cancellation],
+    ...privateFacts(privateStay, isEnglish, [
+      ["确认码", "确认码", "Confirmation code"],
+      ["订单确认号", "订单确认号", "Booking confirmation"],
+      ["PIN 码", "PIN 码", "PIN"],
+      ["住宿联系电话", "住宿联系电话", "Property phone"],
+      ["预计抵达", "预计抵达", "Expected arrival"],
+      ["付款提醒", "付款提醒", "Payment reminder"],
+    ]),
   ].filter(Boolean);
 
   return (
@@ -620,18 +640,8 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
       </Stack>
       <Box className="confirmed-stay-detail-grid">
         <DetailSection facts={stayFacts} title={isEnglish ? "Stay" : "入住"} />
-        <DetailSection facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
+        <DetailSection evidence={booking?.source ? (isEnglish ? booking.sourceEn : booking.source) : ""} facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
         <ConfirmedStayLocation isEnglish={isEnglish} privateStay={privateStay} stay={stay} />
-        <Box className="confirmed-stay-evidence">
-          <Typography component="h3" fontWeight={900} variant="h6">{isEnglish ? "Evidence & private details" : "来源与私密资料"}</Typography>
-          {booking?.source && <Typography color="text.secondary" sx={{ mt: 0.75 }}>{isEnglish ? booking.sourceEn : booking.source}</Typography>}
-          {publicNote && <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">{publicNote}</Typography>}
-          <PrivateDetailSection
-            itemId={stay.bookingId}
-            section="accommodations"
-            title={isEnglish ? "Private stay details" : "私密入住资料"}
-          />
-        </Box>
       </Box>
     </Box>
   );
@@ -660,6 +670,14 @@ function mapDirectionsUrl(origin, destination) {
   return url.toString();
 }
 
+function MapViewport({ position, zoom }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(position, zoom);
+  }, [map, position, zoom]);
+  return null;
+}
+
 function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
   const booking = confirmedAccommodationBookings[stay.bookingId];
   const comparison = stayComparison(stay);
@@ -670,6 +688,12 @@ function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
   const preciseLocation = Boolean(privatePosition || hotel?.position);
   const mapAttractions = attractionPinsByRegion[stay.stayGroup] ?? [];
   const nearby = hotel?.nearbyAttractions ?? mapAttractions;
+  const arrivalFacts = privateFacts(privateStay, isEnglish, [
+    ["行车与停车", "行车与停车", "Driving & parking"],
+    ["行车说明（截图可见部分）", "行车说明", "Driving notes"],
+    ["入户", "入户", "Entry"],
+    ["入住方式", "入住方式", "Check-in method"],
+  ]);
 
   if (!position) return null;
   return (
@@ -691,6 +715,7 @@ function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
           zoom={preciseLocation ? 14 : 13}
           zoomControl
         >
+          <MapViewport position={position} zoom={preciseLocation ? 14 : 13} />
           <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <CircleMarker center={position} pathOptions={{ color: "#123f36", fillColor: "#f28c5b", fillOpacity: 1, weight: 4 }} radius={10}>
             <Tooltip direction="top" offset={[0, -10]} permanent>{preciseLocation ? (isEnglish ? "Confirmed stay" : "已确认住宿") : (isEnglish ? "Trip area" : "行程区域")}</Tooltip>
@@ -716,11 +741,12 @@ function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
           );
         })}
       </Box>
+      {arrivalFacts.length > 0 && <Box className="confirmed-stay-arrival"><DetailSection facts={arrivalFacts} title={isEnglish ? "Arrival & entry" : "到达与入住"} /></Box>}
     </Box>
   );
 }
 
-function DetailSection({ facts, title }) {
+function DetailSection({ evidence = "", facts, title }) {
   if (facts.length === 0) return null;
   return (
     <Box className="confirmed-stay-section">
@@ -733,6 +759,7 @@ function DetailSection({ facts, title }) {
           </Box>
         ))}
       </Box>
+      {evidence && <Typography className="confirmed-stay-evidence-note" color="text.secondary" variant="caption">{evidence}</Typography>}
     </Box>
   );
 }

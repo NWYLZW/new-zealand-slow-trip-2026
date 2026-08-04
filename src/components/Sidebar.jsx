@@ -29,51 +29,31 @@ function clearUnlockUrl() {
 
 export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress, language, onLanguageToggle }) {
   const isEnglish = language === "en";
-  const unlockTimer = useRef(null);
-  const unlockTriggered = useRef(false);
+  const unlockClickCount = useRef(0);
+  const unlockClickTimer = useRef(null);
   const [privateDialogOpen, setPrivateDialogOpen] = useState(unlockRequestedByUrl);
 
-  const cancelUnlockHold = () => {
-    if (unlockTimer.current === null) return;
-    window.clearTimeout(unlockTimer.current);
-    unlockTimer.current = null;
+  const resetUnlockClicks = () => {
+    unlockClickCount.current = 0;
+    if (unlockClickTimer.current !== null) {
+      window.clearTimeout(unlockClickTimer.current);
+      unlockClickTimer.current = null;
+    }
   };
 
-  const startUnlockHold = (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    cancelUnlockHold();
-    unlockTriggered.current = false;
-    try {
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-    } catch {
-      // Pointer capture is only an interaction aid; the hold still works without it.
-    }
-    unlockTimer.current = window.setTimeout(() => {
-      unlockTimer.current = null;
-      unlockTriggered.current = true;
+  const recordUnlockClick = () => {
+    unlockClickCount.current += 1;
+    if (unlockClickCount.current === 10) {
+      resetUnlockClicks();
       setPrivateDialogOpen(true);
       navigator.vibrate?.(20);
-    }, 10_000);
+      return;
+    }
+    if (unlockClickTimer.current !== null) window.clearTimeout(unlockClickTimer.current);
+    unlockClickTimer.current = window.setTimeout(resetUnlockClicks, 2500);
   };
 
-  const finishUnlockHold = (event) => {
-    const shouldSuppressRelease = unlockTriggered.current;
-    cancelUnlockHold();
-    try {
-      if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
-        event.currentTarget.releasePointerCapture?.(event.pointerId);
-      }
-    } catch {
-      // The pointer may already have been released by the browser.
-    }
-    if (shouldSuppressRelease) {
-      event.preventDefault();
-      event.stopPropagation();
-      unlockTriggered.current = false;
-    }
-  };
-
-  useEffect(() => () => cancelUnlockHold(), []);
+  useEffect(() => () => resetUnlockClicks(), []);
 
   useEffect(() => {
     const openFromUrl = () => {
@@ -104,9 +84,6 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
       className={`sidebar ${className}`.trim()}
       component="nav"
       elevation={0}
-      onPointerCancel={finishUnlockHold}
-      onPointerDown={startUnlockHold}
-      onPointerUp={finishUnlockHold}
     >
       <Tabs
         orientation="vertical"
@@ -123,11 +100,13 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
       </Tabs>
 
       <Box className="sidebar-bottom">
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography variant="caption">{isEnglish ? "Booking progress" : "预订进度"}</Typography>
-          <Typography variant="caption">{progress.done} / {progress.total}</Typography>
-        </Stack>
-        <LinearProgress variant="determinate" value={progress.percent} className="progress" />
+        <Box onClick={recordUnlockClick}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Typography variant="caption">{isEnglish ? "Booking progress" : "预订进度"}</Typography>
+            <Typography variant="caption">{progress.done} / {progress.total}</Typography>
+          </Stack>
+          <LinearProgress variant="determinate" value={progress.percent} className="progress" />
+        </Box>
         <Stack direction="row" spacing={1}>
           <Button fullWidth variant="outlined" startIcon={<PrintIcon />} onClick={() => window.print()}>
             {isEnglish ? "Print" : "打印"}

@@ -2,23 +2,23 @@
 export const privateVaultPayload = {
   "format": "nz-slow-trip-private-vault",
   "version": 1,
-  "createdAt": "2026-08-04T09:07:16.045Z",
+  "createdAt": "2026-08-04T12:50:09.911Z",
   "kdf": {
     "algorithm": "Argon2id",
     "memorySize": 19456,
     "iterations": 2,
     "parallelism": 1,
     "hashLength": 32,
-    "salt": "RCuNjZg9vIC778uWQfnzUA=="
+    "salt": "Ry/fNQFsEWq3InO0KbWMYA=="
   },
   "cipher": {
     "algorithm": "AES-256-GCM",
-    "iv": "hLjgXb9OKr8l6gLF",
-    "ciphertext": "dY5EffEqKLM9vci8wlEI9IEdvUOrLvw4i2cezL4kqJuLrB0NjKyNBEV1wXky/XIUge+/sgJSvn5re5szOb+cxylEx8X67gLxDU5GCHhmya8fCqkaS8GcApT3aCGcantyAgAW7XMbsrouKJgQghZ4C8zH83wgKLIR9opXdpOS966VKIYXmvK3502L9/rhCetp0aCVHQ1u2WbRnXy7VmgVudMZGquk8Z+u0vgHSjgXTlxEqZhBY7FmOEv5sBfjQ2LIteAAPqychyXHW1mI30AfQf/xgFe66K44yT6JcY+EhehDmoguDopCElUZrgxultvU/9xieNikntm+hNsVaiEWev2+JoM/S1andGYCYTUzjb5IkSiHM29Cq3hBfG3QB/pUU5XdXXdphhI4132+Flc4us5wFEaA8ez5IZbyMJ74SYsmdHkhNNFbqbqgsqLzmagJk/WUScrkL0COjR/7qlcW+lIe2xRweNVrF+MHeaCRdX3gOGp7IfRvj7LaHnooVXwG8m/5UaP2AhPcTn47QkLgoebuncL2BfOXgC6EupX0BPnwrnRXqptwTTTTgD9JlhBNESd1qrJLzeli/J8psZ4tRS03hHiL/ne/g/e8CWDvEYlpfDQmfCVw93gVrx0QK1OS8Gp9KFobkYF04gcIZ+IjQj1PDzla2S2hdShyg3xqjsrbjT33Vy9pCx5H9y9hHsnPvy9w+SJuEA2hkS+tVe/Yc571/tf0dr1TmNfCBtBoYxPhhDpawsi8zanZeeEUGR6gG8YVURHtnMR9MPgplTTm40S7njezMt7FvznHTotyy4hD9j10FITuYGR6ECBQM/MArEB+DKf/5q3ByX+/U+VavQ34Ui3PCtn5oC4xi5nQ/TBDjwWelA66OxJNkjdYTrj6sCaQos9hqXszJvS/o4HOsGnnNFk73W741jmh3rnHzIGiPX6kwgQoQ+Od0L4dS0s9YZRhaqR11dyjEMLnohAZTUoV96QYsy/SVTl+oVLwE7EnBvd9tiGFnegQJiTNnlWLAm1IX1nqYE2pD7EvzzZYeSbC2N7rm8pVLavfBxuV7oAT4R9XuV6+aOjDikD47Wzl0L9YNqUQKwCGWGnu4LAToJsJv3BSBpSa2VtC+D9QRxCfvKzjyRV7KGh4fV5Cu2SUQw83DVHh7CAavksfaw+i4cVg04kAZrSnufG4Ov4kdgXgUbWyYIgKO9Lv4x/DQjkAhAY1eylo0w0dPaVSO9o1oyShtxGJoFcUv6ebI6QsF4ZX+BHJxtdbo0sfYzQaaOuMg3SATec/CECS6YtC3H6kq3FAtTj/kX7FkDNVLexVZHREqgWZJZqE9XdsMzl+T8wQ07MU3r/Cp2lp8r/aQKWs18tsV7ov2Cvd3ARajMRuVIvB3A0qjIDwd1kQRYv/B4TFJSVneDQFDcQCiDhJwTMbWgYDDE8RneFwgpUmaE/LsfdZXdEIF2NcxEUnjCl6wB/+W5OdpJjpLtrKJ3UMvtkGtrSCihos2w82LyOrvwqMaF9u2QatwZ98j+himFx2IkwI4b4rvXY1GsbuaGwFKU6L66sccUeKllcX6B3XfTvlugDvMbkE7w/gsV8piErKjQVPWgZTYpdI1uevFEfy4sAX0ZrUDtIqJ3uvIQ=="
+    "iv": "b3yD1iHq4dCc855S",
+    "ciphertext": "xj+yMBcTRJAKEhY1IWEqwHMGT+jai5MeZ05VMIlEVJNERNfkmCEhwrcBo8L+HfYOuHF6fy6KHKvYNZZFulSbrOAK6bQs9qztIGUIGBxJBpBjL3RHbbmRplmLIQwYumlHiZCzAgR2OWWO/zmQA6BLu1J9wDxmfl6IbFK8roUS55njtjGFMIiLBA7A3OF1G30WSh3Xpx7xU7z+1eJC/Ym4r7umKHCM2xPcczwlOwd4HcYHonjV3esz3Iz3klDAXWpjEqGxfDn8sUtkny2/Z7wgyr563jGScLoyb70N/mn83njiYKnSgUIJvGBBs751d2JViy/iRKlyyw8CvcopUg17UjJzjz9M8qNxDOXPcyhgZhLjPUSWW4OvVqEjDbCLTqV0iF4t/xnxibpPfHOUbc/uiGxyOMFn7P2JBmuGlhcSCsmzyhHSNZ5fYy5WtljMwx0bPGcP5Wi7PavxfjqDTQYw7LoOIXlk7vNoBofuhys6oRhaY4ElzB3qK/pc0tCu2sGrg3znZVM4ZTvKU3astx6Sl4uS3fOD7JVTwPK2vzs8rm4klSvOcQCLstEbRmiQvD/fwxvVmStLSX5/ZkvSiwac2DUhuCDpBj+AdYg3eKiUe17KxEOi2pA7OTaE6Nt0lMQudXrANWyN8V8f0jdbCQOu/WOLa+l+E+Ev+V3PdCyLQwYOdErRiMJcYwB3gi165y9/w5PMvKxiKZCju2YSf4czC6I2EDYNXYHciNzuIY3e4Yfg7dEU9pomtTKsLog7KWHFRGzQbVhHqm7/my6WI4nL/NLxqeZ0JnaROpZzAY1TsXtFlmIT01bo3U2niY/BY3LOMbaLtxmW/XY+gGStlQUU/7hs8kjeBQonEHz8xzwp5LcrI8YCEkkQngJJkvDoloBksM72EbWNCkfTTU4IBw6HwR86dIVHlbADG84D9COZ6wEJsXVtHRr3sLjaOLM4RbXubIJGHKSKZ8eiIb5zJh/E5hBmW4Vu9Olriv+PLiaUtus2JHIqIi7xnzQQYi6qKOn9Q4D6X4axuz8HMccV2eYKYIwQETbsVAtaaI/sFE3fZtFeURf9k6cQwMavI0kuto8hp4v5fW74GbKF4fw9oknl69fWsi0FKObNG94cCiCZVZokJZKFUyGcxmzGK5TE2CoYsSZlngwcsWKqGX/rnjPnoKriBc5860m20j2wH00V4i9OopFbI6px5WqLn6yY0r235z6iYGTVyGhpKfcbJY9GbW0B4ZAhTUdIS2srTE+9dHQmI+N5MNNgZ33sdBngjQEczmLOLAWp2LRyu2C1xtcSbcyk5Zs2HKa00XxXXQPC787QVC9fOgCik8SXSvsIaT1ON8A3+0gu+0S9MR9yYkuwT0FDC2jVqIaPzmBI4yHIlPdNHwjzsokjoOO6pOXBFyqdoGUzjyk5c8q+HToTZQRaUk7FpZ+1BpHqH/8+XngDF7DKEARiAzrRUvzNfo2QNdZ7+Tas/JKYvmZSFrOI8qYbkrwc1TCuNwo0la4llhu4Xkglg93/c3esdrgKVxyPsijqQhR8rJj8RUd110tkUGwZpwXpEzxaaXfJkEvziuDtTF80qUshnkDz6Gopp+nJgYhN6CJgfxN+YSAkTaI4RR+zIuuGqZRCil5lhp09UFi7Ibbjb6NAfYs/PSluZga/vWYLUM3cHsE6WmJwdx3Tc0IHwmJF3Jcia2YDOSt1BXbCf9z0mYn/JzkoBEF9z5DbhdzDJXsFVSCo4vS9BXnjBmA3VfBPtlHDqQd3yVofSe4DFTqyflschyg89x5ZGZU1nNHv"
   },
   "wrappedDek": {
     "algorithm": "AES-256-GCM",
-    "iv": "907OQ2UMI3XCCQvi",
-    "ciphertext": "Buh3ePd0NEHbBS5B3H/FTT43XBWycD4le4lOV6zyKBJD1d4yjpOBDWEQHDaY3Xkw"
+    "iv": "ZVgQacZ5q5u7x+Bz",
+    "ciphertext": "uCEaKZtV7qOiKpC0BJ0m9jLeTZ2B0PnohCU1HCZgQoJ9mVbiMmUZWhNf/70h3HvG"
   }
 };

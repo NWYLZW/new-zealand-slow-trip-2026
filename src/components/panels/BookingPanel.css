@@ -438,12 +438,6 @@
   font-weight: 900;
 }
 
-.confirmed-stay-evidence {
-  grid-column: 1 / -1;
-  padding-top: 24px;
-  border-top: 1px solid rgba(18, 63, 54, 0.18);
-}
-
 .confirmed-stay-location {
   grid-column: 1 / -1;
   padding-top: 24px;
@@ -488,6 +482,17 @@
   margin-left: 4px;
   vertical-align: -3px;
   font-size: 16px;
+}
+
+.confirmed-stay-arrival {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(18, 63, 54, 0.14);
+}
+
+.confirmed-stay-evidence-note {
+  display: block;
+  margin-top: 14px;
 }
 
 @media (max-width: 700px) {
