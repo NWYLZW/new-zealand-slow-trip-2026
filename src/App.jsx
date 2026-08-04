@@ -13,6 +13,7 @@ import { RentalCarPanel } from "./components/panels/RentalCarPanel";
 import { tabText } from "./components/tabIcons";
 import { activityBookingPlans, bookingItems, tabs } from "./tripData";
 import { LanguageContext } from "./LanguageContext";
+import { PrivateVaultProvider } from "./PrivateVaultContext";
 
 const storageKey = "nz-trip-booking-react-v1";
 const languageStorageKey = "nz-trip-language";
@@ -174,41 +175,43 @@ export default function App() {
 
   return (
     <LanguageContext.Provider value={languageValue}>
-      <Box className="page-shell" data-detail={Boolean(headerDetail) || undefined} data-language={language} data-tab={tab}>
-        <Box className="layout">
-          {!isMobile && sidebar}
-          <Box component="main" className="content">
-            <PageHeader
-              breadcrumbs={headerBreadcrumbs}
-              icon={activeTab.icon}
-              isEnglish={language === "en"}
-              menuOpen={mobileNavOpen}
-              onBack={headerDetail ? (headerDetail.onBack ?? closeDetail) : undefined}
-              onMenu={isMobile ? () => setMobileNavOpen(true) : undefined}
-              parentTitle={headerDetail ? parentTitle : undefined}
-              title={headerDetail?.label ?? parentTitle}
-            />
-            <Box className="page-body">
-              {tab === "overview" && <OverviewPanel onDetailChange={updateDetail} />}
-              {tab === "south" && <SouthPanel onDetailChange={updateDetail} />}
-              {tab === "north" && <NorthPanel onDetailChange={updateDetail} />}
-              {tab === "car" && <RentalCarPanel />}
-              {tab === "booking" && <BookingPanel checked={checked} onDetailChange={updateDetail} />}
-              {tab === "activities" && <ActivitiesPanel checked={checked} onDetailChange={updateDetail} setChecked={setChecked} />}
-              {tab === "notes" && <NotesPanel />}
+      <PrivateVaultProvider>
+        <Box className="page-shell" data-detail={Boolean(headerDetail) || undefined} data-language={language} data-tab={tab}>
+          <Box className="layout">
+            {!isMobile && sidebar}
+            <Box component="main" className="content">
+              <PageHeader
+                breadcrumbs={headerBreadcrumbs}
+                icon={activeTab.icon}
+                isEnglish={language === "en"}
+                menuOpen={mobileNavOpen}
+                onBack={headerDetail ? (headerDetail.onBack ?? closeDetail) : undefined}
+                onMenu={isMobile ? () => setMobileNavOpen(true) : undefined}
+                parentTitle={headerDetail ? parentTitle : undefined}
+                title={headerDetail?.label ?? parentTitle}
+              />
+              <Box className="page-body">
+                {tab === "overview" && <OverviewPanel onDetailChange={updateDetail} />}
+                {tab === "south" && <SouthPanel onDetailChange={updateDetail} />}
+                {tab === "north" && <NorthPanel onDetailChange={updateDetail} />}
+                {tab === "car" && <RentalCarPanel />}
+                {tab === "booking" && <BookingPanel checked={checked} onDetailChange={updateDetail} />}
+                {tab === "activities" && <ActivitiesPanel checked={checked} onDetailChange={updateDetail} setChecked={setChecked} />}
+                {tab === "notes" && <NotesPanel />}
+              </Box>
             </Box>
           </Box>
+          <Drawer
+            anchor="left"
+            id="mobile-navigation-drawer"
+            ModalProps={{ keepMounted: true }}
+            onClose={() => setMobileNavOpen(false)}
+            open={mobileNavOpen}
+          >
+            {sidebar}
+          </Drawer>
         </Box>
-        <Drawer
-          anchor="left"
-          id="mobile-navigation-drawer"
-          ModalProps={{ keepMounted: true }}
-          onClose={() => setMobileNavOpen(false)}
-          open={mobileNavOpen}
-        >
-          {sidebar}
-        </Drawer>
-      </Box>
+      </PrivateVaultProvider>
     </LanguageContext.Provider>
   );
 }

@@ -23,6 +23,7 @@ import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import { assetPath } from "../../assets";
 import { useLanguage } from "../../LanguageContext";
 import { PanelHero } from "../PanelHero";
+import { PrivateDetailSection } from "../PrivateVaultAccess";
 import "./RentalCarPanel.css";
 
 const confirmedBookings = [
@@ -153,6 +154,12 @@ function BookingConfirmationCard({ booking, isEnglish }) {
         <Alert severity="warning" className="rental-cover-limit">
           {isEnglish ? booking.coverLimitEn : booking.coverLimit}
         </Alert>
+
+        <PrivateDetailSection
+          itemId={booking.id}
+          section="rentalCars"
+          title={isEnglish ? "Private rental details" : "私密租车资料"}
+        />
 
         <Button
           href="https://www.budget.co.nz/en/reservation/view-modify-cancel"

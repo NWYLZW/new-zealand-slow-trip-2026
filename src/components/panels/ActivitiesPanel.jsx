@@ -19,6 +19,7 @@ import { itineraryDaysEn } from "../../englishTripData";
 import { activityBookingPlans, activityBookingSummary, northDays, southDays } from "../../tripData";
 import { useLanguage } from "../../LanguageContext";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "../calendar/CalendarPrimitives";
+import { PrivateDetailSection } from "../PrivateVaultAccess";
 import "./ActivitiesPanel.css";
 
 const activityUrlParam = "activity";
@@ -109,6 +110,11 @@ function ActivityDetail({ activity, checked, isEnglish, onToggle }) {
         </Box>
         <Typography className="activity-booking-detail">{isEnglish ? activity.detailEn : activity.detail}</Typography>
         <Typography className="activity-booking-policy" color="text.secondary">{isEnglish ? activity.policyEn : activity.policy}</Typography>
+        <PrivateDetailSection
+          itemId={activity.id}
+          section="activities"
+          title={isEnglish ? "Private booking details" : "私密预订资料"}
+        />
         <Button
           className="activity-booking-link"
           endIcon={<OpenInNewIcon />}

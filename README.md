@@ -50,6 +50,8 @@ GitHub Pages 构建会读取仓库变量 `VITE_GOOGLE_MAPS_API_KEY`（Settings �
 
 预订清单的勾选状态保存在当前浏览器的 `localStorage` 中，不会上传任何个人信息。
 
+订单号、准确地址和入户说明等不适合公开的数据可放入加密的私密保险箱；在左侧栏空白区域长按 10 秒后可本地解锁。其创建、设备信任、恢复和安全边界见 [私密行程保险箱](docs/private-vault.md)；Git 只保存密文，不保存恢复口令或原始私密 JSON。
+
 ## 维护建议
 
 - 修改行程内容：优先编辑 `src/tripData.js`。

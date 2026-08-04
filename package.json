@@ -16,6 +16,8 @@
     "audit:event-media": "node scripts/audit-event-media.mjs",
     "audit:social-guides": "node scripts/audit-social-guides.mjs",
     "audit:ai-rules": "node scripts/audit-ai-rules.mjs",
+    "vault:encrypt": "node scripts/create-private-vault.mjs",
+    "test:private-vault": "node scripts/test-private-vault.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173"
   },
   "dependencies": {
@@ -25,6 +27,7 @@
     "@mui/lab": "^6.0.0-beta.22",
     "@mui/material": "^6.4.0",
     "@react-google-maps/api": "^2.20.8",
+    "hash-wasm": "^4.12.0",
     "leaflet": "^1.9.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

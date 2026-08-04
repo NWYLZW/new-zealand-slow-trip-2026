@@ -402,3 +402,11 @@
     transition: none;
   }
 }
+
+.confirmed-stay-detail {
+  margin-top: 16px;
+}
+
+.confirmed-stay-detail .MuiCardContent-root {
+  padding: 20px;
+}

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, ButtonBase, Card, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, ButtonBase, Card, CardContent, LinearProgress, Stack, Typography } from "@mui/material";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
 import sharedHotelSelections from "../../data/hotel-selections.json";
@@ -11,6 +11,7 @@ import { useLanguage } from "../../LanguageContext";
 import { AccommodationMap } from "../AccommodationMap";
 import { HotelComparisonView } from "../HotelComparisonDialog";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "../calendar/CalendarPrimitives";
+import { PrivateDetailSection } from "../PrivateVaultAccess";
 import "./BookingPanel.css";
 
 const accommodationBookingIds = [
@@ -188,6 +189,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
   const [regionalHotelIds, setRegionalHotelIds] = useState(initialRegionalIds);
   const [selectedHotel, setSelectedHotel] = useState(initialCityHotel.name);
   const [selectedStayGroup, setSelectedStayGroup] = useState(null);
+  const [selectedConfirmedStay, setSelectedConfirmedStay] = useState(null);
   const [comparisonView, setComparisonView] = useState(() => readComparisonUrl());
   const comparisonRegion = comparisonView?.region ?? null;
   const weekdays = isEnglish
@@ -408,7 +410,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
               {isEnglish ? "Accommodation calendar · 28 Sep—11 Oct" : "住宿日历 · 9月28日—10月11日"}
             </Typography>
             <Typography color="text.secondary">
-              {isEnglish ? "Select any date for hotel options; green means confirmed and red means pending." : "点击任意日期打开酒店比选；顶部绿线表示已确认，红线表示待确认。"}
+              {isEnglish ? "Select a confirmed stay to view its details; select a pending stay for hotel options. Green means confirmed and red means pending." : "点击已确认住宿查看入住详情；点击待确认日期打开酒店比选。顶部绿线表示已确认，红线表示待确认。"}
             </Typography>
           </Box>
         </Stack>
@@ -452,12 +454,14 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
             const selectStay = () => {
               setSelectedHotel(stay.hotel);
               setSelectedStayGroup(stay.stayGroup);
+              setSelectedConfirmedStay(stay.confirmed ? stay : null);
+              if (stay.confirmed) return;
               if (stay.stayGroup === "auckland-city" && stay.hotel) openComparison("auckland-city");
               if (regionalHotels[stay.stayGroup] && stay.hotel) openComparison(stay.stayGroup);
             };
             const cellLabel = isEnglish
-              ? `${stay.date}, ${stay.placeEn}, ${stay.hotelEn ?? stay.hotel}, ${segmentConfirmationLabel}. Open accommodation options`
-              : `${stay.date}，${stay.place}，${stay.hotel}，${segmentConfirmationLabel}。打开住宿比选`;
+              ? `${stay.date}, ${stay.placeEn}, ${stay.hotelEn ?? stay.hotel}, ${segmentConfirmationLabel}. ${stay.confirmed ? "View stay details" : "Open accommodation options"}`
+              : `${stay.date}，${stay.place}，${stay.hotel}，${segmentConfirmationLabel}。${stay.confirmed ? "查看入住详情" : "打开住宿比选"}`;
 
             return stay.hotel ? (
               <CalendarDayCell
@@ -519,7 +523,41 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
           </CalendarGrid>
         </Box>
       </Card>
+      {selectedConfirmedStay && (
+        <ConfirmedStayDetail isEnglish={isEnglish} stay={selectedConfirmedStay} />
+      )}
     </Box>
+  );
+}
+
+function ConfirmedStayDetail({ isEnglish, stay }) {
+  const booking = confirmedAccommodationBookings[stay.bookingId];
+  const title = isEnglish ? (stay.hotelEn ?? stay.hotel) : stay.hotel;
+  const dateRange = booking
+    ? `${booking.checkIn} — ${booking.checkOut}`
+    : (isEnglish ? "Public confirmation details are not repeated here." : "公开确认信息未在此重复展示。");
+  const publicNote = booking?.privateNoteEn && isEnglish
+    ? booking.privateNoteEn
+    : booking?.privateNote;
+
+  return (
+    <Card className="confirmed-stay-detail" variant="outlined">
+      <CardContent>
+        <Typography component="h2" variant="h5">{title}</Typography>
+        <Stack spacing={0.45} sx={{ mt: 1.25 }}>
+          <Typography color="text.secondary">{dateRange}</Typography>
+          {booking?.guests && <Typography>{isEnglish ? booking.guestsEn : booking.guests}</Typography>}
+          {booking?.checkInTime && <Typography>{isEnglish ? `Check-in ${booking.checkInTimeEn} · Check-out ${booking.checkOutTimeEn}` : `入住 ${booking.checkInTime} · 退房 ${booking.checkOutTime}`}</Typography>}
+          {booking?.cancellation && <Typography color="text.secondary">{isEnglish ? booking.cancellationEn : booking.cancellation}</Typography>}
+          {publicNote && <Typography color="text.secondary" variant="body2">{publicNote}</Typography>}
+        </Stack>
+        <PrivateDetailSection
+          itemId={stay.bookingId}
+          section="accommodations"
+          title={isEnglish ? "Private stay details" : "私密入住资料"}
+        />
+      </CardContent>
+    </Card>
   );
 }
 

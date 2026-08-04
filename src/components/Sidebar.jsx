@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -14,11 +15,43 @@ import LanguageIcon from "@mui/icons-material/Language";
 import { assetPath } from "../assets";
 import { tabs } from "../tripData";
 import { tabLabel } from "./tabIcons";
+import { PrivateVaultDialog } from "./PrivateVaultAccess";
 
 export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress, language, onLanguageToggle }) {
   const isEnglish = language === "en";
+  const unlockTimer = useRef(null);
+  const [privateDialogOpen, setPrivateDialogOpen] = useState(false);
+
+  const cancelUnlockHold = () => {
+    if (unlockTimer.current === null) return;
+    window.clearTimeout(unlockTimer.current);
+    unlockTimer.current = null;
+  };
+
+  const startUnlockHold = (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (event.target.closest("button, a, input, textarea, [role='tab']")) return;
+    cancelUnlockHold();
+    unlockTimer.current = window.setTimeout(() => {
+      unlockTimer.current = null;
+      setPrivateDialogOpen(true);
+      navigator.vibrate?.(20);
+    }, 10_000);
+  };
+
+  useEffect(() => cancelUnlockHold, []);
+
   return (
-    <Paper className={`sidebar ${className}`.trim()} component="nav" aria-label={isEnglish ? "Main navigation" : "主导航"} elevation={0}>
+    <Paper
+      aria-label={isEnglish ? "Main navigation" : "主导航"}
+      className={`sidebar ${className}`.trim()}
+      component="nav"
+      elevation={0}
+      onPointerCancel={cancelUnlockHold}
+      onPointerDown={startUnlockHold}
+      onPointerLeave={cancelUnlockHold}
+      onPointerUp={cancelUnlockHold}
+    >
       <Tabs
         orientation="vertical"
         value={tab}
@@ -51,6 +84,7 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
           {isEnglish ? "中文" : "English"}
         </Button>
       </Box>
+      <PrivateVaultDialog onClose={() => setPrivateDialogOpen(false)} open={privateDialogOpen} />
     </Paper>
   );
 }

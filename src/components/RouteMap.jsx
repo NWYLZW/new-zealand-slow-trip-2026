@@ -35,6 +35,7 @@ import { eventTitleEn, mapStopEn, routeSegmentEn, routeText } from "../routeI18n
 import { socialGuidesByEvent } from "../socialGuides";
 import { EventRouteMap } from "./EventRouteMap";
 import { SocialGuideCard } from "./SocialGuideCard";
+import { PrivateDetailSection } from "./PrivateVaultAccess";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "./calendar/CalendarPrimitives";
 
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -1102,6 +1103,11 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
                         <Box><Typography className="route-flight-time">{flight.arrival}</Typography><Typography>{flight.to}</Typography><Typography variant="caption">{routeText(flight.arrivalTerminal, language)}</Typography></Box>
                       </Box>
                       {flight.reliabilityNoteZh && <Typography className="route-dialog-stay">{language === "en" ? flight.reliabilityNoteEn : flight.reliabilityNoteZh}</Typography>}
+                      <PrivateDetailSection
+                        itemId={flight.flightNumber}
+                        section="flights"
+                        title={language === "en" ? "Private flight details" : "私密机票资料"}
+                      />
                     </Box>
                   ))}
                   {selectedEvent.flightSummary?.note && <Typography className="route-dialog-stay">{language === "en" ? "Both travellers are ticketed. Names, ID numbers, booking references and e-ticket numbers are not shown on this public page." : selectedEvent.flightSummary.note}</Typography>}
