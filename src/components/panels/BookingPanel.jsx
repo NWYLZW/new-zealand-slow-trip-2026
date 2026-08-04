@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, ButtonBase, Card, CardContent, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, ButtonBase, Card, Chip, LinearProgress, Stack, Typography } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
 import sharedHotelSelections from "../../data/hotel-selections.json";
@@ -8,10 +10,13 @@ import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHot
 import { confirmedAccommodationBookings } from "../../data/confirmedAccommodationBookings";
 import { regionalHotels, regionalStays } from "../../data/regionalHotels";
 import { useLanguage } from "../../LanguageContext";
+import { usePrivateVault } from "../../PrivateVaultContext";
 import { AccommodationMap } from "../AccommodationMap";
-import { HotelComparisonView } from "../HotelComparisonDialog";
+import { attractionPinsByRegion, HotelComparisonView } from "../HotelComparisonDialog";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "../calendar/CalendarPrimitives";
 import { PrivateDetailSection } from "../PrivateVaultAccess";
+import { CircleMarker, MapContainer, TileLayer, Tooltip } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import "./BookingPanel.css";
 
 const accommodationBookingIds = [
@@ -22,6 +27,7 @@ const accommodationBookingIds = [
   "hotel-christchurch",
   "hotel-auckland-city",
 ];
+const confirmedStayUrlParam = "stay";
 
 const comparisonRegionLabels = {
   "auckland-city": { en: "Central Auckland", zh: "奥克兰市中心" },
@@ -120,9 +126,17 @@ function readComparisonUrl() {
   return { region, hotelId };
 }
 
+function readConfirmedStayUrl() {
+  const url = new URL(window.location.href);
+  if (url.hash !== "#booking" || url.searchParams.has("compare")) return null;
+  const bookingId = url.searchParams.get(confirmedStayUrlParam);
+  return accommodationCalendar.find((stay) => stay.confirmed && stay.bookingId === bookingId) ?? null;
+}
+
 function writeComparisonUrl(view, method = "replaceState", state = history.state) {
   const url = new URL(window.location.href);
   if (view) {
+    url.searchParams.delete(confirmedStayUrlParam);
     url.searchParams.set("compare", view.region);
     if (view.hotelId) url.searchParams.set("hotel", view.hotelId);
     else url.searchParams.delete("hotel");
@@ -134,6 +148,21 @@ function writeComparisonUrl(view, method = "replaceState", state = history.state
     url.searchParams.delete("hotel");
     url.searchParams.delete("photo");
     url.searchParams.delete("photoIndex");
+  }
+  history[method](state, "", url);
+}
+
+function writeConfirmedStayUrl(stay, method = "replaceState", state = history.state) {
+  const url = new URL(window.location.href);
+  if (stay) {
+    url.searchParams.set(confirmedStayUrlParam, stay.bookingId);
+    url.searchParams.delete("compare");
+    url.searchParams.delete("hotel");
+    url.searchParams.delete("photo");
+    url.searchParams.delete("photoIndex");
+    url.hash = "booking";
+  } else {
+    url.searchParams.delete(confirmedStayUrlParam);
   }
   history[method](state, "", url);
 }
@@ -180,6 +209,7 @@ function accommodationSegments(stays) {
 }
 
 function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailChange, percent }) {
+  const { data: vaultData, isUnlocked } = usePrivateVault();
   const initialCityHotel = aucklandCityHotels.find((hotel) => hotel.id === readSavedHotelId("auckland-city", aucklandCityStay.selectedHotelId))
     ?? aucklandCityHotels[0];
   const initialRegionalIds = Object.fromEntries(
@@ -189,12 +219,15 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
   const [regionalHotelIds, setRegionalHotelIds] = useState(initialRegionalIds);
   const [selectedHotel, setSelectedHotel] = useState(initialCityHotel.name);
   const [selectedStayGroup, setSelectedStayGroup] = useState(null);
-  const [selectedConfirmedStay, setSelectedConfirmedStay] = useState(null);
+  const [selectedConfirmedStay, setSelectedConfirmedStay] = useState(() => readConfirmedStayUrl());
   const [comparisonView, setComparisonView] = useState(() => readComparisonUrl());
   const comparisonRegion = comparisonView?.region ?? null;
   const weekdays = isEnglish
     ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     : ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+  const selectedPrivateStay = isUnlocked && selectedConfirmedStay
+    ? vaultData?.accommodations?.[selectedConfirmedStay.bookingId]
+    : null;
 
   const cityHotel = aucklandCityHotels.find((hotel) => hotel.id === cityHotelId) ?? aucklandCityHotels[0];
   const displayedCalendar = accommodationCalendar.map((stay) => {
@@ -218,6 +251,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
     const view = { region, hotelId: null };
     const currentState = history.state && typeof history.state === "object" ? history.state : {};
     setComparisonView(view);
+    setSelectedConfirmedStay(null);
     writeComparisonUrl(view, "pushState", {
       ...currentState,
       hotelComparison: "list",
@@ -264,6 +298,11 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
     writeComparisonUrl(null);
   }, []);
 
+  const backFromConfirmedStay = useCallback(() => {
+    setSelectedConfirmedStay(null);
+    writeConfirmedStayUrl(null);
+  }, []);
+
   const changeComparisonHotel = (hotelId) => {
     if (!comparisonRegion || !visibleComparisonHotels(comparisonRegion).some((hotel) => hotel.id === hotelId)) return;
     if (comparisonView?.hotelId === hotelId) return;
@@ -286,6 +325,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
     const syncComparisonFromUrl = () => {
       const next = readComparisonUrl();
       setComparisonView(next);
+      setSelectedConfirmedStay(readConfirmedStayUrl());
       if (next) {
         setSelectedStayGroup(calendarGroupForRegion(next.region));
         const selected = next.hotelId
@@ -315,6 +355,14 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
 
   useEffect(() => {
     if (!onDetailChange) return;
+    if (selectedConfirmedStay) {
+      onDetailChange({
+        label: confirmedStayName(selectedConfirmedStay, isEnglish, selectedPrivateStay),
+        onBack: backFromConfirmedStay,
+        onRoot: backFromConfirmedStay,
+      });
+      return;
+    }
     if (!comparisonRegion) {
       onDetailChange(null);
       return;
@@ -335,7 +383,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
       onBack: backFromComparison,
       onRoot: backToAccommodationCalendar,
     });
-  }, [backFromComparison, backToAccommodationCalendar, comparisonRegion, comparisonView?.hotelId, isEnglish, onDetailChange]);
+  }, [backFromComparison, backFromConfirmedStay, backToAccommodationCalendar, comparisonRegion, comparisonView?.hotelId, isEnglish, onDetailChange, selectedConfirmedStay, selectedPrivateStay]);
 
   useEffect(() => () => onDetailChange?.(null), [onDetailChange]);
 
@@ -367,6 +415,10 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
       // The static build still retains the choice in localStorage.
     }
   };
+
+  if (selectedConfirmedStay) {
+    return <ConfirmedStayDetail isEnglish={isEnglish} privateStay={selectedPrivateStay} stay={selectedConfirmedStay} />;
+  }
 
   if (comparisonRegion) {
     return (
@@ -454,8 +506,12 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
             const selectStay = () => {
               setSelectedHotel(stay.hotel);
               setSelectedStayGroup(stay.stayGroup);
-              setSelectedConfirmedStay(stay.confirmed ? stay : null);
-              if (stay.confirmed) return;
+              if (stay.confirmed) {
+                setSelectedConfirmedStay(stay);
+                writeConfirmedStayUrl(stay, "pushState");
+                return;
+              }
+              setSelectedConfirmedStay(null);
               if (stay.stayGroup === "auckland-city" && stay.hotel) openComparison("auckland-city");
               if (regionalHotels[stay.stayGroup] && stay.hotel) openComparison(stay.stayGroup);
             };
@@ -523,41 +579,161 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
           </CalendarGrid>
         </Box>
       </Card>
-      {selectedConfirmedStay && (
-        <ConfirmedStayDetail isEnglish={isEnglish} stay={selectedConfirmedStay} />
-      )}
     </Box>
   );
 }
 
-function ConfirmedStayDetail({ isEnglish, stay }) {
+function confirmedStayName(stay, isEnglish, privateStay) {
+  const privateName = privateStay?.propertyName ?? privateStay?.propertyNameEn ?? privateStay?.住宿名称;
+  if (typeof privateName === "string" && privateName.trim()) return privateName.trim();
+  return isEnglish ? (stay.hotelEn ?? stay.hotel) : stay.hotel;
+}
+
+function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   const booking = confirmedAccommodationBookings[stay.bookingId];
-  const title = isEnglish ? (stay.hotelEn ?? stay.hotel) : stay.hotel;
-  const dateRange = booking
-    ? `${booking.checkIn} — ${booking.checkOut}`
-    : (isEnglish ? "Public confirmation details are not repeated here." : "公开确认信息未在此重复展示。");
+  const title = confirmedStayName(stay, isEnglish, privateStay);
+  const dates = booking ? `${booking.checkIn} — ${booking.checkOut}` : "—";
   const publicNote = booking?.privateNoteEn && isEnglish
     ? booking.privateNoteEn
     : booking?.privateNote;
+  const stayFacts = [
+    [isEnglish ? "Location" : "地点", isEnglish ? stay.placeEn : stay.place],
+    [isEnglish ? "Dates" : "日期", dates],
+    booking?.guests && [isEnglish ? "Guests" : "同行者", isEnglish ? booking.guestsEn : booking.guests],
+    booking?.checkInTime && [isEnglish ? "Check-in / out" : "入住 / 退房", isEnglish ? `${booking.checkInTimeEn} / ${booking.checkOutTimeEn}` : `${booking.checkInTime} / ${booking.checkOutTime}`],
+  ].filter(Boolean);
+  const bookingFacts = [
+    booking?.total && [isEnglish ? "Verified total" : "已核验总价", isEnglish ? booking.totalEn : booking.total],
+    booking?.payment && [isEnglish ? "Payment" : "付款", isEnglish ? booking.paymentEn : booking.payment],
+    booking?.breakfast && [isEnglish ? "Breakfast" : "早餐", isEnglish ? booking.breakfastEn : booking.breakfast],
+    booking?.cancellation && [isEnglish ? "Cancellation" : "取消政策", isEnglish ? booking.cancellationEn : booking.cancellation],
+  ].filter(Boolean);
 
   return (
-    <Card className="confirmed-stay-detail" variant="outlined">
-      <CardContent>
-        <Typography component="h2" variant="h5">{title}</Typography>
-        <Stack spacing={0.45} sx={{ mt: 1.25 }}>
-          <Typography color="text.secondary">{dateRange}</Typography>
-          {booking?.guests && <Typography>{isEnglish ? booking.guestsEn : booking.guests}</Typography>}
-          {booking?.checkInTime && <Typography>{isEnglish ? `Check-in ${booking.checkInTimeEn} · Check-out ${booking.checkOutTimeEn}` : `入住 ${booking.checkInTime} · 退房 ${booking.checkOutTime}`}</Typography>}
-          {booking?.cancellation && <Typography color="text.secondary">{isEnglish ? booking.cancellationEn : booking.cancellation}</Typography>}
-          {publicNote && <Typography color="text.secondary" variant="body2">{publicNote}</Typography>}
-        </Stack>
-        <PrivateDetailSection
-          itemId={stay.bookingId}
-          section="accommodations"
-          title={isEnglish ? "Private stay details" : "私密入住资料"}
-        />
-      </CardContent>
-    </Card>
+    <Box className="confirmed-stay-detail">
+      <Stack alignItems={{ sm: "flex-start" }} direction={{ xs: "column", sm: "row" }} justifyContent="space-between" spacing={1.25}>
+        <Box>
+          <Typography component="h2" fontWeight={900} variant="h3">{title}</Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.5 }}>{dates}</Typography>
+        </Box>
+        <Chip color="success" icon={<CheckCircleOutlineIcon />} label={isEnglish ? "Confirmed" : "已确认"} />
+      </Stack>
+      <Box className="confirmed-stay-detail-grid">
+        <DetailSection facts={stayFacts} title={isEnglish ? "Stay" : "入住"} />
+        <DetailSection facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
+        <ConfirmedStayLocation isEnglish={isEnglish} privateStay={privateStay} stay={stay} />
+        <Box className="confirmed-stay-evidence">
+          <Typography component="h3" fontWeight={900} variant="h6">{isEnglish ? "Evidence & private details" : "来源与私密资料"}</Typography>
+          {booking?.source && <Typography color="text.secondary" sx={{ mt: 0.75 }}>{isEnglish ? booking.sourceEn : booking.source}</Typography>}
+          {publicNote && <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">{publicNote}</Typography>}
+          <PrivateDetailSection
+            itemId={stay.bookingId}
+            section="accommodations"
+            title={isEnglish ? "Private stay details" : "私密入住资料"}
+          />
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+function coordinatePair(value) {
+  if (!Array.isArray(value) || value.length !== 2 || !value.every(Number.isFinite)) return null;
+  return value;
+}
+
+function stayComparison(stay) {
+  return stay.stayGroup === "auckland-city" ? aucklandCityStay : regionalStays[stay.stayGroup];
+}
+
+function bookedHotel(stay, booking) {
+  if (!booking?.hotelId) return null;
+  return comparisonHotelsForRegion(stay.stayGroup).find((hotel) => hotel.id === booking.hotelId) ?? null;
+}
+
+function mapDirectionsUrl(origin, destination) {
+  const url = new URL("https://www.google.com/maps/dir/");
+  url.searchParams.set("api", "1");
+  url.searchParams.set("origin", origin);
+  url.searchParams.set("destination", destination);
+  url.searchParams.set("travelmode", "driving");
+  return url.toString();
+}
+
+function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
+  const booking = confirmedAccommodationBookings[stay.bookingId];
+  const comparison = stayComparison(stay);
+  const hotel = bookedHotel(stay, booking);
+  const privatePosition = coordinatePair(privateStay?.coordinates);
+  const position = privatePosition ?? hotel?.position ?? comparison?.anchorPosition;
+  const mapQuery = privateStay?.address ?? hotel?.mapQuery ?? `${isEnglish ? stay.placeEn : stay.place}, New Zealand`;
+  const preciseLocation = Boolean(privatePosition || hotel?.position);
+  const mapAttractions = attractionPinsByRegion[stay.stayGroup] ?? [];
+  const nearby = hotel?.nearbyAttractions ?? mapAttractions;
+
+  if (!position) return null;
+  return (
+    <Box className="confirmed-stay-location">
+      <Box>
+        <Typography component="h3" fontWeight={900} variant="h6">{isEnglish ? "Map & nearby places" : "地图与附近景点"}</Typography>
+        <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">
+          {preciseLocation
+            ? (isEnglish ? "The map is centred on this confirmed stay." : "地图已定位到这处已确认住宿。")
+            : (isEnglish ? "The public page uses the trip-area anchor. An unlocked private address or coordinates will replace it with the exact stay location." : "公开页暂以行程区域锚点定位；解锁后的私密地址或坐标会替换为准确住宿位置。")}
+        </Typography>
+      </Box>
+      <Box className="confirmed-stay-map-wrap">
+        <MapContainer
+          aria-label={isEnglish ? "Confirmed stay and nearby itinerary places" : "已确认住宿与附近行程景点地图"}
+          center={position}
+          className="confirmed-stay-map"
+          scrollWheelZoom
+          zoom={preciseLocation ? 14 : 13}
+          zoomControl
+        >
+          <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <CircleMarker center={position} pathOptions={{ color: "#123f36", fillColor: "#f28c5b", fillOpacity: 1, weight: 4 }} radius={10}>
+            <Tooltip direction="top" offset={[0, -10]} permanent>{preciseLocation ? (isEnglish ? "Confirmed stay" : "已确认住宿") : (isEnglish ? "Trip area" : "行程区域")}</Tooltip>
+          </CircleMarker>
+          {mapAttractions.map((attraction) => (
+            <CircleMarker center={attraction.position} key={attraction.label} pathOptions={{ color: "#347e90", fillColor: "#ffffff", fillOpacity: 1, weight: 3 }} radius={7}>
+              <Tooltip direction="top" offset={[0, -8]}>{isEnglish ? (attraction.labelEn ?? attraction.label) : attraction.label}</Tooltip>
+            </CircleMarker>
+          ))}
+        </MapContainer>
+      </Box>
+      <Box className="confirmed-stay-nearby-grid">
+        {nearby.map((attraction) => {
+          const label = isEnglish ? (attraction.nameEn ?? attraction.labelEn ?? attraction.name ?? attraction.label) : (attraction.name ?? attraction.label);
+          const distance = isEnglish ? (attraction.distanceEn ?? attraction.distance) : attraction.distance;
+          const travelTime = isEnglish ? (attraction.travelTimeEn ?? attraction.travelTime) : attraction.travelTime;
+          const destination = attraction.destinationQuery ?? attraction.label;
+          return (
+            <Box component="a" href={mapDirectionsUrl(mapQuery, destination)} key={label} rel="noreferrer" target="_blank">
+              <Typography fontWeight={900}>{label}<OpenInNewIcon aria-hidden="true" /></Typography>
+              <Typography color="text.secondary" variant="body2">{distance && travelTime ? `${distance} · ${travelTime}` : (isEnglish ? "Open directions from this trip area" : "从此行程区域打开导航")}</Typography>
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
+function DetailSection({ facts, title }) {
+  if (facts.length === 0) return null;
+  return (
+    <Box className="confirmed-stay-section">
+      <Typography component="h3" fontWeight={900} variant="h6">{title}</Typography>
+      <Box component="dl">
+        {facts.map(([label, value]) => (
+          <Box key={label}>
+            <Typography component="dt" variant="caption">{label}</Typography>
+            <Typography component="dd">{value}</Typography>
+          </Box>
+        ))}
+      </Box>
+    </Box>
   );
 }
 

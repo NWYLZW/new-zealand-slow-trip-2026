@@ -17,8 +17,8 @@ import { PrivateVaultProvider } from "./PrivateVaultContext";
 
 const storageKey = "nz-trip-booking-react-v1";
 const languageStorageKey = "nz-trip-language";
-const popupSearchParams = ["compare", "hotel", "photo", "photoIndex", "event", "eventTab", "activity"];
-const hotelPopupSearchParams = ["compare", "hotel", "photo", "photoIndex"];
+const popupSearchParams = ["compare", "hotel", "photo", "photoIndex", "stay", "event", "eventTab", "activity"];
+const hotelPopupSearchParams = ["compare", "hotel", "photo", "photoIndex", "stay"];
 const eventPopupSearchParams = ["event", "eventTab"];
 const bookingItemIds = bookingItems.map(([id]) => id);
 const comparisonLabels = {
@@ -36,7 +36,7 @@ function canonicalizePopupParams(tab) {
   if (tab === "booking") {
     eventPopupSearchParams.forEach((param) => url.searchParams.delete(param));
     url.searchParams.delete("activity");
-    if (!url.searchParams.has("compare")) ["hotel", "photo", "photoIndex"].forEach((param) => url.searchParams.delete(param));
+    if (!url.searchParams.has("compare") && !url.searchParams.has("stay")) ["hotel", "photo", "photoIndex"].forEach((param) => url.searchParams.delete(param));
   } else if (tab === "activities") {
     hotelPopupSearchParams.forEach((param) => url.searchParams.delete(param));
     eventPopupSearchParams.forEach((param) => url.searchParams.delete(param));
@@ -96,7 +96,7 @@ function activityLabelFromUrl(language) {
 
 function clearDetailUrl(tab) {
   const url = new URL(window.location.href);
-  if (tab === "booking") ["compare", "hotel", "photo", "photoIndex"].forEach((param) => url.searchParams.delete(param));
+  if (tab === "booking") ["compare", "hotel", "photo", "photoIndex", "stay"].forEach((param) => url.searchParams.delete(param));
   if (tab === "activities") url.searchParams.delete("activity");
   if (["overview", "south", "north"].includes(tab)) ["event", "eventTab"].forEach((param) => url.searchParams.delete(param));
   history.replaceState(history.state, "", url);

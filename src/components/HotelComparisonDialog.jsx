@@ -21,7 +21,7 @@ import { aucklandCityHotels, aucklandCityStay } from "../data/aucklandCityHotels
 import "./HotelComparisonDialog.css";
 
 const defaultComparison = aucklandCityStay;
-const attractionPinsByRegion = {
+export const attractionPinsByRegion = {
   "auckland-airport": [
     { label: "奥克兰国际航站楼", labelEn: "Auckland International Terminal", position: [-37.0040146, 174.7856948] },
     { label: "奥克兰国内航站楼", labelEn: "Auckland Domestic Terminal", position: [-37.0062161, 174.7920758] },
