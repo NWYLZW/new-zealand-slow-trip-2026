@@ -105,6 +105,12 @@
   padding-top: 14px;
 }
 
+.sidebar-bottom .MuiTypography-caption {
+  color: rgba(255, 255, 255, 0.96) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
 .progress {
   height: 7px !important;
   margin: 8px 0 14px;
