@@ -17,11 +17,21 @@ import { tabs } from "../tripData";
 import { tabLabel } from "./tabIcons";
 import { PrivateVaultDialog } from "./PrivateVaultAccess";
 
+function unlockRequestedByUrl() {
+  return new URL(window.location.href).searchParams.get("unlock") === "1";
+}
+
+function clearUnlockUrl() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("unlock");
+  history.replaceState(history.state, "", url);
+}
+
 export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress, language, onLanguageToggle }) {
   const isEnglish = language === "en";
   const unlockTimer = useRef(null);
   const unlockTriggered = useRef(false);
-  const [privateDialogOpen, setPrivateDialogOpen] = useState(false);
+  const [privateDialogOpen, setPrivateDialogOpen] = useState(unlockRequestedByUrl);
 
   const cancelUnlockHold = () => {
     if (unlockTimer.current === null) return;
@@ -66,6 +76,29 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
 
   useEffect(() => () => cancelUnlockHold(), []);
 
+  useEffect(() => {
+    const openFromUrl = () => {
+      if (unlockRequestedByUrl()) setPrivateDialogOpen(true);
+    };
+    const openFromShortcut = (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "l") {
+        event.preventDefault();
+        setPrivateDialogOpen(true);
+      }
+    };
+    window.addEventListener("popstate", openFromUrl);
+    window.addEventListener("keydown", openFromShortcut);
+    return () => {
+      window.removeEventListener("popstate", openFromUrl);
+      window.removeEventListener("keydown", openFromShortcut);
+    };
+  }, []);
+
+  const closePrivateDialog = () => {
+    if (unlockRequestedByUrl()) clearUnlockUrl();
+    setPrivateDialogOpen(false);
+  };
+
   return (
     <Paper
       aria-label={isEnglish ? "Main navigation" : "主导航"}
@@ -109,7 +142,7 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
           {isEnglish ? "中文" : "English"}
         </Button>
       </Box>
-      <PrivateVaultDialog onClose={() => setPrivateDialogOpen(false)} open={privateDialogOpen} />
+      <PrivateVaultDialog onClose={closePrivateDialog} open={privateDialogOpen} />
     </Paper>
   );
 }
