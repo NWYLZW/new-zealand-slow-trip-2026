@@ -404,7 +404,8 @@
 }
 
 .confirmed-stay-detail {
-  max-width: 980px;
+  width: 100%;
+  padding: 28px 44px 48px;
 }
 
 .confirmed-stay-detail-grid {
@@ -490,6 +491,10 @@
 }
 
 @media (max-width: 700px) {
+  .confirmed-stay-detail {
+    padding: 20px 16px 32px;
+  }
+
   .confirmed-stay-detail-grid {
     grid-template-columns: 1fr;
     gap: 28px;

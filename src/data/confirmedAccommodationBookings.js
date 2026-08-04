@@ -3,8 +3,8 @@
 export const confirmedAccommodationBookings = {
   "hotel-queenstown": {
     bookingId: "hotel-queenstown",
-    listingName: "皇后镇已订房源",
-    listingNameEn: "Booked Queenstown stay",
+    listingName: "皇后镇的房源",
+    listingNameEn: "Queenstown home",
     checkIn: "2026-09-29",
     checkOut: "2026-10-03",
     guests: "2 位客人",
@@ -44,8 +44,8 @@ export const confirmedAccommodationBookings = {
   },
   "hotel-oamaru": {
     bookingId: "hotel-oamaru",
-    listingName: "奥马鲁已订房源",
-    listingNameEn: "Booked Ōamaru stay",
+    listingName: "奥马鲁的房源",
+    listingNameEn: "Ōamaru home",
     checkIn: "2026-10-06",
     checkOut: "2026-10-07",
     guests: "2 位客人",
@@ -63,8 +63,8 @@ export const confirmedAccommodationBookings = {
   },
   "hotel-christchurch": {
     bookingId: "hotel-christchurch",
-    listingName: "基督城已订房源",
-    listingNameEn: "Booked Christchurch stay",
+    listingName: "克赖斯特彻奇的房源",
+    listingNameEn: "Christchurch home",
     checkIn: "2026-10-07",
     checkOut: "2026-10-08",
     guests: "2 位客人",
