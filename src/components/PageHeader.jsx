@@ -3,7 +3,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import { TabIcon } from "./tabIcons";
 
-export function PageHeader({ breadcrumbs, icon, isEnglish, menuOpen = false, onBack, onMenu, parentTitle, title }) {
+export function PageHeader({ actions, breadcrumbs, icon, isEnglish, menuOpen = false, onBack, onMenu, parentTitle, title }) {
   const breadcrumbItems = breadcrumbs?.length
     ? breadcrumbs
     : parentTitle
@@ -55,6 +55,7 @@ export function PageHeader({ breadcrumbs, icon, isEnglish, menuOpen = false, onB
           <Typography component="h1" title={title}>{title}</Typography>
         )}
       </Box>
+      {actions && <Box className="page-header-actions">{actions}</Box>}
     </Box>
   );
 }

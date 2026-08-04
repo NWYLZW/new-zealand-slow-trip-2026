@@ -181,6 +181,7 @@ export default function App() {
             {!isMobile && sidebar}
             <Box component="main" className="content">
               <PageHeader
+                actions={headerDetail?.actions}
                 breadcrumbs={headerBreadcrumbs}
                 icon={activeTab.icon}
                 isEnglish={language === "en"}

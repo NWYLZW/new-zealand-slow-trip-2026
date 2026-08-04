@@ -188,6 +188,13 @@
   overflow: hidden;
 }
 
+.page-header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+}
+
 .page-header-copy > h1,
 .page-header-breadcrumb h1,
 .page-header-breadcrumb button {

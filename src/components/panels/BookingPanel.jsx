@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, Button, ButtonBase, Card, Chip, LinearProgress, Stack, Typography } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { Box, ButtonBase, Card, IconButton, LinearProgress, Stack, Tooltip, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import sharedHotelSelections from "../../data/hotel-selections.json";
 import { AUCKLAND_AIRPORT_SELECTION_KEY } from "../../data/aucklandAirportHotels";
 import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHotels";
@@ -14,7 +15,7 @@ import { usePrivateVault } from "../../PrivateVaultContext";
 import { AccommodationMap } from "../AccommodationMap";
 import { attractionPinsByRegion, HotelComparisonView } from "../HotelComparisonDialog";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "../calendar/CalendarPrimitives";
-import { CircleMarker, MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { CircleMarker, MapContainer, TileLayer, Tooltip as LeafletTooltip, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./BookingPanel.css";
 
@@ -357,6 +358,7 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
     if (selectedConfirmedStay) {
       onDetailChange({
         label: confirmedStayName(selectedConfirmedStay, isEnglish, selectedPrivateStay),
+        actions: <StayHeaderActions isEnglish={isEnglish} privateStay={selectedPrivateStay} stay={selectedConfirmedStay} />,
         onBack: backFromConfirmedStay,
         onRoot: backFromConfirmedStay,
       });
@@ -583,7 +585,9 @@ function AccommodationCalendar({ checked, confirmedCount, isEnglish, onDetailCha
 }
 
 function confirmedStayName(stay, isEnglish, privateStay) {
-  const privateName = privateStay?.propertyName ?? privateStay?.propertyNameEn ?? privateStay?.住宿名称;
+  const privateName = isEnglish
+    ? (privateStay?.propertyNameEn ?? privateStay?.propertyName ?? privateStay?.住宿名称)
+    : (privateStay?.propertyNameZh ?? privateStay?.住宿名称 ?? privateStay?.propertyName);
   if (typeof privateName === "string" && privateName.trim()) return privateName.trim();
   const host = privateStay?.房东;
   const source = confirmedAccommodationBookings[stay.bookingId]?.source ?? "";
@@ -641,6 +645,40 @@ function mediaSourceLabel(image, isEnglish) {
   }
 }
 
+function StayHeaderActions({ isEnglish, privateStay, stay }) {
+  const booking = confirmedAccommodationBookings[stay.bookingId];
+  const hotel = bookedHotel(stay, booking);
+  const propertyUrl = privateStay?.propertyUrl ?? hotel?.officialUrl ?? hotel?.bookingUrl;
+  const orderUrl = privateStay?.orderUrl;
+  if (!propertyUrl && !orderUrl) return null;
+
+  return (
+    <Stack className="stay-header-actions" direction="row" spacing={0.5}>
+      {propertyUrl && (
+        <Tooltip title={propertyLinkLabel({ booking, isEnglish, privateStay })}>
+          <IconButton
+            aria-label={propertyLinkLabel({ booking, isEnglish, privateStay })}
+            className={privateStay?.platform === "Airbnb" || booking?.source?.includes("Airbnb") ? "stay-header-action-airbnb" : undefined}
+            component="a"
+            href={propertyUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <HomeOutlinedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
+      {orderUrl && (
+        <Tooltip title={isEnglish ? "Open booking details" : "打开订单详情"}>
+          <IconButton aria-label={isEnglish ? "Open booking details" : "打开订单详情"} component="a" href={orderUrl} rel="noreferrer" target="_blank">
+            <ReceiptLongOutlinedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
+    </Stack>
+  );
+}
+
 function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   const booking = confirmedAccommodationBookings[stay.bookingId];
   const hotel = bookedHotel(stay, booking);
@@ -648,8 +686,6 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   const dates = booking ? `${booking.checkIn} — ${booking.checkOut}` : "—";
   const images = stayImages(hotel, privateStay);
   const coverImage = images[0];
-  const propertyUrl = privateStay?.propertyUrl ?? hotel?.officialUrl ?? hotel?.bookingUrl;
-  const orderUrl = privateStay?.orderUrl;
   const stayFacts = [
     [isEnglish ? "Location" : "地点", isEnglish ? stay.placeEn : stay.place],
     [isEnglish ? "Dates" : "日期", dates],
@@ -678,44 +714,10 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
 
   return (
     <Box className="confirmed-stay-detail">
-      <Stack alignItems={{ sm: "flex-start" }} direction={{ xs: "column", sm: "row" }} justifyContent="space-between" spacing={1.25}>
-        <Box>
-          <Typography component="h2" fontWeight={900} variant="h3">{title}</Typography>
-          <Typography color="text.secondary" sx={{ mt: 0.5 }}>{dates}</Typography>
-        </Box>
-        <Chip color="success" icon={<CheckCircleOutlineIcon />} label={isEnglish ? "Confirmed" : "已确认"} />
-      </Stack>
-      {(coverImage || propertyUrl || orderUrl) && (
-        <Box className="confirmed-stay-hero">
-          {coverImage && (
-            <Box className="confirmed-stay-cover" component="figure">
-              <Box alt={coverImage.label ?? title} component="img" src={coverImage.src} />
-              <Typography component="figcaption" variant="caption">
-                {mediaSourceLabel(coverImage, isEnglish)}
-              </Typography>
-            </Box>
-          )}
-          {(propertyUrl || orderUrl) && (
-            <Stack alignItems="flex-start" className="confirmed-stay-links" spacing={1}>
-              {propertyUrl && (
-                <Button component="a" endIcon={<OpenInNewIcon />} href={propertyUrl} rel="noreferrer" target="_blank" variant="outlined">
-                  {propertyLinkLabel({ booking, isEnglish, privateStay })}
-                </Button>
-              )}
-              {orderUrl && (
-                <Button component="a" endIcon={<OpenInNewIcon />} href={orderUrl} rel="noreferrer" target="_blank" variant="outlined">
-                  {isEnglish ? "Open booking details" : "打开订单详情"}
-                </Button>
-              )}
-              {orderUrl && <Typography color="text.secondary" variant="caption">{isEnglish ? "Your private booking link is only available after local unlock." : "订单链接仅在本设备解锁私密资料后显示。"}</Typography>}
-            </Stack>
-          )}
-        </Box>
-      )}
       <Box className="confirmed-stay-detail-grid">
         <DetailSection facts={stayFacts} title={isEnglish ? "Stay" : "入住"} />
         <DetailSection evidence={booking?.source ? (isEnglish ? booking.sourceEn : booking.source) : ""} facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
-        <ConfirmedStayLocation isEnglish={isEnglish} privateStay={privateStay} stay={stay} />
+        <ConfirmedStayLocation coverImage={coverImage} imageAlt={title} isEnglish={isEnglish} privateStay={privateStay} stay={stay} />
       </Box>
     </Box>
   );
@@ -752,7 +754,7 @@ function MapViewport({ position, zoom }) {
   return null;
 }
 
-function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
+function ConfirmedStayLocation({ coverImage, imageAlt, isEnglish, privateStay, stay }) {
   const booking = confirmedAccommodationBookings[stay.bookingId];
   const comparison = stayComparison(stay);
   const hotel = bookedHotel(stay, booking);
@@ -781,26 +783,34 @@ function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
             : (isEnglish ? "The public page uses the trip-area anchor. An unlocked private address or coordinates will replace it with the exact stay location." : "公开页暂以行程区域锚点定位；解锁后的私密地址或坐标会替换为准确住宿位置。")}
         </Typography>
       </Box>
-      <Box className="confirmed-stay-map-wrap">
-        <MapContainer
-          aria-label={isEnglish ? "Confirmed stay and nearby itinerary places" : "已确认住宿与附近行程景点地图"}
-          center={position}
-          className="confirmed-stay-map"
-          scrollWheelZoom
-          zoom={preciseLocation ? 14 : 13}
-          zoomControl
-        >
-          <MapViewport position={position} zoom={preciseLocation ? 14 : 13} />
-          <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <CircleMarker center={position} pathOptions={{ color: "#123f36", fillColor: "#f28c5b", fillOpacity: 1, weight: 4 }} radius={10}>
-            <Tooltip direction="top" offset={[0, -10]} permanent>{preciseLocation ? (isEnglish ? "Confirmed stay" : "已确认住宿") : (isEnglish ? "Trip area" : "行程区域")}</Tooltip>
-          </CircleMarker>
-          {mapAttractions.map((attraction) => (
-            <CircleMarker center={attraction.position} key={attraction.label} pathOptions={{ color: "#347e90", fillColor: "#ffffff", fillOpacity: 1, weight: 3 }} radius={7}>
-              <Tooltip direction="top" offset={[0, -8]}>{isEnglish ? (attraction.labelEn ?? attraction.label) : attraction.label}</Tooltip>
+      <Box className="confirmed-stay-media-map">
+        {coverImage && (
+          <Box className="confirmed-stay-cover" component="figure">
+            <Box alt={coverImage.label ?? imageAlt} component="img" src={coverImage.src} />
+            <Typography component="figcaption" variant="caption">{mediaSourceLabel(coverImage, isEnglish)}</Typography>
+          </Box>
+        )}
+        <Box className="confirmed-stay-map-wrap">
+          <MapContainer
+            aria-label={isEnglish ? "Confirmed stay and nearby itinerary places" : "已确认住宿与附近行程景点地图"}
+            center={position}
+            className="confirmed-stay-map"
+            scrollWheelZoom
+            zoom={preciseLocation ? 14 : 13}
+            zoomControl
+          >
+            <MapViewport position={position} zoom={preciseLocation ? 14 : 13} />
+            <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <CircleMarker center={position} pathOptions={{ color: "#123f36", fillColor: "#f28c5b", fillOpacity: 1, weight: 4 }} radius={10}>
+              <LeafletTooltip direction="top" offset={[0, -10]} permanent>{preciseLocation ? (isEnglish ? "Confirmed stay" : "已确认住宿") : (isEnglish ? "Trip area" : "行程区域")}</LeafletTooltip>
             </CircleMarker>
-          ))}
-        </MapContainer>
+            {mapAttractions.map((attraction) => (
+              <CircleMarker center={attraction.position} key={attraction.label} pathOptions={{ color: "#347e90", fillColor: "#ffffff", fillOpacity: 1, weight: 3 }} radius={7}>
+                <LeafletTooltip direction="top" offset={[0, -8]}>{isEnglish ? (attraction.labelEn ?? attraction.label) : attraction.label}</LeafletTooltip>
+              </CircleMarker>
+            ))}
+          </MapContainer>
+        </Box>
       </Box>
       <Box className="confirmed-stay-nearby-grid">
         {nearby.map((attraction) => {
