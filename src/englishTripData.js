@@ -117,7 +117,7 @@ const dayTranslations = {
   "10月3日": ["Queenstown → Arrowtown → Wānaka", "Crown Range and Cardrona", "Stay · Wanaka Luxury Apartments; use the Cromwell route in bad weather."],
   "10月4日": ["Wānaka", "A full day without changing hotels", "Stay · Wanaka Luxury Apartments; afternoon plans depend on weather."],
   "10月5日": ["Wānaka → Aoraki / Mount Cook", "Glacier helicopter landing and Big Sky Stargazing", "Stay · booked Mt Cook Motel Studio Queen at The Hermitage; breakfast for two is included and check-in is at Mt Cook Lodge."],
-  "10月6日": ["Aoraki / Mount Cook → Lake Tekapo → Ōamaru", "Short Lake Tekapo stop and 20:00 little-penguin viewing", "Stay · Ōamaru, one night; accommodation is not booked yet."],
+  "10月6日": ["Aoraki / Mount Cook → Lake Tekapo → Ōamaru", "Short Lake Tekapo stop and 20:00 little-penguin viewing", "Stay · booked Ōamaru stay, one night; check in from 15:00."],
   "10月7日": ["Ōamaru → Christchurch", "Drive north and enjoy a slow late afternoon in central Christchurch", "Stay · booked Christchurch stay, one night; check in from 15:00."],
   "10月8日": ["Christchurch → Auckland", "Return the car at 11:00, then take JQ236 at 13:50", "Stay · booked Hotel Grand Chancellor Auckland, night 1; arrive at 15:10 and allow for the 07:00 Hobbiton coach check-in the next morning."],
   "10月9日": ["Auckland ⇄ Hobbiton", "GreatSights GS10H coach day tour", "Stay · Hotel Grand Chancellor Auckland, night 2; no checkout, hotel change or rental car."],

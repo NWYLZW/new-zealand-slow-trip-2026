@@ -33,6 +33,7 @@ const comparisonRegionLabels = {
 
 const queenstownBooking = confirmedAccommodationBookings["hotel-queenstown"];
 const wanakaBooking = confirmedAccommodationBookings["hotel-wanaka"];
+const oamaruBooking = confirmedAccommodationBookings["hotel-oamaru"];
 const christchurchBooking = confirmedAccommodationBookings["hotel-christchurch"];
 const aucklandCityBooking = confirmedAccommodationBookings["hotel-auckland-city"];
 
@@ -45,7 +46,7 @@ const accommodationCalendar = [
   { date: "10/3", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: wanakaBooking.listingName, hotelEn: wanakaBooking.listingNameEn, place: "瓦纳卡", placeEn: "Wānaka", status: "第 1 晚", statusEn: "Night 1", tone: "wanaka", confirmed: true, position: [-44.7047, 169.1216], mapQuery: "Wanaka Luxury Apartments" },
   { date: "10/4", bookingId: "hotel-wanaka", stayGroup: "wanaka", hotel: wanakaBooking.listingName, hotelEn: wanakaBooking.listingNameEn, place: "瓦纳卡", placeEn: "Wānaka", status: "第 2 晚", statusEn: "Night 2", tone: "wanaka", confirmed: true },
   { date: "10/5", bookingId: "mount-cook", stayGroup: "mount-cook", hotel: "The Hermitage · Mt Cook Motel Studio Queen", place: "库克山村", placeEn: "Aoraki / Mount Cook Village", status: "住 1 晚", statusEn: "1 night", tone: "mount-cook", confirmed: true, position: [-43.7363846, 170.0987676], mapQuery: "Mt Cook Lodge & Motels New Zealand" },
-  { date: "10/6", bookingId: "hotel-oamaru", stayGroup: "oamaru", hotel: "Mariner Suites", place: "奥马鲁", placeEn: "Ōamaru", status: "住 1 晚", statusEn: "1 night", tone: "oamaru", position: [-45.1031, 170.9687], mapQuery: "Mariner Suites Oamaru" },
+  { date: "10/6", bookingId: "hotel-oamaru", stayGroup: "oamaru", hotel: oamaruBooking.listingName, hotelEn: oamaruBooking.listingNameEn, place: "奥马鲁", placeEn: "Ōamaru", status: "住 1 晚", statusEn: "1 night", tone: "oamaru", confirmed: true, bookedStay: true },
   { date: "10/7", bookingId: "hotel-christchurch", stayGroup: "christchurch", hotel: christchurchBooking.listingName, hotelEn: christchurchBooking.listingNameEn, place: "基督城", placeEn: "Christchurch", status: "住 1 晚", statusEn: "1 night", tone: "christchurch", confirmed: true, bookedStay: true },
   { date: "10/8", bookingId: "hotel-auckland-city", stayGroup: "auckland-city", hotel: aucklandCityBooking.listingName, hotelEn: aucklandCityBooking.listingNameEn, place: "奥克兰市中心", placeEn: "Central Auckland", status: "第 1 晚", statusEn: "Night 1", tone: "auckland-city", confirmed: true, bookedStay: true, position: [-36.8467, 174.7598], mapQuery: "Hotel Grand Chancellor Auckland" },
   { date: "10/9", bookingId: "hotel-auckland-city", stayGroup: "auckland-city", hotel: aucklandCityBooking.listingName, hotelEn: aucklandCityBooking.listingNameEn, place: "奥克兰市中心", placeEn: "Central Auckland", status: "第 2 晚", statusEn: "Night 2", tone: "auckland-city", confirmed: true, bookedStay: true },
