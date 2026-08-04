@@ -68,7 +68,7 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
   };
 
   const suppressClickAfterUnlock = (event) => {
-    if (!unlockTriggered.current) return;
+    if (!unlockTriggered.current || !event.currentTarget.contains(event.target)) return;
     event.preventDefault();
     event.stopPropagation();
     unlockTriggered.current = false;

@@ -208,7 +208,7 @@ export default function App() {
             onClose={() => setMobileNavOpen(false)}
             open={mobileNavOpen}
           >
-            {sidebar}
+            {(isMobile || mobileNavOpen) && sidebar}
           </Drawer>
         </Box>
       </PrivateVaultProvider>
