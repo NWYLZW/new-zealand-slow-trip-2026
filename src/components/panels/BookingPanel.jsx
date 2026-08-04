@@ -666,7 +666,7 @@ function ConfirmedStayLocation({ isEnglish, privateStay, stay }) {
   const hotel = bookedHotel(stay, booking);
   const privatePosition = coordinatePair(privateStay?.coordinates);
   const position = privatePosition ?? hotel?.position ?? comparison?.anchorPosition;
-  const mapQuery = privateStay?.address ?? hotel?.mapQuery ?? `${isEnglish ? stay.placeEn : stay.place}, New Zealand`;
+  const mapQuery = privateStay?.address ?? privateStay?.["准确地址"] ?? hotel?.mapQuery ?? `${isEnglish ? stay.placeEn : stay.place}, New Zealand`;
   const preciseLocation = Boolean(privatePosition || hotel?.position);
   const mapAttractions = attractionPinsByRegion[stay.stayGroup] ?? [];
   const nearby = hotel?.nearbyAttractions ?? mapAttractions;
