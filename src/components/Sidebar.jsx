@@ -57,6 +57,7 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
   };
 
   const finishUnlockHold = (event) => {
+    const shouldSuppressRelease = unlockTriggered.current;
     cancelUnlockHold();
     try {
       if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
@@ -65,13 +66,11 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
     } catch {
       // The pointer may already have been released by the browser.
     }
-  };
-
-  const suppressClickAfterUnlock = (event) => {
-    if (!unlockTriggered.current || !event.currentTarget.contains(event.target)) return;
-    event.preventDefault();
-    event.stopPropagation();
-    unlockTriggered.current = false;
+    if (shouldSuppressRelease) {
+      event.preventDefault();
+      event.stopPropagation();
+      unlockTriggered.current = false;
+    }
   };
 
   useEffect(() => () => cancelUnlockHold(), []);
@@ -105,7 +104,6 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
       className={`sidebar ${className}`.trim()}
       component="nav"
       elevation={0}
-      onClickCapture={suppressClickAfterUnlock}
       onPointerCancel={finishUnlockHold}
       onPointerDown={startUnlockHold}
       onPointerUp={finishUnlockHold}
