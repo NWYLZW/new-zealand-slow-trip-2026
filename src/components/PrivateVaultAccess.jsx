@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   Stack,
   TextField,
   Typography,
@@ -16,6 +17,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ShieldIcon from "@mui/icons-material/Shield";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CloseIcon from "@mui/icons-material/Close";
 import { useLanguage } from "../LanguageContext";
 import { usePrivateVault } from "../PrivateVaultContext";
 import "./PrivateVaultAccess.css";
@@ -47,9 +49,24 @@ export function PrivateVaultDialog({ onClose, open }) {
     if (unlocked) close();
   };
 
+  const lockAndClose = () => {
+    vault.lock();
+    close();
+  };
+
+  const forgetAndClose = async () => {
+    const forgotten = await vault.forgetDevice();
+    if (forgotten) close();
+  };
+
   return (
     <Dialog className="private-vault-dialog" fullWidth maxWidth="sm" onClose={close} open={open}>
-        <DialogTitle>{isEnglish ? "Private details" : "私密资料"}</DialogTitle>
+        <DialogTitle>
+          {isEnglish ? "Private details" : "私密资料"}
+          <IconButton aria-label={isEnglish ? "Close private details" : "关闭私密资料"} onClick={close} sx={{ position: "absolute", right: 12, top: 12 }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <Stack spacing={2.25}>
             <Stack direction="row" alignItems="flex-start" spacing={1.25} className="private-vault-dialog-intro">
@@ -103,8 +120,9 @@ export function PrivateVaultDialog({ onClose, open }) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          {vault.isUnlocked && <Button onClick={vault.lock} startIcon={<LockIcon />}>{isEnglish ? "Lock now" : "立即锁定"}</Button>}
-          {vault.trusted && <Button color="inherit" onClick={vault.forgetDevice} startIcon={<DeleteOutlineIcon />}>{isEnglish ? "Forget this device" : "移除此设备"}</Button>}
+          <Button color="inherit" onClick={close}>{isEnglish ? "Continue trip" : "继续查看行程"}</Button>
+          {vault.isUnlocked && <Button onClick={lockAndClose} startIcon={<LockIcon />}>{isEnglish ? "Lock now" : "立即锁定"}</Button>}
+          {vault.trusted && <Button color="inherit" onClick={forgetAndClose} startIcon={<DeleteOutlineIcon />}>{isEnglish ? "Forget this device" : "移除此设备"}</Button>}
           {vault.isConfigured && !vault.isUnlocked && (
             <Button
               disabled={vault.loading || (!vault.trusted && passphrase.length === 0)}
