@@ -20,6 +20,7 @@ import { PrivateVaultDialog } from "./PrivateVaultAccess";
 export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress, language, onLanguageToggle }) {
   const isEnglish = language === "en";
   const unlockTimer = useRef(null);
+  const unlockTriggered = useRef(false);
   const [privateDialogOpen, setPrivateDialogOpen] = useState(false);
 
   const cancelUnlockHold = () => {
@@ -30,16 +31,40 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
 
   const startUnlockHold = (event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (event.target.closest("button, a, input, textarea, [role='tab']")) return;
     cancelUnlockHold();
+    unlockTriggered.current = false;
+    try {
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Pointer capture is only an interaction aid; the hold still works without it.
+    }
     unlockTimer.current = window.setTimeout(() => {
       unlockTimer.current = null;
+      unlockTriggered.current = true;
       setPrivateDialogOpen(true);
       navigator.vibrate?.(20);
     }, 10_000);
   };
 
-  useEffect(() => cancelUnlockHold, []);
+  const finishUnlockHold = (event) => {
+    cancelUnlockHold();
+    try {
+      if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+        event.currentTarget.releasePointerCapture?.(event.pointerId);
+      }
+    } catch {
+      // The pointer may already have been released by the browser.
+    }
+  };
+
+  const suppressClickAfterUnlock = (event) => {
+    if (!unlockTriggered.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+    unlockTriggered.current = false;
+  };
+
+  useEffect(() => () => cancelUnlockHold(), []);
 
   return (
     <Paper
@@ -47,10 +72,10 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
       className={`sidebar ${className}`.trim()}
       component="nav"
       elevation={0}
-      onPointerCancel={cancelUnlockHold}
+      onClickCapture={suppressClickAfterUnlock}
+      onPointerCancel={finishUnlockHold}
       onPointerDown={startUnlockHold}
-      onPointerLeave={cancelUnlockHold}
-      onPointerUp={cancelUnlockHold}
+      onPointerUp={finishUnlockHold}
     >
       <Tabs
         orientation="vertical"
