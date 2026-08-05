@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-然后打开 `http://127.0.0.1:4173/`。
+然后打开 `http://127.0.0.1:4173/new-zealand-slow-trip-2026/`。
 
 构建生产版本：
 
@@ -22,6 +22,12 @@ npm run build
 ## GitHub Pages
 
 项目已按仓库名配置 Vite base path：`/new-zealand-slow-trip-2026/`。推送到 GitHub 后，`.github/workflows/pages.yml` 会自动构建并发布到 GitHub Pages。
+
+## 安装为应用
+
+生产构建是可安装的 PWA。桌面版 Chrome、Edge 和 Android 浏览器可使用左侧栏底部的「安装到设备」；iPhone 或 iPad 请在 Safari 中选择「分享 → 添加到主屏幕」。安装后会以独立窗口从「行程总览」启动，并提供「行程总览」和「酒店预订」快捷入口。
+
+Service Worker 会预缓存应用壳，并按需缓存已经打开过的行程图片和 OpenStreetMap 地图瓦片；不会把整个图片库一次性下载，也不会缓存浏览器内解密后的私密资料。发布新版本后应用会自动更新。
 
 ## 地图
 

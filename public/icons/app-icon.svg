@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">新西兰行程</title>
+  <desc id="desc">深绿色底色上的山脉与旅行路线</desc>
+  <rect width="512" height="512" rx="92" fill="#123f36"/>
+  <path d="M82 329 180 184l58 78 56-91 136 158H82Z" fill="#fffdf8"/>
+  <path d="m153 224 27-40 30 40-26-9-31 9Zm110 82 31-135 48 56-34-12-45 91Z" fill="#d9e7d5"/>
+  <path d="M103 376c77 28 97-49 160-39 69 11 72 67 144 37" fill="none" stroke="#f2b86b" stroke-linecap="round" stroke-width="22"/>
+  <circle cx="103" cy="376" r="24" fill="#df7659" stroke="#fffdf8" stroke-width="10"/>
+  <circle cx="407" cy="374" r="24" fill="#df7659" stroke="#fffdf8" stroke-width="10"/>
+</svg>

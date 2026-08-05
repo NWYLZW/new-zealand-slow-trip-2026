@@ -16,6 +16,7 @@ import { assetPath } from "../assets";
 import { tabs } from "../tripData";
 import { tabLabel } from "./tabIcons";
 import { PrivateVaultDialog } from "./PrivateVaultAccess";
+import { PwaInstallButton } from "./PwaInstallButton";
 
 function unlockRequestedByUrl() {
   return new URL(window.location.href).searchParams.get("unlock") === "1";
@@ -118,6 +119,7 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
         <Button className="language-switch" fullWidth variant="outlined" startIcon={<LanguageIcon />} onClick={onLanguageToggle}>
           {isEnglish ? "中文" : "English"}
         </Button>
+        <PwaInstallButton language={language} />
       </Box>
       <PrivateVaultDialog onClose={closePrivateDialog} open={privateDialogOpen} />
     </Paper>

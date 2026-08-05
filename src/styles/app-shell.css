@@ -133,6 +133,11 @@
   text-transform: none !important;
 }
 
+.pwa-install-button {
+  margin-top: 8px !important;
+  text-transform: none !important;
+}
+
 .content {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
