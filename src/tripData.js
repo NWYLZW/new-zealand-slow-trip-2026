@@ -93,7 +93,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "奥克兰 → 皇后镇",
     subtitle: "JQ295 早班机 + 11:00南岛取车",
-    stay: "住宿 · 皇后镇已订房源；15:00 后办理入住，具体位置与入户信息私下保存。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "中",
     color: "#df7659",
     events: [
@@ -102,7 +102,7 @@ export const southDays = [
       ["08:15", "JQ295 奥克兰 → 皇后镇（电子客票状态 OK）"],
       ["10:10", "抵达皇后镇机场"],
       ["11:00", "Budget 皇后镇机场取车（已预订）"],
-      ["11:30", "取车后前往酒店寄存行李，再安排午餐与湖边散步"],
+      ["11:30", "取车后在皇后镇活动，15:00 后办理已确认住宿入住"],
     ],
   },
   {
@@ -111,7 +111,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "皇后镇市区",
     subtitle: "花园、湖边与 Skyline",
-    stay: "住宿 · 皇后镇已订房源；前往花园、湖边与 Skyline 的实际车程以导航为准。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "低",
     color: "#8ab59b",
     events: [
@@ -128,7 +128,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "皇后镇 ⇄ 格林诺奇",
     subtitle: "湖岸公路半日游",
-    stay: "住宿 · 皇后镇已订房源；格林诺奇往返的出发时间以当天导航为准。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "中",
     color: "#7895b2",
     events: [
@@ -146,7 +146,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "Walter Peak 湖上巡游",
     subtitle: "高地农场烧烤 + 农场表演",
-    stay: "住宿 · 皇后镇已订房源；Walter Peak 当天按导航前往镇中心并预留停车。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "低",
     color: "#f2b86b",
     highlight: "米尔福德峡湾改为高强度备选；这天主打轻松、不早起。",
@@ -173,7 +173,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "皇后镇 → 箭镇 → 瓦纳卡",
     subtitle: "Crown Range 与 Cardrona",
-    stay: "住宿 · Wanaka Luxury Apartments；坏天气改走 Cromwell。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "中",
     color: "#df7659",
     events: [
@@ -191,7 +191,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "瓦纳卡",
     subtitle: "整日不换酒店",
-    stay: "住宿 · Wanaka Luxury Apartments；下午项目按天气决定。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "低",
     color: "#8ab59b",
     events: [
@@ -208,7 +208,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "瓦纳卡 → 库克山",
     subtitle: "直升机冰川降落 + Big Sky 星空",
-    stay: "住宿 · 已预订 The Hermitage · Mt Cook Motel Studio Queen；含双人早餐，确认号已私下保存，10月入住到 Mt Cook Lodge 办理入住。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "高",
     color: "#7895b2",
     highlight: "直升机参考 NZ$649/成人，2人约 NZ$1,298；Big Sky 成人 NZ$159 起，2人约 NZ$318。",
@@ -239,7 +239,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "库克山 → 蒂卡波 → 奥马鲁",
     subtitle: "蒂卡波短停 + 20:00 小蓝企鹅归巢",
-    stay: "住宿 · 奥马鲁已订房源，1晚；15:00 后入住，次日继续自驾前往基督城。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "高",
     color: "#123f36",
     events: [
@@ -265,7 +265,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "奥马鲁 → 基督城",
     subtitle: "海岸线北上 + 基督城傍晚慢游",
-    stay: "住宿 · 基督城已订房源，1晚；15:00 后入住，租车保留至10月8日11:00机场还车。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "中",
     color: "#9d7f66",
     events: [
@@ -284,7 +284,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "基督城 → 奥克兰",
     subtitle: "11:00还车 + JQ236 午后航班",
-    stay: "住宿 · 已订 Hotel Grand Chancellor Auckland，连续第1晚；15:10抵达后直接进城，次日 07:00 须到 SkyCity Coach Terminal 报到。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "中",
     color: "#df7659",
     events: [
@@ -305,7 +305,7 @@ export const northDays = [
     calendarRegion: "north",
     title: "奥克兰 ⇄ 霍比屯",
     subtitle: "GreatSights GS10H 大巴日游",
-    stay: "住宿 · 返回已订 Hotel Grand Chancellor Auckland，连续第2晚；不退房、不换酒店、不租车。",
+    stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "中",
     color: "#9dbb54",
     events: [
@@ -324,11 +324,11 @@ export const northDays = [
     calendarRegion: "north",
     title: "奥克兰半日 → 奥克兰机场",
     subtitle: "寄存行李、轻松半日与国际返程",
-    stay: "当晚不住酒店；上午从 Hotel Grand Chancellor Auckland 退房后寄存行李，下午前往奥克兰机场等待次日凌晨航班。",
+    stay: "今日退房已确认；解锁私密资料后显示住宿详情。",
     intensity: "低",
     color: "#f2b86b",
     events: [
-      ["09:00", "市中心酒店退房并寄存行李"],
+      ["09:00", "退房后寄存行李"],
       ["09:30—13:00", "奥克兰轻松半日"],
       ["13:00", "午餐、返回酒店取行李"],
       ["15:30", "前往奥克兰机场"],

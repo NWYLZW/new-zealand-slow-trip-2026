@@ -12,6 +12,7 @@ import { SouthPanel } from "./components/panels/SouthPanel";
 import { RentalCarPanel } from "./components/panels/RentalCarPanel";
 import { tabText } from "./components/tabIcons";
 import { activityBookingPlans, bookingItems, tabs } from "./tripData";
+import { confirmedAccommodationBookings } from "./data/confirmedAccommodationBookings";
 import { LanguageContext } from "./LanguageContext";
 import { PrivateVaultProvider } from "./PrivateVaultContext";
 
@@ -120,7 +121,7 @@ export default function App() {
   const activeTab = tabs.find((item) => item.value === tab) ?? tabs[0];
   const parentTitle = tabText(activeTab, "label", language);
   const progress = useMemo(() => {
-    const fixedConfirmedIds = new Set(["mount-cook"]);
+    const fixedConfirmedIds = new Set(Object.keys(confirmedAccommodationBookings));
     const done = bookingItemIds.filter((id) => fixedConfirmedIds.has(id) || Boolean(checked[id])).length;
     return { done, total: bookingItemIds.length, percent: Math.round((done / bookingItemIds.length) * 100) };
   }, [checked]);

@@ -29,8 +29,10 @@ import "leaflet/dist/leaflet.css";
 import { eventMediaByTitle, localNameTranslations } from "../eventMedia";
 import { getInlineEventLink, getInlineEventParts } from "../eventLinks";
 import { mapStops, northDays, southDays } from "../tripData";
+import { confirmedStayTransitionsOn } from "../data/confirmedStayTimeline";
 import { itineraryDaysEn } from "../englishTripData";
 import { useLanguage } from "../LanguageContext";
+import { usePrivateVault } from "../PrivateVaultContext";
 import { eventTitleEn, mapStopEn, routeSegmentEn, routeText } from "../routeI18n";
 import { socialGuidesByEvent } from "../socialGuides";
 import { EventRouteMap } from "./EventRouteMap";
@@ -378,6 +380,7 @@ const eventColors = {
   boat: "#347e90",
   helicopter: "#6f7db8",
   stargazing: "#4b678f",
+  confirmedStay: "#527b65",
 };
 const eventIconMap = {
   calendar: CalendarTodayIcon,
@@ -588,20 +591,73 @@ function getTripCalendarCells(days) {
   return cells;
 }
 
-function getCalendarEvents(day) {
+function stayPhaseLabel(phase, isEnglish) {
+  const labels = {
+    "check-in": isEnglish ? "Check-in" : "入住",
+    "check-out": isEnglish ? "Check-out" : "退房",
+    overnight: isEnglish ? "Confirmed stay" : "已确认住宿",
+  };
+  return labels[phase];
+}
+
+function privateStayName(booking, privateStay, isEnglish) {
+  const name = isEnglish
+    ? (privateStay?.propertyNameEn ?? privateStay?.propertyName ?? privateStay?.住宿名称)
+    : (privateStay?.propertyNameZh ?? privateStay?.住宿名称 ?? privateStay?.propertyName);
+  if (typeof name === "string" && name.trim()) return name.trim();
+  return isEnglish ? (booking.listingNameEn ?? booking.listingName) : booking.listingName;
+}
+
+function stayEventTime(booking, phase, isEnglish) {
+  if (phase === "check-in") return isEnglish ? (booking.checkInTimeEn ?? "Check-in day") : (booking.checkInTime ?? "入住日");
+  if (phase === "check-out") return isEnglish ? (booking.checkOutTimeEn ?? "Check-out day") : (booking.checkOutTime ?? "退房日");
+  return isEnglish ? "Overnight" : "住宿中";
+}
+
+function confirmedStayEvents(day, { isPrivateUnlocked = false, language = "zh", privateVault } = {}) {
+  const isEnglish = language === "en";
+  const date = eventDateId({ day });
+  return confirmedStayTransitionsOn(date).map(({ booking, phase }) => {
+    const privateStay = isPrivateUnlocked ? privateVault?.accommodations?.[booking.bookingId] : null;
+    const statusLabel = stayPhaseLabel(phase, isEnglish);
+    const propertyName = isPrivateUnlocked ? privateStayName(booking, privateStay, isEnglish) : null;
+    const title = propertyName ? `${statusLabel} · ${propertyName}` : statusLabel;
+    return {
+      id: `stay-${booking.bookingId}-${phase}`,
+      title,
+      calendarLabel: propertyName ? `${statusLabel} · ${propertyName}` : statusLabel,
+      calendarLabelEn: propertyName ? `${statusLabel} · ${propertyName}` : statusLabel,
+      time: stayEventTime(booking, phase, isEnglish),
+      timeEn: stayEventTime(booking, phase, true),
+      color: eventColors.confirmedStay,
+      icon: "hotel",
+      booking,
+      privateStay,
+      isPrivateUnlocked,
+      stayPhase: phase,
+      isConfirmedStay: true,
+      events: [],
+      segmentIds: [],
+      stopTags: [],
+    };
+  });
+}
+
+function getCalendarEvents(day, options) {
   const dayKey = day.dateKey ?? day.date;
   const groups = calendarEventGroupsByDate[dayKey] ?? [
     { title: day.subtitle || day.title, time: day.events[0]?.[0] || "全天", items: day.events.map((_, index) => index) },
   ];
 
-  return groups.map((group) => ({
+  const groupedEvents = groups.map((group) => ({
     color: eventColors.queenstown,
     icon: "calendar",
     ...group,
     day,
-    events: group.items.map((index) => day.events[index]).filter(Boolean),
+    events: group.events ?? group.items.map((index) => day.events[index]).filter(Boolean),
     media: eventMediaByTitle[group.title],
   }));
+  return [...confirmedStayEvents(day, options), ...groupedEvents].map((event) => ({ ...event, day }));
 }
 
 const eventUrlParam = "event";
@@ -617,7 +673,7 @@ function eventDateId(event) {
 }
 
 function eventUrlId(event) {
-  return `${eventDateId(event)}|${event.title}`;
+  return `${eventDateId(event)}|${event.id ?? event.title}`;
 }
 
 function eventDialogTabs(event) {
@@ -686,6 +742,48 @@ function eventGoogleMapsAction(event, language) {
     url: mapLink?.url
       ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.media?.localNames?.[0] ?? event.media?.location ?? event.title)}`,
   };
+}
+
+function ConfirmedStayEventContent({ event, language }) {
+  const isEnglish = language === "en";
+  const { booking, privateStay } = event;
+  const isUnlocked = event.isPrivateUnlocked;
+  const details = isUnlocked ? [
+    [isEnglish ? "Property" : "住宿", privateStayName(booking, privateStay, isEnglish)],
+    [isEnglish ? "Dates" : "日期", `${booking.checkIn} — ${booking.checkOut}`],
+    booking.checkInTime && [isEnglish ? "Check-in / out" : "入住 / 退房", isEnglish ? `${booking.checkInTimeEn} / ${booking.checkOutTimeEn}` : `${booking.checkInTime} / ${booking.checkOutTime}`],
+    privateStay?.房东 && [isEnglish ? "Host" : "房东", privateStay.房东],
+    privateStay?.准确地址 && [isEnglish ? "Exact address" : "准确地址", privateStay.准确地址],
+    privateStay?.确认码 && [isEnglish ? "Confirmation code" : "确认码", privateStay.确认码],
+    privateStay?.订单确认号 && [isEnglish ? "Booking confirmation" : "订单确认号", privateStay.订单确认号],
+    privateStay?.["预计抵达"] && [isEnglish ? "Expected arrival" : "预计抵达", privateStay["预计抵达"]],
+    privateStay?.["行车与停车"] && [isEnglish ? "Driving & parking" : "行车与停车", privateStay["行车与停车"]],
+    privateStay?.["行车说明（截图可见部分）"] && [isEnglish ? "Driving notes" : "行车说明", privateStay["行车说明（截图可见部分）"]],
+    privateStay?.入户 && [isEnglish ? "Entry" : "入户", privateStay.入户],
+    privateStay?.入住方式 && [isEnglish ? "Check-in method" : "入住方式", privateStay.入住方式],
+  ].filter(Boolean) : [];
+
+  if (!isUnlocked) {
+    return <Typography className="route-dialog-stay">{isEnglish
+      ? "This stay is confirmed. Unlock private details to view its property, arrival and booking information."
+      : "住宿已确认。解锁私密资料后可查看房源、入住与订单信息。"}</Typography>;
+  }
+
+  return (
+    <>
+      <Stack spacing={1.2} className="route-dialog-events">
+        {details.map(([label, value]) => (
+          <Box className="route-dialog-event" key={label}>
+            <Typography className="route-dialog-time">{label}</Typography>
+            <Typography className="route-dialog-event-copy">{value}</Typography>
+          </Box>
+        ))}
+      </Stack>
+      <Button component="a" href={`?stay=${booking.bookingId}#booking`} size="small" startIcon={<HotelIcon />} sx={{ mt: 2 }} variant="outlined">
+        {isEnglish ? "Open stay details" : "打开住宿详情"}
+      </Button>
+    </>
+  );
 }
 
 function InlineEventText({ language = "zh", text }) {
@@ -884,7 +982,7 @@ function EventHeroCarousel({ children, eventKey, language, media }) {
   );
 }
 
-function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", language = "zh", onDayRegionSelect, onDialogTabChange, onEventSelect, selectedEvent, selectedRegion, title = "2026 新西兰行程 · 9月28日—10月11日" }) {
+function RouteDayCalendar({ calendarOptions, days = itineraryDays, dialogTab = "schedule", language = "zh", onDayRegionSelect, onDialogTabChange, onEventSelect, selectedEvent, selectedRegion, title = "2026 新西兰行程 · 9月28日—10月11日" }) {
   const [copyResult, setCopyResult] = useState(null);
   const daysByKey = new Map();
   days.forEach((day) => {
@@ -910,7 +1008,7 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
           <CalendarGrid>
             {getTripCalendarCells(days).map((date, index) => {
               const day = daysByKey.get(keyForDate(date));
-              const calendarEvents = day ? getCalendarEvents(day) : [];
+              const calendarEvents = day ? getCalendarEvents(day, calendarOptions) : [];
               const hasFlightTransfer = calendarEvents.some((event) => event.isFlightTransfer);
               const cellStyle = {
                 gridColumnStart: index === 0 ? mondayFirstColumn(date) : undefined,
@@ -1053,22 +1151,24 @@ function RouteDayCalendar({ days = itineraryDays, dialogTab = "schedule", langua
             <Box className="route-event-page-content">
               {activeDialogTab === "schedule" && (
                 <>
-                  <Stack spacing={1.2} className="route-dialog-events">
-                    {selectedEvent.events.map(([time, text]) => (
-                      <Box className="route-dialog-event" key={[selectedEvent.day.date, selectedEvent.title, time, text].join("-")}>
-                        <Typography className="route-dialog-time">{routeText(time, language)}</Typography>
-                        <InlineEventText language={language} text={text} />
+                  {selectedEvent.isConfirmedStay ? <ConfirmedStayEventContent event={selectedEvent} language={language} /> : <>
+                    <Stack spacing={1.2} className="route-dialog-events">
+                      {selectedEvent.events.map(([time, text]) => (
+                        <Box className="route-dialog-event" key={[selectedEvent.day.date, selectedEvent.title, time, text].join("-")}>
+                          <Typography className="route-dialog-time">{routeText(time, language)}</Typography>
+                          <InlineEventText language={language} text={text} />
+                        </Box>
+                      ))}
+                    </Stack>
+                    {confirmedStayTransitionsOn(eventDateId(selectedEvent)).length === 0 && <Typography className="route-dialog-stay">{selectedEvent.day.stay}</Typography>}
+                    {selectedEvent.day.highlight && <Typography className="route-dialog-highlight">{selectedEvent.day.highlight}</Typography>}
+                    {selectedEvent.day.alternative && (
+                      <Box className="route-dialog-alternative">
+                        <Typography fontWeight={950}>{selectedEvent.day.alternative.title}</Typography>
+                        <Typography>{selectedEvent.day.alternative.desc}</Typography>
                       </Box>
-                    ))}
-                  </Stack>
-                  <Typography className="route-dialog-stay">{selectedEvent.day.stay}</Typography>
-                  {selectedEvent.day.highlight && <Typography className="route-dialog-highlight">{selectedEvent.day.highlight}</Typography>}
-                  {selectedEvent.day.alternative && (
-                    <Box className="route-dialog-alternative">
-                      <Typography fontWeight={950}>{selectedEvent.day.alternative.title}</Typography>
-                      <Typography>{selectedEvent.day.alternative.desc}</Typography>
-                    </Box>
-                  )}
+                    )}
+                  </>}
                 </>
               )}
               {activeDialogTab === "flight" && (
@@ -1509,6 +1609,7 @@ function GoogleRouteMap({ language = "zh", mode = "overview" }) {
 
 export function RouteMap({ mode = "overview", days = itineraryDays, onDetailChange }) {
   const { language } = useLanguage();
+  const { data: privateVault, isUnlocked: isPrivateUnlocked } = usePrivateVault();
   const [selectedRegion, setSelectedRegion] = useState(null);
   const config = routeConfigs[mode] ?? routeConfigs.overview;
   const mapMode = mode === "overview" ? (selectedRegion ?? "overview") : mode;
@@ -1516,9 +1617,10 @@ export function RouteMap({ mode = "overview", days = itineraryDays, onDetailChan
   const localizedDays = useMemo(() => language === "en"
     ? days.map((day) => englishDayByDate.get(day.dateKey ?? day.date) ?? day)
     : days, [days, language]);
+  const calendarOptions = useMemo(() => ({ language, isPrivateUnlocked, privateVault }), [isPrivateUnlocked, language, privateVault]);
   const baseEventById = useMemo(() => new Map(
-    localizedDays.flatMap((day) => getCalendarEvents(day).map((event) => [eventUrlId(event), event])),
-  ), [localizedDays]);
+    localizedDays.flatMap((day) => getCalendarEvents(day, calendarOptions).map((event) => [eventUrlId(event), event])),
+  ), [calendarOptions, localizedDays]);
   const eventById = baseEventById;
   const [eventView, setEventView] = useState(() => readEventUrl(eventById, mode));
   const selectedEvent = eventView ? eventById.get(eventView.eventId) ?? null : null;
@@ -1595,6 +1697,7 @@ export function RouteMap({ mode = "overview", days = itineraryDays, onDetailChan
 
   const calendar = (
     <RouteDayCalendar
+      calendarOptions={calendarOptions}
       days={localizedDays}
       dialogTab={eventView?.tab}
       language={language}

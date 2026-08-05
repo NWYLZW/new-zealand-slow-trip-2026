@@ -613,7 +613,7 @@
 
 .confirmed-stay-location {
   grid-column: 1 / -1;
-  padding-top: 24px;
+  padding-top: 0;
   border-top: 1px solid rgba(18, 63, 54, 0.18);
 }
 
