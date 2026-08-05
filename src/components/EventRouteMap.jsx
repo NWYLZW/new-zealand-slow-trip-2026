@@ -43,7 +43,7 @@ export function EventRouteMap({ color, googleMapsLabel = "在 Google 地图打�
     () => stops.map((stop) => toPoint(stop.position)),
     [stops],
   );
-  const points = segments.length ? routePoints : locationPoints;
+  const points = [...routePoints, ...locationPoints];
 
   if (!points.length) return null;
 
@@ -105,8 +105,8 @@ export function EventRouteMap({ color, googleMapsLabel = "在 Google 地图打�
             radius={8}
           >
             <Tooltip direction="top">
-              <strong>{language === "en" ? (mapStopEn[stop.tag]?.[0] ?? stop.name) : stop.name}</strong><br />
-              {language === "en" ? (mapStopEn[stop.tag]?.[1] ?? stop.desc) : stop.desc}
+              <strong>{language === "en" ? (stop.nameEn ?? mapStopEn[stop.tag]?.[0] ?? stop.name) : stop.name}</strong><br />
+              {language === "en" ? (stop.descEn ?? mapStopEn[stop.tag]?.[1] ?? stop.desc) : stop.desc}
             </Tooltip>
           </CircleMarker>
         ))}

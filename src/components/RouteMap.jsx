@@ -578,6 +578,66 @@ const calendarEventGroupsByDate = {
   ],
 };
 
+// Stays enrich the existing itinerary events after the local vault is unlocked.
+// They never become standalone calendar events: each binding describes how a
+// confirmed stay participates in the event's map, route and detail link.
+const stayIntegrationByEvent = {
+  "南岛取车入住": {
+    mapPhases: ["check-in"],
+    routeOrigin: "activity-origin",
+    routeDestination: "check-in",
+    linkPhase: "check-in",
+    linkEventIndex: 1,
+    omitStopTags: ["ZQN"],
+    activityOrigin: {
+      tag: "ZQN-BUDGET",
+      name: "Budget 皇后镇机场取车点",
+      nameEn: "Budget Queenstown Airport pickup",
+      desc: "11:00 已预订取车",
+      descEn: "Reserved pickup at 11:00",
+      position: [-45.0211, 168.739],
+      mapQuery: "Budget Car Rental Queenstown Airport",
+    },
+  },
+  "皇后镇适应日": { mapPhases: ["overnight"] },
+  "格林诺奇湖岸公路": { mapPhases: ["overnight"], routeOrigin: "overnight" },
+  "Walter Peak 湖上巡游": { mapPhases: ["overnight"] },
+  "箭镇与 Crown Range": { mapPhases: ["check-out", "check-in"], routeOrigin: "check-out", routeDestination: "check-in", linkPhase: "check-in", linkEventIndex: 4, omitStopTags: ["ZQN", "WKA"] },
+  "抵达瓦纳卡": { mapPhases: ["check-in"], linkPhase: "check-in", linkEventIndex: 0, omitStopTags: ["WKA"] },
+  "瓦纳卡湖边慢游": { mapPhases: ["overnight"] },
+  "自驾前往库克山": { mapPhases: ["check-out", "check-in"], routeOrigin: "check-out", routeDestination: "check-in", omitStopTags: ["WKA", "AOR"] },
+  "冰川直升机": {
+    mapPhases: ["check-in"],
+    routeOrigin: "check-in",
+    routeDestination: "activity",
+    omitStopTags: ["AOR"],
+    activityDestination: {
+      tag: "NZMC",
+      name: "奥拉基库克山机场 · 直升机报到",
+      nameEn: "Aoraki Mount Cook Airport · helicopter check-in",
+      desc: "Glacier Highlights 从库克山机场基地出发",
+      descEn: "Glacier Highlights departs from the Mount Cook Airport base",
+      position: [-43.766736, 170.138033],
+      mapQuery: "Aoraki Mount Cook Airport, Mount Cook Road, New Zealand",
+      sourceUrl: "https://www.mtcookskiplanes.com/getting-here/",
+      coordinateSourceUrl: "https://airport-data.com/world-airports/NZMC-MON/",
+      reviewedAt: "2026-08-05",
+    },
+  },
+  "库克山观星夜": { mapPhases: ["check-in"] },
+  "库克山候补安排": { mapPhases: ["check-out"] },
+  "蒂卡波到奥马鲁": { mapPhases: ["check-out", "check-in"], routeOrigin: "check-out", routeDestination: "check-in", linkPhase: "check-in", linkEventIndex: 3, omitStopTags: ["AOR", "OAM"] },
+  "奥马鲁企鹅与海狗": { mapPhases: ["check-in"], routeOrigin: "check-in" },
+  "奥马鲁前往基督城": { mapPhases: ["check-out", "check-in"], routeOrigin: "check-out", routeDestination: "check-in", linkPhase: "check-in", linkEventIndex: 3, omitStopTags: ["OAM", "CHC"] },
+  "基督城补充半日": { mapPhases: ["check-in"] },
+  "按更新订单还车": { mapPhases: ["check-out"], routeOrigin: "check-out", omitStopTags: ["CHC"] },
+  "前往机场飞奥克兰": { mapPhases: ["check-out", "check-in"], linkPhase: "check-in", linkEventIndex: 2 },
+  "大巴前往霍比屯": { mapPhases: ["overnight"], routeOrigin: "overnight" },
+  "大巴返回奥克兰": { mapPhases: ["overnight"], routeDestination: "overnight" },
+  "奥克兰轻松半日": { mapPhases: ["check-out"] },
+  "前往奥克兰机场": { mapPhases: ["check-out"], routeOrigin: "check-out", omitStopTags: ["AKC"] },
+};
+
 function getTripCalendarCells(days) {
   const tripDates = days.map((day) => parseTripDate(day.date)).filter(Boolean);
   const tripStart = new Date(Math.min(...tripDates));
@@ -591,15 +651,6 @@ function getTripCalendarCells(days) {
   return cells;
 }
 
-function stayPhaseLabel(phase, isEnglish) {
-  const labels = {
-    "check-in": isEnglish ? "Check-in" : "入住",
-    "check-out": isEnglish ? "Check-out" : "退房",
-    overnight: isEnglish ? "Confirmed stay" : "已确认住宿",
-  };
-  return labels[phase];
-}
-
 function privateStayName(booking, privateStay, isEnglish) {
   const name = isEnglish
     ? (privateStay?.propertyNameEn ?? privateStay?.propertyName ?? privateStay?.住宿名称)
@@ -608,56 +659,84 @@ function privateStayName(booking, privateStay, isEnglish) {
   return isEnglish ? (booking.listingNameEn ?? booking.listingName) : booking.listingName;
 }
 
-function stayEventTime(booking, phase, isEnglish) {
-  if (phase === "check-in") return isEnglish ? (booking.checkInTimeEn ?? "Check-in day") : (booking.checkInTime ?? "入住日");
-  if (phase === "check-out") return isEnglish ? (booking.checkOutTimeEn ?? "Check-out day") : (booking.checkOutTime ?? "退房日");
-  return isEnglish ? "Overnight" : "住宿中";
+function coordinatePair(value) {
+  if (!Array.isArray(value) || value.length !== 2 || !value.every(Number.isFinite)) return null;
+  return value;
 }
 
-function confirmedStayEvents(day, { isPrivateUnlocked = false, language = "zh", privateVault } = {}) {
+function stayPhaseDescription(phase, isEnglish) {
+  const labels = {
+    "check-in": isEnglish ? "Confirmed stay for tonight" : "当晚已确认住宿",
+    "check-out": isEnglish ? "Check-out stay" : "当日退房住宿",
+    overnight: isEnglish ? "Current confirmed stay" : "当前已确认住宿",
+  };
+  return labels[phase];
+}
+
+function stayContextsForDay(day, { isPrivateUnlocked = false, language = "zh", privateVault } = {}) {
+  if (!isPrivateUnlocked) return [];
   const isEnglish = language === "en";
   const date = eventDateId({ day });
   return confirmedStayTransitionsOn(date).map(({ booking, phase }) => {
-    const privateStay = isPrivateUnlocked ? privateVault?.accommodations?.[booking.bookingId] : null;
-    const statusLabel = stayPhaseLabel(phase, isEnglish);
-    const propertyName = isPrivateUnlocked ? privateStayName(booking, privateStay, isEnglish) : null;
-    const title = propertyName ? `${statusLabel} · ${propertyName}` : statusLabel;
+    const privateStay = privateVault?.accommodations?.[booking.bookingId];
+    const position = coordinatePair(privateStay?.coordinates) ?? coordinatePair(booking.mapPosition);
+    const address = privateStay?.address ?? privateStay?.["准确地址"];
+    const mapTarget = (typeof address === "string" && address.trim())
+      ? address.trim()
+      : (position ? position.join(",") : booking.mapQuery);
+    const propertyName = privateStayName(booking, privateStay, isEnglish);
     return {
-      id: `stay-${booking.bookingId}-${phase}`,
-      title,
-      calendarLabel: propertyName ? `${statusLabel} · ${propertyName}` : statusLabel,
-      calendarLabelEn: propertyName ? `${statusLabel} · ${propertyName}` : statusLabel,
-      time: stayEventTime(booking, phase, isEnglish),
-      timeEn: stayEventTime(booking, phase, true),
-      color: eventColors.confirmedStay,
-      icon: "hotel",
       booking,
+      mapTarget,
+      name: propertyName,
+      phase,
+      position,
       privateStay,
-      isPrivateUnlocked,
-      stayPhase: phase,
-      isConfirmedStay: true,
-      events: [],
-      segmentIds: [],
-      stopTags: [],
+      stop: position ? {
+        tag: `STAY-${booking.bookingId}`,
+        name: propertyName,
+        nameEn: privateStayName(booking, privateStay, true),
+        desc: stayPhaseDescription(phase, false),
+        descEn: stayPhaseDescription(phase, true),
+        date: `${booking.checkIn}—${booking.checkOut}`,
+        color: eventColors.confirmedStay,
+        position,
+      } : null,
     };
   });
 }
 
 function getCalendarEvents(day, options) {
   const dayKey = day.dateKey ?? day.date;
+  const stayContexts = stayContextsForDay(day, options);
   const groups = calendarEventGroupsByDate[dayKey] ?? [
     { title: day.subtitle || day.title, time: day.events[0]?.[0] || "全天", items: day.events.map((_, index) => index) },
   ];
 
-  const groupedEvents = groups.map((group) => ({
-    color: eventColors.queenstown,
-    icon: "calendar",
-    ...group,
-    day,
-    events: group.events ?? group.items.map((index) => day.events[index]).filter(Boolean),
-    media: eventMediaByTitle[group.title],
-  }));
-  return [...confirmedStayEvents(day, options), ...groupedEvents].map((event) => ({ ...event, day }));
+  return groups.map((group) => {
+    const stayIntegration = stayIntegrationByEvent[group.title];
+    const attachedStays = stayIntegration
+      ? stayContexts.filter((stay) => stayIntegration.mapPhases.includes(stay.phase))
+      : [];
+    const stayLinkContext = stayIntegration?.linkPhase
+      ? attachedStays.find((stay) => stay.phase === stayIntegration.linkPhase)
+      : null;
+    return {
+      color: eventColors.queenstown,
+      icon: "calendar",
+      ...group,
+      day,
+      events: group.events ?? group.items.map((index) => day.events[index]).filter(Boolean),
+      media: eventMediaByTitle[group.title],
+      stayContexts: attachedStays,
+      stayIntegration,
+      stayLink: stayLinkContext ? {
+        eventIndex: stayIntegration.linkEventIndex,
+        href: `?stay=${stayLinkContext.booking.bookingId}#booking`,
+        label: options?.language === "en" ? "Open stay details" : "查看住宿详情",
+      } : null,
+    };
+  });
 }
 
 const eventUrlParam = "event";
@@ -717,19 +796,76 @@ function writeEventUrl(view, method = "replaceState", state = history.state, mod
 function eventMapData(event) {
   const segmentIds = new Set(event.segmentIds ?? []);
   const stopTags = new Set(event.stopTags ?? []);
-  const segments = routeSegments
+  const omittedStopTags = new Set(event.stayContexts?.some((stay) => stay.stop) ? (event.stayIntegration?.omitStopTags ?? []) : []);
+  let segments = routeSegments
     .filter((segment) => segmentIds.has(segment.id))
     .map((segment) => ({ ...segment, path: segmentPath(segment) }));
   const stops = mapStops
-    .filter((stop) => stopTags.has(stop.tag))
+    .filter((stop) => stopTags.has(stop.tag) && !omittedStopTags.has(stop.tag))
     .map((stop) => ({ ...stop, ...(event.stopOverrides?.[stop.tag] ?? {}) }));
 
-  return { segments, stops };
+  const integration = event.stayIntegration;
+  const stayByPhase = new Map((event.stayContexts ?? []).map((stay) => [stay.phase, stay]));
+  const routeOrigin = integration?.routeOrigin === "activity-origin"
+    ? integration.activityOrigin
+    : (integration?.routeOrigin === "activity" ? integration.activityDestination : stayByPhase.get(integration?.routeOrigin));
+  const routeDestination = integration?.routeDestination === "activity"
+    ? integration.activityDestination
+    : stayByPhase.get(integration?.routeDestination);
+  const originPosition = coordinatePair(routeOrigin?.position);
+  const destinationPosition = coordinatePair(routeDestination?.position);
+
+  if (segments.length && originPosition) {
+    segments = segments.map((segment, index) => index === 0
+      ? { ...segment, path: [originPosition, ...segment.path.slice(1)] }
+      : segment);
+  }
+  if (segments.length && destinationPosition) {
+    segments = segments.map((segment, index) => index === segments.length - 1
+      ? { ...segment, path: [...segment.path.slice(0, -1), destinationPosition] }
+      : segment);
+  }
+  if (!segments.length && originPosition && destinationPosition) {
+    segments = [{
+      id: `stay-route-${event.title}`,
+      color: event.color,
+      date: eventDateId(event),
+      label: `${routeOrigin.name ?? routeOrigin.nameEn} → ${routeDestination.name ?? routeDestination.nameEn}`,
+      path: [originPosition, destinationPosition],
+      transport: "road",
+    }];
+  }
+
+  const contextualStops = (event.stayContexts ?? []).map((stay) => stay.stop).filter(Boolean);
+  const activityOriginStop = coordinatePair(integration?.activityOrigin?.position)
+    ? integration.activityOrigin
+    : null;
+  const activityStop = coordinatePair(integration?.activityDestination?.position)
+    ? integration.activityDestination
+    : null;
+
+  return { segments, stops: [...stops, ...contextualStops, ...(activityOriginStop ? [activityOriginStop] : []), ...(activityStop ? [activityStop] : [])] };
 }
 
 function eventGoogleMapsAction(event, language) {
-  const route = eventGoogleRoutes[event.title];
-  if (route) {
+  const baseRoute = eventGoogleRoutes[event.title];
+  const integration = event.stayIntegration;
+  const stayByPhase = new Map((event.stayContexts ?? []).map((stay) => [stay.phase, stay]));
+  const routeOrigin = integration?.routeOrigin === "activity-origin"
+    ? integration.activityOrigin
+    : (integration?.routeOrigin === "activity" ? integration.activityDestination : stayByPhase.get(integration?.routeOrigin));
+  const routeDestination = integration?.routeDestination === "activity"
+    ? integration.activityDestination
+    : stayByPhase.get(integration?.routeDestination);
+  const origin = routeOrigin?.mapTarget ?? routeOrigin?.mapQuery ?? baseRoute?.origin;
+  const destination = routeDestination?.mapTarget ?? routeDestination?.mapQuery ?? baseRoute?.destination;
+  const route = origin && destination ? {
+    ...baseRoute,
+    destination,
+    origin,
+  } : baseRoute;
+
+  if (route?.origin && route?.destination) {
     return {
       label: routeText("在 Google 地图打开当前路线", language),
       url: googleDirectionsUrl(route),
@@ -743,55 +879,10 @@ function eventGoogleMapsAction(event, language) {
       ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.media?.localNames?.[0] ?? event.media?.location ?? event.title)}`,
   };
 }
-
-function ConfirmedStayEventContent({ event, language }) {
-  const isEnglish = language === "en";
-  const { booking, privateStay } = event;
-  const isUnlocked = event.isPrivateUnlocked;
-  const details = isUnlocked ? [
-    [isEnglish ? "Property" : "住宿", privateStayName(booking, privateStay, isEnglish)],
-    [isEnglish ? "Dates" : "日期", `${booking.checkIn} — ${booking.checkOut}`],
-    booking.checkInTime && [isEnglish ? "Check-in / out" : "入住 / 退房", isEnglish ? `${booking.checkInTimeEn} / ${booking.checkOutTimeEn}` : `${booking.checkInTime} / ${booking.checkOutTime}`],
-    privateStay?.房东 && [isEnglish ? "Host" : "房东", privateStay.房东],
-    privateStay?.准确地址 && [isEnglish ? "Exact address" : "准确地址", privateStay.准确地址],
-    privateStay?.确认码 && [isEnglish ? "Confirmation code" : "确认码", privateStay.确认码],
-    privateStay?.订单确认号 && [isEnglish ? "Booking confirmation" : "订单确认号", privateStay.订单确认号],
-    privateStay?.["预计抵达"] && [isEnglish ? "Expected arrival" : "预计抵达", privateStay["预计抵达"]],
-    privateStay?.["行车与停车"] && [isEnglish ? "Driving & parking" : "行车与停车", privateStay["行车与停车"]],
-    privateStay?.["行车说明（截图可见部分）"] && [isEnglish ? "Driving notes" : "行车说明", privateStay["行车说明（截图可见部分）"]],
-    privateStay?.入户 && [isEnglish ? "Entry" : "入户", privateStay.入户],
-    privateStay?.入住方式 && [isEnglish ? "Check-in method" : "入住方式", privateStay.入住方式],
-  ].filter(Boolean) : [];
-
-  if (!isUnlocked) {
-    return <Typography className="route-dialog-stay">{isEnglish
-      ? "This stay is confirmed. Unlock private details to view its property, arrival and booking information."
-      : "住宿已确认。解锁私密资料后可查看房源、入住与订单信息。"}</Typography>;
-  }
-
-  return (
-    <>
-      <Stack spacing={1.2} className="route-dialog-events">
-        {details.map(([label, value]) => (
-          <Box className="route-dialog-event" key={label}>
-            <Typography className="route-dialog-time">{label}</Typography>
-            <Typography className="route-dialog-event-copy">{value}</Typography>
-          </Box>
-        ))}
-      </Stack>
-      <Button component="a" href={`?stay=${booking.bookingId}#booking`} size="small" startIcon={<HotelIcon />} sx={{ mt: 2 }} variant="outlined">
-        {isEnglish ? "Open stay details" : "打开住宿详情"}
-      </Button>
-    </>
-  );
-}
-
-function InlineEventText({ language = "zh", text }) {
-  if (language === "en") return <Typography component="span" className="route-dialog-event-copy">{text}</Typography>;
-
+function InlineEventText({ language = "zh", stayLink, text }) {
   return (
     <Typography component="span" className="route-dialog-event-copy">
-      {getInlineEventParts(text).map((part, index) => part.url ? (
+      {(language === "en" ? [{ text }] : getInlineEventParts(text)).map((part, index) => part.url ? (
         <Box
           aria-label={part.label}
           className="route-dialog-inline-link"
@@ -805,6 +896,11 @@ function InlineEventText({ language = "zh", text }) {
           {part.text}<OpenInNewIcon />
         </Box>
       ) : <span key={`${part.text}-${index}`}>{part.text}</span>)}
+      {stayLink && (
+        <Box className="route-dialog-inline-link route-dialog-stay-link" component="a" href={stayLink.href}>
+          {stayLink.label}<HotelIcon />
+        </Box>
+      )}
     </Typography>
   );
 }
@@ -1151,16 +1247,19 @@ function RouteDayCalendar({ calendarOptions, days = itineraryDays, dialogTab = "
             <Box className="route-event-page-content">
               {activeDialogTab === "schedule" && (
                 <>
-                  {selectedEvent.isConfirmedStay ? <ConfirmedStayEventContent event={selectedEvent} language={language} /> : <>
                     <Stack spacing={1.2} className="route-dialog-events">
-                      {selectedEvent.events.map(([time, text]) => (
+                      {selectedEvent.events.map(([time, text], eventIndex) => (
                         <Box className="route-dialog-event" key={[selectedEvent.day.date, selectedEvent.title, time, text].join("-")}>
                           <Typography className="route-dialog-time">{routeText(time, language)}</Typography>
-                          <InlineEventText language={language} text={text} />
+                          <InlineEventText
+                            language={language}
+                            stayLink={selectedEvent.stayLink?.eventIndex === eventIndex ? selectedEvent.stayLink : null}
+                            text={text}
+                          />
                         </Box>
                       ))}
                     </Stack>
-                    {confirmedStayTransitionsOn(eventDateId(selectedEvent)).length === 0 && <Typography className="route-dialog-stay">{selectedEvent.day.stay}</Typography>}
+                    {!selectedEvent.stayContexts?.length && !selectedEvent.stayLink && <Typography className="route-dialog-stay">{selectedEvent.day.stay}</Typography>}
                     {selectedEvent.day.highlight && <Typography className="route-dialog-highlight">{selectedEvent.day.highlight}</Typography>}
                     {selectedEvent.day.alternative && (
                       <Box className="route-dialog-alternative">
@@ -1168,7 +1267,6 @@ function RouteDayCalendar({ calendarOptions, days = itineraryDays, dialogTab = "
                         <Typography>{selectedEvent.day.alternative.desc}</Typography>
                       </Box>
                     )}
-                  </>}
                 </>
               )}
               {activeDialogTab === "flight" && (

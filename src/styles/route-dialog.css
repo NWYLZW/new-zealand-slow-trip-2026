@@ -326,6 +326,10 @@
   vertical-align: baseline;
 }
 
+.route-dialog-stay-link {
+  margin-inline-start: 10px;
+}
+
 .route-dialog-inline-link .MuiSvgIcon-root,
 .route-flight-number-link .MuiSvgIcon-root {
   font-size: 15px;
