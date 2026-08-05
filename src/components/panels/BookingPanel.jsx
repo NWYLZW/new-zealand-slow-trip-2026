@@ -881,7 +881,13 @@ function MapEdgeAttractionTracker({ attractions, onChange }) {
     onChange(edges);
   }, [attractions, map, onChange]);
 
-  useMapEvents({ moveend: updateEdgeAttractions, resize: updateEdgeAttractions, zoomend: updateEdgeAttractions });
+  useMapEvents({
+    move: updateEdgeAttractions,
+    moveend: updateEdgeAttractions,
+    resize: updateEdgeAttractions,
+    zoom: updateEdgeAttractions,
+    zoomend: updateEdgeAttractions,
+  });
 
   useEffect(() => {
     updateEdgeAttractions();
