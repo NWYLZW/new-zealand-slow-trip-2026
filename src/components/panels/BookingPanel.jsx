@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, ButtonBase, Card, Dialog, IconButton, LinearProgress, Stack, Tab, Tabs, Tooltip, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Card, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, LinearProgress, Stack, Tab, Tabs, Tooltip, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from "@mui/icons-material/Close";
@@ -23,7 +23,7 @@ import { usePrivateVault } from "../../PrivateVaultContext";
 import { AccommodationMap } from "../AccommodationMap";
 import { attractionPinsByRegion, HotelComparisonView } from "../HotelComparisonDialog";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "../calendar/CalendarPrimitives";
-import { CircleMarker, MapContainer, TileLayer, Tooltip as LeafletTooltip, useMap } from "react-leaflet";
+import { CircleMarker, MapContainer, TileLayer, Tooltip as LeafletTooltip, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./BookingPanel.css";
 
@@ -854,6 +854,42 @@ function MapViewport({ onMapReady, position, zoom }) {
   return null;
 }
 
+function MapEdgeAttractionTracker({ attractions, onChange }) {
+  const map = useMap();
+  const updateEdgeAttractions = useCallback(() => {
+    const size = map.getSize();
+    const centerX = size.x / 2;
+    const centerY = size.y / 2;
+    const edgeInset = 42;
+    const edges = attractions.flatMap((attraction) => {
+      const point = map.latLngToContainerPoint(attraction.position);
+      const isVisible = point.x >= 0 && point.x <= size.x && point.y >= 0 && point.y <= size.y;
+      if (isVisible) return [];
+      const dx = point.x - centerX;
+      const dy = point.y - centerY;
+      const scale = Math.min(
+        dx === 0 ? Infinity : (centerX - edgeInset) / Math.abs(dx),
+        dy === 0 ? Infinity : (centerY - edgeInset) / Math.abs(dy),
+      );
+      return [{
+        attraction,
+        direction: Math.atan2(dy, dx) * (180 / Math.PI),
+        x: centerX + (dx * scale),
+        y: centerY + (dy * scale),
+      }];
+    });
+    onChange(edges);
+  }, [attractions, map, onChange]);
+
+  useMapEvents({ moveend: updateEdgeAttractions, resize: updateEdgeAttractions, zoomend: updateEdgeAttractions });
+
+  useEffect(() => {
+    updateEdgeAttractions();
+  }, [updateEdgeAttractions]);
+
+  return null;
+}
+
 function CopyAddressButton({ isEnglish, value }) {
   const [copied, setCopied] = useState(false);
   const copyAddress = async () => {
@@ -952,10 +988,12 @@ function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay 
   const mapQuery = privateStay?.address ?? privateStay?.["准确地址"] ?? hotel?.mapQuery ?? stay.mapQuery ?? `${isEnglish ? stay.placeEn : stay.place}, New Zealand`;
   const preciseLocation = Boolean(privatePosition || hotel?.position || calendarPosition);
   const mapAttractions = attractionPinsByRegion[stay.stayGroup] ?? [];
-  const nearby = hotel?.nearbyAttractions ?? mapAttractions;
   const hasWanakaPlan = stay.stayGroup === "wanaka";
   const [activeTab, setActiveTab] = useState("map");
+  const [edgeAttractions, setEdgeAttractions] = useState([]);
   const [mapInstance, setMapInstance] = useState(null);
+  const [selectedAttraction, setSelectedAttraction] = useState(null);
+  const updateEdgeAttractions = useCallback((nextEdges) => setEdgeAttractions(nextEdges), []);
   const arrivalFacts = privateFacts(privateStay, isEnglish, [
     ["行车与停车", "行车与停车", "Driving & parking"],
     ["行车说明（截图可见部分）", "行车说明", "Driving notes"],
@@ -984,16 +1022,32 @@ function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay 
             zoomControl
           >
             <MapViewport onMapReady={setMapInstance} position={position} zoom={preciseLocation ? 14 : 13} />
+            <MapEdgeAttractionTracker attractions={mapAttractions} onChange={updateEdgeAttractions} />
             <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <CircleMarker center={position} pathOptions={{ color: "#123f36", fillColor: "#f28c5b", fillOpacity: 1, weight: 4 }} radius={10}>
               <LeafletTooltip direction="top" offset={[0, -10]} permanent>{preciseLocation ? (isEnglish ? "Confirmed stay" : "已确认住宿") : (isEnglish ? "Trip area" : "行程区域")}</LeafletTooltip>
             </CircleMarker>
             {mapAttractions.map((attraction) => (
-              <CircleMarker center={attraction.position} key={attraction.label} pathOptions={{ color: "#347e90", fillColor: "#ffffff", fillOpacity: 1, weight: 3 }} radius={7}>
+              <CircleMarker center={attraction.position} eventHandlers={{ click: () => setSelectedAttraction(attraction) }} key={attraction.label} pathOptions={{ color: "#347e90", fillColor: "#ffffff", fillOpacity: 1, weight: 3 }} radius={7}>
                 <LeafletTooltip direction="top" offset={[0, -8]}>{isEnglish ? (attraction.labelEn ?? attraction.label) : attraction.label}</LeafletTooltip>
               </CircleMarker>
             ))}
           </MapContainer>
+            {edgeAttractions.map(({ attraction, direction, x, y }) => {
+              const label = isEnglish ? (attraction.labelEn ?? attraction.label) : attraction.label;
+              return (
+                <Tooltip key={attraction.label} title={isEnglish ? `Centre map on ${label}` : `定位到${label}`}>
+                  <IconButton
+                    aria-label={isEnglish ? `Centre map on ${label}` : `定位到${label}`}
+                    className="confirmed-stay-map-edge-attraction"
+                    onClick={() => mapInstance?.setView(attraction.position, Math.max(mapInstance.getZoom(), 15))}
+                    style={{ "--edge-attraction-direction": `${direction}deg`, "--edge-attraction-x": `${x}px`, "--edge-attraction-y": `${y}px` }}
+                  >
+                    <ChevronRightIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              );
+            })}
             <Tooltip title={isEnglish ? "Centre on stay" : "定位到住宿"}>
               <IconButton aria-label={isEnglish ? "Centre on stay" : "定位到住宿"} className="confirmed-stay-map-locate" disabled={!mapInstance} onClick={() => mapInstance?.setView(position, preciseLocation ? 15 : 14)} size="small">
                 <MyLocationOutlinedIcon fontSize="inherit" />
@@ -1006,23 +1060,30 @@ function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay 
             </Tooltip>
           </Box>
         </Box>
-        <Box className="confirmed-stay-nearby-grid">
-        {nearby.map((attraction) => {
-          const label = isEnglish ? (attraction.nameEn ?? attraction.labelEn ?? attraction.name ?? attraction.label) : (attraction.name ?? attraction.label);
-          const distance = isEnglish ? (attraction.distanceEn ?? attraction.distance) : attraction.distance;
-          const travelTime = isEnglish ? (attraction.travelTimeEn ?? attraction.travelTime) : attraction.travelTime;
-          const destination = attraction.destinationQuery ?? attraction.label;
-          return (
-            <Box component="a" href={mapDirectionsUrl(mapQuery, destination)} key={label} rel="noreferrer" target="_blank">
-              <Typography fontWeight={900}>{label}<OpenInNewIcon aria-hidden="true" /></Typography>
-              <Typography color="text.secondary" variant="body2">{distance && travelTime ? `${distance} · ${travelTime}` : (isEnglish ? "Open directions from this trip area" : "从此行程区域打开导航")}</Typography>
-            </Box>
-          );
-        })}
-        </Box>
       </>}
       {activeTab === "wanaka-plan" && hasWanakaPlan && <WanakaPlanTab isEnglish={isEnglish} />}
       {activeTab === "arrival" && arrivalFacts.length > 0 && <Box className="confirmed-stay-arrival"><DetailSection facts={arrivalFacts} title="" /></Box>}
+      <Dialog aria-labelledby="map-attraction-confirm-title" onClose={() => setSelectedAttraction(null)} open={Boolean(selectedAttraction)}>
+        <DialogTitle id="map-attraction-confirm-title">{isEnglish ? "Open Google Maps?" : "在 Google 地图中打开？"}</DialogTitle>
+        <DialogContent>
+          <Typography>{isEnglish
+            ? `Open driving directions to ${selectedAttraction ? (selectedAttraction.labelEn ?? selectedAttraction.label) : "this place"} in a new tab.`
+            : `将在新标签页中打开前往${selectedAttraction ? selectedAttraction.label : "该地点"}的驾车导航。`}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button color="inherit" onClick={() => setSelectedAttraction(null)}>{isEnglish ? "Cancel" : "取消"}</Button>
+          <Button
+            component="a"
+            href={selectedAttraction ? mapDirectionsUrl(mapQuery, selectedAttraction.destinationQuery ?? selectedAttraction.label) : undefined}
+            onClick={() => setSelectedAttraction(null)}
+            rel="noreferrer"
+            target="_blank"
+            variant="contained"
+          >
+            {isEnglish ? "Open Google Maps" : "打开 Google 地图"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
