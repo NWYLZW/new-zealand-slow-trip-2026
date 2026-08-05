@@ -16,6 +16,8 @@ import { aucklandCityHotels, aucklandCityStay } from "../../data/aucklandCityHot
 import { confirmedAccommodationBookings } from "../../data/confirmedAccommodationBookings";
 import { confirmedStayMedia } from "../../data/confirmedStayMedia";
 import { regionalHotels, regionalStays } from "../../data/regionalHotels";
+import { southDays } from "../../tripData";
+import { southDaysEn } from "../../englishTripData";
 import { useLanguage } from "../../LanguageContext";
 import { usePrivateVault } from "../../PrivateVaultContext";
 import { AccommodationMap } from "../AccommodationMap";
@@ -613,7 +615,10 @@ function privateFact(privateStay, key, label) {
 
 function privateFacts(privateStay, isEnglish, fields) {
   return fields
-    .map(([key, zhLabel, enLabel]) => privateFact(privateStay, key, isEnglish ? (enLabel ?? zhLabel) : zhLabel))
+    .map(([key, zhLabel, enLabel, options]) => {
+      const fact = privateFact(privateStay, key, isEnglish ? (enLabel ?? zhLabel) : zhLabel);
+      return fact && options ? [...fact, options] : fact;
+    })
     .filter(Boolean);
 }
 
@@ -780,17 +785,19 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
     privateStay?.房东 && [isEnglish ? "Host" : "房东", privateStay.房东],
     privateStay?.准确地址 && [isEnglish ? "Exact address" : "准确地址", privateStay.准确地址, { copy: true }],
   ].filter(Boolean);
-  const bookingFacts = [
+  const primaryBookingFacts = [
     booking?.total && [isEnglish ? "Verified total" : "已核验总价", isEnglish ? booking.totalEn : booking.total],
+    booking?.cancellation && [isEnglish ? "Cancellation" : "取消政策", isEnglish ? booking.cancellationEn : booking.cancellation],
+  ].filter(Boolean);
+  const secondaryBookingFacts = [
     booking?.payment && [isEnglish ? "Payment" : "付款", isEnglish ? booking.paymentEn : booking.payment],
     booking?.breakfast && [isEnglish ? "Breakfast" : "早餐", isEnglish ? booking.breakfastEn : booking.breakfast],
-    booking?.cancellation && [isEnglish ? "Cancellation" : "取消政策", isEnglish ? booking.cancellationEn : booking.cancellation],
     ...privateFacts(privateStay, isEnglish, [
       ["订单总额", "订单总额", "Booking total"],
       ["确认码", "确认码", "Confirmation code"],
       ["订单确认号", "订单确认号", "Booking confirmation"],
       ["PIN 码", "PIN 码", "PIN"],
-      ["住宿联系电话", "住宿联系电话", "Property phone"],
+      ["住宿联系电话", "住宿联系电话", "Property phone", { phone: true }],
       ["预计抵达", "预计抵达", "Expected arrival"],
       ["付款提醒", "付款提醒", "Payment reminder"],
     ]),
@@ -800,7 +807,7 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
     <Box className="confirmed-stay-detail">
       <Box className="confirmed-stay-detail-grid">
         <StayDetailSection isEnglish={isEnglish} primaryFacts={primaryStayFacts} secondaryFacts={secondaryStayFacts} title={isEnglish ? "Stay" : "入住"} />
-        <DetailSection facts={bookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
+        <StayDetailSection isEnglish={isEnglish} primaryFacts={primaryBookingFacts} secondaryFacts={secondaryBookingFacts} title={isEnglish ? "Booking & policy" : "预订与政策"} />
         <ConfirmedStayLocation imageAlt={title} images={images} isEnglish={isEnglish} privateStay={privateStay} stay={stay} />
       </Box>
     </Box>
@@ -888,8 +895,10 @@ function StayDetailSection({ isEnglish, primaryFacts, secondaryFacts, title }) {
         {visibleFacts.map(([label, value, options]) => (
           <Box key={label}>
             <Typography component="dt" variant="caption">{label}</Typography>
-            <Box className="confirmed-stay-value">
-              <Typography component="dd">{value}</Typography>
+            <Box className="confirmed-stay-value" component="dd">
+              {options?.phone
+                ? <Box aria-label={isEnglish ? "Call property" : "拨打住宿电话"} className="confirmed-stay-telephone" component="a" href={`tel:${String(value).replace(/[^+\d]/g, "")}`}>{value}</Box>
+                : value}
               {options?.copy && <CopyAddressButton isEnglish={isEnglish} value={value} />}
             </Box>
           </Box>
@@ -900,6 +909,35 @@ function StayDetailSection({ isEnglish, primaryFacts, secondaryFacts, title }) {
           {expanded ? (isEnglish ? "Show less" : "收起") : (isEnglish ? `More details (${secondaryFacts.length})` : `更多信息（${secondaryFacts.length}）`)}
         </ButtonBase>
       )}
+    </Box>
+  );
+}
+
+function WanakaPlanTab({ isEnglish }) {
+  const days = (isEnglish ? southDaysEn : southDays)
+    .filter((day) => (day.dateKey ?? day.date) === "10月3日" || (day.dateKey ?? day.date) === "10月4日");
+
+  return (
+    <Box className="confirmed-stay-plan" aria-label={isEnglish ? "Wānaka stay plan" : "瓦纳卡住宿期间安排"}>
+      {days.map((day) => (
+        <Box className="confirmed-stay-plan-day" key={day.dateKey ?? day.date}>
+          <Stack alignItems="baseline" direction="row" justifyContent="space-between" spacing={2}>
+            <Box>
+              <Typography component="h3" fontWeight={900}>{day.title}</Typography>
+              <Typography color="text.secondary" variant="body2">{day.subtitle}</Typography>
+            </Box>
+            <Typography color="text.secondary" variant="body2">{isEnglish ? day.displayDate : day.date}</Typography>
+          </Stack>
+          <Box component="ol" className="confirmed-stay-plan-events">
+            {day.events.map(([time, event]) => (
+              <Box component="li" key={`${time}-${event}`}>
+                <Typography component="time" variant="caption">{time}</Typography>
+                <Typography>{event}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      ))}
     </Box>
   );
 }
@@ -915,6 +953,7 @@ function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay 
   const preciseLocation = Boolean(privatePosition || hotel?.position || calendarPosition);
   const mapAttractions = attractionPinsByRegion[stay.stayGroup] ?? [];
   const nearby = hotel?.nearbyAttractions ?? mapAttractions;
+  const hasWanakaPlan = stay.stayGroup === "wanaka";
   const [activeTab, setActiveTab] = useState("map");
   const [mapInstance, setMapInstance] = useState(null);
   const arrivalFacts = privateFacts(privateStay, isEnglish, [
@@ -929,6 +968,7 @@ function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay 
     <Box className="confirmed-stay-location">
       <Tabs aria-label={isEnglish ? "Confirmed stay details" : "已确认住宿详情"} className="confirmed-stay-tabs" onChange={(_, nextTab) => setActiveTab(nextTab)} value={activeTab}>
         <Tab label={isEnglish ? "Map & nearby" : "地图与附近景点"} value="map" />
+        {hasWanakaPlan && <Tab label={isEnglish ? "Wānaka plan" : "瓦纳卡安排"} value="wanaka-plan" />}
         {arrivalFacts.length > 0 && <Tab label={isEnglish ? "Arrival & entry" : "到达与入住"} value="arrival" />}
       </Tabs>
       {activeTab === "map" && <>
@@ -981,6 +1021,7 @@ function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay 
         })}
         </Box>
       </>}
+      {activeTab === "wanaka-plan" && hasWanakaPlan && <WanakaPlanTab isEnglish={isEnglish} />}
       {activeTab === "arrival" && arrivalFacts.length > 0 && <Box className="confirmed-stay-arrival"><DetailSection facts={arrivalFacts} title="" /></Box>}
     </Box>
   );

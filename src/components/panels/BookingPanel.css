@@ -664,8 +664,23 @@
   gap: 6px;
 }
 
-.confirmed-stay-value > dd {
+.confirmed-stay-value {
   flex: 1 1 auto;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.confirmed-stay-telephone {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(18, 63, 54, 0.42);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.confirmed-stay-telephone:hover {
+  color: var(--forest);
+  text-decoration-color: currentcolor;
 }
 
 .stay-copy-address {
@@ -718,6 +733,38 @@
 
 .confirmed-stay-arrival {
   padding-top: 24px;
+}
+
+.confirmed-stay-plan {
+  display: grid;
+  gap: 18px;
+  padding-top: 20px;
+}
+
+.confirmed-stay-plan-day {
+  padding: 16px;
+  border: 1px solid rgba(18, 63, 54, 0.16);
+  border-radius: var(--radius-inner);
+  background: rgba(255, 253, 248, 0.52);
+}
+
+.confirmed-stay-plan-events {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.confirmed-stay-plan-events > li {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.confirmed-stay-plan-events time {
+  color: rgba(24, 52, 46, 0.66);
+  font-weight: 900;
 }
 
 @media (max-width: 700px) {
