@@ -776,26 +776,31 @@ function ConfirmedStayDetail({ isEnglish, privateStay, stay }) {
   const dates = booking ? `${booking.checkIn} — ${booking.checkOut}` : "—";
   const images = stayImages(hotel, privateStay, stay.bookingId);
   const primaryStayFacts = [
-    [isEnglish ? "Location" : "地点", isEnglish ? stay.placeEn : stay.place],
+    [isEnglish ? "Location" : "地点", isEnglish ? stay.placeEn : stay.place, { href: mapSearchUrl(`${stay.placeEn ?? stay.place}, New Zealand`) }],
     [isEnglish ? "Dates" : "日期", dates],
     booking?.checkInTime && [isEnglish ? "Check-in / out" : "入住 / 退房", isEnglish ? `${booking.checkInTimeEn} / ${booking.checkOutTimeEn}` : `${booking.checkInTime} / ${booking.checkOutTime}`],
   ].filter(Boolean);
   const secondaryStayFacts = [
     booking?.guests && [isEnglish ? "Guests" : "同行者", isEnglish ? booking.guestsEn : booking.guests],
     privateStay?.房东 && [isEnglish ? "Host" : "房东", privateStay.房东],
-    privateStay?.准确地址 && [isEnglish ? "Exact address" : "准确地址", privateStay.准确地址, { copy: true }],
+    privateStay?.准确地址 && [isEnglish ? "Exact address" : "准确地址", privateStay.准确地址, { copy: true, href: mapNavigationUrl(privateStay.准确地址), truncate: true }],
   ].filter(Boolean);
+  const confirmationFacts = [
+    privateFact(privateStay, "确认码", isEnglish ? "Confirmation code" : "确认码"),
+    privateFact(privateStay, "订单确认号", isEnglish ? "Booking confirmation" : "订单确认号"),
+  ].filter(Boolean);
+  const totalFact = privateFact(privateStay, "订单总额", isEnglish ? "Booking total" : "订单总额")
+    ?? (booking?.total && [isEnglish ? "Verified total" : "已核验总价", isEnglish ? booking.totalEn : booking.total]);
   const primaryBookingFacts = [
-    booking?.total && [isEnglish ? "Verified total" : "已核验总价", isEnglish ? booking.totalEn : booking.total],
-    booking?.cancellation && [isEnglish ? "Cancellation" : "取消政策", isEnglish ? booking.cancellationEn : booking.cancellation],
+    confirmationFacts[0],
+    totalFact,
+    booking?.cancellation && [isEnglish ? "Cancellation" : "取消政策", isEnglish ? booking.cancellationEn : booking.cancellation, { truncate: true }],
   ].filter(Boolean);
   const secondaryBookingFacts = [
+    ...confirmationFacts.slice(1),
     booking?.payment && [isEnglish ? "Payment" : "付款", isEnglish ? booking.paymentEn : booking.payment],
     booking?.breakfast && [isEnglish ? "Breakfast" : "早餐", isEnglish ? booking.breakfastEn : booking.breakfast],
     ...privateFacts(privateStay, isEnglish, [
-      ["订单总额", "订单总额", "Booking total"],
-      ["确认码", "确认码", "Confirmation code"],
-      ["订单确认号", "订单确认号", "Booking confirmation"],
       ["PIN 码", "PIN 码", "PIN"],
       ["住宿联系电话", "住宿联系电话", "Property phone", { phone: true }],
       ["预计抵达", "预计抵达", "Expected arrival"],
@@ -842,6 +847,13 @@ function mapNavigationUrl(destination) {
   url.searchParams.set("api", "1");
   url.searchParams.set("destination", destination);
   url.searchParams.set("travelmode", "driving");
+  return url.toString();
+}
+
+function mapSearchUrl(query) {
+  const url = new URL("https://www.google.com/maps/search/");
+  url.searchParams.set("api", "1");
+  url.searchParams.set("query", query);
   return url.toString();
 }
 
@@ -937,10 +949,12 @@ function StayDetailSection({ isEnglish, primaryFacts, secondaryFacts, title }) {
         {visibleFacts.map(([label, value, options]) => (
           <Box key={label}>
             <Typography component="dt" variant="caption">{label}</Typography>
-            <Box className="confirmed-stay-value" component="dd">
+            <Box className={`confirmed-stay-value${options?.truncate ? " confirmed-stay-value--truncate" : ""}`} component="dd">
               {options?.phone
                 ? <Box aria-label={isEnglish ? "Call property" : "拨打住宿电话"} className="confirmed-stay-telephone" component="a" href={`tel:${String(value).replace(/[^+\d]/g, "")}`}>{value}</Box>
-                : value}
+                : options?.href
+                  ? <Box className="confirmed-stay-text-link" component="a" href={options.href} rel="noreferrer" target="_blank">{value}</Box>
+                  : <Box className="confirmed-stay-value-text" component="span">{value}</Box>}
               {options?.copy && <CopyAddressButton isEnglish={isEnglish} value={value} />}
             </Box>
           </Box>
