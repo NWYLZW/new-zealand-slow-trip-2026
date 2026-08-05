@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, ButtonBase, Card, IconButton, LinearProgress, Stack, Tab, Tabs, Tooltip, Typography } from "@mui/material";
+import { Box, ButtonBase, Card, Dialog, IconButton, LinearProgress, Stack, Tab, Tabs, Tooltip, Typography } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import HotelIcon from "@mui/icons-material/Hotel";
 import LuggageIcon from "@mui/icons-material/Luggage";
@@ -629,15 +632,92 @@ function stayImages(hotel, privateStay, bookingId) {
   });
 }
 
-function StayImageGallery({ imageAlt, images }) {
-  const galleryImages = images.slice(0, 3);
-  if (galleryImages.length === 0) return null;
+function StayImageGallery({ imageAlt, images, isEnglish }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const galleryImages = images;
+  const imageCount = galleryImages.length;
+  const activeImage = galleryImages[activeIndex] ?? galleryImages[0];
+  const goToImage = useCallback((nextIndex) => {
+    setActiveIndex((current) => {
+      const normalized = typeof nextIndex === "function" ? nextIndex(current) : nextIndex;
+      return ((normalized % imageCount) + imageCount) % imageCount;
+    });
+  }, [imageCount]);
+
+  useEffect(() => {
+    if (!isFullscreen || imageCount < 2) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goToImage((current) => current - 1);
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goToImage((current) => current + 1);
+      }
+      if (event.key === "Escape" || event.key === "Esc" || event.code === "Escape") setIsFullscreen(false);
+    };
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, [goToImage, imageCount, isFullscreen]);
+
+  if (!activeImage) return null;
+  const currentLabel = activeImage.label ?? `${imageAlt} · ${activeIndex + 1}`;
+  const previousLabel = isEnglish ? "Previous image" : "上一张";
+  const nextLabel = isEnglish ? "Next image" : "下一张";
   return (
-    <Box aria-label={imageAlt} className={`confirmed-stay-gallery gallery-count-${galleryImages.length}`}>
-      {galleryImages.map((image, index) => (
-        <Box alt={image.label ?? `${imageAlt} · ${index + 1}`} component="img" key={image.src} src={image.src} />
-      ))}
-    </Box>
+    <>
+      <Box aria-label={imageAlt} className="confirmed-stay-gallery">
+        <ButtonBase
+          aria-label={isEnglish ? `View ${currentLabel}` : `查看${currentLabel}`}
+          className="confirmed-stay-gallery-image"
+          onClick={() => setIsFullscreen(true)}
+        >
+          <Box alt={currentLabel} component="img" src={activeImage.src} />
+        </ButtonBase>
+        {imageCount > 1 && <>
+          <IconButton aria-label={previousLabel} className="confirmed-stay-gallery-previous" onClick={() => goToImage((current) => current - 1)} size="small">
+            <ChevronLeftIcon fontSize="small" />
+          </IconButton>
+          <IconButton aria-label={nextLabel} className="confirmed-stay-gallery-next" onClick={() => goToImage((current) => current + 1)} size="small">
+            <ChevronRightIcon fontSize="small" />
+          </IconButton>
+        </>}
+        <Typography className="confirmed-stay-gallery-count" component="span" variant="caption">{activeIndex + 1} / {imageCount}</Typography>
+      </Box>
+      <Dialog
+        aria-label={isEnglish ? `View ${imageAlt} fullscreen` : `全屏查看${imageAlt}`}
+        className="confirmed-stay-gallery-dialog"
+        fullScreen
+        onKeyDownCapture={(event) => {
+          if (event.key === "Escape" || event.key === "Esc" || event.code === "Escape") setIsFullscreen(false);
+        }}
+        onClose={() => setIsFullscreen(false)}
+        open={isFullscreen}
+      >
+        <Box className="confirmed-stay-gallery-fullscreen">
+          <IconButton aria-label={isEnglish ? "Close fullscreen gallery" : "关闭全屏图库"} className="confirmed-stay-gallery-close" onClick={() => setIsFullscreen(false)}>
+            <CloseIcon />
+          </IconButton>
+          <Typography className="confirmed-stay-gallery-fullscreen-count" component="span">{activeIndex + 1} / {imageCount}</Typography>
+          {imageCount > 1 && <IconButton aria-label={previousLabel} className="confirmed-stay-gallery-fullscreen-previous" onClick={() => goToImage((current) => current - 1)}>
+            <ChevronLeftIcon />
+          </IconButton>}
+          <Box alt={currentLabel} className="confirmed-stay-gallery-fullscreen-image" component="img" src={activeImage.src} />
+          {imageCount > 1 && <IconButton aria-label={nextLabel} className="confirmed-stay-gallery-fullscreen-next" onClick={() => goToImage((current) => current + 1)}>
+            <ChevronRightIcon />
+          </IconButton>}
+          {imageCount > 1 && <Box aria-label={isEnglish ? "Gallery thumbnails" : "图库缩略图"} className="confirmed-stay-gallery-thumbnails">
+            {galleryImages.map((image, index) => (
+              <ButtonBase aria-label={isEnglish ? `View image ${index + 1}` : `查看第 ${index + 1} 张`} className={index === activeIndex ? "is-active" : undefined} key={image.src} onClick={() => goToImage(index)}>
+                <Box alt={image.label ?? `${imageAlt} · ${index + 1}`} component="img" src={image.src} />
+              </ButtonBase>
+            ))}
+          </Box>}
+        </Box>
+      </Dialog>
+    </>
   );
 }
 
@@ -853,7 +933,7 @@ function ConfirmedStayLocation({ imageAlt, images, isEnglish, privateStay, stay 
       </Tabs>
       {activeTab === "map" && <>
         <Box className="confirmed-stay-media-map">
-          <StayImageGallery imageAlt={imageAlt} images={images} />
+          <StayImageGallery imageAlt={imageAlt} images={images} isEnglish={isEnglish} />
           <Box className="confirmed-stay-map-wrap">
           <MapContainer
             aria-label={isEnglish ? "Confirmed stay and nearby itinerary places" : "已确认住宿与附近行程景点地图"}

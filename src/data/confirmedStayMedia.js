@@ -26,6 +26,30 @@ export const confirmedStayMedia = {
       label: "皇后镇房源图片 3",
       labelEn: "Queenstown listing image 3",
     },
+    {
+      src: "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MjIxNjgxMTQ=/original/efe4700b-6587-48af-8ed1-be530352ef6e.jpeg?im_w=720",
+      sourceUrl: "https://www.airbnb.cn/rooms/22168114",
+      propertyId: "22168114",
+      reviewedAt: "2026-08-05",
+      label: "皇后镇房源图片 4",
+      labelEn: "Queenstown listing image 4",
+    },
+    {
+      src: "https://a0.muscache.com/im/pictures/hosting/Hosting-22168114/original/18a4f1bd-0f0d-4457-a9ca-6c9f98189f18.jpeg?im_w=720",
+      sourceUrl: "https://www.airbnb.cn/rooms/22168114",
+      propertyId: "22168114",
+      reviewedAt: "2026-08-05",
+      label: "皇后镇房源图片 5",
+      labelEn: "Queenstown listing image 5",
+    },
+    {
+      src: "https://a0.muscache.com/im/pictures/hosting/Hosting-22168114/original/4f60c46b-2059-4492-bba6-496a51d34a1a.jpeg?im_w=720",
+      sourceUrl: "https://www.airbnb.cn/rooms/22168114",
+      propertyId: "22168114",
+      reviewedAt: "2026-08-05",
+      label: "皇后镇房源图片 6",
+      labelEn: "Queenstown listing image 6",
+    },
   ],
   "hotel-oamaru": [
     {
@@ -52,6 +76,22 @@ export const confirmedStayMedia = {
       label: "奥马鲁房源图片 3",
       labelEn: "Ōamaru listing image 3",
     },
+    {
+      src: "https://a0.muscache.com/im/pictures/miso/Hosting-654457696683927212/original/31fb3911-6b5d-4f21-8d8c-0a50d8a03267.jpeg?im_w=720",
+      sourceUrl: "https://www.airbnb.cn/rooms/654457696683927212",
+      propertyId: "654457696683927212",
+      reviewedAt: "2026-08-05",
+      label: "奥马鲁房源图片 4",
+      labelEn: "Ōamaru listing image 4",
+    },
+    {
+      src: "https://a0.muscache.com/im/pictures/miso/Hosting-654457696683927212/original/804666ff-66aa-46db-8f16-8694d123459b.jpeg?im_w=720",
+      sourceUrl: "https://www.airbnb.cn/rooms/654457696683927212",
+      propertyId: "654457696683927212",
+      reviewedAt: "2026-08-05",
+      label: "奥马鲁房源图片 5",
+      labelEn: "Ōamaru listing image 5",
+    },
   ],
   "hotel-christchurch": [
     {
@@ -77,6 +117,22 @@ export const confirmedStayMedia = {
       reviewedAt: "2026-08-05",
       label: "基督城房源图片 3",
       labelEn: "Christchurch listing image 3",
+    },
+    {
+      src: "https://a0.muscache.com/im/pictures/miso/Hosting-1267145957641608513/original/de5896a3-5542-42cd-9e40-d7b5dca92e10.jpeg?im_w=720",
+      sourceUrl: "https://www.airbnb.cn/rooms/1267145957641608513",
+      propertyId: "1267145957641608513",
+      reviewedAt: "2026-08-05",
+      label: "基督城房源图片 4",
+      labelEn: "Christchurch listing image 4",
+    },
+    {
+      src: "https://a0.muscache.com/im/pictures/hosting/Hosting-1267145957641608513/original/44d67775-3f8b-4e68-a37b-a6d05ac20741.jpeg?im_w=720&im_q=lowq",
+      sourceUrl: "https://www.airbnb.cn/rooms/1267145957641608513",
+      propertyId: "1267145957641608513",
+      reviewedAt: "2026-08-05",
+      label: "基督城房源图片 5",
+      labelEn: "Christchurch listing image 5",
     },
   ],
 };
