@@ -1,0 +1,311 @@
+.pretrip-panel {
+  display: grid;
+  gap: 26px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(16px, 2.4vw, 30px);
+}
+
+.pretrip-summary {
+  overflow: hidden;
+  border-color: rgba(18, 63, 54, 0.18) !important;
+  background: rgba(255, 253, 248, 0.96) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.pretrip-summary .MuiCardContent-root {
+  padding: clamp(22px, 3.5vw, 38px);
+}
+
+.pretrip-summary-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.pretrip-summary-kicker {
+  margin-bottom: 10px;
+  color: var(--lake);
+}
+
+.pretrip-summary-kicker .MuiSvgIcon-root {
+  font-size: 21px;
+}
+
+.pretrip-summary-kicker .MuiTypography-root {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.pretrip-summary h2 {
+  max-width: 680px;
+  margin-bottom: 8px;
+  font-size: clamp(27px, 4vw, 42px);
+  line-height: 1.15;
+}
+
+.pretrip-departure-chip {
+  flex: 0 0 auto;
+  min-height: 34px;
+  color: #fff !important;
+  background: var(--forest) !important;
+  font-weight: 900;
+}
+
+.pretrip-progress {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.pretrip-progress-label {
+  color: var(--forest);
+  font-weight: 900 !important;
+}
+
+.pretrip-progress-percent {
+  color: var(--forest);
+  font-size: 30px !important;
+  font-weight: 900 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.pretrip-progress .MuiLinearProgress-root {
+  height: 9px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: var(--mint);
+}
+
+.pretrip-progress .MuiLinearProgress-bar {
+  border-radius: inherit;
+  background: var(--forest);
+  transition-duration: 240ms;
+}
+
+.pretrip-summary-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.pretrip-summary-actions .MuiAlert-root {
+  flex: 1 1 auto;
+  min-height: 48px;
+  align-items: center;
+  border: 1px solid rgba(242, 184, 107, 0.38);
+  border-radius: var(--radius-inner);
+}
+
+.pretrip-open-filter {
+  flex: 0 0 auto;
+  min-height: 48px;
+  margin: 0 !important;
+  padding: 0 10px 0 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: #fff;
+}
+
+.pretrip-open-filter .MuiFormControlLabel-label {
+  color: var(--forest);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pretrip-category-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.pretrip-category-heading > .MuiSvgIcon-root {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--forest);
+  font-size: 27px;
+}
+
+.pretrip-category-heading h2 {
+  margin-bottom: 2px;
+  font-size: clamp(21px, 2.4vw, 27px);
+  line-height: 1.25;
+}
+
+.pretrip-task {
+  border-color: rgba(18, 63, 54, 0.14) !important;
+  background: rgba(255, 253, 248, 0.92) !important;
+  transition: border-color 180ms ease-out, background-color 180ms ease-out, opacity 180ms ease-out;
+}
+
+.pretrip-task:hover {
+  border-color: rgba(18, 63, 54, 0.34) !important;
+}
+
+.pretrip-task[data-complete="true"] {
+  border-color: rgba(46, 125, 50, 0.2) !important;
+  background: rgba(237, 245, 236, 0.76) !important;
+}
+
+.pretrip-task .MuiCardContent-root {
+  padding: 14px 16px !important;
+}
+
+.pretrip-task-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 14px;
+}
+
+.pretrip-task-control {
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: flex-start !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.pretrip-task-control .MuiCheckbox-root {
+  min-width: 48px;
+  min-height: 48px;
+  margin: -4px 4px -4px -8px;
+}
+
+.pretrip-task-control .MuiFormControlLabel-label {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.pretrip-task-copy {
+  min-width: 0;
+}
+
+.pretrip-task-labels {
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.pretrip-task-labels .MuiChip-root {
+  height: 24px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.pretrip-priority-chip.MuiChip-colorWarning {
+  color: #4d2b00;
+  background: #f4c985;
+}
+
+.pretrip-deadline-chip {
+  color: var(--forest) !important;
+  border-color: rgba(18, 63, 54, 0.3) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.pretrip-task-title {
+  color: var(--ink);
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  line-height: 1.45 !important;
+}
+
+.pretrip-task-detail {
+  max-width: 860px;
+  margin-top: 4px !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+}
+
+.pretrip-task[data-complete="true"] .pretrip-task-title {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.pretrip-task[data-complete="true"] .pretrip-task-detail {
+  opacity: 0.76;
+}
+
+.pretrip-task-link {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding-inline: 12px !important;
+  text-transform: none !important;
+}
+
+.pretrip-empty .MuiCardContent-root {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 42px 24px;
+  text-align: center;
+}
+
+.pretrip-empty .MuiSvgIcon-root {
+  color: #2e7d32;
+  font-size: 42px;
+}
+
+@media (max-width: 700px) {
+  .pretrip-panel {
+    gap: 22px;
+    padding: 14px;
+  }
+
+  .pretrip-summary-heading,
+  .pretrip-summary-actions,
+  .pretrip-task-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pretrip-departure-chip {
+    align-self: flex-start;
+  }
+
+  .pretrip-open-filter,
+  .pretrip-task-link {
+    width: 100%;
+  }
+
+  .pretrip-open-filter {
+    justify-content: space-between;
+  }
+
+  .pretrip-task-link {
+    justify-content: flex-start;
+    padding-left: 48px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pretrip-progress .MuiLinearProgress-bar,
+  .pretrip-task {
+    transition: none;
+  }
+}
+
+@media print {
+  .pretrip-panel {
+    max-width: none;
+    padding: 0;
+  }
+
+  .pretrip-summary,
+  .pretrip-task {
+    box-shadow: none !important;
+  }
+
+  .pretrip-open-filter,
+  .pretrip-task-link {
+    display: none !important;
+  }
+}
