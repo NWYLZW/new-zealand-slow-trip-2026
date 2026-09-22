@@ -6,6 +6,7 @@ import TerrainIcon from "@mui/icons-material/Terrain";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const iconMap = {
   hotel: HotelIcon,
@@ -13,6 +14,7 @@ const iconMap = {
   activity: LocalActivityIcon,
   car: DirectionsCarIcon,
   notes: ListAltIcon,
+  prep: TaskAltIcon,
   route: RouteIcon,
   shopping: ShoppingBagIcon,
   terrain: TerrainIcon,
@@ -30,6 +32,7 @@ const englishLabels = {
   car: { label: "Car rental plan", short: "Car" },
   booking: { label: "Hotel bookings", short: "Hotels" },
   activities: { label: "Activity bookings", short: "Activities" },
+  prep: { label: "Before departure", short: "Prepare" },
   notes: { label: "Travel notes", short: "Notes" },
 };
 

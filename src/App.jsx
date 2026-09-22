@@ -8,6 +8,7 @@ import { BookingPanel } from "./components/panels/BookingPanel";
 import { NorthPanel } from "./components/panels/NorthPanel";
 import { NotesPanel } from "./components/panels/NotesPanel";
 import { OverviewPanel } from "./components/panels/OverviewPanel";
+import { PreTripPanel } from "./components/panels/PreTripPanel";
 import { SouthPanel } from "./components/panels/SouthPanel";
 import { RentalCarPanel } from "./components/panels/RentalCarPanel";
 import { tabText } from "./components/tabIcons";
@@ -199,6 +200,7 @@ export default function App() {
                 {tab === "car" && <RentalCarPanel />}
                 {tab === "booking" && <BookingPanel checked={checked} onDetailChange={updateDetail} />}
                 {tab === "activities" && <ActivitiesPanel checked={checked} onDetailChange={updateDetail} setChecked={setChecked} />}
+                {tab === "prep" && <PreTripPanel />}
                 {tab === "notes" && <NotesPanel />}
               </Box>
             </Box>
