@@ -1,0 +1,9 @@
+/* The sea base is the 0–200 m band. Depth boundaries are color changes only;
+   the coastline is drawn above this layer by the map. */
+#trip-board-structure .trip-map-area{background:#d8e9e7}
+.trip-bathymetry{pointer-events:none}
+.trip-bathymetry-band{stroke:none;pointer-events:none}
+.trip-bathymetry-band--200{fill:#cbe4e3}
+.trip-bathymetry-band--1000{fill:#bddbdd}
+.trip-bathymetry-band--2000{fill:#afd0d4}
+.trip-bathymetry-band--4000{fill:#9ec2c9}

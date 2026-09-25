@@ -41,6 +41,14 @@ function hotelSelectionPersistence() {
 
 export default defineConfig({
   base: "/new-zealand-slow-trip-2026/",
+  build: {
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL("./index.html", import.meta.url)),
+        adventure: fileURLToPath(new URL("./adventure.html", import.meta.url)),
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({
@@ -86,6 +94,8 @@ export default defineConfig({
         skipWaiting: true,
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/^\/api\//],
+        // Preserve the correct HTML entry when opening adventure deep links.
+        ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^panel$/, /^place$/, /^route$/],
         globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2}"],
         globIgnores: ["images/**/*", "icons/**/*"],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,

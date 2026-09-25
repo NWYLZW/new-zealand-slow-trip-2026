@@ -13,6 +13,8 @@ npm start
 
 然后打开 `http://127.0.0.1:4173/new-zealand-slow-trip-2026/`。
 
+独立的冒险地图页面位于 `/new-zealand-slow-trip-2026/adventure.html`，也可从主页面侧栏的「冒险地图」进入。两页共用行程和预订数据。
+
 构建生产版本：
 
 ```bash

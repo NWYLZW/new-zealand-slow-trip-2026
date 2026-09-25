@@ -1,0 +1,706 @@
+{
+  "meaning": "Original generated bitmap vegetation only. Fixed-seed decorative distribution; no itinerary, navigation, or observed ecology claim.",
+  "assets": [
+    {
+      "id": "rimu",
+      "group": "tree",
+      "file": "rimu.png",
+      "pixelWidth": 157,
+      "pixelHeight": 256,
+      "alt": "里木树地图装饰",
+      "altEn": "Rimu map decoration",
+      "regionHint": "south, west",
+      "sha256": "7a06dde5d5948b7cd45defb3a1bff7f5ebe32002919cd3e5b467ee1fae5be6e0",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-85fd940e-a80e-43c8-9bba-add48acff3e9.png",
+        "originalSha256": "47ba5d996142dcf1a78f60f4ad96d7650f621fa5acd363cf2ba445c824ee87a5",
+        "originalPixelWidth": 1024,
+        "originalPixelHeight": 1536,
+        "cropBox": [
+          57,
+          8,
+          978,
+          1528
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "southern-beech",
+      "group": "tree",
+      "file": "southern-beech.png",
+      "pixelWidth": 256,
+      "pixelHeight": 216,
+      "alt": "南方山毛榉地图装饰",
+      "altEn": "Southern beech map decoration",
+      "regionHint": "south, west",
+      "sha256": "0d80d9808f4c43a95628db286dc43f52f924605381398d5a9d7fd304710e88a0",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-23308b15-0223-41d9-a86f-8be8de171f62.png",
+        "originalSha256": "c7fc14307f11f51d5efc4ec77f6a4c283e3219231eb36477793502b58cea6165",
+        "originalPixelWidth": 1385,
+        "originalPixelHeight": 1136,
+        "cropBox": [
+          41,
+          9,
+          1361,
+          1120
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "totara",
+      "group": "tree",
+      "file": "totara.png",
+      "pixelWidth": 241,
+      "pixelHeight": 256,
+      "alt": "桃柘罗树地图装饰",
+      "altEn": "Tōtara map decoration",
+      "regionHint": "both islands",
+      "sha256": "08804704c17a2e95f8561f16ae5e8e931a431a63ef6bbef6ae273b5eaee6444c",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-44df0b0b-ae6b-498b-8191-9e53deeb1a36.png",
+        "originalSha256": "b1ca28fc189f4da1117fa36d1b764883b7d7166cb4b8de227c4fbd9dc789d9f2",
+        "originalPixelWidth": 1214,
+        "originalPixelHeight": 1296,
+        "cropBox": [
+          0,
+          24,
+          1178,
+          1278
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "kahikatea",
+      "group": "tree",
+      "file": "kahikatea.png",
+      "pixelWidth": 136,
+      "pixelHeight": 256,
+      "alt": "卡希卡蒂亚树地图装饰",
+      "altEn": "Kahikatea map decoration",
+      "regionHint": "north, lowland",
+      "sha256": "483a7cf3cee06e263b4f260161602af1771f0866e25e13d6cb4e11a6abbd87bc",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-d34245c1-8e2b-49e1-8544-e28ed6317c48.png",
+        "originalSha256": "71be839ee57af68986073a590fbb24b757e1fae81925e315b392159d9fb55d66",
+        "originalPixelWidth": 1024,
+        "originalPixelHeight": 1536,
+        "cropBox": [
+          57,
+          5,
+          852,
+          1532
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "rata",
+      "group": "tree",
+      "file": "rata.png",
+      "pixelWidth": 256,
+      "pixelHeight": 234,
+      "alt": "拉塔树地图装饰",
+      "altEn": "Rātā map decoration",
+      "regionHint": "west, north",
+      "sha256": "832848305a6eea7fd2737f93d09800b6851f346f2ac0a35db46765b5ab63eda6",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-92ef2176-4b97-4f6b-b24b-46931f348b9b.png",
+        "originalSha256": "3a138df526735c24b4f9cf700e4bafb4537157b7644c8b2102bb1cbd45f6318b",
+        "originalPixelWidth": 1312,
+        "originalPixelHeight": 1199,
+        "cropBox": [
+          0,
+          0,
+          1304,
+          1189
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "pohutukawa",
+      "group": "tree",
+      "file": "pohutukawa.png",
+      "pixelWidth": 256,
+      "pixelHeight": 173,
+      "alt": "波胡图卡瓦树地图装饰",
+      "altEn": "Pōhutukawa map decoration",
+      "regionHint": "north coast",
+      "sha256": "901c53bd3e511b5d494c126c50dc412eee6a3dd161f7e35af7a252c740667321",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-0b57c479-092e-47ee-88d4-9811332a9346.png",
+        "originalSha256": "5c42226a729ee53b6b0f6e6e289468921139e9962918d29cc6550fe94bc6e9ca",
+        "originalPixelWidth": 1536,
+        "originalPixelHeight": 1024,
+        "cropBox": [
+          0,
+          1,
+          1532,
+          1024
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "manuka",
+      "group": "tree",
+      "file": "manuka.png",
+      "pixelWidth": 250,
+      "pixelHeight": 256,
+      "alt": "麦卢卡树地图装饰",
+      "altEn": "Mānuka map decoration",
+      "regionHint": "scrub",
+      "sha256": "f5ad0d89ca0937f0b1d5c74f9469a1a5410bdb0cae9154436006854ec49e732e",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-40621f96-23da-47d3-b4fc-6019c72e96a4.png",
+        "originalSha256": "30c2ab816fa0a0913438a02fa8f30a7aab9ea414a516357b479fc7fbd3dd13af",
+        "originalPixelWidth": 1237,
+        "originalPixelHeight": 1272,
+        "cropBox": [
+          0,
+          11,
+          1230,
+          1272
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "cabbage-tree",
+      "group": "tree",
+      "file": "cabbage-tree.png",
+      "pixelWidth": 162,
+      "pixelHeight": 256,
+      "alt": "蒂树地图装饰",
+      "altEn": "Cabbage tree map decoration",
+      "regionHint": "both islands, lowland",
+      "sha256": "3c8e4d820989244035331cd771b36197e44d0c724049854d0a58296be94c40d0",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-dc5ecc54-69f4-4fad-b518-b96f0cafa1eb.png",
+        "originalSha256": "8ef6be8fa9c8ce2c4e5d75baeb20e9d1935b019f0470451fcd1ddc6b254bb1fc",
+        "originalPixelWidth": 1024,
+        "originalPixelHeight": 1536,
+        "cropBox": [
+          57,
+          2,
+          1014,
+          1534
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "wind-tree",
+      "group": "tree",
+      "file": "wind-tree.png",
+      "pixelWidth": 256,
+      "pixelHeight": 174,
+      "alt": "风形树地图装饰",
+      "altEn": "Wind-shaped tree map decoration",
+      "regionHint": "coastal",
+      "sha256": "337095552f6a5f0f0c25c940d24734cbb19ea0ba5a865eaaf5c31da80d6f0886",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-e52054b3-252d-461f-8cfd-8fed53307a05.png",
+        "originalSha256": "fba27f035db5c271b9fc7b991b8be8d027dd7589f3656b5e5bb424883585c38c",
+        "originalPixelWidth": 1536,
+        "originalPixelHeight": 1024,
+        "cropBox": [
+          29,
+          1,
+          1530,
+          1008
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "tussock",
+      "group": "grass",
+      "file": "tussock.png",
+      "pixelWidth": 192,
+      "pixelHeight": 131,
+      "alt": "丛草地图装饰",
+      "altEn": "Tussock map decoration",
+      "regionHint": "grassland",
+      "sha256": "d7bcd05217ce0045e5f0d9906504706f91bc68f7fe8723cb31b48c6eefe5af4e",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-55f567d2-d5cc-40e4-9940-645bcddbcf6d.png",
+        "originalSha256": "8136a925ef17ee89973e9e996a9b88afb00721150d7cd34900402e1cd75a2c49",
+        "originalPixelWidth": 1536,
+        "originalPixelHeight": 1024,
+        "cropBox": [
+          41,
+          23,
+          1526,
+          1024
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "toetoe",
+      "group": "grass",
+      "file": "toetoe.png",
+      "pixelWidth": 176,
+      "pixelHeight": 192,
+      "alt": "蒲苇地图装饰",
+      "altEn": "Toetoe map decoration",
+      "regionHint": "grassland",
+      "sha256": "b7262feff3217b34ba226002a39163fefc4faa85dd2c9feb9c9f5d6680e751f6",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-7502a9aa-bff7-4ea0-8fd4-aae3779d50e3.png",
+        "originalSha256": "075c034de7742aa9d5602d9c023dda22a74e6fbe4e582021c9df9aa328d83365",
+        "originalPixelWidth": 1199,
+        "originalPixelHeight": 1312,
+        "cropBox": [
+          0,
+          9,
+          1191,
+          1312
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "harakeke",
+      "group": "grass",
+      "file": "harakeke.png",
+      "pixelWidth": 192,
+      "pixelHeight": 176,
+      "alt": "亚麻地图装饰",
+      "altEn": "Harakeke flax map decoration",
+      "regionHint": "lowland",
+      "sha256": "99c88f1e8660aab7c85ce1663d684b96120ac78c7d356158e0603f5a292e0ab0",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-7c5cbecb-51d1-469e-ac63-d67f211f0185.png",
+        "originalSha256": "07ec5c7aa781faa5f0fd6fa266712479def591730cd2fd0bc36712074d5dae46",
+        "originalPixelWidth": 1312,
+        "originalPixelHeight": 1199,
+        "cropBox": [
+          0,
+          0,
+          1312,
+          1199
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    },
+    {
+      "id": "sedge",
+      "group": "grass",
+      "file": "sedge.png",
+      "pixelWidth": 192,
+      "pixelHeight": 127,
+      "alt": "莎草地图装饰",
+      "altEn": "Sedge map decoration",
+      "regionHint": "grassland",
+      "sha256": "c4101981ea3a265223828aa1afcf82b94e1929055a0c7ee73b3d1518c218df18",
+      "source": {
+        "kind": "ai-generated-illustration",
+        "tool": "built-in-imagegen",
+        "reviewedAt": "2026-09-25",
+        "originalFile": "exec-526fabe0-c440-4370-bf06-4ac4e76b18c5.png",
+        "originalSha256": "4207c24aab5352ec3c7c1f3cbdd930ca9096531e83ab7412f5a2bca98968dabe",
+        "originalPixelWidth": 1536,
+        "originalPixelHeight": 1024,
+        "cropBox": [
+          17,
+          22,
+          1536,
+          1008
+        ],
+        "derivation": "alpha-bounds crop, 8 px padding, Lanczos downsample, 3 px clear edge, lossless RGBA PNG",
+        "styleReference": "user-provided hand-drawn map reference; no game assets",
+        "approvedUse": "decorative map vegetation only; not an observed ecology claim"
+      }
+    }
+  ],
+  "texturePatches": [
+    {
+      "id": "fiordland-forest",
+      "position": [
+        168.65,
+        -45.4
+      ],
+      "radius": [
+        0.85,
+        0.75
+      ],
+      "count": 90,
+      "style": "forest"
+    },
+    {
+      "id": "westland-forest",
+      "position": [
+        170.8,
+        -43.0
+      ],
+      "radius": [
+        0.85,
+        0.85
+      ],
+      "count": 95,
+      "style": "forest"
+    },
+    {
+      "id": "nelson-scrub",
+      "position": [
+        172.35,
+        -41.9
+      ],
+      "radius": [
+        0.9,
+        0.7
+      ],
+      "count": 50,
+      "style": "scrub"
+    },
+    {
+      "id": "southern-alps-hatching",
+      "position": [
+        170.45,
+        -43.45
+      ],
+      "radius": [
+        0.95,
+        0.8
+      ],
+      "count": 60,
+      "style": "alpine"
+    },
+    {
+      "id": "canterbury-grass",
+      "position": [
+        171.3,
+        -44.2
+      ],
+      "radius": [
+        1.0,
+        0.8
+      ],
+      "count": 55,
+      "style": "grass"
+    },
+    {
+      "id": "northland-forest",
+      "position": [
+        173.95,
+        -35.85
+      ],
+      "radius": [
+        0.9,
+        0.85
+      ],
+      "count": 85,
+      "style": "forest"
+    },
+    {
+      "id": "waikato-forest",
+      "position": [
+        175.0,
+        -37.8
+      ],
+      "radius": [
+        0.9,
+        0.9
+      ],
+      "count": 90,
+      "style": "forest"
+    },
+    {
+      "id": "central-plateau",
+      "position": [
+        175.35,
+        -39.35
+      ],
+      "radius": [
+        0.85,
+        0.9
+      ],
+      "count": 55,
+      "style": "scrub"
+    },
+    {
+      "id": "east-coast-grass",
+      "position": [
+        176.65,
+        -39.1
+      ],
+      "radius": [
+        1.0,
+        1.0
+      ],
+      "count": 50,
+      "style": "grass"
+    },
+    {
+      "id": "eastern-north-forest",
+      "position": [
+        176.3,
+        -38.9
+      ],
+      "radius": [
+        0.8,
+        0.85
+      ],
+      "count": 80,
+      "style": "forest"
+    },
+    {
+      "id": "southern-north-scrub",
+      "position": [
+        175.5,
+        -40.1
+      ],
+      "radius": [
+        0.85,
+        0.75
+      ],
+      "count": 55,
+      "style": "scrub"
+    },
+    {
+      "id": "southland-tree-belt",
+      "position": [
+        168.8,
+        -45.9
+      ],
+      "radius": [
+        0.7,
+        0.45
+      ],
+      "count": 70,
+      "style": "forest"
+    },
+    {
+      "id": "central-otago-tussock",
+      "position": [
+        169.7,
+        -45.5
+      ],
+      "radius": [
+        0.75,
+        0.55
+      ],
+      "count": 70,
+      "style": "grass"
+    },
+    {
+      "id": "canterbury-plain-tufts",
+      "position": [
+        171.4,
+        -44.1
+      ],
+      "radius": [
+        0.7,
+        0.55
+      ],
+      "count": 70,
+      "style": "grass"
+    },
+    {
+      "id": "westland-coast-trees",
+      "position": [
+        171.3,
+        -42.5
+      ],
+      "radius": [
+        0.7,
+        0.55
+      ],
+      "count": 100,
+      "style": "forest"
+    },
+    {
+      "id": "canterbury-foothill-trees",
+      "position": [
+        171.5,
+        -43.6
+      ],
+      "radius": [
+        0.65,
+        0.45
+      ],
+      "count": 95,
+      "style": "forest"
+    },
+    {
+      "id": "otago-inland-grasses",
+      "position": [
+        170.6,
+        -44.6
+      ],
+      "radius": [
+        0.75,
+        0.55
+      ],
+      "count": 95,
+      "style": "grass"
+    },
+    {
+      "id": "eastern-canterbury-grasses",
+      "position": [
+        171.1,
+        -44.5
+      ],
+      "radius": [
+        0.7,
+        0.5
+      ],
+      "count": 90,
+      "style": "grass"
+    },
+    {
+      "id": "northeastern-south-trees",
+      "position": [
+        172.7,
+        -42.5
+      ],
+      "radius": [
+        0.85,
+        0.6
+      ],
+      "count": 100,
+      "style": "forest"
+    },
+    {
+      "id": "eastern-canterbury-lowland",
+      "position": [
+        172.0,
+        -43.8
+      ],
+      "radius": [
+        0.75,
+        0.55
+      ],
+      "count": 100,
+      "style": "grass"
+    },
+    {
+      "id": "southern-otago-meadow",
+      "position": [
+        171.0,
+        -45.0
+      ],
+      "radius": [
+        0.75,
+        0.5
+      ],
+      "count": 100,
+      "style": "grass"
+    }
+  ],
+  "waterAvoidance": [
+    {
+      "id": "wakatipu",
+      "position": [
+        168.5,
+        -45.1
+      ],
+      "worldRadius": 18
+    },
+    {
+      "id": "wanaka",
+      "position": [
+        169.1,
+        -44.66
+      ],
+      "worldRadius": 16
+    },
+    {
+      "id": "pukaki",
+      "position": [
+        170.1,
+        -44.12
+      ],
+      "worldRadius": 13
+    },
+    {
+      "id": "tekapo",
+      "position": [
+        170.5,
+        -43.95
+      ],
+      "worldRadius": 13
+    },
+    {
+      "id": "taupo",
+      "position": [
+        175.9,
+        -38.78
+      ],
+      "worldRadius": 20
+    }
+  ],
+  "distribution": {
+    "seed": "terrain-vegetation-v2",
+    "treeWorldWidth": 9.2,
+    "grassWorldWidth": 4.8,
+    "capZoom": 5,
+    "externalGameAssets": "none"
+  }
+}

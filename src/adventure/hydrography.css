@@ -1,0 +1,6 @@
+.trip-hydrography{pointer-events:none}
+.trip-hydro-feature--lake .trip-hydro-shape{fill:#82abb0;stroke:#4f777a;stroke-width:.45;stroke-opacity:.2;vector-effect:non-scaling-stroke;opacity:.88}
+.trip-hydro-feature--river .trip-hydro-shape{fill:#83acac;stroke:#4e7778;stroke-width:.45;vector-effect:non-scaling-stroke;opacity:.86}
+.trip-hydro-label-text{font-family:"Trip Map Hand","Kaiti SC","STKaiti",cursive;font-weight:400;letter-spacing:.035em;fill:#31565b;stroke:#e7ead5;stroke-width:2.5px;stroke-linejoin:round;paint-order:stroke fill;dominant-baseline:middle;pointer-events:none}
+.trip-hydro-label--river .trip-hydro-label-text{fill:#456d6b;stroke:#e7ead5;stroke-width:2.2px}
+.trip-hydro-leader{fill:none;stroke:#557e7c;stroke-width:.7;vector-effect:non-scaling-stroke;opacity:.8}

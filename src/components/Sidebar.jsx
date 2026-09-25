@@ -12,6 +12,7 @@ import {
 import PrintIcon from "@mui/icons-material/Print";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import LanguageIcon from "@mui/icons-material/Language";
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import { assetPath } from "../assets";
 import { tabs } from "../tripData";
 import { tabLabel } from "./tabIcons";
@@ -108,6 +109,9 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
           </Stack>
           <LinearProgress variant="determinate" value={progress.percent} className="progress" />
         </Box>
+        <Button fullWidth variant="outlined" startIcon={<ExploreOutlinedIcon />} component="a" href={assetPath("adventure.html")}>
+          {isEnglish ? "Adventure map" : "冒险地图"}
+        </Button>
         <Stack direction="row" spacing={1}>
           <Button fullWidth variant="outlined" startIcon={<PrintIcon />} onClick={() => window.print()}>
             {isEnglish ? "Print" : "打印"}

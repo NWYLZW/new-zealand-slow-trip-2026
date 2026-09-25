@@ -1,0 +1,155 @@
+:root{color-scheme:light}
+@font-face{font-family:"Trip Map Hand";src:url("./assets/ui-hand-yozai.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#bddadb}
+body{font:16px/1.65 "Trip Map Hand","Kaiti SC","STKaiti",cursive;color:#303d36}
+*{box-sizing:border-box}
+button,a{font:inherit;-webkit-tap-highlight-color:transparent}
+button,summary{letter-spacing:.015em}
+button{cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid #364f41;outline-offset:4px}
+[hidden]{display:none!important}
+#trip-board-structure{--drawably-stroke:#435746;--drawably-fill:#435746;--drawably-paper:#f2ead7;--drawably-width:1.6;position:relative;width:100%;height:100dvh;overflow:hidden;overflow:clip}
+.trip-map-area{position:absolute;inset:0;background:#bddadb;touch-action:none;user-select:none;cursor:grab;overflow:hidden;overflow:clip}
+.trip-map-area.is-dragging{cursor:grabbing}
+.trip-map-controls{position:absolute;left:18px;bottom:32px;z-index:2;display:flex;gap:6px;cursor:default}
+.trip-map-controls .trip-tool{width:48px;height:48px;padding:7px}
+.trip-map-controls .trip-tool svg{width:33px;height:33px}
+.trip-map-controls .trip-tool-label{top:auto;bottom:calc(100% + 5px)}
+.trip-map{display:block;width:100%;height:100%}
+.trip-map-label{position:absolute;left:26px;top:25px;font-size:13px;letter-spacing:3px;color:#415e5d;pointer-events:none}
+.trip-game-tools{position:absolute;top:18px;right:22px;z-index:5;display:flex;gap:10px}
+.trip-tool{border:0;background:transparent;width:54px;height:54px;padding:10px;position:relative;color:#344e40;display:grid;place-items:center}
+.trip-tool-symbol{display:grid;place-items:center;transform-origin:50% 65%;transition:filter .18s ease,color .18s ease;pointer-events:none}
+.trip-tool svg{width:32px;height:32px;pointer-events:none}
+.trip-tool:hover .trip-tool-symbol,.trip-tool:focus-visible .trip-tool-symbol{filter:drop-shadow(1px 1px 0 #edf0d9)}
+.trip-tool[aria-pressed=true] .trip-tool-symbol{color:#294735;filter:none}
+.trip-tool-symbol--pulse{animation:trip-icon-pulse .42s ease-out}
+@keyframes trip-icon-pulse{0%{transform:scale(.96) rotate(-2deg)}45%{transform:scale(1.07) rotate(1.5deg)}100%{transform:scale(1) rotate(0)}}
+.sketch-icon--tasks{--sketch-fill:#b98947}
+.sketch-icon--bag{--sketch-fill:#7e9b74}
+.sketch-icon--photos{--sketch-fill:#789ca5}
+.sketch-icon--zoom{--sketch-fill:#c3ae75}
+.sketch-icon--reset{--sketch-fill:#91a69a}
+.sketch-icon--back{--sketch-fill:#bda078}
+.sketch-wash{fill:transparent;fill-opacity:0;transition:fill-opacity .18s ease}
+.sketch-lens{stroke-width:2;stroke-linecap:butt}
+.sketch-scuff{stroke-width:.58;opacity:.36;stroke-linecap:butt}
+.sketch-hatch{stroke-width:1;opacity:0;transition:opacity .18s ease}
+.trip-tool[aria-pressed=true] .sketch-wash,.trip-tool:active .sketch-wash{fill:var(--sketch-fill);fill-opacity:.86}
+.trip-tool[aria-pressed=true] .sketch-hatch,.trip-tool:active .sketch-hatch{opacity:.48}
+.trip-tool:not([aria-pressed=true]) .trip-tool-symbol--pulse .sketch-wash{animation:trip-wash-flash .48s ease-out both}
+.trip-tool:not([aria-pressed=true]) .trip-tool-symbol--pulse .sketch-hatch{animation:trip-hatch-flash .48s ease-out both}
+@keyframes trip-wash-flash{0%{fill:var(--sketch-fill);fill-opacity:0}28%{fill:var(--sketch-fill);fill-opacity:.72}100%{fill:transparent;fill-opacity:0}}
+@keyframes trip-hatch-flash{0%{opacity:0}28%{opacity:.45}100%{opacity:0}}
+.trip-tool-label{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);white-space:nowrap;background:#f2ead7;padding:4px 10px;color:#37483d;opacity:0;pointer-events:none;transition:opacity .12s;font-size:16px}
+.trip-tool:hover .trip-tool-label,.trip-tool:focus-visible .trip-tool-label{opacity:1}
+.trip-stop{position:absolute;width:36px;height:36px;padding:0;border:0;background:transparent;transform:translate(-50%,-50%);display:grid;place-items:center;touch-action:manipulation}
+.trip-stop-dot{width:11px;height:11px;border:0;background:#3f5b43;border-radius:50%;pointer-events:none}
+.trip-stop-leader{display:none;position:absolute;height:0;border-top:1px solid #536d5e;opacity:.55;transform-origin:left center;pointer-events:none}
+.trip-stop[aria-pressed=true] .trip-stop-dot{background:#2f4935;box-shadow:0 0 0 5px #47695130}
+.trip-stop:hover,.trip-stop:focus-visible,.trip-stop[aria-pressed=true]{z-index:1}
+.trip-stop-label{position:absolute;top:calc(100% - 4px);left:50%;transform:translateX(-50%);font-family:"Trip Map Hand","Kaiti SC","STKaiti",cursive;font-size:11.5px;line-height:1.2;white-space:nowrap;color:#263d31;text-shadow:0 1px 2px #e5ead1,0 -1px 2px #e5ead1,1px 0 2px #e5ead1,-1px 0 2px #e5ead1;opacity:1;visibility:visible;pointer-events:none}
+.trip-stop[data-label-side=right] .trip-stop-label{left:12px;transform:none}
+.trip-stop[data-label-side=left] .trip-stop-label{left:auto;right:12px;transform:none}
+@media(max-width:900px){.trip-stop[data-tag=WKA] .trip-stop-label,.trip-stop[data-tag=AOR] .trip-stop-label{top:-11px}}
+.trip-stop:hover .trip-stop-label,.trip-stop:focus-visible .trip-stop-label,.trip-stop[aria-pressed=true] .trip-stop-label{font-size:13px;color:#1d382b}
+.trip-map-area.is-dragging .trip-stop-label{opacity:.8}
+@media(pointer:coarse){.trip-stop{width:44px;height:44px}}
+.trip-coast{fill:#d0dba9;stroke:#4b654d;stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.trip-terrain-bitmap--understory{opacity:.88}
+.trip-ground-upland{fill:#b7d3c4;stroke:none}
+.trip-ground-mountain{fill:#d2d8d0;stroke:none}
+.trip-mountain-mark{fill:none;stroke:#7b8f83;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.trip-sea-label{font-family:"Trip Map Hand","Kaiti SC","STKaiti",serif;fill:#3f6364;font-size:27px;letter-spacing:4px;opacity:.92}
+.trip-wave{fill:none;stroke:#719c9f;stroke-width:1;stroke-linecap:round;opacity:.24}
+.trip-route,.trip-route-underlay{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.trip-route-underlay{stroke:#eee9d1;stroke-width:4.5;opacity:.65;pointer-events:none}
+.trip-route{stroke:#917343;stroke-width:2;opacity:.8;pointer-events:none}
+.trip-route--flight{stroke:#5e8190;stroke-dasharray:3 7}
+.trip-route--coach{stroke:#627a48;stroke-dasharray:9 5}
+.trip-route[data-active=true]{stroke-width:2.7;opacity:1}
+.trip-route-hit{fill:none;stroke:transparent;stroke-width:20;vector-effect:non-scaling-stroke;pointer-events:stroke;cursor:pointer;outline:none}
+.trip-route-group:hover .trip-route,.trip-route-group:focus-within .trip-route{stroke-width:3;opacity:1}
+.trip-route-hit:focus-visible{stroke:#e3c88355;stroke-width:12}
+.is-dragging .trip-route-hit{cursor:grabbing}
+@media(pointer:coarse){.trip-route-hit{stroke-width:28}}
+.trip-route-stops{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.trip-route-stops li{display:grid;gap:3px}
+.trip-route-stops li>span{font-size:15px;color:#69715d}
+.trip-route-stops button{padding:0;text-align:left;background:transparent;border:0;color:#385641;text-decoration:underline;text-underline-offset:4px}
+.trip-route-day h2{font-size:19px;font-weight:400;margin:2px 0 14px}
+.trip-route-day ol{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.trip-route-day li{display:grid;gap:4px;font-size:16px}
+.trip-route-day time{color:#7a7965}
+.trip-route-note{font-size:15px;color:#69715d;line-height:1.7;margin:0}
+.trip-route-title{display:flex;flex-wrap:wrap;gap:0 7px;font-size:24px;line-height:1.6;padding-right:10px}
+.trip-route-title span{white-space:nowrap}
+.trip-route-type.drawably-badge{padding:4px 9px;font-family:inherit;font-size:13px;font-weight:400;line-height:1.5}
+.trip-day{position:absolute;z-index:4;top:90px;bottom:18px;right:22px;width:310px;margin:0;padding:30px 22px 24px;background:transparent;filter:drop-shadow(-4px 5px 10px #30494725);display:flex;flex-direction:column;gap:22px}
+/* Fill the library's animated outline itself so paper follows the pen edge. */
+.trip-day > .drawably-svg > .drawably-outline{fill:var(--drawably-paper)}
+.trip-close{position:absolute;right:10px;top:10px;width:34px;height:34px;padding:0;border:0;background:transparent;font-size:20px;z-index:1}
+.trip-panel-title{font-size:32px;font-weight:400;letter-spacing:.07em;line-height:1.35;margin:0;padding-right:30px;transform:rotate(-.7deg);transform-origin:left center}
+.trip-panel-body{flex:1;min-height:0;overflow:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:18px}
+.trip-date{font-size:17px;color:#596d5b;margin-bottom:9px;display:block;letter-spacing:.04em}
+.trip-location{font-size:30px;font-weight:400;letter-spacing:.03em;line-height:1.35;margin:0 0 8px;transform:rotate(-.6deg);transform-origin:left center}
+.trip-activity{color:#68705d;margin:0}
+.trip-expanded{font-size:14px;line-height:1.85;color:#586150}
+.trip-card-actions{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px}
+.trip-prev,.trip-next{width:38px;height:42px;background:transparent;border:0;padding:0}
+.trip-detail{min-height:44px;padding:10px 15px;border:0;background:transparent;color:var(--drawably-paper)}
+.trip-task-list,.trip-bag-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.trip-task{border:0;background:transparent;text-align:left;width:100%;display:grid;gap:2px;padding:12px 10px}
+.trip-task:hover{background:#e4dec8}
+.trip-task span{font-size:15px;color:#69715d}
+.trip-bag-list a{display:flex;align-items:center;gap:12px;padding:14px 10px;color:inherit;text-decoration:none;border-bottom:1px solid #c8c2aa}
+.trip-bag-list a:hover{background:#e4dec8}
+.trip-bag-list svg{width:22px;height:22px;stroke-width:1.5}
+.trip-empty{margin:auto 0;text-align:center;color:#7b806b}
+.trip-empty svg{width:38px;height:38px;stroke-width:1.2}
+.trip-empty p{margin:15px 0 20px}
+.trip-add-photos{border:0;background:transparent;padding:12px 22px;color:var(--drawably-paper)}
+.trip-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.trip-photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border:1px solid #c8c2aa}
+@media(max-width:650px){.trip-game-tools{right:14px;top:14px;gap:8px}.trip-tool{width:48px;height:48px;padding:7px}.trip-map-label{left:16px;top:26px;font-size:11px;letter-spacing:1px}.trip-day{top:76px;bottom:14px;right:14px;width:min(310px,calc(100% - 28px));padding:26px 20px}}
+@media(prefers-reduced-motion:reduce){.trip-tool-label,.trip-tool-symbol,.sketch-wash,.sketch-hatch{transition:none}.trip-tool-symbol--pulse,.trip-tool-symbol--pulse .sketch-wash,.trip-tool-symbol--pulse .sketch-hatch{animation:none}}
+
+/* Full-height overlay: it never participates in the map's layout. */
+#trip-board-structure{height:100dvh}
+.trip-map-area{background:#a9d7df}
+.trip-home{position:absolute;left:20px;top:18px;z-index:5}
+.trip-panel{position:absolute;right:22px;top:90px;bottom:18px;width:310px;z-index:4}
+.trip-day{position:relative;inset:auto;width:100%;height:100%;padding:32px 22px 24px;margin:0;font-family:"Trip Map Hand","Kaiti SC","STKaiti",cursive}
+.trip-day .drawably-button{font-family:inherit}
+.trip-close-wrap{position:absolute;right:10px;top:10px;z-index:1}
+.trip-close{position:static}
+.trip-close svg:not(.drawably-svg){width:25px;height:25px}
+.trip-description{font-size:17px;line-height:1.75;color:#4d5d4e;margin:0;overflow-wrap:anywhere}
+.trip-task{padding:10px 0;border-bottom:1px solid #c5c3ad}
+.trip-task summary{display:flex;flex-direction:column;gap:5px;cursor:pointer}
+.trip-task summary strong{font-size:19px;font-weight:400;line-height:1.4;overflow-wrap:anywhere}
+.trip-task ol{padding-left:18px;margin:12px 0}
+.trip-task li{margin:12px 0;display:grid;gap:4px;font-size:16px}
+.trip-task time{color:#7a7965}
+.trip-section-title{font-size:20px;font-weight:400;margin:12px 0 0}
+.trip-bag-links{display:flex;flex-wrap:wrap;gap:14px}
+.trip-bag-links a{color:#435746}
+.trip-bag-list a{display:grid;gap:5px}
+.trip-bag-list strong{font-weight:500}
+.trip-bag-list span{font-size:15px;color:#5d6a57}
+.trip-photo-grid{grid-template-columns:1fr;gap:20px}
+.trip-photo-grid figure{margin:0}
+.trip-photo-grid img{aspect-ratio:4/3;display:block}
+.trip-photo-grid figcaption{margin-top:7px;font-size:16px;color:#566b57}
+.trip-attribution{position:absolute;bottom:5px;left:12px;font-size:10px;color:#506e69;max-width:calc(100% - 24px)}
+.trip-attribution a{color:inherit;text-decoration:none}
+.trip-attribution a:hover{text-decoration:underline}
+.trip-home .trip-tool-label{left:0;transform:none}
+/* Functional captions make the hand lettering visible even before a panel opens. */
+.trip-game-tools .trip-tool,.trip-home{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:60px;height:66px;padding:2px}
+.trip-game-tools .trip-tool svg,.trip-home svg{width:35px;height:35px}
+.trip-game-tools .trip-tool-label,.trip-home .trip-tool-label{position:static;left:auto;top:auto;transform:none;opacity:1;background:transparent;padding:0;color:#304c3d;font-size:15px;line-height:1.2;letter-spacing:.06em}
+.trip-game-tools .trip-tool[aria-pressed=true] .trip-tool-label{text-decoration:underline;text-decoration-style:wavy;text-underline-offset:3px}
+@media(max-width:650px){.trip-game-tools .trip-tool,.trip-home{width:56px;height:58px}.trip-game-tools .trip-tool svg,.trip-home svg{width:31px;height:31px}.trip-game-tools .trip-tool-label,.trip-home .trip-tool-label{font-size:13px}}
+@media(max-width:799px){.trip-day{position:relative;top:auto;bottom:auto;right:auto;width:100%;height:100%;padding:30px 20px 20px}}
+@media(max-width:650px){.trip-home{left:14px;top:14px}.trip-panel{top:76px;bottom:14px;right:14px;width:min(310px,calc(100% - 28px))}}

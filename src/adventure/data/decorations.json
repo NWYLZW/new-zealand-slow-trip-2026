@@ -1,0 +1,513 @@
+[
+  {
+    "id": "kiwi-bird",
+    "file": "kiwi-bird.png",
+    "kind": "wildlife-illustration",
+    "position": [
+      169.1,
+      -46.2
+    ],
+    "anchor": [
+      0.5,
+      0.54
+    ],
+    "worldWidth": 26,
+    "pixelWidth": 1448,
+    "pixelHeight": 1086,
+    "alt": "几维鸟地图装饰插画，非野生动物目击记录",
+    "altEn": "Decorative kiwi bird illustration, not a wildlife sighting",
+    "sha256": "6bdf1e6d539bc62946f53052697969d18a636cd74a976b9bd7933ad21793d4bc",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-f58dc28b-7c9f-413f-8b99-978af0239af5.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; no wildlife sighting or itinerary decision"
+    },
+    "offsetWorld": [
+      20,
+      0
+    ],
+    "minPixels": 18
+  },
+  {
+    "id": "whale-surfacing",
+    "file": "whale-surfacing.png",
+    "kind": "marine-wildlife-illustration",
+    "position": [
+      170.8,
+      -39
+    ],
+    "pose": "surfacing",
+    "anchor": [
+      0.5,
+      0.58
+    ],
+    "worldWidth": 38,
+    "pixelWidth": 1774,
+    "pixelHeight": 887,
+    "alt": "海面露头并换气的鲸鱼地图装饰，非野生动物目击记录",
+    "altEn": "Decorative whale surfacing at sea, not a wildlife sighting",
+    "sha256": "04664f7bd011d08e1237dab4308d5c1572c8a876112763a4bb133c7f29787514",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-6cfde4e7-5cc3-4f12-88ef-ea95a5ef3c30.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; no wildlife sighting, whale tour or itinerary decision"
+    },
+    "minPixels": 26
+  },
+  {
+    "id": "whale-tail",
+    "file": "whale-tail.png",
+    "kind": "marine-wildlife-illustration",
+    "position": [
+      175.2,
+      -43.4
+    ],
+    "pose": "tail",
+    "anchor": [
+      0.5,
+      0.68
+    ],
+    "worldWidth": 25,
+    "pixelWidth": 1254,
+    "pixelHeight": 1254,
+    "alt": "海面上露出的鲸尾地图装饰，非野生动物目击记录",
+    "altEn": "Decorative whale tail above the sea, not a wildlife sighting",
+    "sha256": "742789bd0c0ee3d6f1325d0868eede6a88345e143bec0f16bef5abba871d8065",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-1a7aea62-c9f0-4ac1-971e-3db8296351ff.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; no wildlife sighting, whale tour or itinerary decision"
+    },
+    "minPixels": 25
+  },
+  {
+    "id": "whale-breaching",
+    "file": "whale-breaching.png",
+    "kind": "marine-wildlife-illustration",
+    "position": [
+      177,
+      -41.9
+    ],
+    "pose": "breaching",
+    "anchor": [
+      0.5,
+      0.62
+    ],
+    "worldWidth": 30,
+    "pixelWidth": 1254,
+    "pixelHeight": 1254,
+    "alt": "跃出海面的鲸鱼地图装饰，非野生动物目击记录",
+    "altEn": "Decorative breaching whale at sea, not a wildlife sighting",
+    "sha256": "3beb8eee3e75efe00b145b08aad286abb152ab03a81c35b0f47060da2117f362",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-d3d9ff37-70a7-4a72-87a8-e7ccb43e1b19.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; no wildlife sighting, whale tour or itinerary decision"
+    },
+    "minPixels": 26
+  },
+  {
+    "id": "helicopter",
+    "file": "helicopter.png",
+    "kind": "travel-illustration",
+    "position": [
+      170.143,
+      -43.595
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "worldWidth": 24,
+    "pixelWidth": 1448,
+    "pixelHeight": 1086,
+    "alt": "直升机地图装饰插画，非额外活动或预订",
+    "altEn": "Decorative helicopter illustration, not an additional activity or booking",
+    "sha256": "a401f92bb821bbc2f8512c90ad734c010a2e1636413b8b264665c22a7b035385",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-9556fccf-ee48-4c25-a1e4-4d36af1c68f3.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; no additional activity or booking"
+    },
+    "offsetWorld": [
+      17,
+      -31
+    ],
+    "minPixels": 21
+  },
+  {
+    "id": "milford-sound",
+    "file": "milford-sound.png",
+    "kind": "non-itinerary-landscape",
+    "position": [
+      167.9053,
+      -44.63685
+    ],
+    "anchor": [
+      0.35,
+      0.9
+    ],
+    "worldWidth": 40,
+    "pixelWidth": 1448,
+    "pixelHeight": 1086,
+    "alt": "米尔福德峡湾地景装饰插画，非本次行程站点",
+    "altEn": "Decorative Milford Sound landscape, not an itinerary stop",
+    "sha256": "cace5da430a453de5ed81aa180c5bde54a116a68e234e9f2bd4c54aae8ae8a36",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-001a0b75-828f-4518-8bb7-660a2ae1d1ee.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Decorative landscape only; not an added itinerary stop or decision"
+    },
+    "minPixels": 42,
+    "coordinateSource": "https://www.doc.govt.nz/globalassets/documents/conservation/marine-and-coastal/marine-protected-areas/marine-reserve-maps/piopiotahi-milford-sound-marine-reserve.pdf",
+    "coordinateSourcePoint": "DOC Piopiotahi Marine Reserve map point C; representative point within the fiord"
+  },
+  {
+    "id": "kea",
+    "file": "kea.png",
+    "kind": "native-bird-illustration",
+    "position": [
+      169.3,
+      -44
+    ],
+    "offsetWorld": [
+      0,
+      -9
+    ],
+    "habitatSource": "https://www.doc.govt.nz/kea",
+    "anchor": [
+      0.5,
+      0.8
+    ],
+    "worldWidth": 20,
+    "pixelWidth": 1254,
+    "pixelHeight": 1254,
+    "alt": "南岛山地啄羊鹦鹉地图装饰，非野生动物目击记录",
+    "altEn": "Decorative South Island alpine kea, not a wildlife sighting",
+    "sha256": "1bfd235c8febaca81eaabe0a6d1379d099c66940e88c0ee78fbe08ea14375d6d",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-43e666d1-ce42-4238-96b6-dcf8f456a415.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; kea habitat, not a wildlife sighting or itinerary decision"
+    },
+    "minPixels": 18
+  },
+  {
+    "id": "silver-fern",
+    "file": "silver-fern.png",
+    "kind": "native-plant-illustration",
+    "position": [
+      174.8,
+      -39.4
+    ],
+    "offsetWorld": [
+      -10,
+      0
+    ],
+    "habitatSource": "https://www.doc.govt.nz/nature/native-plants/ferns/",
+    "anchor": [
+      0.5,
+      0.7
+    ],
+    "worldWidth": 20,
+    "pixelWidth": 1219,
+    "pixelHeight": 1290,
+    "alt": "新西兰银蕨地图装饰，非实地观察记录",
+    "altEn": "Decorative New Zealand silver fern, not a field observation",
+    "sha256": "2d1ebe283a2868499a6b91fcc160c33503ec359fc2b175720578812f5826e54f",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-cd6bb559-2c1a-4ff2-a615-4180986d815e.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; native fern, not a field observation or itinerary decision"
+    },
+    "minPixels": 18
+  },
+  {
+    "id": "sheep",
+    "file": "sheep.png",
+    "kind": "farm-animal-illustration",
+    "position": [
+      171.5,
+      -43.9
+    ],
+    "offsetWorld": [
+      -3,
+      -15
+    ],
+    "habitatSource": "https://www.mpi.govt.nz/dmsdocument/4057/direct/",
+    "anchor": [
+      0.5,
+      0.75
+    ],
+    "worldWidth": 19,
+    "pixelWidth": 1227,
+    "pixelHeight": 1282,
+    "alt": "新西兰牧场绵羊地图装饰，非行程活动",
+    "altEn": "Decorative New Zealand farm sheep, not an itinerary activity",
+    "sha256": "5fa5289b298535453a1398ad5668fc703b2f1139317657d31d5fb17408996bac",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-5805fc64-1fab-411a-9589-dd6a73030be2.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "Map atmosphere only; pastoral landscape, not an activity or itinerary decision"
+    },
+    "minPixels": 18
+  },
+  {
+    "id": "pohutukawa-blossom",
+    "file": "pohutukawa-blossom.png",
+    "kind": "native-coastal-plant-illustration",
+    "position": [
+      173.7,
+      -35.1
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "worldWidth": 36,
+    "minPixels": 72,
+    "pixelWidth": 640,
+    "pixelHeight": 593,
+    "alt": "北岛北部沿海的 pōhutukawa 花枝装饰，非实地观察或行程站点",
+    "altEn": "Decorative northern North Island pōhutukawa blossom, not a field observation or itinerary stop",
+    "sha256": "cd69d98b0815e455abd376c75e4e525bf79bde9a5dd1c9e8573bc716e158d292",
+    "region": "Northern North Island coast",
+    "habitatSource": "https://www.doc.govt.nz/pohutukawa/",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-ec69f57d-0a5a-49a2-9f63-925e2a105c68.png",
+      "originalSha256": "e72bcaef738c2d3de17b80090d9631497702b6a682f39e2aa4c42262cc222266",
+      "referenceAsset": "queenstown-lakeside.png",
+      "derivation": "Lanczos downscale to max 640px RGBA PNG; original retained in imagegen output",
+      "approvedUse": "Map atmosphere only; representative regional placement, no sighting, extra stop, activity or booking",
+      "generationThreadId": "01a0d50c-b1e8-7d33-a573-82a8f57f8523"
+    }
+  },
+  {
+    "id": "bay-of-plenty-kiwifruit",
+    "file": "bay-of-plenty-kiwifruit.png",
+    "kind": "regional-fruit-illustration",
+    "position": [
+      177.2,
+      -38.1
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "worldWidth": 36,
+    "minPixels": 68,
+    "pixelWidth": 640,
+    "pixelHeight": 640,
+    "alt": "丰盛湾猕猴桃装饰，非果园活动或预订",
+    "altEn": "Decorative Bay of Plenty kiwifruit, not an orchard activity or booking",
+    "sha256": "31069e5e0a58037d0da04a9ff141e552f513ab2fa9636835d07a7a036f32f1b1",
+    "region": "Bay of Plenty",
+    "habitatSource": "https://www.mpi.govt.nz/dmsdocument/5746/direct/",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-2854ad07-e780-4d34-8770-c5b312aab57a.png",
+      "originalSha256": "f19bbe2f11d379e4685beb86781b1cc568acf9c60ee5e8e7a1cd85fadffe5c34",
+      "referenceAsset": "queenstown-lakeside.png",
+      "derivation": "Lanczos downscale to max 640px RGBA PNG; original retained in imagegen output",
+      "approvedUse": "Map atmosphere only; representative regional placement, no sighting, extra stop, activity or booking",
+      "generationThreadId": "01a0d50c-b1e8-7d33-a573-82a8f57f8523"
+    }
+  },
+  {
+    "id": "north-island-tui",
+    "file": "north-island-tui.png",
+    "kind": "native-bird-illustration",
+    "position": [
+      175.0,
+      -39.7
+    ],
+    "anchor": [
+      0.5,
+      0.65
+    ],
+    "worldWidth": 36,
+    "minPixels": 68,
+    "pixelWidth": 640,
+    "pixelHeight": 533,
+    "alt": "北岛林地 tūī 地图装饰，非野生动物目击记录",
+    "altEn": "Decorative North Island forest tūī, not a wildlife sighting",
+    "sha256": "df62499e7618f32ca178d54898d537157f20a4bd3d10ee506693743eda951ad4",
+    "region": "North Island forest",
+    "habitatSource": "https://www.doc.govt.nz/nature/native-animals/birds/birds-a-z/tui/",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-9dc707d1-f350-4969-bd14-2e9916de352f.png",
+      "originalSha256": "cadab555d167a31e4abd994845b5290daa9464d005f61629f6232345958d8d29",
+      "referenceAsset": "queenstown-lakeside.png",
+      "derivation": "Lanczos downscale to max 640px RGBA PNG; original retained in imagegen output",
+      "approvedUse": "Map atmosphere only; representative regional placement, no sighting, extra stop, activity or booking",
+      "generationThreadId": "01a0d50c-b1e8-7d33-a573-82a8f57f8523"
+    }
+  },
+  {
+    "id": "central-otago-cherries",
+    "file": "central-otago-cherries.png",
+    "kind": "regional-fruit-illustration",
+    "position": [
+      169.65,
+      -45.65
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "worldWidth": 36,
+    "minPixels": 68,
+    "pixelWidth": 640,
+    "pixelHeight": 585,
+    "alt": "中奥塔哥樱桃装饰，非采摘活动或预订",
+    "altEn": "Decorative Central Otago cherries, not a picking activity or booking",
+    "sha256": "a6858bd4fc85a6324f4279a0fa4cb521afde019187f85b980d83ee4978a4a260",
+    "region": "Central Otago",
+    "habitatSource": "https://www.centralotagonz.com/assets/Documents/2023-Central-Otago-Growers-and-Producers.pdf",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-02d8661f-3410-4a1e-99ab-aeb5b9a35bee.png",
+      "originalSha256": "cd85a04a116060491ce4ce085d1ef3153df1cc99d5c730ab36d3959c085c1f0f",
+      "referenceAsset": "queenstown-lakeside.png",
+      "derivation": "Lanczos downscale to max 640px RGBA PNG; original retained in imagegen output",
+      "approvedUse": "Map atmosphere only; representative regional placement, no sighting, extra stop, activity or booking",
+      "generationThreadId": "01a0d50c-b1e8-7d33-a573-82a8f57f8523"
+    }
+  },
+  {
+    "id": "kaikoura-fur-seal",
+    "file": "kaikoura-fur-seal.png",
+    "kind": "marine-wildlife-illustration",
+    "position": [
+      173.7,
+      -42.2
+    ],
+    "anchor": [
+      0.5,
+      0.82
+    ],
+    "worldWidth": 36,
+    "minPixels": 72,
+    "pixelWidth": 603,
+    "pixelHeight": 640,
+    "alt": "凯库拉海岸毛皮海豹装饰，非野生动物目击记录",
+    "altEn": "Decorative Kaikōura coast fur seal, not a wildlife sighting",
+    "sha256": "517eda13206fc33f5582d587bb55d333f87ce0d5d90156781f09f00c3429d824",
+    "region": "Kaikōura coast",
+    "habitatSource": "https://www.doc.govt.nz/Documents/science-and-technical/seal-callouts-kaikoura.pdf",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-4f3c0a56-ee96-4d9c-8e53-2a29e21a0bb6.png",
+      "originalSha256": "f5eea67ea7459b34f24e06d9492a0598279bda776e367421633bb8220f14648a",
+      "referenceAsset": "queenstown-lakeside.png",
+      "derivation": "Lanczos downscale to max 640px RGBA PNG; original retained in imagegen output",
+      "approvedUse": "Map atmosphere only; representative regional placement, no sighting, extra stop, activity or booking",
+      "generationThreadId": "01a0d50c-b1e8-7d33-a573-82a8f57f8523"
+    }
+  },
+  {
+    "id": "wetland-harakeke",
+    "file": "wetland-harakeke.png",
+    "kind": "native-wetland-plant-illustration",
+    "position": [
+      171.4,
+      -42.2
+    ],
+    "anchor": [
+      0.5,
+      0.94
+    ],
+    "worldWidth": 36,
+    "minPixels": 68,
+    "pixelWidth": 640,
+    "pixelHeight": 640,
+    "alt": "湿地 harakeke 装饰，非实地观察记录",
+    "altEn": "Decorative wetland harakeke, not a field observation",
+    "sha256": "fc911ab5bbfc1471f630d366e72f83f56375752250d6ed8b37cdda61fb6d1eba",
+    "region": "Wet areas across New Zealand",
+    "habitatSource": "https://www.doc.govt.nz/nature/native-plants/harakeke-flax/",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-e1d68955-c0d8-4e7c-845b-3ef03fb551d4.png",
+      "originalSha256": "1b4984f46887ebff92d523e72bb1a37808b91786950654cc0f632fc8cb1e2eb9",
+      "referenceAsset": "queenstown-lakeside.png",
+      "derivation": "Lanczos downscale to max 640px RGBA PNG; original retained in imagegen output",
+      "approvedUse": "Map atmosphere only; representative regional placement, no sighting, extra stop, activity or booking",
+      "generationThreadId": "01a0d50c-b1e8-7d33-a573-82a8f57f8523"
+    }
+  },
+  {
+    "id": "wetland-ti-kouka",
+    "file": "wetland-ti-kouka.png",
+    "kind": "native-wetland-plant-illustration",
+    "position": [
+      171.45,
+      -43.6
+    ],
+    "anchor": [
+      0.5,
+      0.96
+    ],
+    "worldWidth": 36,
+    "minPixels": 68,
+    "pixelWidth": 611,
+    "pixelHeight": 640,
+    "alt": "湿润开阔地的 tī kōuka 装饰，非实地观察记录",
+    "altEn": "Decorative tī kōuka of wet open areas, not a field observation",
+    "sha256": "1cde4e6a34593770c066b43fa73a7d0945defff5412f6176ce1bd6dc144b03bb",
+    "region": "Wet open areas across New Zealand",
+    "habitatSource": "https://www.doc.govt.nz/nature/native-plants/cabbage-tree-ti-kouka/",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-25",
+      "originalFile": "exec-619983c9-84fa-4942-882d-2cc559de03ed.png",
+      "originalSha256": "e6e2d35c9df956cb61c9d027526ed2014ccdc0f34384c2aecb72fe1d8e1b1afe",
+      "referenceAsset": "queenstown-lakeside.png",
+      "derivation": "Lanczos downscale to max 640px RGBA PNG; original retained in imagegen output",
+      "approvedUse": "Map atmosphere only; representative regional placement, no sighting, extra stop, activity or booking",
+      "generationThreadId": "01a0d50c-b1e8-7d33-a573-82a8f57f8523"
+    }
+  }
+]

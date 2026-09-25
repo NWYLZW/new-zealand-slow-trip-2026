@@ -1,0 +1,168 @@
+[
+  {
+    "file": "queenstown-lakeside.png",
+    "id": "queenstown-lakeside",
+    "stopTag": "ZQN",
+    "alt": "皇后镇湖畔手绘示意插画：湖水、码头、房屋、树和山脉",
+    "altEn": "Illustrated Queenstown lakeside with a lake, jetty, houses, a tree and mountains",
+    "anchor": [
+      0.55,
+      0.5
+    ],
+    "pixelWidth": 1448,
+    "pixelHeight": 1086,
+    "worldWidth": 36,
+    "sha256": "0fdde3c8d921e8ce3835b47e45b3605760eed2bb9999579120707ba2ee5a1dfa",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-d73be622-5e58-4473-9b0d-5873e1a94177.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  },
+  {
+    "file": "aoraki-mountain.png",
+    "id": "aoraki-mountain",
+    "stopTag": "AOR",
+    "alt": "库克山手绘示意插画：雪山、冰川湖和金色草岸",
+    "altEn": "Illustrated Aoraki / Mount Cook with snowy peaks, a glacial lake and golden tussock shore",
+    "anchor": [
+      0.65,
+      0.86
+    ],
+    "pixelWidth": 1448,
+    "pixelHeight": 1086,
+    "worldWidth": 36,
+    "sha256": "930d799ae133f10ef4d4fd43c2acd3b978454a0f7858e032ff3b7b412cce8047",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-ea5f7db5-b736-4644-bfd1-b5e4af281bbb.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  },
+  {
+    "file": "wanaka-tree.png",
+    "id": "wanaka-tree",
+    "stopTag": "WKA",
+    "alt": "瓦纳卡湖畔孤树手绘示意插画",
+    "altEn": "Illustrated lone willow in Lake Wanaka",
+    "anchor": [0.1, 1],
+    "pixelWidth": 1536,
+    "pixelHeight": 1024,
+    "worldWidth": 36,
+    "sha256": "d4f9c12ac0a0adb8f8cb69283b08807cad754cac07231f6bb25094942b00eff4",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-392fd4f1-5e78-4c0f-bb08-08dad902c1ad.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  },
+  {
+    "file": "tekapo-church.png",
+    "id": "tekapo-church",
+    "stopTag": "TEK",
+    "alt": "特卡波湖畔好牧羊人教堂手绘示意插画",
+    "altEn": "Illustrated Church of the Good Shepherd beside Lake Tekapo",
+    "anchor": [0, 0.75],
+    "pixelWidth": 1448,
+    "pixelHeight": 1086,
+    "worldWidth": 36,
+    "sha256": "400b3fbca5d99191b2a6b8b94b1918550971ad5b57be2afc3fa4a5551723c0b4",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-1f6e0eea-afbe-4616-8063-65a60f0bffa0.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  },
+  {
+    "file": "oamaru-penguins.png",
+    "id": "oamaru-penguins",
+    "stopTag": "OAM",
+    "alt": "奥马鲁主题手绘示意插画：小蓝企鹅、石仓库和码头",
+    "altEn": "Illustrated Oamaru penguins, stone warehouse and tiny harbor",
+    "anchor": [0.5, 1],
+    "pixelWidth": 1536,
+    "pixelHeight": 1024,
+    "worldWidth": 36,
+    "sha256": "565d3b57f6b0942835467a43b3423d17bedb810f35d7bbb9feffc73215aa7ea1",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-9e9e104c-014f-4fe8-a982-3008b82d154f.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  },
+  {
+    "file": "christchurch-tram.png",
+    "id": "christchurch-tram",
+    "stopTag": "CHC",
+    "alt": "基督城主题手绘示意插画：复古红色电车、石桥与河流",
+    "altEn": "Illustrated Christchurch tram, stone bridge and river",
+    "anchor": [0.5, 1],
+    "pixelWidth": 1536,
+    "pixelHeight": 1024,
+    "worldWidth": 36,
+    "sha256": "95f92c2873a631a0f2aa72d1ecd2bdc42a403561eb063dca0e0f20ce84fbfb1c",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-e59b5810-355c-4def-94f5-af15ce3cfa53.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  },
+  {
+    "file": "auckland-sky-tower.png",
+    "id": "auckland-sky-tower",
+    "stopTag": "AKC",
+    "alt": "奥克兰天空塔与滨水建筑手绘示意插画",
+    "altEn": "Illustrated Auckland Sky Tower and waterfront buildings",
+    "anchor": [0.5, 0.93],
+    "pixelWidth": 1217,
+    "pixelHeight": 1292,
+    "worldWidth": 36,
+    "sha256": "0245f847c22f53b43ade287ff837b30c406b07b6f481b2f3448b109ee123b4f3",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-f5e2a7f8-49b8-46b5-8306-10181a69fa18.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  },
+  {
+    "file": "hobbiton-door.png",
+    "id": "hobbiton-door",
+    "stopTag": "HBT",
+    "alt": "霍比屯草坡圆门与石径手绘示意插画",
+    "altEn": "Illustrated Hobbiton grassy hill, round door and stone path",
+    "anchor": [0, 1],
+    "pixelWidth": 1536,
+    "pixelHeight": 1024,
+    "worldWidth": 36,
+    "sha256": "09569e499ac506b5f194f4707882ddd7184bc14c358eb616eae8887c39e67e05",
+    "source": {
+      "kind": "ai-generated-illustration",
+      "tool": "imagegen",
+      "reviewedAt": "2026-09-23",
+      "originalFile": "exec-7f4cdbe1-1c2a-46f0-a9ab-afdb42abcdac.png",
+      "referenceAsset": "queenstown-lakeside.png",
+      "approvedUse": "User-authorized map decoration following the approved Queenstown style; not a location photograph"
+    }
+  }
+]
