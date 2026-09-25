@@ -7,6 +7,7 @@ export const tabs = [
   { value: "car", label: "租车规划", short: "租车", icon: "car" },
   { value: "booking", label: "酒店预订", short: "酒店", icon: "hotel" },
   { value: "activities", label: "活动预订", short: "活动", icon: "activity" },
+  { value: "prep", label: "出行前准备", short: "准备", icon: "prep" },
   { value: "notes", label: "注意事项", short: "提醒", icon: "notes" },
 ];
 
