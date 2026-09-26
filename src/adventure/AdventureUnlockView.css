@@ -1,0 +1,11 @@
+.trip-adventure-unlock { display: grid; gap: 18px; width: min(100%, 440px); margin-inline: auto; color: var(--trip-ink-color); font-size: 17px; line-height: 1.6; }
+.trip-adventure-unlock p { margin: 0; }
+.trip-adventure-unlock-status,.trip-adventure-unlock-device,.trip-adventure-unlock-recovery { display: grid; justify-items: start; gap: 12px; }
+.trip-adventure-unlock-status { justify-items: center; text-align: center; }
+.trip-adventure-unlock-recovery { width: 100%; }
+.trip-adventure-unlock-recovery label { color: var(--trip-ink-muted); }
+.trip-adventure-unlock-recovery input { box-sizing: border-box; width: 100%; min-height: 46px; padding: 8px 11px; border: 1px solid var(--trip-ink-muted); border-radius: 5px; background: var(--trip-paper-color); color: var(--trip-ink-color); font: inherit; }
+.trip-adventure-unlock-recovery input:focus-visible { outline: 2px solid var(--trip-focus-color); outline-offset: 2px; }
+.trip-adventure-unlock-action.trip-pencil-surface { width: auto; min-width: 180px; min-height: 46px; gap: 9px; padding: 8px 14px; color: var(--trip-ink-color); }
+.trip-adventure-unlock-action .trip-pencil-icon { width: 27px; height: 27px; }
+.trip-adventure-unlock-error { color: var(--trip-error-color); }

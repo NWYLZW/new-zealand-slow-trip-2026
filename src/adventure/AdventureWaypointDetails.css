@@ -1,0 +1,13 @@
+.trip-waypoint-detail { display:flex; flex-direction:column; gap:18px; min-width:0; color:var(--trip-ink-color); }
+.trip-waypoint-summary,.trip-waypoint-source { display:grid; gap:10px; min-width:0; }
+.trip-waypoint-kicker { color:var(--trip-ink-muted); font-size:13px; }
+.trip-waypoint-summary p,.trip-waypoint-source p { margin:0; font-size:15px; line-height:1.65; }
+.trip-waypoint-summary dl { display:grid; gap:7px; margin:2px 0 0; }
+.trip-waypoint-summary dl div { display:grid; grid-template-columns:86px minmax(0,1fr); gap:10px; align-items:start; }
+.trip-waypoint-summary dt { color:var(--trip-ink-muted); font-size:13px; }
+.trip-waypoint-summary dd { min-width:0; margin:0; font-size:14px; overflow-wrap:anywhere; }
+.trip-waypoint-section-heading { position:relative; min-height:33px; padding-bottom:9px; }
+.trip-waypoint-section-heading h2 { margin:0; font-size:17px; font-weight:400; line-height:1.4; }
+.trip-waypoint-section-heading .trip-panel-divider-ink { bottom:0; }
+.trip-waypoint-source { color:var(--trip-ink-muted); font-size:13px; line-height:1.55; }
+.trip-waypoint-source a { width:max-content; max-width:100%; min-height:44px; display:inline-flex; align-items:center; color:var(--trip-focus-color); text-underline-offset:3px; }

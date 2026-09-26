@@ -16,6 +16,7 @@ import { activityBookingPlans, bookingItems, tabs } from "./tripData";
 import { confirmedAccommodationBookings } from "./data/confirmedAccommodationBookings";
 import { LanguageContext } from "./LanguageContext";
 import { PrivateVaultProvider } from "./PrivateVaultContext";
+import { isItineraryPath } from "./siteNavigation";
 
 const storageKey = "nz-trip-booking-react-v1";
 const languageStorageKey = "nz-trip-language";
@@ -65,6 +66,7 @@ function useHashTab() {
   };
   useEffect(() => {
     const syncTabFromUrl = () => {
+      if (!isItineraryPath()) return;
       const nextTab = readTab();
       setTab(nextTab);
       canonicalizePopupParams(nextTab);

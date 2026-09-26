@@ -94,16 +94,6 @@ export const preTripChecklist = [
         deadlineEn: "Before departure",
         priority: "required",
       },
-      {
-        id: "cancel-north-rental",
-        title: "确认北岛旧租车订单已取消并保存邮件",
-        titleEn: "Confirm the old North Island rental is cancelled and save the email",
-        detail: "网页行程改成大巴不会自动取消真实订单；必须看到取消成功页面或确认邮件才算完成。",
-        detailEn: "Changing the itinerary to coach travel does not cancel the real booking. Treat it as complete only after seeing a cancellation page or email.",
-        deadline: "9月24日前",
-        deadlineEn: "By 24 Sep",
-        priority: "required",
-      },
     ],
   },
   {

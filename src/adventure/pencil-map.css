@@ -5,10 +5,17 @@
 .trip-depth-map,.trip-pencil-map,.trip-pencil-routes { pointer-events:none; }
 .trip-map-area .trip-stop-label { font-size:19px; line-height:1; text-shadow:none; }
 .trip-map-area .trip-stop-label canvas { display:block; max-width:none; }
-.trip-stop-marker { position:absolute; inset:0; display:block; width:28px; height:28px; }
+.trip-stop-marker { position:absolute; inset:0; display:block; width:100%; height:100%; }
 .trip-stop-marker--selected { opacity:0; }
 .trip-stop[aria-pressed=true] .trip-stop-marker--normal { opacity:0; }
 .trip-stop[aria-pressed=true] .trip-stop-marker--selected { opacity:1; }
+.trip-map-area .trip-stop { width:44px; height:44px; z-index:3; }
+.trip-map-area .trip-waypoint { width:44px; height:44px; z-index:2; }
+.trip-map-area .trip-cluster { z-index:4; }
+.trip-map-area .trip-stop[hidden] { display:none; }
+.trip-cluster-count { position:absolute; left:27px; top:26px; display:grid; place-items:center; width:18px; height:18px; padding:0; color:var(--trip-ink,#293d33); pointer-events:none; }
+.trip-map-area .trip-waypoint .trip-stop-label { font-size:15px; color:#6f3f37; opacity:0; }
+.trip-map-area .trip-waypoint[aria-pressed=true] .trip-stop-label { opacity:1; }
 .trip-map-area .trip-stop-leader { border-color:#994f3f; }
 .trip-map-area .trip-stop:hover .trip-stop-label,
 .trip-map-area .trip-stop:focus-visible .trip-stop-label,
@@ -19,9 +26,8 @@
 .trip-map-sources li { margin:12px 0; }
 .trip-map-sources p { margin:4px 0; font-size:14px; line-height:1.8; overflow-wrap:anywhere; }
 .trip-map-sources a { color:inherit; }
-.trip-task li>span { font-size:16px; }
 .trip-location.trip-route-title { font-size:24px; }
-.trip-pencil-text,.trip-pencil-text-source { font:inherit; color:inherit; letter-spacing:0; }
+.trip-pencil-text,.trip-pencil-text-source { font:inherit; font-family:var(--trip-handwriting); font-kerning:none; font-variant-ligatures:none; color:inherit; letter-spacing:0; }
 .trip-pencil-text { display:inline-block; position:relative; max-width:100%; min-width:0; vertical-align:baseline; overflow-wrap:anywhere; }
 .trip-pencil-text canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; display:none; }
 .trip-pencil-text[data-pencil-ready=true] canvas { display:block; }

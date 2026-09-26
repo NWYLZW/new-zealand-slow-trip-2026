@@ -17,7 +17,7 @@
 
 ## 技术边界
 
-- React 18 + Vite 6；入口 `src/main.jsx`，壳层 `src/App.jsx`。
+- React 18 + Vite 6；统一入口 `src/main.jsx`，`SiteRouter` 在默认 path 加载新版地图，在 `/v1` 懒加载旧版 `ItineraryPage`；旧版内部壳层仍为 `src/App.jsx`。旧 `/adventure` 与 `adventure.html` 由构建生成兼容入口并归一到默认 path。
 - MUI 负责通用控件；Leaflet/React Leaflet 负责地图；Google Maps 仅在配置 key 或外链场景使用。
 - URL hash 表示主面板；query 参数表示酒店、事件、活动和图片详情。深链接、前进/后退和关闭恢复属于产品契约。
 - `localStorage` 保存语言、预订勾选等浏览器私有状态；共享选择种子位于 `src/data/hotel-selections.json`。

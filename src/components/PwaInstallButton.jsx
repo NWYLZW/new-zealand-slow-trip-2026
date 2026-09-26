@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { getInstallState, subscribeInstallState, requestInstallation } from "../pwa/installState";
 import {
   Button,
   Dialog,
@@ -14,10 +15,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import InstallMobileIcon from "@mui/icons-material/InstallMobile";
 import IosShareIcon from "@mui/icons-material/IosShare";
 
-function inStandaloneMode() {
-  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-}
-
 function isAppleMobileDevice() {
   const platform = navigator.platform ?? "";
   return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -25,43 +22,20 @@ function isAppleMobileDevice() {
 
 export function PwaInstallButton({ language = "zh" }) {
   const isEnglish = language === "en";
-  const [installPrompt, setInstallPrompt] = useState(null);
+  const { prompt: installPrompt, installed } = useSyncExternalStore(subscribeInstallState, getInstallState);
   const [instructionsOpen, setInstructionsOpen] = useState(false);
-  const [installed, setInstalled] = useState(inStandaloneMode);
   const appleMobile = isAppleMobileDevice();
-
-  useEffect(() => {
-    const displayMode = window.matchMedia("(display-mode: standalone)");
-    const captureInstallPrompt = (event) => {
-      event.preventDefault();
-      setInstallPrompt(event);
-    };
-    const markInstalled = () => {
-      setInstalled(true);
-      setInstallPrompt(null);
-      setInstructionsOpen(false);
-    };
-    const syncDisplayMode = () => setInstalled(inStandaloneMode());
-
-    window.addEventListener("beforeinstallprompt", captureInstallPrompt);
-    window.addEventListener("appinstalled", markInstalled);
-    displayMode.addEventListener?.("change", syncDisplayMode);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", captureInstallPrompt);
-      window.removeEventListener("appinstalled", markInstalled);
-      displayMode.removeEventListener?.("change", syncDisplayMode);
-    };
-  }, []);
 
   const requestInstall = async () => {
     if (!installPrompt) {
       setInstructionsOpen(true);
       return;
     }
-    await installPrompt.prompt();
-    const choice = await installPrompt.userChoice;
-    if (choice.outcome === "accepted") setInstalled(true);
-    setInstallPrompt(null);
+    try {
+      await requestInstallation();
+    } catch {
+      setInstructionsOpen(true);
+    }
   };
 
   if (installed) return null;

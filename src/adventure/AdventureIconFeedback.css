@@ -1,0 +1,38 @@
+.trip-icon-tooltip {
+  position: fixed;
+  z-index: 100;
+  max-width: min(320px, calc(100vw - 16px));
+  margin: 0;
+  padding: 8px 12px;
+  color: var(--trip-ink-color);
+  font: 14px/1.5 var(--trip-handwriting);
+  overflow-wrap: anywhere;
+  pointer-events: none;
+  animation: trip-tooltip-appear 120ms ease-out;
+}
+#trip-board-structure :is(button,a,summary,[role=button],[role=tab]):has(.trip-pencil-icon) {
+  touch-action: manipulation;
+}
+#trip-board-structure :is(button,a,summary,[role=button],[role=tab]) .trip-pencil-icon:not([data-icon=shutter-ring]) {
+  transform-origin: center;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+#trip-board-structure :is(button,a,summary,[role=button],[role=tab]):not(:disabled):not([aria-disabled=true]):focus-visible .trip-pencil-icon:not([data-icon=shutter-ring]) {
+  transform: scale(1.16);
+  filter: drop-shadow(.6px .6px 0 currentColor);
+}
+@media (hover:hover) {
+  #trip-board-structure :is(button,a,summary,[role=button],[role=tab]):not(:disabled):not([aria-disabled=true]):hover .trip-pencil-icon:not([data-icon=shutter-ring]) {
+    transform: scale(1.16);
+    filter: drop-shadow(.6px .6px 0 currentColor);
+  }
+}
+#trip-board-structure .trip-camera :is(button,a):hover .trip-pencil-icon,
+#trip-board-structure .trip-camera :is(button,a):focus-visible .trip-pencil-icon {
+  filter: drop-shadow(0 1px 1px #000) drop-shadow(0 0 2px #000) drop-shadow(.6px .6px 0 currentColor);
+}
+@keyframes trip-tooltip-appear { from { opacity:0; } to { opacity:1; } }
+@media (prefers-reduced-motion:reduce) {
+  .trip-icon-tooltip { animation:none; }
+  #trip-board-structure :is(button,a,summary,[role=button],[role=tab]) .trip-pencil-icon { transition:none; }
+}

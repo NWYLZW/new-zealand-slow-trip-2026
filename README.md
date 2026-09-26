@@ -13,7 +13,7 @@ npm start
 
 然后打开 `http://127.0.0.1:4173/new-zealand-slow-trip-2026/`。
 
-独立的冒险地图页面位于 `/new-zealand-slow-trip-2026/adventure.html`，也可从主页面侧栏的「冒险地图」进入。两页共用行程和预订数据。
+默认入口 `/new-zealand-slow-trip-2026/` 为新版冒险地图，旧版攻略页面保留在 `/new-zealand-slow-trip-2026/v1`，从地图菜单的「老版本」进入。两版共用同一 React 入口、路径路由与 PWA；旧 `/adventure`、`adventure.html` 链接自动归一到默认入口并保留查询参数。构建自动生成 GitHub Pages 路径入口，不需额外服务器重写。运行 `npm run build` 后用 `npm run test:unified-pwa` 验证深链接和离线切换。
 
 构建生产版本：
 

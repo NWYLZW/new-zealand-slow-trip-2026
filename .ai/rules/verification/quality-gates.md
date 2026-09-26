@@ -61,6 +61,12 @@ git diff --check
 
 ## 浏览器验收
 
+用户要求运行浏览器验证时，本地 Playwright 脚本使用随 Playwright 安装的 Chromium，
+不指定 `channel: "chrome"` 或系统 Chrome 可执行文件，避免测试启动影响日常浏览器。
+缺少匹配的浏览器依赖时先报告；经许可可运行 `npx playwright install chromium`，
+不得偷偷回退系统 Chrome。遇到 sandbox `EPERM` 先申请所需权限，不反复启动重试。
+界面改动仍按根 AGENTS 的预览优先约定，不默认启动测试浏览器。
+
 ### 所有 UI 改动
 
 - 本地 URL 返回 200，页面没有白屏和 console error。

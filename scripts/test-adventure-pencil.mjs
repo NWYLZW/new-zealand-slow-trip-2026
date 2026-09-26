@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
-const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure.html';
+const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure';
 const output = process.env.ADVENTURE_TEST_OUTPUT;
 if (output) await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true });
+const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1323, height: 956 }, deviceScaleFactor: 2 });
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
@@ -43,11 +43,11 @@ try {
     return {ink:alpha.length,levels:new Set(alpha).size};
   });
   assert(iconInk.ink>50&&iconInk.levels>20,'Return icon is blank or uniform');
-  assert(!(await home.locator('.trip-tool-tooltip').isVisible()));
-  await home.hover();assert(await home.locator('.trip-tool-tooltip').isVisible());
+  assert(!(await page.getByRole('tooltip').isVisible()));
+  await home.hover();await page.getByRole('tooltip').waitFor({state:'visible'});
   if(output)await home.screenshot({path:`${output}/pencil-return-icon.png`});
-  await page.mouse.move(150,200);assert(!(await home.locator('.trip-tool-tooltip').isVisible()));
-  await home.focus();assert(await home.locator('.trip-tool-tooltip').isVisible());
+  await page.mouse.move(150,200);await page.getByRole('tooltip').waitFor({state:'hidden'});
+  await page.keyboard.press('Tab');await home.focus();await page.getByRole('tooltip').waitFor({state:'visible'});
   await home.evaluate(button=>button.blur());
   const routeCanvas=page.locator('.trip-pencil-routes');
   assert.equal(await routeCanvas.getAttribute('data-renderer'),'pressure-pencil');
@@ -201,7 +201,7 @@ try {
   }
   assert.deepEqual(errors,[]);
   await home.focus();await page.keyboard.press('Enter');
-  await page.waitForURL(new URL('./',base).href);
+  await page.waitForURL(url => url.pathname === new URL('./',base).pathname && url.hash === '#overview');
   console.log(JSON.stringify({depthBands:fills,pencilInk:ink,routeChecks,routePanFrameMs:routeMoved.stats.frameMs,
     markerInk,iconInk,placeZoom:10,returnKeyboard:true,panAndProjection:true,reset:true,placeDeepLink:true,routeKeyboard:true,history:true,attributionRelocated:true,highZoom:high.stats,responsive:true,errors}));
 } finally { await browser.close(); }

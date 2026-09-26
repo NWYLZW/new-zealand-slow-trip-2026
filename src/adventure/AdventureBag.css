@@ -1,0 +1,80 @@
+.trip-bag{display:flex;flex:1;min-height:0;min-width:0;gap:var(--trip-content-gap,8px);color:#293d33;font-family:var(--trip-handwriting)}
+.trip-bag-tabs{display:flex;flex:none;flex-direction:column;align-items:center;gap:5px;width:var(--trip-leading-slot,44px)}
+.trip-bag-tab.trip-pencil-surface{display:grid;place-items:center;flex:none;width:44px;height:44px;min-height:44px;padding:5px;color:#526a57;cursor:pointer}
+.trip-bag-tab[aria-selected=true]{color:#244f36}
+.trip-bag-tab[aria-selected=false]>.trip-pencil-surface-ink{display:none}
+.trip-bag-tab:focus-visible,.trip-bag-calendar-date:focus-visible,.trip-bag-calendar-stay:focus-visible,.trip-bag-entry a:focus-visible{outline:2px solid #2d6847;outline-offset:2px}
+.trip-bag-tab .trip-pencil-icon{display:block;width:24px;height:24px}
+.trip-bag-tabpanel{flex:1;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;container-type:inline-size;padding:1px 4px 14px 0}
+.trip-bag-stay-calendar{min-width:0}
+.trip-bag-weekdays,.trip-bag-calendar-dates,.trip-bag-calendar-bands{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.trip-bag-weekdays{margin-bottom:5px;text-align:center;color:#526b59;font-size:13px}
+.trip-bag-calendar-weeks{display:grid;gap:11px}
+.trip-bag-calendar-week{display:grid;gap:4px;min-width:0}
+.trip-bag-calendar-date{display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:0 3px;min-width:0;min-height:36px;padding:3px 1px;border:0;background:transparent;color:#2a4935;font-size:12px;text-align:center;cursor:pointer}
+.trip-bag-calendar-date[data-selected=true]{color:#215c39;text-decoration:underline;text-decoration-color:#658c6a;text-underline-offset:4px}
+.trip-bag-calendar-number{white-space:nowrap}
+.trip-bag-calendar-departure{color:#667263;font-size:10px;white-space:nowrap}
+.trip-bag-calendar-bands{grid-auto-flow:row dense;grid-auto-rows:minmax(48px,auto);align-items:stretch;min-width:0}
+.trip-bag-calendar-band.trip-pencil-surface{display:flex;align-items:center;justify-content:center;min-width:0;min-height:48px;padding:8px 6px;color:#274d36;text-align:center}
+.trip-bag-band-name{display:block;width:100%;min-width:0;font-size:12px;line-height:1.4;white-space:normal;overflow-wrap:anywhere}
+.trip-bag-band-join{position:absolute;top:2px;left:3px;color:#396c48;font-size:15px;line-height:1}
+.trip-bag-band-name+.trip-bag-band-join{left:auto;right:3px}
+.trip-bag-content-list{display:grid;gap:17px}
+.trip-bag-entry{display:grid;gap:5px;min-width:0;padding:0 0 7px}
+.trip-bag-entry>.trip-panel-divider-ink{display:block;width:100%;height:8px;margin-top:7px}
+.trip-bag-entry h2{margin:0;color:#294f39;font-size:18px;font-weight:400;line-height:1.35}
+.trip-bag-entry p{margin:0;color:#405845;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.trip-bag-entry .trip-bag-entry-meta{color:#6d6b4c;font-size:13px}
+.trip-bag-entry a{justify-self:start;min-height:44px;padding:10px 0;color:#315d44;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.trip-bag-empty{margin:6px 0;color:#526b59;font-size:15px}
+.trip-bag-rental{display:grid;gap:9px;min-width:0;color:#304e3b}
+.trip-bag-rental-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;min-width:0}
+.trip-bag-rental-heading h2{margin:0;color:#294d37;font-size:21px;font-weight:400;line-height:1.2}
+.trip-bag-rental-heading>div>span{font-size:13px;color:#627360}
+.trip-bag-rental-status.trip-pencil-surface{flex:none;min-height:34px;padding:4px 9px;font-size:13px}
+.trip-bag-rental-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 16px;min-width:0}
+.trip-bag-rental-fact{display:grid;grid-template-columns:30px minmax(0,1fr);gap:6px;align-items:start;min-width:0}
+.trip-bag-rental-fact>div{display:grid;gap:2px;min-width:0}
+.trip-bag-rental-icon{display:grid;place-items:center;width:30px;height:30px;color:#547660}
+.trip-bag-rental-icon .trip-pencil-icon{width:24px;height:24px}
+.trip-bag-rental-label{color:#6c7b69;font-size:12px}
+.trip-bag-rental-fact strong{color:#294d37;font-size:14px;font-weight:400;line-height:1.4;overflow-wrap:anywhere}
+.trip-bag-rental>.trip-panel-divider-ink{display:block;width:100%;height:8px}
+.trip-bag-rental-expand,.trip-bag-rental-unlock{display:flex;align-items:center;gap:8px;min-height:44px;padding:4px 0;border:0;background:transparent;color:#315b42;font-size:15px;text-align:left;cursor:pointer}
+.trip-bag-rental-expand>.trip-pencil-icon{width:21px;height:21px;transition:transform 180ms ease}
+.trip-bag-rental-expand[aria-expanded=true]>.trip-pencil-icon{transform:rotate(90deg)}
+.trip-bag-rental-details{display:grid;gap:10px;padding:0 0 5px}
+.trip-bag-rental-details[hidden],.trip-bag-note-detail[hidden]{display:none}
+.trip-bag-rental-details>div{display:grid;grid-template-columns:minmax(105px,30%) minmax(0,1fr);gap:9px;align-items:start;font-size:13px;line-height:1.5}
+.trip-bag-rental-details>div>span{color:#637863}
+.trip-bag-rental-details p{margin:0;overflow-wrap:anywhere}
+.trip-bag-rental-unlock>.trip-pencil-icon{width:24px;height:24px}
+.trip-bag-rental-private{display:grid;gap:5px}
+.trip-bag-rental-private h3{margin:0;font-size:15px;font-weight:400}
+.trip-bag-rental-private dl{display:grid;gap:5px;margin:0}
+.trip-bag-rental-private dl>div{display:grid;grid-template-columns:minmax(90px,30%) minmax(0,1fr);gap:8px;font-size:13px}
+.trip-bag-rental-private dd{margin:0;overflow-wrap:anywhere}
+.trip-bag-notes{min-width:0}
+.trip-bag-note-category-view{display:grid;grid-template-columns:var(--trip-leading-slot,44px) minmax(0,1fr);column-gap:var(--trip-content-gap,8px);align-content:start;flex:1;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:1px 4px 14px 0}
+.trip-bag-note-category-view>.trip-bag-note-items{grid-column:2;min-width:0}
+.trip-bag-note-categories,.trip-bag-note-items{display:grid;align-content:start;gap:2px}
+.trip-bag-note-row{display:grid;min-width:0}
+.trip-bag-note-row>.trip-panel-divider-ink{position:static;display:block;width:100%;height:8px}
+.trip-bag-note-category,.trip-bag-note-item{display:grid;align-items:center;width:100%;min-width:0;min-height:55px;padding:5px 0;border:0;background:transparent;color:#294b37;text-align:left;cursor:pointer}
+.trip-bag-note-category{grid-template-columns:24px minmax(0,1fr) 24px 24px;gap:6px}
+.trip-bag-note-item{grid-template-columns:minmax(0,1fr) 28px;gap:8px;font-size:15px;line-height:1.4}
+.trip-bag-note-icon{display:grid;align-items:center;justify-items:start;width:24px;height:44px}
+/* Offset the canvas without reserving an extra button-width gap. */
+.trip-bag-note-icon .trip-pencil-icon{width:27px;height:27px;margin-left:-5px}
+.trip-bag-note-category-title{min-width:0;font-size:17px;line-height:1.4}
+.trip-bag-note-count{color:#6a806d;font-size:13px;text-align:center}
+.trip-bag-note-category>.trip-pencil-icon,.trip-bag-note-item>.trip-pencil-icon{width:23px;height:23px}
+.trip-bag-note-detail{display:grid;gap:6px;padding:2px 0 12px;color:#405845;font-size:14px;line-height:1.55}
+.trip-bag-note-detail small{color:#766d4e;font-size:12px}
+.trip-bag-note-detail p{margin:0;overflow-wrap:anywhere}
+.trip-bag-note-detail a{justify-self:start;min-height:38px;color:#315d44;text-decoration:underline;text-underline-offset:3px}
+.trip-bag-note-category:focus-visible,.trip-bag-note-item:focus-visible{outline:2px solid #2d6847;outline-offset:2px}
+.trip-bag-rental-expand:focus-visible,.trip-bag-rental-unlock:focus-visible{outline:2px solid #2d6847;outline-offset:2px}
+@container (max-width:430px){.trip-bag-weekdays,.trip-bag-calendar-dates,.trip-bag-calendar-bands{gap:2px}.trip-bag-calendar-date{font-size:11px}.trip-bag-calendar-band.trip-pencil-surface{padding:7px 4px}.trip-bag-band-name{font-size:11px}.trip-bag-note-category{gap:4px}}
+@container (max-width:340px){.trip-bag-calendar-date{font-size:10px}.trip-bag-calendar-departure{font-size:9px}.trip-bag-rental-facts{grid-template-columns:1fr}}

@@ -1,0 +1,79 @@
+.trip-event-details { position:relative; display:flex; flex:1; flex-direction:column; min-width:0; min-height:0; height:100%; overflow:hidden; font-size:15px; }
+.trip-event-details :is(h2,p,figure) { margin:0; }
+.trip-event-details h2 { font-size:17px; font-weight:400; }
+.trip-event-details a { color:#2b614a; text-underline-offset:3px; }
+.trip-event-media { flex:none; height:clamp(128px,24dvh,250px); min-width:0; }
+.trip-event-media figure { position:relative; width:100%; height:100%; min-width:0; overflow:hidden; background:#e8ecdf; }
+.trip-event-media-image-link { display:block; width:100%; height:100%; }
+.trip-event-media img { display:block; width:100%; height:100%; object-fit:cover; filter:none; }
+.trip-event-media-error { display:grid; place-items:center; width:100%; height:100%; padding:18px; color:var(--trip-ink-muted); text-align:center; }
+.trip-event-media-credit { position:absolute; z-index:2; top:8px; right:8px; max-width:calc(100% - 16px); font-size:11px; line-height:1.35; }
+.trip-event-media-credit .trip-pencil-surface { min-height:32px; max-width:100%; padding:4px 8px; color:var(--trip-ink-color); overflow-wrap:anywhere; }
+.trip-event-media-controls { position:absolute; z-index:2; inset:auto 8px 8px; display:flex; align-items:center; justify-content:space-between; color:var(--trip-ink-color); }
+.trip-event-media-controls .trip-pencil-surface { display:grid; place-items:center; flex:none; width:44px; height:44px; min-height:44px; padding:0; color:var(--trip-ink-color); }
+.trip-event-media-controls .trip-pencil-icon { width:27px; height:27px; }
+.trip-event-media-count.trip-pencil-surface { width:auto; min-width:48px; padding:3px 9px; font-size:13px; line-height:1; }
+.trip-event-media-status { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.trip-event-tab-frame { position:relative; flex:none; min-width:0; padding-bottom:8px; }
+.trip-event-media + .trip-event-tab-frame { margin-top:var(--trip-panel-pad); }
+.trip-event-tab-scroll { min-width:0; overflow-x:auto; overflow-y:hidden; scrollbar-width:thin; }
+.trip-event-tab-scroll .trip-adventure-calendar-scopes { width:max-content; max-width:none; padding-bottom:3px; }
+.trip-event-tab-scroll .trip-adventure-calendar-scope { flex:none; min-width:0; padding:5px 10px; font-size:16px; }
+.trip-event-tabpanel { flex:1; min-width:0; min-height:0; overflow-x:hidden; overflow-y:auto; padding:var(--trip-panel-pad) 0; scrollbar-width:thin; }
+.trip-event-tabpanel--schedule { display:flex; flex-direction:column; }
+.trip-event-schedule { display:flex; flex:1; flex-direction:column; gap:13px; min-height:100%; }
+.trip-event-flights,.trip-event-names,.trip-event-social,.trip-event-links { display:grid; gap:13px; }
+.trip-event-location { display:flex; align-items:center; flex-wrap:wrap; gap:2px; min-width:0; }
+.trip-inline-detail { display:inline-flex; align-items:center; flex-wrap:wrap; max-width:100%; min-width:0; vertical-align:middle; }
+.trip-inline-detail>.trip-pencil-text { display:inline-flex; align-items:center; min-height:28px; vertical-align:middle; }
+.trip-google-map-link { display:inline-flex; align-items:center; gap:5px; min-width:0; min-height:28px; line-height:1.45; vertical-align:middle; }
+.trip-google-map-link>.trip-pencil-icon { flex:none; width:22px; height:22px; transform:translateY(1px); }
+.trip-google-map-link>.trip-pencil-text { display:inline-flex; align-items:center; min-height:22px; }
+.trip-google-map-link--icon-after .trip-pencil-icon { order:2; }
+.trip-event-timeline-adapter { display:flex; flex:1; flex-direction:column; gap:12px; min-width:0; min-height:180px; }
+.trip-event-schedule-timeline { flex:1; width:100%; min-height:160px; }
+.trip-event-flight-timeline-content { display:grid; gap:2px; min-width:0; }
+.trip-event-flight-timeline-content>span { display:block; min-width:0; overflow-wrap:anywhere; }
+.trip-event-timeline-inline-content { display:flex; align-items:center; flex-wrap:wrap; gap:2px; min-width:0; }
+.trip-event-agenda-interval-content { display:flex; align-items:center; flex-wrap:wrap; gap:5px; min-width:0; }
+.trip-event-agenda-interval-content>span { min-width:0; overflow-wrap:anywhere; }
+.trip-event-agenda-interval-content>small { flex:none; color:var(--trip-ink-muted); font-size:10px; }
+.trip-event-agenda-select { flex:none; min-height:30px; padding:2px 4px; border:0; background:transparent; color:var(--trip-ink-muted); font:inherit; text-decoration:underline; text-decoration-style:wavy; text-underline-offset:3px; }
+.trip-event-optional-choice { display:grid; gap:5px; min-width:0; }
+.trip-event-optional-choice-title { min-width:0; overflow-wrap:anywhere; }
+.trip-event-optional-choice-options { display:flex; flex-wrap:wrap; gap:4px 9px; min-width:0; }
+.trip-event-optional-choice-option { display:inline-flex; align-items:center; gap:4px; min-width:0; }
+.trip-event-optional-choice-option>button { flex:none; min-height:30px; padding:2px 5px; border:0; background:transparent; color:var(--trip-ink-muted); font:inherit; text-decoration:underline; text-decoration-style:wavy; text-underline-offset:3px; }
+.trip-event-optional-choice-option>span { min-width:0; }
+.trip-event-optional-choice-status { min-width:0; color:var(--trip-ink-muted); font-size:11px; }
+.trip-event-untimed { display:grid; gap:5px; min-width:0; }
+.trip-event-untimed>div { display:grid; gap:3px; min-width:0; }
+.trip-event-untimed time { color:var(--trip-ink-muted); font-size:12px; }
+.trip-event-untimed .trip-panel-divider-ink { position:static; display:block; width:100%; height:8px; margin-top:4px; }
+.trip-event-alternative,.trip-event-flight-summary { display:grid; gap:4px; }
+.trip-event-flights section { display:grid; gap:7px; padding:10px 0; border-top:1px solid #b9c8b7; }
+.trip-event-private { display:grid; gap:5px; margin:0; }
+.trip-event-private > div { display:grid; grid-template-columns:100px 1fr; gap:8px; }
+.trip-event-private dd { margin:0; overflow-wrap:anywhere; }
+.trip-event-names > div { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.trip-event-names > div > span { display:grid; gap:2px; min-width:0; overflow-wrap:anywhere; }
+.trip-event-names button { flex:none; min-height:44px; padding:3px 8px; border:0; background:transparent; text-decoration:underline; }
+.trip-event-social { grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr)); align-items:start; gap:12px; }
+.trip-event-social-card.trip-pencil-surface { display:grid; align-content:start; gap:6px; min-width:0; padding:9px; }
+.trip-event-social-media { display:block; width:100%; aspect-ratio:2.2; overflow:hidden; background:#e8ecdf; }
+.trip-event-social-media img { display:block; width:100%; height:100%; object-fit:contain; }
+.trip-event-social-card h2 { max-height:2.8em; overflow:hidden; font-size:15px; line-height:1.4; }
+.trip-event-social-meta { max-height:2.7em; overflow:hidden; color:#526a57; font-size:12px; line-height:1.35; }
+.trip-event-social-excerpt { max-height:4.35em; overflow:hidden; font-size:13px; line-height:1.45; }
+.trip-event-social-more { min-width:0; font-size:13px; line-height:1.45; }
+.trip-event-social-more summary { min-height:44px; display:flex; align-items:center; cursor:pointer; color:#2b614a; }
+.trip-event-social-more p,.trip-event-social-more ul { margin:6px 0; }
+.trip-event-social-more ul { padding-left:18px; }
+.trip-event-social-link { display:inline-flex; align-items:center; min-height:44px; font-size:13px; }
+.trip-event-links section { display:grid; gap:7px; }
+.trip-event-stay-menu { position:relative; flex:none; }
+.trip-event-stay-menu>summary { list-style:none; }
+.trip-event-stay-menu>summary::-webkit-details-marker { display:none; }
+.trip-event-stay-menu-list { position:absolute; z-index:30; top:calc(100% + 5px); right:0; display:grid; width:min(260px,70vw); padding:6px; background:var(--trip-paper-color); color:var(--trip-ink-color); box-shadow:0 3px 12px #18231c33; }
+.trip-event-stay-menu-list button { min-height:44px; padding:7px 9px; border:0; background:transparent; color:inherit; text-align:left; }
+@media(max-width:650px){.trip-event-media{height:clamp(120px,22dvh,210px)}}

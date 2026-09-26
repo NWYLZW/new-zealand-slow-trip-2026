@@ -9,9 +9,18 @@ import { GameIconButton } from "./GameIconButton";
 import { adventureRoutes, projectedRoutePath, routeGeometryLabel } from "./adventureRoutes";
 import { createPencilMap } from "./pencil/drawPencilMap";
 import { createPencilRoutes, routeBadge } from "./pencil/drawPencilRoutes";
-import { fillStopLabel } from "./pencil/mapLabels";
+import { fillStopLabel, mapLabel } from "./pencil/mapLabels";
 import { clearPencilLabels } from "./pencil/label";
 import { createStopMarker } from "./pencil/stopMarker";
+import { drawPencilWash } from "./pencil/wash";
+import { stroke as pencilStroke } from "./pencil/brush";
+import { pencilPalette } from "./pencil/palette";
+import { adventureWaypoints, getRouteWaypoints } from "./adventureWaypoints";
+import { clusterMapNodes } from "./adventureClusters";
+import { AdventureMapScale } from "./AdventureMapScale";
+import { createInternationalMapLayer, INTERNATIONAL_MIN_ZOOM,
+  internationalOverviewPositions } from "./createInternationalMapLayer";
+import { loadTownMapData, townMapCoverages } from "./townMapData";
 import "./route-ink.css";
 import "./pencil-map.css";
 
@@ -38,7 +47,43 @@ const mapScale = (width, height) => Math.min(
   (height - (height < 500 ? 68 : 110)) / (maxY - minY),
 );
 const PLACE_ZOOM = 10;
+const MIN_ZOOM = .25;
+const MAX_DETAIL_ZOOM = 384;
 const FOCUS_DURATION = 850;
+const EARTH_RADIUS_M = 6371008.8;
+const TOWN_SCALE_METERS = 500;
+const LOCAL_DETAIL_500M_PIXELS = 36;
+
+function panelPixels(value, total) {
+  const amount = Number.parseFloat(value);
+  if (!Number.isFinite(amount)) return 0;
+  return value.trim().endsWith("%") ? total * amount / 100 : amount;
+}
+
+function visibleMapRect(area, { sideOpen, calendarOpen }) {
+  const width = area.clientWidth, height = area.clientHeight;
+  const style = getComputedStyle(area.parentElement);
+  const side = sideOpen ? panelPixels(style.getPropertyValue("--trip-side-width"), width) : 0;
+  const bottom = calendarOpen ? panelPixels(style.getPropertyValue("--trip-calendar-height"), height) : 0;
+  const right = Math.max(1, width - side), lower = Math.max(1, height - bottom);
+  return { width: right, height: lower, center: [right / 2, lower / 2] };
+}
+
+function niceScaleDistance(maxMeters) {
+  if (!Number.isFinite(maxMeters) || maxMeters <= 0) return 1;
+  const power = 10 ** Math.floor(Math.log10(maxMeters));
+  for (const factor of [5, 2, 1]) {
+    const candidate = factor * power;
+    if (candidate <= maxMeters) return candidate;
+  }
+  return power / 2;
+}
+
+function formatScaleDistance(meters) {
+  if (meters < 1000) return `${Math.round(meters)} m`;
+  const km = meters / 1000;
+  return `${km < 10 && !Number.isInteger(km) ? km.toFixed(1) : Math.round(km)} km`;
+}
 
 function segmentTouchesRect(from, to, rect) {
   const bounds = { left: rect.left - 2, right: rect.right + 2, top: rect.top - 2, bottom: rect.bottom + 2 };
@@ -69,7 +114,8 @@ function positionOverviewLabels(area, markers) {
   }
   const viewport = area.getBoundingClientRect();
   const dots = labels.map(({ button }) => button.querySelector(".trip-stop-dot").getBoundingClientRect());
-  const placed = [...area.querySelectorAll('.trip-map-controls')].map(element => element.getBoundingClientRect());
+  const placed = [...area.querySelectorAll('.trip-map-controls,.trip-map-orientation')]
+    .filter(element => !element.hidden).map(element => element.getBoundingClientRect());
   const placedLeaders = [];
   const overlaps = (a, b) => a.left < b.right + 2 && a.right + 2 > b.left &&
     a.top < b.bottom + 2 && a.bottom + 2 > b.top;
@@ -110,7 +156,7 @@ function positionOverviewLabels(area, markers) {
           ux ? size.width / 2 / Math.abs(ux) : Infinity,
           uy ? size.height / 2 / Math.abs(uy) : Infinity,
         );
-        const start = 8, end = distance - toLabelEdge - 2;
+        const start = 22, end = distance - toLabelEdge - 2;
         if (end > start + 2) connector = {
           from: { x: x + ux * start, y: y + uy * start },
           to: { x: x + ux * end, y: y + uy * end }, ux, uy, length: end - start,
@@ -146,11 +192,19 @@ function positionOverviewLabels(area, markers) {
   }
 }
 
-export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect, onClear }) {
+export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey,
+  focusNode, mapView, onMapViewChange,
+  calendarOpen, sideOpen, language = "zh", onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
+  onInternationalNodeSelect, mapMode = "new-zealand", onMapModeChange, onClear, obscured = false }) {
   const container = useRef(null);
   const controls = useRef(null);
-  const state = useRef({ selected, selectedRoute, onSelect, onRouteSelect });
-  state.current = { selected, selectedRoute, onSelect, onRouteSelect };
+  const scaleControl = useRef(null);
+  const state = useRef({ selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView,
+    calendarOpen, sideOpen, language, onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
+    onInternationalNodeSelect, mapMode, onMapModeChange, onMapViewChange });
+  state.current = { selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView,
+    calendarOpen, sideOpen, language, onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
+    onInternationalNodeSelect, mapMode, onMapModeChange, onMapViewChange };
   useEffect(() => {
     container.current.querySelectorAll(".trip-stop").forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.tag === selected));
@@ -159,96 +213,494 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
     container.current.querySelectorAll(".trip-route-hit").forEach((path) => {
       path.setAttribute("aria-pressed", String(path.dataset.route === selectedRoute));
     });
+    controls.current?.selectWaypoints({ selectedRoute, selectedWaypoint });
+  }, [selected, selectedRoute, selectedWaypoint]);
+  useEffect(() => { controls.current?.updateViewport(); }, [calendarOpen, sideOpen, obscured]);
+  useEffect(() => { controls.current?.setMapMode(mapMode); }, [mapMode]);
+  useEffect(() => { if (mapView) controls.current?.restoreMapView(mapView); },
+    [mapView?.zoom, mapView?.center?.[0], mapView?.center?.[1]]);
+  useEffect(() => { controls.current?.updateInternational(); }, [language]);
+  useEffect(() => {
     if (selected) controls.current?.focusPlace(selected);
+    else if (focusLocations) controls.current?.focusLocations(focusLocations);
+    else if (focusRoute) controls.current?.focusRoute(focusRoute);
     else controls.current?.cancelFocus();
-  }, [selected, selectedRoute]);
+  }, [focusKey]);
+  useEffect(() => {
+    if (focusNode?.key) controls.current?.focusNode(focusNode.key);
+  }, [focusNode?.key, focusNode?.token]);
   useEffect(() => {
     const area = container.current, svg = d3.select(area.querySelector("svg.trip-map"));
     const sea = d3.select(area.querySelector("svg.trip-depth-map"));
     const canvas = area.querySelector("canvas.trip-pencil-map");
     const routeCanvas = area.querySelector("canvas.trip-pencil-routes");
+    const internationalCanvas = area.querySelector("canvas.trip-international-map");
+    const internationalRouteCanvas = area.querySelector("canvas.trip-international-routes");
+    const internationalButtons = area.querySelector(".trip-international-points");
     const buttons = area.querySelector(".trip-point-buttons");
     const surface = d3.select(area);
-    let world, depthWorld, pencil, routeInk, waterLabels, markerPositions = [], layout = null, shortRouteSpot = null;
-    let view = d3.zoomIdentity, focusing = false;
-    const initialView = (width, height) => {
+    let world, depthWorld, pencil, routeInk, international, waterLabels, markerPositions = [], layout = null, shortRouteSpot = null;
+    let view = d3.zoomIdentity, focusing = false, userMoved = false, viewFrame = 0, pendingView = null;
+    let activeMapMode = state.current.mapMode, newZealandView = null;
+    let restoringMapView = null, lastPublishedMapView = null;
+    let lastClusterZoom = Number.NaN, lastClusterSignature = "", lastWaterLabelZoom = Number.NaN;
+    let townLoadGeneration = 0, townTagSignature = "";
+    const focusRect = () => visibleMapRect(area, state.current);
+    const initialView = (width, height, rect) => {
       const scale = mapScale(width, height);
       const focusX = (southCenter[0] - (minX + maxX) / 2) * scale + width / 2;
       const focusY = (southCenter[1] - (minY + maxY) / 2) * scale + height / 2;
       const zoomLevel = 2.16;
-      return d3.zoomIdentity.translate(width / 2 - focusX * zoomLevel,
-        height / 2 - focusY * zoomLevel).scale(zoomLevel);
+      return d3.zoomIdentity.translate(rect.center[0] - focusX * zoomLevel,
+        rect.center[1] - focusY * zoomLevel).scale(zoomLevel);
     };
-    const placeView = (position, width, height) => d3.zoomIdentity
-      .translate(width / 2 - position[0] * PLACE_ZOOM,
-        height / 2 - position[1] * PLACE_ZOOM).scale(PLACE_ZOOM);
-    const applyView = (transform) => {
+    const placeView = (position, rect) => d3.zoomIdentity
+      .translate(rect.center[0] - position[0] * PLACE_ZOOM,
+        rect.center[1] - position[1] * PLACE_ZOOM).scale(PLACE_ZOOM);
+    const townZoom = (stop, project, rect) => {
+      const [lat, lng] = stop.position;
+      const longitudeOffset = TOWN_SCALE_METERS / (EARTH_RADIUS_M * Math.cos(lat * Math.PI / 180)) * 180 / Math.PI;
+      const from = project([lng, lat]), to = project([lng + longitudeOffset, lat]);
+      const projectedMeters = Math.abs(to[0] - from[0]);
+      const targetPixels = Math.min(92, Math.max(68, rect.width * .16));
+      return Math.min(MAX_DETAIL_ZOOM, Math.max(PLACE_ZOOM, targetPixels / Math.max(.001, projectedMeters)));
+    };
+    const townView = (marker, rect) => {
+      const zoomLevel = townZoom(marker.stop, area._project, rect);
+      return d3.zoomIdentity.translate(rect.center[0] - marker.position[0] * zoomLevel,
+        rect.center[1] - marker.position[1] * zoomLevel).scale(zoomLevel);
+    };
+    const locationsView = (positions, project, rect, minZoom = MIN_ZOOM) => {
+      const points = positions.map(project);
+      const left = d3.min(points, point => point[0]), right = d3.max(points, point => point[0]);
+      const top = d3.min(points, point => point[1]), bottom = d3.max(points, point => point[1]);
+      const padX = Math.min(80, rect.width * .15), padY = Math.min(90, rect.height * .15);
+      const k = Math.max(minZoom, Math.min(PLACE_ZOOM,
+        Math.max(1, rect.width - padX * 2) / Math.max(1, right - left),
+        Math.max(1, rect.height - padY * 2) / Math.max(1, bottom - top)));
+      return d3.zoomIdentity.translate(rect.center[0] - (left + right) / 2 * k,
+        rect.center[1] - (top + bottom) / 2 * k).scale(k);
+    };
+    const normalizeMapView = value => {
+      const zoomLevel = Number(value?.zoom), center = value?.center;
+      if (!Number.isFinite(zoomLevel) || !Array.isArray(center) || center.length !== 2 ||
+        !center.every(Number.isFinite) || Math.abs(center[0]) > 85 || Math.abs(center[1]) > 180) return null;
+      return { zoom: Math.max(Math.min(MIN_ZOOM, INTERNATIONAL_MIN_ZOOM), Math.min(MAX_DETAIL_ZOOM, zoomLevel)),
+        center: [center[0], center[1]] };
+    };
+    const mapViewTransform = (value, projection = area._project) => {
+      const normalized = normalizeMapView(value);
+      if (!normalized || !projection) return null;
+      const rect = focusRect(), center = projection([normalized.center[1], normalized.center[0]]);
+      return { normalized, transform: d3.zoomIdentity.translate(rect.center[0] - center[0] * normalized.zoom,
+        rect.center[1] - center[1] * normalized.zoom).scale(normalized.zoom) };
+    };
+    const settledMapView = transform => {
+      if (!area._unproject) return null;
+      const coordinate = area._unproject(transform.invert(focusRect().center));
+      if (!coordinate?.every(Number.isFinite)) return null;
+      return { zoom: transform.k, center: [coordinate[1], coordinate[0]] };
+    };
+    const equivalentMapView = (left, right) => Boolean(left && right &&
+      Math.abs(left.zoom - right.zoom) < .0001 &&
+      Math.abs(left.center[0] - right.center[0]) < .000001 &&
+      Math.abs(left.center[1] - right.center[1]) < .000001);
+    const publishMapView = transform => {
+      const next = settledMapView(transform);
+      if (!next) return;
+      if (equivalentMapView(next, restoringMapView)) {
+        restoringMapView = null; lastPublishedMapView = next; return;
+      }
+      restoringMapView = null;
+      if (equivalentMapView(next, lastPublishedMapView)) return;
+      lastPublishedMapView = next;
+      state.current.onMapViewChange?.(next);
+    };
+    const updateScale = () => {
+      if (!area._unproject || !scaleControl.current) return;
+      const rect = focusRect(), maxPixels = Math.min(112, Math.max(58, rect.width * .22));
+      const orientation = area.querySelector(".trip-map-orientation");
+      const orientationStyle = orientation ? getComputedStyle(orientation) : null;
+      const gap = Number.parseFloat(orientationStyle?.columnGap) || 0;
+      const compassWidth = area.querySelector(".trip-map-compass")?.getBoundingClientRect().width ?? 0;
+      const rightInset = 18, compassOffset = compassWidth + gap;
+      const distanceAt = (width, bottomInset) => {
+        const y = Math.max(8, rect.height - bottomInset - 6);
+        const x = Math.max(8, rect.width - rightInset - compassOffset - width);
+        const from = area._unproject(view.invert([x, y]));
+        const to = area._unproject(view.invert([x + width, y]));
+        return from && to ? d3.geoDistance(from, to) * EARTH_RADIUS_M : 0;
+      };
+      const maxMeters = distanceAt(maxPixels, 18);
+      if (!maxMeters) return;
+      const meters = niceScaleDistance(maxMeters);
+      const firstWidth = maxPixels * meters / maxMeters;
+      const controlsWidth = area.querySelector(".trip-map-controls")?.getBoundingClientRect().width ?? 0;
+      const compactBottomInset = rect.width < controlsWidth + firstWidth + compassOffset + 58 ? 76 : 18;
+      const actualMeters = distanceAt(firstWidth, compactBottomInset);
+      const width = actualMeters ? firstWidth * meters / actualMeters : firstWidth;
+      scaleControl.current.update({
+        width,
+        text: formatScaleDistance(meters),
+        right: area.clientWidth - rect.width + 18,
+        bottom: area.clientHeight - rect.height + compactBottomInset,
+      });
+    };
+    const visibleTownTags = transform => {
+      if (!area._project) return [];
+      const rect = focusRect();
+      return townMapCoverages.filter(({ position: [lat, lng], radiusMeters }) => {
+        const longitudeOffset = TOWN_SCALE_METERS /
+          (EARTH_RADIUS_M * Math.cos(lat * Math.PI / 180)) * 180 / Math.PI;
+        const center = transform.apply(area._project([lng, lat]));
+        const reference = transform.apply(area._project([lng + longitudeOffset, lat]));
+        const pixelsPer500m = Math.abs(reference[0] - center[0]);
+        if (pixelsPer500m < LOCAL_DETAIL_500M_PIXELS) return false;
+        const margin = pixelsPer500m * radiusMeters / TOWN_SCALE_METERS;
+        return center[0] > -margin && center[0] < rect.width + margin &&
+          center[1] > -margin && center[1] < rect.height + margin;
+      }).map(coverage => coverage.tag);
+    };
+    const syncTownDetails = transform => {
+      const tags = visibleTownTags(transform), signature = tags.join("|");
+      pencil?.setVisibleTowns(tags);
+      if (!tags.length) { townLoadGeneration++; townTagSignature = ""; return; }
+      if (signature === townTagSignature) return;
+      townTagSignature = signature;
+      const generation = ++townLoadGeneration;
+      Promise.all(tags.map(tag => loadTownMapData(tag).then(payload => [tag, payload])))
+        .then(entries => {
+          if (generation !== townLoadGeneration) return;
+          for (const [tag, payload] of entries) if (payload?.place) pencil?.setTownData(tag, payload.place);
+          pencil?.refine(view);
+        }).catch(() => { if (generation === townLoadGeneration) townTagSignature = ""; });
+    };
+    const clusterSeed = keys => keys.reduce((seed, key) => [...key]
+      .reduce((value, letter) => Math.imul(value ^ letter.charCodeAt(0), 16777619), seed), 2166136261) >>> 0;
+    const setClusterBadge = (button, count, seed) => {
+      let badge = button.querySelector(".trip-cluster-count");
+      if (count < 2) { if (badge) badge.hidden = true; return; }
+      if (!badge) {
+        badge = document.createElement("span");
+        badge.className = "trip-cluster-count";
+        badge.setAttribute("aria-hidden", "true");
+        button.append(badge);
+      }
+      badge.hidden = false;
+      if (badge.dataset.count === String(count) && badge.dataset.seed === String(seed)) return;
+      const sprite = mapLabel(String(count), 12, seed);
+      const countCanvas = document.createElement("canvas");
+      const size = 18, dpr = Math.min(devicePixelRatio || 1, 2);
+      countCanvas.width = countCanvas.height = Math.round(size * dpr);
+      countCanvas.style.width = countCanvas.style.height = `${size}px`;
+      const countCtx = countCanvas.getContext("2d"); countCtx.scale(dpr, dpr);
+      drawPencilWash(countCtx, { x: 0, y: 0, width: size, height: size }, pencilPalette.crop, seed,
+        { strength: .92, spacing: 1.25, roughness: 1.4, inset: 1, radius: 9 });
+      const ring = Array.from({ length: 37 }, (_, index) => {
+        const angle = index / 36 * Math.PI * 2, radius = 7.6 + Math.sin(angle * 5 + seed) * .25;
+        return [size / 2 + Math.cos(angle) * radius, size / 2 + Math.sin(angle) * radius];
+      });
+      pencilStroke(countCtx, ring, pencilPalette.accent, .72, seed + 19,
+        { closed: true, passes: 2, breaks: .2, amplitude: .18 });
+      countCtx.drawImage(sprite.canvas, (size - sprite.width) / 2, (size - sprite.height) / 2,
+        sprite.width, sprite.height);
+      countCanvas.setAttribute("aria-hidden", "true");
+      badge.replaceChildren(countCanvas); badge.dataset.count = String(count); badge.dataset.seed = String(seed);
+    };
+    const measureMarkerRadius = marker => {
+      const dot = marker.button.querySelector(".trip-stop-dot");
+      const normal = dot?.querySelector(".trip-stop-marker--normal");
+      const sourceRadius = Number.parseFloat(normal?.dataset.markerRadius);
+      const displayWidth = Number.parseFloat(getComputedStyle(dot).width);
+      marker.radius = Number.isFinite(sourceRadius) && Number.isFinite(displayWidth)
+        ? sourceRadius * displayWidth / 28 : marker.primary ? 10.95 : 9;
+    };
+    const syncClusters = (force = false) => {
+      if (!force && Math.abs(view.k - lastClusterZoom) < .0001) return;
+      lastClusterZoom = view.k;
+      const activeMarkers = markerPositions.filter(marker => !marker.international || activeMapMode === "international");
+      const clusters = clusterMapNodes(activeMarkers.map(marker => {
+        const [x, y] = view.apply(marker.position);
+        return { key: marker.key, x, y, radius: marker.radius, primary: marker.primary };
+      }));
+      const signature = clusters.map(cluster => cluster.keys.join("+")).join("|");
+      if (!force && signature === lastClusterSignature) return;
+      lastClusterSignature = signature;
+      const byKey = new Map(markerPositions.map(marker => [marker.key, marker]));
+      markerPositions.forEach(marker => {
+        marker.button.hidden = Boolean(marker.international && activeMapMode !== "international");
+        marker.button.classList.remove("trip-cluster");
+        delete marker.button.dataset.cluster;
+        marker.button.removeAttribute("aria-haspopup");
+        marker.button.setAttribute("aria-label", marker.baseLabel);
+        setClusterBadge(marker.button, 1, marker.seed);
+      });
+      clusters.forEach((cluster, index) => {
+        if (cluster.keys.length < 2) return;
+        const anchor = byKey.get(cluster.anchorKey);
+        if (!anchor) return;
+        cluster.keys.forEach(key => { if (key !== cluster.anchorKey) byKey.get(key).button.hidden = true; });
+        anchor.button.classList.add("trip-cluster");
+        anchor.button.dataset.cluster = cluster.keys.join(",");
+        anchor.button.setAttribute("aria-haspopup", "dialog");
+        anchor.button.setAttribute("aria-label", state.current.language === "en"
+          ? `Open ${cluster.keys.length} nearby map places`
+          : `查看附近${cluster.keys.length}个地图地点`);
+        setClusterBadge(anchor.button, cluster.keys.length, clusterSeed(cluster.keys) + index);
+      });
+      const airportAnchors = new Map();
+      clusters.forEach(cluster => {
+        if (cluster.keys.length < 2) return;
+        const anchor = byKey.get(cluster.anchorKey);
+        if (!anchor) return;
+        cluster.keys.filter(key => key.startsWith("a:")).forEach(key => airportAnchors.set(key, anchor.position));
+      });
+      international?.setClusterAnchors(airportAnchors);
+    };
+    const applyView = (transform, { moving = false, settled = false } = {}) => {
       view = transform;
+      const visibleRect = focusRect();
+      pencil?.setVisibleRect(visibleRect);
       world?.attr("transform", transform.toString());
       depthWorld?.attr("transform", transform.toString());
+      if (settled) syncTownDetails(transform);
       pencil?.draw(transform);
-      routeInk?.draw(transform, { moving: focusing });
+      routeInk?.draw(transform, { moving, visibleRect });
+      international?.draw({ view: transform, moving, visibleRect });
       if (shortRouteSpot) {
         const { group, middle } = shortRouteSpot;
         group.attr("transform", `translate(${middle}) scale(${1 / transform.k})`);
       }
-      waterLabels?.updateZoom(transform.k);
+      if (Math.abs(transform.k - lastWaterLabelZoom) > .0001) {
+        waterLabels?.updateZoom(transform.k); lastWaterLabelZoom = transform.k;
+      }
       markerPositions.forEach(({ button, position }) => {
         const [x, y] = transform.apply(position);
         button.style.left = x + "px";
         button.style.top = y + "px";
         button.dataset.labelSide = x < 110 ? "right" : x > area.clientWidth - 110 ? "left" : "center";
       });
+      syncClusters();
       area.dataset.zoom = transform.k.toFixed(3);
-      positionOverviewLabels(area, markerPositions);
-      waterLabels?.avoidStops(markerPositions);
+      if (!settled) return;
+      const visibleMarkers = markerPositions.filter(({ button }) => !button.hidden);
+      visibleMarkers.filter(({ waypoint }) => waypoint && waypoint.id !== state.current.selectedWaypoint)
+        .forEach(({ button }) => {
+          const label = button.querySelector(".trip-stop-label");
+          const leader = button.querySelector(".trip-stop-leader");
+          label.style.visibility = "hidden";
+          leader.style.display = "none";
+        });
+      const labelledMarkers = visibleMarkers.filter(({ waypoint }) => !waypoint || waypoint.id === state.current.selectedWaypoint);
+      positionOverviewLabels(area, labelledMarkers);
+      waterLabels?.avoidStops(visibleMarkers);
+      updateScale();
     };
-    const zoom = d3.zoom().scaleExtent([0.55, 12]).clickDistance(5)
+    const scheduleView = (transform, moving) => {
+      view = transform; pendingView = { transform, moving };
+      if (viewFrame) return;
+      viewFrame = requestAnimationFrame(() => {
+        viewFrame = 0;
+        const next = pendingView; pendingView = null;
+        if (next) applyView(next.transform, { moving: next.moving });
+      });
+    };
+    const settleView = transform => {
+      cancelAnimationFrame(viewFrame); viewFrame = 0; pendingView = null;
+      applyView(transform, { moving: false, settled: true });
+    };
+    const zoom = d3.zoom().scaleExtent([MIN_ZOOM, MAX_DETAIL_ZOOM]).clickDistance(5)
       .filter((event) => (!event.ctrlKey || event.type === "wheel") && !event.button &&
         (event.type === "wheel" || !event.target.closest("button")))
       .on("start", (event) => { if (event.sourceEvent) area.classList.add("is-dragging"); })
-      .on("zoom", (event) => applyView(event.transform))
-      .on("end", () => { area.classList.remove("is-dragging"); if (!focusing) pencil?.refine(view); });
+      .on("zoom", (event) => {
+        if (event.sourceEvent) userMoved = true;
+        scheduleView(event.transform, Boolean(event.sourceEvent) || focusing);
+      })
+      .on("end", (event) => {
+        area.classList.remove("is-dragging"); settleView(event.transform);
+        if (activeMapMode === "new-zealand") newZealandView = event.transform;
+        if (!focusing) pencil?.refine(view);
+        publishMapView(event.transform);
+      });
+    zoom.scaleExtent([Math.min(MIN_ZOOM, INTERNATIONAL_MIN_ZOOM), MAX_DETAIL_ZOOM]);
     surface.call(zoom);
     const finishFocus = () => {
       focusing = false;
       area.dataset.focusing = "false";
-      routeInk?.draw(view);
+      settleView(view);
       pencil?.refine(view);
+    };
+    const animateFocus = target => {
+      surface.interrupt();
+      userMoved = false;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        (Math.abs(view.k - target.k) < .001 && Math.hypot(view.x - target.x, view.y - target.y) < .1)) {
+        surface.call(zoom.transform, target);
+        return;
+      }
+      focusing = true;
+      area.dataset.focusing = "true";
+      surface.transition().duration(FOCUS_DURATION).ease(d3.easeCubicInOut)
+        .call(zoom.transform, target)
+        .on("end.focus interrupt.focus cancel.focus", finishFocus);
+    };
+    const setMapMode = mode => {
+      const nextMode = mode === "international" ? "international" : "new-zealand";
+      if (nextMode === activeMapMode) {
+        international?.update({ mapMode: nextMode, language: state.current.language,
+          selected: state.current.selected, selectedRoute: state.current.selectedRoute, visibleRect: focusRect() });
+        return;
+      }
+      if (activeMapMode === "new-zealand") newZealandView = view;
+      activeMapMode = nextMode;
+      state.current.mapMode = nextMode;
+      international?.update({ mapMode: nextMode, language: state.current.language,
+        selected: state.current.selected, selectedRoute: state.current.selectedRoute, visibleRect: focusRect() });
+      lastClusterZoom = Number.NaN; lastClusterSignature = "";
+      syncClusters(true);
+      const target = nextMode === "international"
+        ? locationsView(internationalOverviewPositions, area._project, focusRect(), INTERNATIONAL_MIN_ZOOM)
+        : newZealandView ?? initialView(area.clientWidth, area.clientHeight, focusRect());
+      animateFocus(target);
+    };
+    const activateMarker = (fallback, event) => {
+      const clusterKeys = fallback.button.dataset.cluster?.split(",").filter(Boolean);
+      if (clusterKeys?.length > 1) {
+        state.current.onClusterSelect?.(clusterKeys);
+        return;
+      }
+      let marker = fallback;
+      if (event.detail !== 0 && Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) {
+        marker = markerPositions.filter(item => !item.button.hidden).reduce((nearest, item) => {
+          const rect = item.button.getBoundingClientRect();
+          const distance = Math.hypot(event.clientX - (rect.left + rect.right) / 2,
+            event.clientY - (rect.top + rect.bottom) / 2);
+          return !nearest || distance < nearest.distance ? { item, distance } : nearest;
+        }, null)?.item ?? fallback;
+      }
+      if (marker.waypoint) {
+        state.current.onWaypointSelect?.(marker.waypoint.id);
+        return;
+      }
+      const reused = getRouteWaypoints(state.current.selectedRoute)
+        .find(item => item.reuseStopTag === marker.stop?.tag);
+      if (reused) state.current.onWaypointSelect?.(reused.id);
+      else if (marker.stop) state.current.onSelect(marker.stop.tag);
+    };
+    const syncWaypointMarkers = ({ selectedRoute: routeId, selectedWaypoint: waypointId }) => {
+      const routeWaypoints = getRouteWaypoints(routeId);
+      markerPositions.forEach((marker) => {
+        if (marker.international) return;
+        const { button, waypoint, stop, primaryMarker, waypointMarker } = marker;
+        if (waypoint) {
+          button.hidden = false;
+          marker.baseLabel = `查看途经点：${waypoint.name}`;
+          button.setAttribute("aria-pressed", String(waypoint.id === waypointId));
+          return;
+        }
+        const reused = stop && routeWaypoints.find(item => item.reuseStopTag === stop.tag);
+        button.classList.toggle("trip-waypoint-reused", Boolean(reused));
+        if (reused) {
+          const currentMarker = button.querySelector(".trip-stop-dot");
+          if (waypointMarker && currentMarker !== waypointMarker) {
+            currentMarker?.replaceWith(waypointMarker); measureMarkerRadius(marker);
+          }
+          button.dataset.waypoint = reused.id;
+          marker.baseLabel = `查看途经点：${reused.name}`;
+          button.setAttribute("aria-pressed", String(reused.id === waypointId));
+        } else {
+          const currentMarker = button.querySelector(".trip-stop-dot");
+          if (primaryMarker && currentMarker !== primaryMarker) {
+            currentMarker?.replaceWith(primaryMarker); measureMarkerRadius(marker);
+          }
+          delete button.dataset.waypoint;
+          marker.baseLabel = stop.name;
+          button.setAttribute("aria-pressed", String(stop.tag === state.current.selected));
+        }
+      });
     };
     controls.current = {
       cancelFocus: () => surface.interrupt(),
-      selectRoutes: (selection) => routeInk?.select(selection),
-      zoomIn: () => surface.call(zoom.scaleBy, 1.35),
-      zoomOut: () => surface.call(zoom.scaleBy, 1 / 1.35),
-      reset: () => surface.call(zoom.transform, initialView(area.clientWidth, area.clientHeight)),
+      selectRoutes: (selection) => { routeInk?.select(selection); international?.select(selection); },
+      selectWaypoints: ({ selectedRoute: routeId, selectedWaypoint: waypointId }) => {
+        syncWaypointMarkers({ selectedRoute: routeId, selectedWaypoint: waypointId });
+        lastClusterZoom = Number.NaN; lastClusterSignature = "";
+        applyView(view, { settled: true });
+      },
+      updateScale,
+      updateViewport: () => {
+        const visibleRect = focusRect();
+        pencil?.setVisibleRect(visibleRect);
+        routeInk?.draw(view, { moving: false, visibleRect });
+        updateScale();
+        if (!focusing) pencil?.refine(view);
+      },
+      setMapMode,
+      updateInternational: () => international?.update({ language: state.current.language,
+        selected: state.current.selected, selectedRoute: state.current.selectedRoute,
+        mapMode: activeMapMode, visibleRect: focusRect() }),
+      restoreMapView: value => {
+        const restored = mapViewTransform(value);
+        if (!restored) return;
+        const current = settledMapView(view);
+        if (equivalentMapView(current, restored.normalized)) return;
+        restoringMapView = restored.normalized;
+        surface.interrupt().call(zoom.transform, restored.transform);
+      },
+      zoomIn: () => { userMoved = true; surface.call(zoom.scaleBy, 1.35, focusRect().center); },
+      zoomOut: () => { userMoved = true; surface.call(zoom.scaleBy, 1 / 1.35, focusRect().center); },
+      reset: () => {
+        userMoved = true;
+        const target = activeMapMode === "international"
+          ? locationsView(internationalOverviewPositions, area._project, focusRect(), INTERNATIONAL_MIN_ZOOM)
+          : initialView(area.clientWidth, area.clientHeight, focusRect());
+        surface.call(zoom.transform, target);
+      },
       focusPlace: (tag) => {
         const marker = markerPositions.find((item) => item.tag === tag);
         if (!marker) return;
-        surface.interrupt();
-        const target = placeView(marker.position, area.clientWidth, area.clientHeight);
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-          (Math.abs(view.k - target.k) < .001 && Math.hypot(view.x - target.x, view.y - target.y) < .1)) {
-          surface.call(zoom.transform, target);
-          return;
-        }
-        focusing = true;
-        area.dataset.focusing = "true";
-        surface.transition().duration(FOCUS_DURATION).ease(d3.easeCubicInOut)
-          .call(zoom.transform, target)
-          .on("end.focus interrupt.focus cancel.focus", finishFocus);
+        animateFocus(placeView(marker.position, focusRect()));
+      },
+      focusTown: (tag) => {
+        const marker = markerPositions.find((item) => item.stop?.tag === tag);
+        if (!marker || !area._project) return;
+        animateFocus(townView(marker, focusRect()));
+      },
+      focusNode: key => {
+        const marker = markerPositions.find(item => item.key === key);
+        if (!marker) return;
+        const zoomLevel = marker.international ? Math.min(1.4, Math.max(view.k, .22)) : PLACE_ZOOM;
+        const rect = focusRect();
+        animateFocus(d3.zoomIdentity.translate(rect.center[0] - marker.position[0] * zoomLevel,
+          rect.center[1] - marker.position[1] * zoomLevel).scale(zoomLevel));
+      },
+      focusLocations: ({ positions }) => {
+        if (!area._project || !positions.length) return;
+        animateFocus(locationsView(positions, area._project, focusRect()));
+      },
+      focusRoute: (id) => {
+        const route = adventureRoutes.find(item => item.id === id);
+        if (!route || !area._project) return;
+        const positions = route.roadGeometry?.coordinates ?? route.points.map(([lat, lng]) => [lng, lat]);
+        animateFocus(locationsView(positions, area._project, focusRect()));
       },
     };
     function draw() {
       const width = area.clientWidth, height = area.clientHeight;
       if (!width || !height) return;
+      const resumeFocus = focusing;
       surface.interrupt();
-      // The view transform never depends on selection or the side panel.
+      // Reproject only on a real viewport resize; the calendar overlays this viewport.
       const scale = mapScale(width, height);
       const project = (point) => {
         const [x, y] = base(point);
         return [(x - (minX + maxX) / 2) * scale + width / 2, (y - (minY + maxY) / 2) * scale + height / 2];
       };
+      const unproject = (point) => base.invert([
+        (point[0] - width / 2) / scale + (minX + maxX) / 2,
+        (point[1] - height / 2) / scale + (minY + maxY) / 2,
+      ]);
       svg.attr("viewBox", `0 0 ${width} ${height}`).selectAll("*").remove();
       sea.attr("viewBox", `0 0 ${width} ${height}`).selectAll("*").remove();
       shortRouteSpot = null;
@@ -258,12 +710,31 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
       drawBathymetry(depthWorld, project);
       pencil?.dispose();
       pencil = createPencilMap(canvas, project, width, height);
+      international?.dispose();
+      international = createInternationalMapLayer({
+        baseCanvas: internationalCanvas,
+        routeCanvas: internationalRouteCanvas,
+        markerHost: internationalButtons,
+        project,
+        width,
+        height,
+        language: state.current.language,
+        onNodeSelect: key => state.current.onInternationalNodeSelect?.(key),
+        onRouteSelect: id => state.current.onRouteSelect?.(id),
+        onViewChange: mode => {
+          state.current.onMapModeChange?.(mode);
+          setMapMode(mode);
+        },
+      });
+      international.update({ mapMode: activeMapMode, language: state.current.language,
+        selected: state.current.selected, selectedRoute: state.current.selectedRoute,
+        theme: document.documentElement.dataset.adventureAppearance ?? "", width, height, visibleRect: focusRect() });
       const routes = world.append("g").attr("class", "trip-routes");
       const routeEntries = [];
       // Links remain in the same coordinate system as the coastline and dots.
-      [...adventureRoutes].sort((a, b) => Number(b.transport === "flight") - Number(a.transport === "flight")).forEach((route) => {
+      [...adventureRoutes].filter(route => !international.handledRouteIds.has(route.id))
+        .sort((a, b) => Number(b.transport === "flight") - Number(a.transport === "flight")).forEach((route) => {
         const path = projectedRoutePath(route, project);
-        routeEntries.push({ route, path, points: route.roadGeometry?.coordinates.map(project) });
         const group = routes.append("g").attr("class", "trip-route-group")
           .on("pointerenter", () => routeInk?.hover(route.id))
           .on("pointerleave", () => routeInk?.hover(null))
@@ -273,7 +744,7 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
         // The transparent stroke follows the same curve; station buttons sit
         // above this SVG so their hit targets keep priority on touch screens.
         // Keep pointer starts bubbling to D3 so this is still draggable.
-        group.append("path").attr("d", path).attr("class", "trip-route-hit")
+        const hitPath = group.append("path").attr("d", path).attr("class", "trip-route-hit")
           .attr("data-route", route.id).attr("role", "button").attr("tabindex", 0)
           .attr("data-geometry", route.roadGeometry ? "road-network" : "schematic")
           .attr("data-transport", route.transport)
@@ -288,6 +759,7 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
             event.preventDefault(); event.stopPropagation();
             state.current.onRouteSelect(route.id);
           });
+        routeEntries.push({ route, path, points: route.roadGeometry?.coordinates.map(project), hitPath: hitPath.node() });
         if (route.id === "zqn-wanaka") {
           // At an island-wide phone scale the two stop buttons nearly touch.
           // Give this short route its own visible 44px tap target below them.
@@ -326,51 +798,146 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
         button.style.left = x + "px"; button.style.top = y + "px";
         button.setAttribute("aria-label", stop.name);
         button.setAttribute("aria-pressed", String(stop.tag === state.current.selected));
-        const dot = createStopMarker(7201 + markerPositions.length * 97);
+        const markerSeed = 7201 + markerPositions.length * 97;
+        const dot = createStopMarker(markerSeed, { type: "primary" });
+        const reusedWaypoint = adventureWaypoints.find(item => item.reuseStopTag === stop.tag);
+        const waypointMarker = reusedWaypoint ? createStopMarker(markerSeed, {
+          type: reusedWaypoint.markerType, iconType: reusedWaypoint.iconType,
+        }) : null;
         const label = document.createElement("span"); label.className = "trip-stop-label";
         fillStopLabel(label, stop.name.split(" · ")[0], 6100 + markerPositions.length);
         label.setAttribute("aria-hidden", "true");
         const leader = document.createElement("span"); leader.className = "trip-stop-leader"; leader.setAttribute("aria-hidden", "true");
         button.append(leader, dot, label);
-        button.onclick = () => {
-          if (state.current.selected === stop.tag) controls.current?.focusPlace(stop.tag);
-          state.current.onSelect(stop.tag);
+        const marker = { button, position: [x, y], tag: stop.tag, key: `p:${stop.tag}`, primary: true,
+          stop, primaryMarker: dot, waypointMarker, baseLabel: stop.name, seed: markerSeed };
+        button.onclick = event => activateMarker(marker, event);
+        button.ondblclick = event => {
+          event.preventDefault(); event.stopPropagation();
+          controls.current?.focusTown(stop.tag);
         };
         buttons.append(button);
-        markerPositions.push({ button, position: [x, y], tag: stop.tag });
+        measureMarkerRadius(marker);
+        markerPositions.push(marker);
+      });
+      adventureWaypoints.filter(waypoint => !waypoint.reuseStopTag).forEach((waypoint, index) => {
+        const [lat, lng] = waypoint.position;
+        const [x, y] = project([lng, lat]);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "trip-stop trip-waypoint";
+        button.dataset.waypoint = waypoint.id;
+        button.dataset.waypointRoute = waypoint.routeId;
+        button.hidden = false;
+        button.style.left = x + "px";
+        button.style.top = y + "px";
+        button.setAttribute("aria-label", `查看途经点：${waypoint.name}`);
+        button.setAttribute("aria-pressed", String(waypoint.id === state.current.selectedWaypoint));
+        const dot = createStopMarker(9101 + index * 101, {
+          type: waypoint.markerType, iconType: waypoint.iconType,
+        });
+        const label = document.createElement("span");
+        label.className = "trip-stop-label";
+        fillStopLabel(label, waypoint.name, 8100 + index);
+        label.setAttribute("aria-hidden", "true");
+        const leader = document.createElement("span");
+        leader.className = "trip-stop-leader";
+        leader.setAttribute("aria-hidden", "true");
+        button.append(leader, dot, label);
+        const marker = { button, position: [x, y], tag: waypoint.id, key: `w:${waypoint.id}`, primary: false,
+          waypoint, baseLabel: `查看途经点：${waypoint.name}`, seed: 9101 + index * 101 };
+        button.onclick = event => activateMarker(marker, event);
+        buttons.append(button);
+        measureMarkerRadius(marker);
+        markerPositions.push(marker);
+      });
+      international.markers.forEach(marker => {
+        marker.international = true;
+        marker.button.addEventListener("click", event => {
+          const clusterKeys = marker.button.dataset.cluster?.split(",").filter(Boolean);
+          if (clusterKeys?.length < 2) return;
+          event.preventDefault(); event.stopImmediatePropagation();
+          state.current.onClusterSelect?.(clusterKeys);
+        }, { capture: true });
+        markerPositions.push(marker);
       });
       zoom.extent([[0, 0], [width, height]]);
       area._project = project;
-      let nextView = initialView(width, height);
-      if (!layout && state.current.selected) {
-        const marker = markerPositions.find((item) => item.tag === state.current.selected);
-        if (marker) nextView = placeView(marker.position, width, height);
+      area._unproject = unproject;
+      syncWaypointMarkers(state.current);
+      lastClusterZoom = Number.NaN;
+      lastClusterSignature = "";
+      lastWaterLabelZoom = Number.NaN;
+      const rect = focusRect();
+      let nextView = initialView(width, height, rect);
+      const restored = mapViewTransform(state.current.mapView, project);
+      if (restored) {
+        restoringMapView = restored.normalized;
+        nextView = restored.transform;
+      } else if (activeMapMode === "international") {
+        nextView = locationsView(internationalOverviewPositions, project, rect, INTERNATIONAL_MIN_ZOOM);
       }
-      if (layout) {
-        const center = view.invert([layout.width / 2, layout.height / 2]);
+      if (!restored && activeMapMode !== "international" && !layout && state.current.selected) {
+        const marker = markerPositions.find((item) => item.tag === state.current.selected);
+        if (marker) nextView = placeView(marker.position, rect);
+      }
+      if (!restored && activeMapMode !== "international" && !layout && state.current.focusLocations) {
+        nextView = locationsView(state.current.focusLocations.positions, project, rect);
+      }
+      if (!restored && activeMapMode !== "international" && !layout && state.current.focusRoute) {
+        const route = adventureRoutes.find(item => item.id === state.current.focusRoute);
+        if (route) nextView = locationsView(route.roadGeometry?.coordinates ??
+          route.points.map(([lat, lng]) => [lng, lat]), project, rect);
+      }
+      if (!restored && layout && activeMapMode !== "international") {
+        const center = view.invert(layout.rect.center);
         const nx = (center[0] - layout.width / 2) * scale / layout.scale + width / 2;
         const ny = (center[1] - layout.height / 2) * scale / layout.scale + height / 2;
-        nextView = d3.zoomIdentity.translate(width / 2 - nx * view.k, height / 2 - ny * view.k).scale(view.k);
+        nextView = d3.zoomIdentity.translate(rect.center[0] - nx * view.k,
+          rect.center[1] - ny * view.k).scale(view.k);
+        if (activeMapMode !== "international" && !userMoved && !resumeFocus && state.current.selected) {
+          const marker = markerPositions.find((item) => item.tag === state.current.selected);
+          if (marker) nextView = placeView(marker.position, rect);
+        } else if (activeMapMode !== "international" && !userMoved && !resumeFocus && state.current.focusLocations) {
+          nextView = locationsView(state.current.focusLocations.positions, project, rect);
+        } else if (activeMapMode !== "international" && !userMoved && !resumeFocus && state.current.focusRoute) {
+          const route = adventureRoutes.find(item => item.id === state.current.focusRoute);
+          if (route) nextView = locationsView(route.roadGeometry?.coordinates ??
+            route.points.map(([lat, lng]) => [lng, lat]), project, rect);
+        }
       }
-      layout = { width, height, scale };
+      layout = { width, height, scale, rect };
       surface.call(zoom.transform, nextView);
+      if (activeMapMode === "new-zealand") newZealandView = nextView;
+      if (resumeFocus && state.current.selected) controls.current?.focusPlace(state.current.selected);
+      else if (resumeFocus && state.current.focusLocations) controls.current?.focusLocations(state.current.focusLocations);
+      else if (resumeFocus && state.current.focusRoute) controls.current?.focusRoute(state.current.focusRoute);
     }
     let frame = 0, disposed = false;
     const redraw = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(draw); };
     const observer = new ResizeObserver(redraw); observer.observe(area); redraw();
+    const appearance = new MutationObserver(() => international?.update({
+      theme: document.documentElement.dataset.adventureAppearance ?? "", visibleRect: focusRect(),
+    }));
+    appearance.observe(document.documentElement, { attributes: true,
+      attributeFilter: ["data-adventure-appearance", "data-adventure-theme"] });
     document.fonts.ready.then(() => { if (!disposed) { clearPencilLabels(); redraw(); } });
-    return () => { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); surface.interrupt(); pencil?.dispose(); routeInk?.dispose(); surface.on(".zoom", null); controls.current = null; buttons.replaceChildren(); svg.selectAll("*").remove(); sea.selectAll("*").remove(); };
+    return () => { disposed = true; townLoadGeneration++; cancelAnimationFrame(frame); cancelAnimationFrame(viewFrame); observer.disconnect(); appearance.disconnect(); surface.interrupt(); pencil?.dispose(); routeInk?.dispose(); international?.dispose(); surface.on(".zoom", null); controls.current = null; delete area._project; delete area._unproject; buttons.replaceChildren(); internationalButtons.replaceChildren(); svg.selectAll("*").remove(); sea.selectAll("*").remove(); };
   }, []);
-  return <div ref={container} className="trip-map-area">
+  return <div ref={container} className="trip-map-area" inert={obscured ? "" : undefined} aria-hidden={obscured || undefined}>
     <svg className="trip-depth-map" aria-hidden="true" />
-    <canvas className="trip-pencil-map" role="img" aria-label="C 重描彩铅地表：林地、草地、农田、灌丛、裸地、冰雪、湿地与城镇；海洋按 200、1000、2000、4000 米深度分色" />
+    <canvas className="trip-pencil-map" role="img" aria-label={language === "en" ? "Colored-pencil terrain and ocean depth bands at 200, 1000, 2000 and 4000 meters" : "C 重描彩铅地表：林地、草地、农田、灌丛、裸地、冰雪、湿地与城镇；海洋按 200、1000、2000、4000 米深度分色"} />
+    <canvas className="trip-international-map" aria-hidden="true" />
     <canvas className="trip-pencil-routes" aria-hidden="true" />
-    <svg className="trip-map" role="group" aria-label="南北岛彩铅地图及可点击路线；实线为自驾公路参考路径，短虚线为航线示意，长虚线为大巴公路参考路径" onClick={onClear} />
+    <canvas className="trip-international-routes" aria-hidden="true" />
+    <svg className="trip-map" role="group" aria-label={language === "en" ? "Colored-pencil map of New Zealand with selectable routes; road paths are references and flight paths are schematic" : "南北岛彩铅地图及可点击路线；实线为自驾公路参考路径，短虚线为航线示意，长虚线为大巴公路参考路径"} onClick={onClear} />
+    <div className="trip-international-points" />
     <div className="trip-point-buttons" />
-    <nav className="trip-map-controls" aria-label="地图视图">
-      <GameIconButton label="放大地图" onClick={() => controls.current?.zoomIn()}><ZoomInIcon /></GameIconButton>
-      <GameIconButton label="缩小地图" onClick={() => controls.current?.zoomOut()}><ZoomOutIcon /></GameIconButton>
-      <GameIconButton label="复位地图" onClick={() => controls.current?.reset()}><ResetIcon /></GameIconButton>
+    <AdventureMapScale ref={scaleControl} hidden={obscured} language={language} />
+    <nav className="trip-map-controls" aria-label={language === "en" ? "Map view" : "地图视图"}>
+      <GameIconButton label={language === "en" ? "Zoom in" : "放大地图"} onClick={() => controls.current?.zoomIn()}><ZoomInIcon /></GameIconButton>
+      <GameIconButton label={language === "en" ? "Zoom out" : "缩小地图"} onClick={() => controls.current?.zoomOut()}><ZoomOutIcon /></GameIconButton>
+      <GameIconButton label={language === "en" ? "Reset map" : "复位地图"} onClick={() => controls.current?.reset()}><ResetIcon /></GameIconButton>
     </nav>
   </div>;
 }

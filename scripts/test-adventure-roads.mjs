@@ -58,10 +58,10 @@ try {
   assert.deepEqual(snapshot.routes['oamaru-christchurch'].input.at(-1), [172.6362, -43.5321]);
 } finally { await server.close(); }
 
-const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure.html';
+const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure';
 const output = process.env.ADVENTURE_TEST_OUTPUT;
 if (output) await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true });
+const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1323, height: 956 }, deviceScaleFactor: 2 });
 const errors = [], routingRequests = [];
 page.on('pageerror', error => errors.push(error.message));

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -13,27 +13,30 @@ import PrintIcon from "@mui/icons-material/Print";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import LanguageIcon from "@mui/icons-material/Language";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-import { assetPath } from "../assets";
+import { adventurePath, itineraryPath, followSiteLink, isItineraryPath, navigateSite } from "../siteNavigation";
 import { tabs } from "../tripData";
 import { tabLabel } from "./tabIcons";
-import { PrivateVaultDialog } from "./PrivateVaultAccess";
 import { PwaInstallButton } from "./PwaInstallButton";
 
 function unlockRequestedByUrl() {
   return new URL(window.location.href).searchParams.get("unlock") === "1";
 }
 
-function clearUnlockUrl() {
-  const url = new URL(window.location.href);
-  url.searchParams.delete("unlock");
-  history.replaceState(history.state, "", url);
-}
-
 export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress, language, onLanguageToggle }) {
   const isEnglish = language === "en";
   const unlockClickCount = useRef(0);
   const unlockClickTimer = useRef(null);
-  const [privateDialogOpen, setPrivateDialogOpen] = useState(unlockRequestedByUrl);
+  const openAdventureUnlock = useCallback(() => {
+    if (!isItineraryPath()) return;
+    const origin = new URL(window.location.href);
+    const hadUnlockParam = origin.searchParams.has("unlock");
+    origin.searchParams.delete("unlock");
+    if (hadUnlockParam) history.replaceState(history.state, "", origin);
+    const target = new URL(adventurePath, origin.origin);
+    target.searchParams.set("unlock", "1");
+    target.searchParams.set("return", `${origin.pathname}${origin.search}${origin.hash}`);
+    navigateSite(target.href);
+  }, []);
 
   const resetUnlockClicks = () => {
     unlockClickCount.current = 0;
@@ -47,7 +50,7 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
     unlockClickCount.current += 1;
     if (unlockClickCount.current === 10) {
       resetUnlockClicks();
-      setPrivateDialogOpen(true);
+      openAdventureUnlock();
       navigator.vibrate?.(20);
       return;
     }
@@ -59,26 +62,23 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
 
   useEffect(() => {
     const openFromUrl = () => {
-      if (unlockRequestedByUrl()) setPrivateDialogOpen(true);
+      if (isItineraryPath() && unlockRequestedByUrl()) openAdventureUnlock();
     };
     const openFromShortcut = (event) => {
+      if (!isItineraryPath()) return;
       if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "l") {
         event.preventDefault();
-        setPrivateDialogOpen(true);
+        openAdventureUnlock();
       }
     };
     window.addEventListener("popstate", openFromUrl);
     window.addEventListener("keydown", openFromShortcut);
+    openFromUrl();
     return () => {
       window.removeEventListener("popstate", openFromUrl);
       window.removeEventListener("keydown", openFromShortcut);
     };
-  }, []);
-
-  const closePrivateDialog = () => {
-    if (unlockRequestedByUrl()) clearUnlockUrl();
-    setPrivateDialogOpen(false);
-  };
+  }, [openAdventureUnlock]);
 
   return (
     <Paper
@@ -109,14 +109,14 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
           </Stack>
           <LinearProgress variant="determinate" value={progress.percent} className="progress" />
         </Box>
-        <Button fullWidth variant="outlined" startIcon={<ExploreOutlinedIcon />} component="a" href={assetPath("adventure.html")}>
+        <Button fullWidth variant="outlined" startIcon={<ExploreOutlinedIcon />} component="a" href={adventurePath} onClick={followSiteLink}>
           {isEnglish ? "Adventure map" : "冒险地图"}
         </Button>
         <Stack direction="row" spacing={1}>
           <Button fullWidth variant="outlined" startIcon={<PrintIcon />} onClick={() => window.print()}>
             {isEnglish ? "Print" : "打印"}
           </Button>
-          <Button fullWidth variant="outlined" startIcon={<SaveAltIcon />} component="a" href={assetPath("")} download="2026-新西兰旅行攻略.html">
+          <Button fullWidth variant="outlined" startIcon={<SaveAltIcon />} component="a" href={itineraryPath + "/"} download="2026-新西兰旅行攻略.html">
             {isEnglish ? "Save" : "保存"}
           </Button>
         </Stack>
@@ -125,7 +125,6 @@ export function Sidebar({ className = "", onNavigate, tab, onTabChange, progress
         </Button>
         <PwaInstallButton language={language} />
       </Box>
-      <PrivateVaultDialog onClose={closePrivateDialog} open={privateDialogOpen} />
     </Paper>
   );
 }

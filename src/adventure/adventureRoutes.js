@@ -7,9 +7,15 @@ const stops = new Map(adventureStops.map((stop) => [stop.tag, stop]));
 const displayTag = (tag) => tag === "AKL" ? "AKC" : tag;
 const seen = new Set();
 
+function endpointPosition(segment, side, displayedTag) {
+  const explicit = segment[`${side}Position`];
+  if (segment.transport === "flight" && explicit) return [explicit.lat, explicit.lng];
+  return stops.get(displayedTag)?.position ?? null;
+}
+
 // Connect the displayed city stops, using the original itinerary order and
-// named waypoints. Road shapes come from the stored routing snapshot; flights are
-// city-to-city schematic arcs, not actual flight tracks.
+// named waypoints. Road shapes come from the stored routing snapshot; flights use
+// their source-backed airport endpoints and remain schematic, not actual tracks.
 export const adventureRoutes = routeSegments.flatMap((segment) => {
   const from = displayTag(segment.from), to = displayTag(segment.to);
   if (from === to || !stops.has(from) || !stops.has(to)) return [];
@@ -17,6 +23,9 @@ export const adventureRoutes = routeSegments.flatMap((segment) => {
   const key = [transport, ...[from, to].sort()].join(":");
   if (seen.has(key)) return [];
   seen.add(key);
+  const fromPosition = endpointPosition(segment, "from", from);
+  const toPosition = endpointPosition(segment, "to", to);
+  if (!fromPosition || !toPosition) return [];
   const waypoints = segment.waypoints ?? [];
   const via = adventureStops.filter((stop) => waypoints.some((point) =>
     Math.abs(point.lat - stop.position[0]) < 0.0001 && Math.abs(point.lng - stop.position[1]) < 0.0001,
@@ -32,8 +41,8 @@ export const adventureRoutes = routeSegments.flatMap((segment) => {
   return [{
     id: segment.id, from, to, via, transport, date: segment.date,
     label: transport === "coach" ? "奥克兰 ⇄ 霍比屯 · 大巴" : segment.label,
-    points: [stops.get(from).position, ...waypoints.map(({ lat, lng }) => [lat, lng]), stops.get(to).position],
-    routingPoints: [stops.get(from).position, ...routingWaypoints.map(({ lat, lng }) => [lat, lng]), stops.get(to).position],
+    points: [fromPosition, ...waypoints.map(({ lat, lng }) => [lat, lng]), toPosition],
+    routingPoints: [fromPosition, ...routingWaypoints.map(({ lat, lng }) => [lat, lng]), toPosition],
     roadGeometry: roadRoutes.routes[segment.id]?.geometry ?? null,
     roadSource: roadRoutes.routes[segment.id] ?? null,
   }];

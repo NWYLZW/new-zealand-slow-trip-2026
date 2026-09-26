@@ -1,0 +1,157 @@
+.trip-place-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  color: #293d33;
+  font-family: var(--trip-handwriting);
+}
+
+#trip-right-panel .trip-panel-body:has(> .trip-place-tabs) {
+  overflow: hidden;
+  gap: 0;
+}
+
+.trip-place-tab-scroll {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+
+.trip-place-town-map {
+  flex: none;
+  width: 100%;
+  height: clamp(112px, 22dvh, 220px);
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-height: 600px) {
+  .trip-place-town-map { height: 112px; }
+}
+
+.trip-place-tab-frame {
+  display: grid;
+  gap: 6px;
+  flex: none;
+  min-width: 0;
+}
+
+.trip-place-tab-divider {
+  display: block;
+  width: 100%;
+  height: 8px;
+  pointer-events: none;
+}
+
+.trip-place-tab-scroll .trip-adventure-calendar-scopes {
+  width: max-content;
+  max-width: none;
+  padding-bottom: 4px;
+}
+
+.trip-place-tab-scroll .trip-adventure-calendar-scope { flex: none; }
+
+.trip-place-tabpanel {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  outline-offset: 3px;
+}
+
+.trip-place-tabpanel[data-tab="calendar"],
+.trip-place-tabpanel[data-tab="hotels"],
+.trip-place-tabpanel[data-tab="photos"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.trip-place-tabpanel[data-tab="calendar"] .trip-adventure-calendar--embedded {
+  flex: 1;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+}
+
+.trip-place-tabpanel[data-tab="calendar"] .trip-adventure-calendar-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.trip-place-tabpanel[data-tab="activities"] {
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.trip-place-hotels {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.trip-place-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.trip-place-list > li { min-width: 0; }
+.trip-place-item-title {
+  display: block;
+  min-width: 0;
+}
+
+.trip-place-list-item {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  min-width: 0;
+  padding: 0 3px;
+}
+
+.trip-place-item-title {
+  width: 100%;
+  color: #294936;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.trip-place-item-meta,
+.trip-place-item-status {
+  color: #526a57;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.trip-place-item-status { color: #745e3d; }
+
+.trip-place-detail-link.trip-pencil-surface {
+  max-width: 100%;
+  min-height: 44px;
+  margin-top: 5px;
+  padding: 7px 13px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.trip-place-empty {
+  margin: 8px 3px;
+  color: #637667;
+  font-size: 16px;
+  line-height: 1.5;
+}

@@ -1,0 +1,57 @@
+// Public booking facts shared by the main itinerary and adventure backpack.
+// Private reservation numbers remain in the vault, never in this module.
+export const confirmedRentalBookings = [
+  {
+    id: "south",
+    provider: "Budget",
+    status: "booked",
+    island: "南岛",
+    islandEn: "South Island",
+    reservation: "已私下保存",
+    reservationEn: "stored privately",
+    vehicle: "Mazda CX-30 或同级 · 自动挡 · 不限里程",
+    vehicleEn: "Mazda CX-30 or similar · automatic · unlimited kilometres",
+    pickup: {
+      date: "2026-09-29",
+      time: "11:00",
+      location: "皇后镇机场（ZQN）",
+      locationEn: "Queenstown Airport (ZQN)",
+    },
+    return: {
+      date: "2026-10-08",
+      time: "11:00",
+      location: "基督城机场（CHC）",
+      locationEn: "Christchurch Airport (CHC)",
+    },
+    route: "皇后镇机场（ZQN）→ 基督城机场（CHC）",
+    routeEn: "Queenstown Airport (ZQN) → Christchurch Airport (CHC)",
+    dates: "2026年9月29日 11:00取车 — 10月8日 11:00还车",
+    datesEn: "Pick up 11:00 on 29 Sep 2026 — return 11:00 on 8 Oct 2026",
+    duration: "9 × 24小时 · 异地还车",
+    durationEn: "9 × 24 hours · one-way",
+    total: "NZD 1,685.98 · 已预付",
+    totalEn: "NZD 1,685.98 · prepaid",
+    prepaid: { currency: "NZD", amount: 1685.98 },
+    protection: "订单截图未显示，取车前复核",
+    protectionEn: "Not shown in the booking screenshot; verify before pickup",
+    counter: "皇后镇机场柜台 08:00–22:00；基督城机场柜台 06:00–次日01:30，可使用非营业时间钥匙箱。",
+    counterEn: "Queenstown Airport desk 08:00–22:00; Christchurch Airport desk 06:00–01:30, with an after-hours key drop.",
+    cancellation: "订单截图未显示退改规则；如需变更或取消，先在 Budget 管理订单页核对费用。",
+    cancellationEn: "Cancellation terms are not shown in the booking screenshot; check fees in Manage Booking before making any change.",
+    payment: "订单总额 NZD 1,685.98 已预付；取车押金、预授权与刷卡要求仍需按 Budget 条款复核。",
+    paymentEn: "The NZD 1,685.98 total is prepaid; verify Budget's deposit, pre-authorisation and card requirements before pickup.",
+    coverLimit: "玻璃、轮胎、车顶、底盘、涉水和禁行道路等未确认包含；不要驶入 Skippers Canyon。",
+    coverLimitEn: "Windscreen, tyres, overhead, underbody, water damage and prohibited roads are not confirmed as covered. Do not drive Skippers Canyon.",
+  },
+];
+
+export const northIslandRentalStatus = {
+  id: "north",
+  provider: "Budget",
+  status: "cancelled",
+  statusSource: "user-confirmed",
+  providerConfirmationVerified: false,
+  previousSchedule: "2026-10-09 08:30 — 2026-10-10 17:00",
+  previousVehicle: "Mazda CX-30 or similar",
+  previousQuotedTotal: { currency: "NZD", amount: 303.03 },
+};

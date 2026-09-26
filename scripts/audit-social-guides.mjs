@@ -5,9 +5,11 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { socialGuidesByEvent } from "../src/socialGuides.js";
 
-const routeMapUrl = new URL("../src/components/RouteMap.jsx", import.meta.url);
+const routeMapUrl = new URL("../src/components/calendar/tripCalendarData.js", import.meta.url);
 const requiredStances = ["positive", "pitfall"];
 const minimumGuidesPerEvent = 5;
+// Personal logistics are timeline phases, not curated destination experiences.
+const logisticsOnlyEvents = new Set(["前往深圳机场", "奥克兰机场候机", "抵达深圳", "回家休息"]);
 const forbiddenBrowserScreenshotDimensions = new Set(["1280x720", "1136x863", "1159x863", "1122x863", "436x863"]);
 const forbiddenBrowserScreenshotMedia = new Set([
   "/new-zealand-slow-trip-2026/images/xhs-klia-smooth-transfer.jpg",
@@ -168,7 +170,8 @@ async function auditEvent(eventTitle, guides) {
 const routeMapSource = await readFile(routeMapUrl, "utf8");
 const calendarEventTitles = extractCalendarEventTitles(routeMapSource);
 const calendarEventTitleSet = new Set(calendarEventTitles);
-const report = await Promise.all(calendarEventTitles.map(async (eventTitle) => ({
+const curatedEventTitles = calendarEventTitles.filter(title => !logisticsOnlyEvents.has(title) || socialGuidesByEvent[title]?.length);
+const report = await Promise.all(curatedEventTitles.map(async (eventTitle) => ({
   eventTitle,
   errors: await auditEvent(eventTitle, socialGuidesByEvent[eventTitle]),
 })));
@@ -187,7 +190,7 @@ for (const eventTitle of calendarEventTitles) {
 }
 const reusedNotes = [...noteEvents.entries()].filter(([, events]) => events.size > 1);
 
-console.log(`Social guide audit: ${calendarEventTitles.length - failed.length}/${calendarEventTitles.length} calendar events pass.`);
+console.log(`Social guide audit: ${curatedEventTitles.length - failed.length}/${curatedEventTitles.length} curated calendar events pass; ${calendarEventTitles.length - curatedEventTitles.length} logistics-only phases do not require destination guides.`);
 for (const { eventTitle, errors } of failed) {
   console.log(`\nFAIL ${eventTitle}`);
   errors.forEach((error) => console.log(`  - ${error}`));
@@ -205,5 +208,5 @@ if (failed.length) {
   console.log(`\nAudit failed: ${failed.length} event${failed.length === 1 ? "" : "s"} need curated coverage.`);
   process.exitCode = 1;
 } else {
-  console.log("\nAudit passed: every event has verified positive and pitfall Xiaohongshu coverage.");
+  console.log("\nAudit passed: every curated event has verified positive and pitfall Xiaohongshu coverage.");
 }

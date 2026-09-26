@@ -1,0 +1,81 @@
+:where(.trip-pencil-surface) {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+:where(.trip-pencil-surface) > .trip-pencil-surface-ink {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.trip-pencil-surface--clipped > .trip-pencil-surface-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  clip-path: var(--trip-surface-clip, inset(3px));
+}
+
+.trip-pencil-surface--clipped > .trip-pencil-surface-border-ink {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+:where(.trip-pencil-surface:is(button, a, span)) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+:where(.trip-pencil-surface:is(button, a)) {
+  border: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+:where(.trip-pencil-surface--action) {
+  min-height: 44px;
+  padding: 8px 15px;
+  color: #234632;
+}
+
+:where(.trip-pencil-surface--quiet) {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #345442;
+}
+
+:where(.trip-pencil-surface--badge) {
+  padding: 4px 9px;
+  color: #405443;
+}
+
+#trip-board-structure .trip-pencil-surface--action { color: var(--trip-surface-action-ink, #234632); }
+#trip-board-structure .trip-pencil-surface--quiet { color: #345442; }
+
+:where(.trip-pencil-surface:is(button, a):hover) > .trip-pencil-surface-ink {
+  filter: contrast(1.08);
+}
+
+:where(.trip-pencil-surface:is(button, a):focus-visible) {
+  outline: 2px solid #355c46;
+  outline-offset: 3px;
+}
+
+:where(.trip-pencil-surface:disabled, .trip-pencil-surface[aria-disabled="true"]) {
+  opacity: .5;
+  cursor: not-allowed;
+}

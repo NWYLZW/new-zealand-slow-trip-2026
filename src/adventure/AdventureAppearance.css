@@ -1,0 +1,114 @@
+#trip-board-structure {
+  --trip-paper-color: var(--trip-theme-paper);
+  --trip-ink-color: #293d33;
+  --trip-ink-muted: #506752;
+  --trip-surface-action-wash: var(--trip-theme-accent);
+  --trip-surface-quiet-wash: var(--trip-theme-quiet);
+  --trip-surface-badge-wash: var(--trip-theme-quiet);
+  --trip-surface-action-ink: var(--trip-theme-ink);
+  --trip-focus-color: var(--trip-theme-ink);
+  --trip-error-color: #873e36;
+  --trip-tooltip-paper: #f2ead7;
+  color: var(--trip-ink-color);
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure {
+  --trip-paper-color: #1b1b17;
+  --trip-ink-color: #e5e2cf;
+  --trip-ink-muted: #b6b39d;
+  --trip-surface-action-wash: var(--trip-theme-accent-dark);
+  --trip-surface-quiet-wash: var(--trip-theme-quiet);
+  --trip-surface-badge-wash: var(--trip-theme-quiet);
+  --trip-surface-action-ink: var(--trip-ink-color);
+  --trip-focus-color: #e4d99e;
+  --trip-error-color: #ffb6a8;
+  --trip-tooltip-paper: #292920;
+  --trip-theme-map: #263238;
+  --trip-theme-paper: #1b1b17;
+  --trip-theme-ink: #e5e2cf;
+  --trip-theme-map-filter: brightness(.48) saturate(.7) contrast(1.1);
+  color-scheme: dark;
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure .trip-map-area {
+  background: var(--trip-theme-map);
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(
+  .trip-day, .trip-panel, .trip-panel-heading-date, .trip-tool,
+  .trip-adventure-calendar, .trip-adventure-calendar-header,
+  .trip-adventure-calendar-day, .trip-adventure-menu,
+  .trip-adventure-menu-link, .trip-adventure-menu-setting h2,
+  .trip-adventure-menu-install-help, .trip-map-sources-page
+) {
+  color: var(--trip-ink-color);
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(
+  .trip-pencil-surface--action, .trip-pencil-surface--quiet,
+  .trip-pencil-surface--badge, .trip-adventure-menu-option
+) {
+  color: var(--trip-ink-color);
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(button, a, input):focus-visible {
+  outline-color: var(--trip-focus-color);
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(
+  .trip-depth-map, .trip-pencil-map, .trip-pencil-routes, .trip-map
+) { filter: brightness(.52) saturate(.8) contrast(1.1); }
+html[data-adventure-appearance="dark"] #trip-board-structure .trip-stop-label canvas {
+  filter: invert(.88) hue-rotate(155deg) contrast(1.15);
+}
+html[data-adventure-appearance="dark"] #trip-board-structure .trip-stop-leader {
+  border-color: #d6e0bd;
+  opacity: .85;
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(
+  .trip-adventure-calendar-scope, .trip-adventure-calendar-scope[aria-selected="true"],
+  .trip-adventure-calendar-weekdays, .trip-adventure-calendar-date,
+  .trip-adventure-calendar-event, .trip-day-timeline-event.trip-pencil-surface,
+  .trip-day-timeline-point, .trip-route-detail, .trip-route-node-link,
+  .trip-route-node-link:hover,
+  .trip-route-node-name, .trip-route-provenance summary,
+  .trip-event-window, .trip-event-social-more summary,
+  .trip-place-tabs, .trip-place-item-title, .trip-place-item-meta,
+  .trip-place-detail-link.trip-pencil-surface, .trip-stay-detail,
+  .trip-stay-title, .trip-stay-location-name, .trip-stay-vault-icon,
+  .trip-stay-vault-prompt .trip-pencil-surface--action,
+  .trip-place-stay-choices button, .trip-place-stay-choices button[aria-pressed="true"],
+  .trip-bag, .trip-bag-tab.trip-pencil-surface, .trip-bag-tab[aria-selected="true"],
+  .trip-bag-calendar-date, .trip-bag-calendar-date[data-selected="true"],
+  .trip-bag-calendar-band.trip-pencil-surface, .trip-bag-band-join,
+  .trip-bag-entry h2, .trip-bag-entry p, .trip-bag-rental,
+  .trip-bag-rental-heading h2, .trip-bag-rental-icon,
+  .trip-bag-rental-fact strong, .trip-bag-rental-expand,
+  .trip-bag-rental-unlock, .trip-bag-note-category, .trip-bag-note-item,
+  .trip-bag-note-heading h2, .trip-bag-note-back, .trip-bag-note-detail
+) { color: var(--trip-ink-color); }
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(
+  .trip-route-node-role, .trip-route-agenda time, .trip-route-provenance,
+  .trip-event-schedule time, .trip-event-social-meta,
+  .trip-day-timeline-hour, .trip-place-item-status, .trip-place-empty,
+  .trip-stay-section dt,
+  .trip-bag-weekdays, .trip-bag-calendar-departure,
+  .trip-bag-entry .trip-bag-entry-meta, .trip-bag-empty,
+  .trip-bag-rental-heading > div > span, .trip-bag-rental-label,
+  .trip-bag-rental-details > div > span, .trip-bag-note-count,
+  .trip-bag-note-detail small
+) { color: var(--trip-ink-muted); }
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(
+  .trip-map-sources-page a, .trip-route-provenance a,
+  .trip-stay-location a,
+  .trip-stay-section dd a, .trip-stay-more,
+  .trip-event-tabpanel a, .trip-bag-entry a,
+  .trip-bag-rental-details > a, .trip-bag-note-detail a
+) { color: #c1e9cf; }
+
+html[data-adventure-appearance="dark"] #trip-board-structure :is(
+  .trip-day-timeline-point, .trip-stay-gallery figure
+) { background-color: #292920; }

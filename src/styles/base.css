@@ -39,7 +39,7 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+body[data-trip-page="itinerary"] {
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -51,7 +51,7 @@ body {
   height: 100%;
 }
 
-body::before {
+body[data-trip-page="itinerary"]::before {
   position: fixed;
   z-index: -2;
   inset: 0;
@@ -59,7 +59,7 @@ body::before {
   content: "";
 }
 
-body::after {
+body[data-trip-page="itinerary"]::after {
   position: fixed;
   z-index: -1;
   inset: 0;

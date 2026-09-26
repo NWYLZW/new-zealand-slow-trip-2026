@@ -29,6 +29,7 @@ const placeAliases = [
   ["Wanaka Luxury Apartments", "Wanaka Luxury Apartments"],
   ["Rydges Latimer", "Rydges Latimer Christchurch"],
   ["Queenstown Gardens", "Queenstown Gardens"],
+  ["皇后镇", "Queenstown New Zealand"],
   ["皇后镇花园", "Queenstown Gardens"],
   ["Skyline", "Skyline Queenstown"],
   ["Bob’s Cove", "Bob's Cove Track"],

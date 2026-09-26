@@ -13,4 +13,3 @@ export const adventureStops = stopLayout.map(([tag, offset]) => ({
   ...(tag === "CHC" ? { position: [placePositions.christchurchCbd.lat, placePositions.christchurchCbd.lng] } : {}),
 }));
 export const adventureDays = [...southDays, ...northDays];
-export const sketchOptions = { seed: 23, roughness: 0.8, boil: 0.08 };

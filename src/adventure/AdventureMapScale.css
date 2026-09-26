@@ -1,0 +1,23 @@
+.trip-map-orientation {
+  --trip-map-scale-width:80px;
+  --trip-map-orientation-right:18px;
+  --trip-map-orientation-bottom:18px;
+  position:absolute;
+  right:max(var(--trip-map-orientation-right), env(safe-area-inset-right));
+  bottom:max(var(--trip-map-orientation-bottom), env(safe-area-inset-bottom));
+  z-index:3;
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  color:var(--trip-ink-color);
+  cursor:default;
+  pointer-events:none;
+}
+.trip-map-orientation[hidden] { display:none; }
+.trip-map-compass { position:relative; width:34px; height:46px; display:grid; justify-items:center; align-content:start; }
+.trip-map-compass-letter { height:20px; font-size:14px; line-height:20px; }
+.trip-map-compass .trip-pencil-icon { width:30px; height:30px; color:var(--trip-accent-ink,var(--trip-ink-color)); }
+.trip-map-scale { display:grid; justify-items:center; gap:1px; min-width:var(--trip-map-scale-width); }
+.trip-map-scale-label { min-height:22px; font-size:13px; line-height:22px; white-space:nowrap; }
+.trip-map-scale-bar { display:block; width:calc(var(--trip-map-scale-width) + 4px); height:12px; }
+@media(max-width:650px){.trip-map-orientation{gap:8px}.trip-map-compass{width:30px}}

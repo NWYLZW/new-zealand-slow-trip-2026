@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import { staticAppRoutes } from "./scripts/lib/static-app-routes.mjs";
 
 const hotelSelectionsPath = fileURLToPath(new URL("./src/data/hotel-selections.json", import.meta.url));
 
@@ -41,13 +42,9 @@ function hotelSelectionPersistence() {
 
 export default defineConfig({
   base: "/new-zealand-slow-trip-2026/",
-  build: {
-    rollupOptions: {
-      input: {
-        main: fileURLToPath(new URL("./index.html", import.meta.url)),
-        adventure: fileURLToPath(new URL("./adventure.html", import.meta.url)),
-      },
-    },
+  optimizeDeps: {
+    // Prepare media dependencies before the lazy adventure route is requested.
+    include: ["@zip.js/zip.js", "exifr", "hash-wasm"],
   },
   plugins: [
     react(),
@@ -59,11 +56,11 @@ export default defineConfig({
         short_name: "新西兰行程",
         description: "2026 年新西兰双人旅行的行程、住宿、交通与活动执行站点。",
         lang: "zh-CN",
-        start_url: "./#overview",
+        start_url: "./",
         scope: "./",
         display: "standalone",
-        background_color: "#f4f7f3",
-        theme_color: "#123f36",
+        background_color: "#bddadb",
+        theme_color: "#bddadb",
         orientation: "any",
         categories: ["travel", "navigation", "lifestyle"],
         icons: [
@@ -73,17 +70,23 @@ export default defineConfig({
         ],
         shortcuts: [
           {
+            name: "冒险地图",
+            short_name: "地图",
+            url: "./",
+            icons: [{ src: "icons/icon-192.png", sizes: "192x192", type: "image/png" }],
+          },
+          {
             name: "行程总览",
             short_name: "行程",
             description: "打开地图和完整日历",
-            url: "./#overview",
+            url: "./?panel=tasks",
             icons: [{ src: "icons/icon-192.png", sizes: "192x192", type: "image/png" }],
           },
           {
             name: "酒店预订",
             short_name: "酒店",
             description: "打开已确认住宿与酒店详情",
-            url: "./#booking",
+            url: "./?panel=bag&bagTab=stays",
             icons: [{ src: "icons/icon-192.png", sizes: "192x192", type: "image/png" }],
           },
         ],
@@ -93,11 +96,9 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: true,
         navigateFallback: "index.html",
-        navigateFallbackDenylist: [/^\/api\//],
-        // Preserve the correct HTML entry when opening adventure deep links.
-        ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^panel$/, /^place$/, /^route$/],
+        navigateFallbackDenylist: [/\/(?:api|assets|images|icons)\//],
         globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2}"],
-        globIgnores: ["images/**/*", "icons/**/*"],
+        globIgnores: ["images/**/*"],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         runtimeCaching: [
           {
@@ -122,5 +123,6 @@ export default defineConfig({
       },
     }),
     hotelSelectionPersistence(),
+    staticAppRoutes(),
   ],
 });

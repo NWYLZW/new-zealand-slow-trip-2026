@@ -1,0 +1,56 @@
+{
+  "source": {
+    "dataset": "Natural Earth 1:10m Airports",
+    "upstreamUrl": "https://www.naturalearthdata.com/downloads/10m-cultural-vectors/airports/",
+    "snapshotUrl": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_airports.geojson",
+    "termsUrl": "https://www.naturalearthdata.com/about/terms-of-use/",
+    "license": "Public domain",
+    "retrievedAt": "2026-09-26",
+    "sha256": "28892a892f670f1cf654c62253c6169fdc2504b92c956addb4ac8224f50cebe0",
+    "limitations": "Generalized terminal reference points for overview mapping; not navigation or aeronautical use."
+  },
+  "records": [
+    {
+      "iataCode": "SZX",
+      "icaoCode": "ZGSZ",
+      "name": "Shenzhen Bao'an International Airport",
+      "nameZh": "深圳宝安国际机场",
+      "position": [
+        22.646508,
+        113.815853
+      ],
+      "sourceRecordId": "1159124107",
+      "wikidataId": "Q842297",
+      "scaleRank": 5,
+      "pointMeaning": "terminal"
+    },
+    {
+      "iataCode": "KUL",
+      "icaoCode": "WMKK",
+      "name": "Kuala Lumpur International Airport",
+      "nameZh": "吉隆坡国际机场",
+      "position": [
+        2.747513,
+        101.713886
+      ],
+      "sourceRecordId": "1159126985",
+      "wikidataId": "Q500253",
+      "scaleRank": 3,
+      "pointMeaning": "terminal"
+    },
+    {
+      "iataCode": "AKL",
+      "icaoCode": "NZAA",
+      "name": "Auckland Airport",
+      "nameZh": "奧克蘭機場",
+      "position": [
+        -37.006355,
+        174.791719
+      ],
+      "sourceRecordId": "1159127251",
+      "wikidataId": "Q45938",
+      "scaleRank": 2,
+      "pointMeaning": "terminal"
+    }
+  ]
+}

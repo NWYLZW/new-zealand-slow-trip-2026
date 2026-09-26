@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
-const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure.html';
+const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure';
 const output = process.env.ADVENTURE_TEST_OUTPUT;
 if (output) await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true });
+const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1323, height: 956 }, deviceScaleFactor: 2, hasTouch: true });
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
@@ -42,12 +42,12 @@ try {
     assert.equal(icon.renderer, 'pressure-pencil'); assert(icon.width>=44 && icon.height>=44);
     assert(icon.ink>100 && icon.levels>35, `${icon.label}: blank or uniform icon`);
     const button = page.getByRole('button', {name: icon.label, exact:true});
-    await button.hover();assert(await button.locator('.trip-tool-tooltip').isVisible());
-    const bounds = await button.locator('.trip-tool-tooltip').boundingBox();
+    await button.hover();await page.getByRole('tooltip').waitFor({state:'visible'});
+    const bounds = await page.getByRole('tooltip').boundingBox();
     assert(bounds.x>=0 && bounds.x+bounds.width<=1323 && bounds.y>=0 && bounds.y+bounds.height<=956);
-    await button.focus();assert(await button.locator('.trip-tool-tooltip').isVisible());
+    await button.focus();assert(await page.getByRole('tooltip').isVisible());
     await button.evaluate(node=>node.blur());await page.mouse.move(200,120);
-    assert(!(await button.locator('.trip-tool-tooltip').isVisible()));
+    await page.getByRole('tooltip').waitFor({state:'hidden'});
   }
   if(output){
     await page.locator('.trip-game-tools').screenshot({path:`${output}/controls-tools.png`});
@@ -60,7 +60,7 @@ try {
     assert.equal(await button.getAttribute('aria-pressed'),'true');
     assert.equal(await button.locator('.trip-pencil-icon').getAttribute('data-active'),'true');
     assert.notEqual(await button.locator('.trip-pencil-icon').evaluate(canvas=>canvas.toDataURL()),before);
-    assert.equal(await page.getByRole('button',{name:'关闭面板'}).locator('canvas').count(),1);
+    assert.equal(await page.getByRole('button',{name:id==='tasks'?'关闭日历':'关闭面板'}).locator('canvas').count(),1);
     await page.keyboard.press('Escape');
     assert.equal(await button.locator('.trip-pencil-icon').getAttribute('data-active'),'false');
   }
@@ -115,8 +115,9 @@ try {
   await page.locator('.trip-stop[data-tag="ZQN"]').tap();await centered('ZQN');await page.keyboard.press('Escape');
   await page.waitForTimeout(900);await page.mouse.move(200,120);await screenshot('controls-mobile-10x');
   for(const label of ['任务','背包','相册']){
-    await page.getByRole('button',{name:label,exact:true}).tap();assert(await page.locator('.trip-panel').isVisible());
-    await page.getByRole('button',{name:'关闭面板'}).tap();
+    await page.getByRole('button',{name:label,exact:true}).tap();
+    assert(await page.locator(label==='任务'?'#trip-calendar-region':'.trip-panel').isVisible());
+    await page.getByRole('button',{name:label==='任务'?'关闭日历':'关闭面板'}).tap();
   }
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   assert.deepEqual(errors,[]);

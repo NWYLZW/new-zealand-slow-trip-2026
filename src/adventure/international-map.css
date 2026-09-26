@@ -1,0 +1,50 @@
+.trip-map-area .trip-international-map,
+.trip-map-area .trip-international-routes,
+.trip-map-area .trip-international-points {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.trip-international-map,
+.trip-international-routes { pointer-events: none; }
+
+.trip-international-map { z-index: 1; }
+.trip-international-routes { z-index: 2; }
+.trip-international-points { z-index: 4; pointer-events: none; }
+.trip-international-points > * { pointer-events: auto; }
+
+.trip-international-route-hits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.trip-international-route-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 16;
+  vector-effect: non-scaling-stroke;
+  pointer-events: stroke;
+  cursor: pointer;
+  outline: none;
+}
+
+.trip-international-route-hit:focus-visible { stroke: color-mix(in srgb, var(--trip-accent, #994f3f) 34%, transparent); stroke-width: 12; }
+.trip-international-stop { z-index: 3; }
+.trip-international-stop .trip-stop-label { font-size: 17px; }
+
+.trip-international-view-toggle {
+  position: absolute;
+  left: var(--trip-edge-left);
+  top: calc(var(--trip-edge-top) + 53px);
+  z-index: 7;
+}
+
+@media (pointer: coarse) {
+  .trip-international-route-hit { stroke-width: 22; }
+}

@@ -10,7 +10,6 @@ const notesZh = notes.map((note) => note.title !== "租车关键点" ? note : {
     "南岛 Budget 订单已确认：9月29日11:00皇后镇机场取车，10月8日11:00基督城机场还车；预订号已私下保存。",
     "Mazda CX-30或同级、自动挡、不限里程；9 × 24小时异地还车，订单总额 NZD 1,685.98 已预付。",
     "订单截图未显示取消、押金、预授权与保障细则，取车前仍需按 Budget 条款复核。",
-    "北岛 Budget 订单现为待取消：网站改成大巴行程不会同步取消真实订单，需在 Budget 官网管理订单中主动操作并保存取消确认。",
     "不走 Skippers Road；车顶、底盘、涉水及其他条款除外损失仍可能需要全额自付。",
   ],
 });
@@ -39,7 +38,6 @@ const notesEn = [
       "The South Island Budget booking is confirmed: pick up at Queenstown Airport at 11:00 on 29 September and return at Christchurch Airport at 11:00 on 8 October; the reservation number is stored privately.",
       "Mazda CX-30 or similar, automatic, unlimited kilometres; the nine-24-hour one-way rental total of NZD 1,685.98 is prepaid.",
       "Cancellation, deposit, pre-authorisation and protection details are not shown in the booking screenshot; verify them against Budget's terms before pickup.",
-      "The existing North Island Budget booking is still active. The new coach itinerary does not cancel it; cancel it online before pickup and save the confirmation.",
       "Do not drive Skippers Road; check the rental terms before using gravel roads.",
     ],
   },

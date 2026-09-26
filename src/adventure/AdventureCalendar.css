@@ -1,0 +1,267 @@
+.trip-adventure-calendar {
+  --trip-calendar-paper: var(--trip-paper-color, #faf9f3);
+  --trip-calendar-outline: #536d59;
+  --trip-calendar-card-outline: #778375;
+  --trip-calendar-card-selected-outline: #2e5c45;
+  --trip-calendar-selected-tab: #769566;
+  --trip-calendar-transit: #86a8b2;
+  --trip-calendar-south: #a79f68;
+  --trip-calendar-north: #8fa474;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--trip-ink-color, #293d33);
+  font-family: var(--trip-handwriting);
+  background: transparent;
+}
+
+html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-calendar {
+  --trip-calendar-outline: #918e78;
+  --trip-calendar-card-outline: #817e6b;
+  --trip-calendar-card-selected-outline: #e0d396;
+  --trip-calendar-selected-tab: #c6b873;
+  --trip-calendar-transit: #8eafc4;
+  --trip-calendar-south: #c1a680;
+  --trip-calendar-north: #9ab68a;
+}
+
+.trip-adventure-calendar-header {
+  position: relative;
+  flex: none;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 9px;
+}
+
+.trip-adventure-calendar-scopes {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.trip-adventure-calendar-scope {
+  position: relative;
+  z-index: 1;
+  min-width: 68px;
+  min-height: 44px;
+  padding: 5px 12px;
+  border: 0;
+  background: transparent;
+  color: #536456;
+  font-size: 18px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.trip-adventure-calendar-scope[aria-selected="true"] {
+  color: #244b37;
+}
+
+.trip-adventure-calendar-close {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 4px;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+}
+
+.trip-adventure-calendar-close .trip-pencil-icon { width: 30px; height: 30px; }
+.trip-calendar-header-actions { position:relative; z-index:1; display:flex; align-items:center; gap:2px; flex:none; margin-left:auto; }
+.trip-calendar-header-actions .trip-adventure-calendar-close { margin-left:0; }
+.trip-calendar-header-actions .trip-pencil-icon { width:var(--trip-header-icon-size); height:var(--trip-header-icon-size); }
+
+.trip-adventure-calendar-ink {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.trip-adventure-calendar-scroll {
+  background-color: var(--trip-calendar-paper);
+  background-image: var(--trip-calendar-texture);
+  background-size: 384px 384px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  container-type: inline-size;
+  padding: 7px 12px 12px;
+  scrollbar-width: thin;
+}
+
+.trip-adventure-calendar-weekdays,
+.trip-adventure-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.trip-adventure-calendar-weekdays > span { min-width: 0; }
+
+.trip-adventure-calendar-weekdays {
+  flex: none;
+  text-align: center;
+  font-size: 15px;
+  color: #536456;
+  line-height: 1.5;
+  margin-bottom: 3px;
+}
+
+.trip-adventure-calendar-grid {
+  position: relative;
+  flex: 1 0 auto;
+  grid-auto-rows: minmax(min-content, 1fr);
+}
+
+.trip-adventure-calendar--embedded {
+  flex: none;
+  width: 100%;
+  height: auto;
+  max-height: min(460px, 52dvh);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.trip-adventure-calendar--embedded .trip-adventure-calendar-scroll {
+  flex: 0 1 auto;
+}
+
+.trip-adventure-calendar--embedded .trip-adventure-calendar-weekdays,
+.trip-adventure-calendar--embedded .trip-adventure-calendar-grid {
+  width: 100%;
+  min-width: 0;
+  gap: 6px;
+}
+
+.trip-adventure-calendar--embedded .trip-adventure-calendar-grid {
+  flex: none;
+  grid-auto-rows: minmax(112px, max-content);
+}
+
+.trip-adventure-calendar-day {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  min-height: 112px;
+  padding: 7px 9px 9px;
+  border-radius: 8px;
+}
+
+.trip-adventure-calendar-date {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 9px 12px;
+  border: 0;
+  background: transparent;
+  color: #263e32;
+  font-size: 17px;
+  line-height: 1.2;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.trip-adventure-calendar-month,
+.trip-adventure-calendar-day-number { display: inline-block; flex: none; }
+
+.trip-adventure-calendar-day[data-selected="true"] .trip-adventure-calendar-date { color: #173a2a; }
+.trip-adventure-calendar-events { position: relative; z-index: 2; display: grid; gap: 2px; margin-top: 36px; pointer-events: none; }
+
+.trip-adventure-calendar-event {
+  pointer-events: auto;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  min-height: 27px;
+  padding: 2px 6px 2px 8px;
+  border: 0;
+  background: transparent;
+  color: #263d33;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+}
+
+.trip-adventure-calendar-event:hover,
+.trip-adventure-calendar-event:focus-visible { filter: contrast(1.18) brightness(.82); }
+
+html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-calendar-day[data-selected="true"] .trip-adventure-calendar-date {
+  color: #f0e7bc;
+}
+html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-calendar-event:is(:hover,:focus-visible) {
+  filter: none;
+  text-decoration: underline;
+  text-decoration-color: #d5c892;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .trip-adventure-calendar-header { min-height: 54px; padding: 5px 14px; gap: 9px; }
+  .trip-adventure-calendar-scopes { gap: 0; }
+  .trip-adventure-calendar-scope { min-width: 56px; padding: 5px 6px; font-size: 16px; }
+  .trip-adventure-calendar-scroll { padding: 5px 7px 7px; }
+  .trip-adventure-calendar-weekdays,
+  .trip-adventure-calendar-grid { width: 100%; min-width: 0; gap: 4px; }
+  .trip-adventure-calendar-day { min-height: 154px; padding: 5px 3px 7px; }
+  .trip-adventure-calendar-date { font-size: 15px; padding: 7px 4px; }
+  .trip-adventure-calendar-events { margin-top: 44px; }
+  .trip-adventure-calendar-event { min-height: 44px; padding: 5px 3px; font-size: 14px; line-height: 1.25; }
+}
+
+@container (max-width: 360px) {
+  .trip-adventure-calendar-weekdays,
+  .trip-adventure-calendar-grid,
+  .trip-adventure-calendar--embedded .trip-adventure-calendar-weekdays,
+  .trip-adventure-calendar--embedded .trip-adventure-calendar-grid { gap: 2px; }
+  .trip-adventure-calendar-weekdays { font-size: 13px; }
+  .trip-adventure-calendar-day { padding: 3px 2px 5px; }
+  .trip-adventure-calendar-date { flex-direction: column; gap: 0; padding: 4px 2px; font-size: 13px; line-height: 1.05; }
+  .trip-adventure-calendar-month { font-size: 10px; }
+  .trip-adventure-calendar-events { margin-top: 35px; }
+  .trip-adventure-calendar-event { padding: 4px 1px; font-size: 13px; }
+}
+
+@container (max-width: 430px) {
+  .trip-adventure-calendar-header {
+    flex-wrap: wrap;
+  }
+  .trip-adventure-calendar-header .trip-adventure-calendar-scopes {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow-x: hidden;
+  }
+  .trip-adventure-calendar-header .trip-adventure-calendar-scope { min-width: 0; padding: 5px 2px; }
+}

@@ -21,40 +21,11 @@ import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import { assetPath } from "../../assets";
+import { confirmedRentalBookings } from "../../data/rentalBookings";
 import { useLanguage } from "../../LanguageContext";
 import { PanelHero } from "../PanelHero";
 import { PrivateDetailSection } from "../PrivateVaultAccess";
 import "./RentalCarPanel.css";
-
-const confirmedBookings = [
-  {
-    id: "south",
-    island: "南岛",
-    islandEn: "South Island",
-    reservation: "已私下保存",
-    reservationEn: "stored privately",
-    vehicle: "Mazda CX-30 或同级 · 自动挡 · 不限里程",
-    vehicleEn: "Mazda CX-30 or similar · automatic · unlimited kilometres",
-    route: "皇后镇机场（ZQN）→ 基督城机场（CHC）",
-    routeEn: "Queenstown Airport (ZQN) → Christchurch Airport (CHC)",
-    dates: "2026年9月29日 11:00取车 — 10月8日 11:00还车",
-    datesEn: "Pick up 11:00 on 29 Sep 2026 — return 11:00 on 8 Oct 2026",
-    duration: "9 × 24小时 · 异地还车",
-    durationEn: "9 × 24 hours · one-way",
-    total: "NZD 1,685.98 · 已预付",
-    totalEn: "NZD 1,685.98 · prepaid",
-    protection: "订单截图未显示，取车前复核",
-    protectionEn: "Not shown in the booking screenshot; verify before pickup",
-    counter: "皇后镇机场柜台 08:00–22:00；基督城机场柜台 06:00–次日01:30，可使用非营业时间钥匙箱。",
-    counterEn: "Queenstown Airport desk 08:00–22:00; Christchurch Airport desk 06:00–01:30, with an after-hours key drop.",
-    cancellation: "订单截图未显示退改规则；如需变更或取消，先在 Budget 管理订单页核对费用。",
-    cancellationEn: "Cancellation terms are not shown in the booking screenshot; check fees in Manage Booking before making any change.",
-    payment: "订单总额 NZD 1,685.98 已预付；取车押金、预授权与刷卡要求仍需按 Budget 条款复核。",
-    paymentEn: "The NZD 1,685.98 total is prepaid; verify Budget's deposit, pre-authorisation and card requirements before pickup.",
-    coverLimit: "玻璃、轮胎、车顶、底盘、涉水和禁行道路等未确认包含；不要驶入 Skippers Canyon。",
-    coverLimitEn: "Windscreen, tyres, overhead, underbody, water damage and prohibited roads are not confirmed as covered. Do not drive Skippers Canyon.",
-  },
-];
 
 const checklistZh = [
   "两位驾驶人的实体正式驾照；中国驾照同时携带 NZTA 认可英文翻译或中国公证翻译件",
@@ -192,31 +163,8 @@ export function RentalCarPanel() {
           : "9月29日11:00在皇后镇机场取车，10月8日11:00在基督城机场还车；Mazda CX-30或同级、自动挡、不限里程，NZD 1,685.98已预付。"}
       />
 
-      <Alert severity="warning" className="rental-cover-limit">
-        <Stack spacing={1} alignItems="flex-start">
-          <Typography fontWeight={900}>
-            {isEnglish ? "North Island Budget booking: cancellation pending" : "北岛 Budget 真实订单：待你主动取消"}
-          </Typography>
-          <Typography>
-            {isEnglish
-              ? "The existing booking is still active for 9 Oct 08:30–10 Oct 17:00, Mazda CX-30 or similar, NZ$303.03; its reservation number is stored privately. Updating this itinerary does not cancel the real booking. The confirmation states Pay at Counter with no cancellation or no-show fee, but cancel online before pickup."
-              : "现有订单仍是 10月9日 08:30—10月10日 17:00、Mazda CX-30 或同级、NZ$303.03，预订号已私下保存。页面改成大巴方案不等于真实订单已取消；确认邮件写明 Pay at Counter 且取消或未到店不收费，但仍请在取车前主动在线取消。"}
-          </Typography>
-          <Button
-            href="https://www.budget.co.nz/en/reservation/view-modify-cancel"
-            target="_blank"
-            rel="noreferrer"
-            variant="outlined"
-            color="warning"
-            endIcon={<OpenInNewIcon />}
-          >
-            {isEnglish ? "Manage or cancel North Island booking" : "管理或取消北岛订单"}
-          </Button>
-        </Stack>
-      </Alert>
-
       <Grid container spacing={2}>
-        {confirmedBookings.map((booking) => (
+        {confirmedRentalBookings.map((booking) => (
           <Grid size={{ xs: 12 }} key={booking.id}>
             <BookingConfirmationCard booking={booking} isEnglish={isEnglish} />
           </Grid>

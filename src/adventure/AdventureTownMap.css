@@ -1,0 +1,70 @@
+.adventure-town-map {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  isolation: isolate;
+  color: var(--trip-ink-color, #293d33);
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.adventure-town-map:active { cursor: grabbing; }
+.adventure-town-map > .trip-pencil-surface-content { overflow: hidden; }
+.adventure-town-map__canvas { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; }
+.adventure-town-map__stay-marker {
+  position: absolute;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.adventure-town-map__stay-marker:focus-visible {
+  outline: 2px dashed var(--trip-accent-color, #a85b48);
+  outline-offset: -8px;
+}
+.adventure-town-map__controls.trip-map-controls {
+  left: 8px;
+  bottom: 8px !important;
+  z-index: 4;
+  gap: 2px;
+  transition: none;
+}
+.adventure-town-map__controls .trip-tool { background: transparent; }
+.adventure-town-map__controls .trip-pencil-icon { width: 30px; height: 30px; }
+.adventure-town-map .trip-map-orientation {
+  z-index: 4;
+  gap: 8px;
+  color: var(--trip-ink-color, #293d33);
+}
+.adventure-town-map .trip-map-scale-label { font-size: 11px; }
+.adventure-town-map .trip-map-compass { width: 30px; height: 42px; }
+.adventure-town-map .trip-map-compass-letter { height: 17px; font-size: 12px; line-height: 17px; }
+.adventure-town-map .trip-map-compass .trip-pencil-icon { width: 26px; height: 26px; }
+.adventure-town-map__status {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  max-width: calc(100% - 120px);
+  margin: 0;
+  transform: translate(-50%, -50%);
+  color: var(--trip-ink-muted, #627769);
+  font-size: 12px;
+  text-align: center;
+  pointer-events: none;
+}
+
+@media (max-height: 600px) {
+  .adventure-town-map__controls.trip-map-controls { left: 5px; bottom: 5px !important; }
+  .adventure-town-map .trip-map-orientation { gap: 5px; }
+}

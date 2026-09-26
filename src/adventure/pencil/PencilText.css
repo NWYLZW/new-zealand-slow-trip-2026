@@ -1,0 +1,15 @@
+.trip-pencil-text.trip-pencil-text--ellipsis {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.trip-pencil-text--ellipsis > .trip-pencil-text-source {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

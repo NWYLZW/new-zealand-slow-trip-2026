@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
-const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure.html';
+const base = process.env.ADVENTURE_TEST_URL || 'http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure';
 const output = process.env.ADVENTURE_TEST_OUTPUT;
 if (output) await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true });
+const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1324, height: 964 }, deviceScaleFactor: 2 });
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
@@ -39,10 +39,10 @@ const check = async locator => {
 
 try {
   assert.equal((await page.goto(`${base}?panel=tasks`)).status(), 200);
-  await check(page.locator('.trip-panel-title .trip-pencil-text'));
-  const title = page.locator('.trip-task summary strong .trip-pencil-text').first();
+  await check(page.locator('.trip-adventure-calendar-scope .trip-pencil-text').first());
+  const title = page.locator('.trip-adventure-calendar-event .trip-pencil-text').first();
   const titleMetrics = await check(title);
-  assert.equal(titleMetrics.text, '深圳 → 吉隆坡 → 奥克兰');
+  assert.equal(titleMetrics.text, 'MH0523 / MH0133');
   const pixels = await title.locator('canvas').evaluate(canvas => canvas.toDataURL());
   await title.hover(); await page.waitForTimeout(200);
   assert.equal(await title.locator('canvas').evaluate(canvas => canvas.toDataURL()), pixels, 'Pigment changed on hover');
@@ -52,13 +52,12 @@ try {
     const text = selection.toString(); selection.removeAllRanges(); return text;
   }), titleMetrics.text);
   await screenshot('tasks-desktop');
-  const firstDay = page.locator('.trip-task').first();
-  await firstDay.locator('summary').focus(); await page.keyboard.press('Enter');
-  assert(await firstDay.evaluate(node => node.open));
-  for (const item of await firstDay.locator('li .trip-pencil-text').all()) await check(item);
-  await firstDay.scrollIntoViewIfNeeded(); await screenshot('tasks-expanded');
-  await page.locator('.trip-task').last().locator('summary').scrollIntoViewIfNeeded();
-  await check(page.locator('.trip-task summary strong .trip-pencil-text').last());
+  const firstDay = page.locator('.trip-adventure-calendar-day').first();
+  await firstDay.locator('.trip-adventure-calendar-date').focus(); await page.keyboard.press('Enter');
+  assert.equal(await firstDay.getAttribute('data-selected'), 'true');
+  await check(firstDay.locator('.trip-adventure-calendar-date .trip-pencil-text'));
+  await screenshot('calendar-selected');
+  await check(page.locator('.trip-adventure-calendar-event .trip-pencil-text').last());
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: '背包', exact: true }).click();
   await check(page.locator('.trip-bag-list strong .trip-pencil-text').first());
@@ -85,11 +84,12 @@ try {
   for (const width of [436, 320]) {
     await page.setViewportSize({ width, height: 900 });
     await page.getByRole('button', { name: '任务', exact: true }).click();
-    await check(page.locator('.trip-task summary strong .trip-pencil-text').first());
-    await page.locator('.trip-task summary').first().click();
-    await check(page.locator('.trip-task li .trip-pencil-text').nth(3));
+    await check(page.locator('.trip-adventure-calendar-scope .trip-pencil-text').first());
+    await page.locator('.trip-adventure-calendar-date').first().click();
+    await check(page.locator('.trip-adventure-calendar-day[data-selected="true"] .trip-adventure-calendar-date .trip-pencil-text'));
+    await check(page.locator('.trip-adventure-calendar-event .trip-pencil-text').last());
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-    assert(await page.locator('.trip-panel-body').evaluate(node => node.scrollWidth <= node.clientWidth));
+    assert(await page.locator('.trip-adventure-calendar-scroll').evaluate(node => node.scrollWidth > node.clientWidth));
     await screenshot(`tasks-${width}`);
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: '背包', exact: true }).click();
