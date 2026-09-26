@@ -1,21 +1,16 @@
 import React from "react";
+import { PencilIcon } from "./pencil/PencilIcon";
 
-// Each icon has a few deliberate pen lifts, faint second passes, and short dry marks.
-// Washes stay transparent until the parent button is selected or briefly pressed.
-function SketchIcon({ children, className = "", kind = "ink" }) {
-  return <svg className={`sketch-icon sketch-icon--${kind} ${className}`.trim()}
-    viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2.1"
-    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-    {children}
-  </svg>;
+// Keep the local symbols and pen lifts; all icons now use the same pencil brush.
+function SketchIcon(props) {
+  return <PencilIcon {...props} />;
 }
 
 export function BackIcon(props) {
-  return <SketchIcon kind="back" {...props}>
-    <path className="sketch-wash" d="M6.1 15.8 14.2 7l-.4 6.6 5.2 2.7-5.8 2.6.9 5.2z" stroke="none" />
+  return <PencilIcon {...props}>
     <path d="M14.4 6.9 5.8 15.7l8.6 8.5M6.2 15.9c7.5-.8 13-.1 16.5 3.1 1.6 1.5 2.5 3.1 2.9 5.2" />
-    <path className="sketch-scuff" d="M7.3 17.2 11 17m5.8.4 2.1.7M13.6 8.4l-2.3 2.3" />
-  </SketchIcon>;
+    <path className="sketch-scuff" d="M7.3 17.2 11 17M16.8 17.4l2.1.7M13.6 8.4l-2.3 2.3" />
+  </PencilIcon>;
 }
 
 export function TasksIcon(props) {

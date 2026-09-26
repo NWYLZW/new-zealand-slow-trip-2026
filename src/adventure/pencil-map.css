@@ -1,0 +1,33 @@
+.trip-map-area .trip-depth-map,
+.trip-map-area .trip-pencil-map,
+.trip-map-area .trip-pencil-routes,
+.trip-map-area .trip-map { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.trip-depth-map,.trip-pencil-map,.trip-pencil-routes { pointer-events:none; }
+.trip-map-area .trip-stop-label { font-size:19px; line-height:1; text-shadow:none; }
+.trip-map-area .trip-stop-label canvas { display:block; max-width:none; }
+.trip-stop-marker { position:absolute; inset:0; display:block; width:28px; height:28px; }
+.trip-stop-marker--selected { opacity:0; }
+.trip-stop[aria-pressed=true] .trip-stop-marker--normal { opacity:0; }
+.trip-stop[aria-pressed=true] .trip-stop-marker--selected { opacity:1; }
+.trip-map-area .trip-stop-leader { border-color:#994f3f; }
+.trip-map-area .trip-stop:hover .trip-stop-label,
+.trip-map-area .trip-stop:focus-visible .trip-stop-label,
+.trip-map-area .trip-stop[aria-pressed=true] .trip-stop-label { font-size:19px; }
+.trip-map-sources { margin-top:10px; font-size:14px; }
+.trip-map-sources summary { cursor:pointer; }
+.trip-map-sources ul { padding-left:18px; }
+.trip-map-sources li { margin:12px 0; }
+.trip-map-sources p { margin:4px 0; font-size:14px; line-height:1.8; overflow-wrap:anywhere; }
+.trip-map-sources a { color:inherit; }
+.trip-task li>span { font-size:16px; }
+.trip-location.trip-route-title { font-size:24px; }
+.trip-pencil-text,.trip-pencil-text-source { font:inherit; color:inherit; letter-spacing:0; }
+.trip-pencil-text { display:inline-block; position:relative; max-width:100%; min-width:0; vertical-align:baseline; overflow-wrap:anywhere; }
+.trip-pencil-text canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; display:none; }
+.trip-pencil-text[data-pencil-ready=true] canvas { display:block; }
+.trip-pencil-text[data-pencil-ready=true]>.trip-pencil-text-source { color:transparent; }
+.trip-pencil-text-source::selection { color:#293d33; background:#d6b781; }
+@media(forced-colors:active),print {
+  .trip-pencil-text[data-pencil-ready=true]>.trip-pencil-text-source { color:inherit; }
+  .trip-pencil-text[data-pencil-ready=true] canvas { display:none; }
+}

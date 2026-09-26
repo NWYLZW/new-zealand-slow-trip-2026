@@ -116,8 +116,6 @@ for (const patch of data.texturePatches) {
   assert(Number.isInteger(patch.count) && patch.count >= 30 && patch.count <= 100);
   patchIds.add(patch.id);
 }
-const drawer = readFileSync(new URL("src/adventure/drawTerrainDecorations.js", root), "utf8");
-assert(drawer.includes('.append("image")'), "Bitmap vegetation must render on the map");
-assert(!drawer.includes('.append("path")'), "SVG vegetation paths must not render");
-assert(drawer.includes('data-sprite') && drawer.includes('capZoom'));
-console.log(`Terrain decoration audit passed: ${treeAssets.length} tree + ${grassAssets.length} grass bitmaps, ${data.texturePatches.length} regions, ${totalBytes} B total.`);
+// These retained source assets no longer have a live map renderer. Runtime
+// coverage belongs to test:adventure-pencil, not this provenance audit.
+console.log(`Archived terrain asset audit passed: ${treeAssets.length} tree + ${grassAssets.length} grass bitmaps, ${data.texturePatches.length} regions, ${totalBytes} B total.`);

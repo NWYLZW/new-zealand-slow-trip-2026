@@ -2,19 +2,18 @@ import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import geo from "./data/coastline.json";
 import { adventureStops } from "./adventureData";
-import { getTerrainRegions, terrainPointToGeo } from "./terrain";
-import { drawTerrainBackground } from "./terrainBackground";
-import { drawTerrainDecorations } from "./drawTerrainDecorations";
-import { drawHydrography } from "./drawHydrography";
+import { drawWaterLabels } from "./pencil/drawWaterLabels";
 import { drawBathymetry } from "./drawBathymetry";
-import { drawSketchStroke } from "./sketchLines";
 import { ZoomInIcon, ZoomOutIcon, ResetIcon } from "./SketchIcons";
 import { GameIconButton } from "./GameIconButton";
-import { adventureRoutes, projectedRoutePath } from "./adventureRoutes";
-import { drawLandmarks } from "./drawLandmarks";
-import { drawDecorations, updateDecorationVisibility } from "./drawDecorations";
+import { adventureRoutes, projectedRoutePath, routeGeometryLabel } from "./adventureRoutes";
+import { createPencilMap } from "./pencil/drawPencilMap";
+import { createPencilRoutes, routeBadge } from "./pencil/drawPencilRoutes";
+import { fillStopLabel } from "./pencil/mapLabels";
+import { clearPencilLabels } from "./pencil/label";
+import { createStopMarker } from "./pencil/stopMarker";
 import "./route-ink.css";
-import "./sketch-lines.css";
+import "./pencil-map.css";
 
 const rings = geo.features[0].geometry.coordinates.map((polygon) => polygon[0]);
 const features = rings.map((ring) => {
@@ -38,7 +37,8 @@ const mapScale = (width, height) => Math.min(
   (width - (width < 650 ? 40 : 80)) / (maxX - minX),
   (height - (height < 500 ? 68 : 110)) / (maxY - minY),
 );
-const PLACE_ZOOM = 3.25;
+const PLACE_ZOOM = 10;
+const FOCUS_DURATION = 850;
 
 function segmentTouchesRect(from, to, rect) {
   const bounds = { left: rect.left - 2, right: rect.right + 2, top: rect.top - 2, bottom: rect.bottom + 2 };
@@ -56,7 +56,7 @@ function segmentTouchesRect(from, to, rect) {
   return near <= far;
 }
 
-function positionOverviewLabels(area, markers, zoomScale) {
+function positionOverviewLabels(area, markers) {
   const labels = markers.map(({ button, tag }) => ({
     tag, button, label: button.querySelector(".trip-stop-label"),
     leader: button.querySelector(".trip-stop-leader"),
@@ -67,11 +67,10 @@ function positionOverviewLabels(area, markers, zoomScale) {
     }
     leader.style.display = "none";
   }
-  if (zoomScale >= 1.4) return;
-
   const viewport = area.getBoundingClientRect();
   const dots = labels.map(({ button }) => button.querySelector(".trip-stop-dot").getBoundingClientRect());
-  const placed = [], placedLeaders = [];
+  const placed = [...area.querySelectorAll('.trip-map-controls')].map(element => element.getBoundingClientRect());
+  const placedLeaders = [];
   const overlaps = (a, b) => a.left < b.right + 2 && a.right + 2 > b.left &&
     a.top < b.bottom + 2 && a.bottom + 2 > b.top;
   const ordered = labels.map((entry, index) => ({
@@ -156,21 +155,22 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
     container.current.querySelectorAll(".trip-stop").forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.tag === selected));
     });
-    container.current.querySelectorAll(".trip-route").forEach((path) => {
-      path.dataset.active = String(path.dataset.route === selectedRoute || path.dataset.stops.split(" ").includes(selected));
-    });
+    controls.current?.selectRoutes({ selected, selectedRoute });
     container.current.querySelectorAll(".trip-route-hit").forEach((path) => {
       path.setAttribute("aria-pressed", String(path.dataset.route === selectedRoute));
     });
     if (selected) controls.current?.focusPlace(selected);
+    else controls.current?.cancelFocus();
   }, [selected, selectedRoute]);
   useEffect(() => {
-    const area = container.current, svg = d3.select(area.querySelector("svg"));
+    const area = container.current, svg = d3.select(area.querySelector("svg.trip-map"));
+    const sea = d3.select(area.querySelector("svg.trip-depth-map"));
+    const canvas = area.querySelector("canvas.trip-pencil-map");
+    const routeCanvas = area.querySelector("canvas.trip-pencil-routes");
     const buttons = area.querySelector(".trip-point-buttons");
-    const terrain = getTerrainRegions();
     const surface = d3.select(area);
-    let world, hydro, markerPositions = [], layout = null, shortRouteSpot = null;
-    let view = d3.zoomIdentity;
+    let world, depthWorld, pencil, routeInk, waterLabels, markerPositions = [], layout = null, shortRouteSpot = null;
+    let view = d3.zoomIdentity, focusing = false;
     const initialView = (width, height) => {
       const scale = mapScale(width, height);
       const focusX = (southCenter[0] - (minX + maxX) / 2) * scale + width / 2;
@@ -185,18 +185,14 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
     const applyView = (transform) => {
       view = transform;
       world?.attr("transform", transform.toString());
+      depthWorld?.attr("transform", transform.toString());
+      pencil?.draw(transform);
+      routeInk?.draw(transform, { moving: focusing });
       if (shortRouteSpot) {
-        const { group, middle, normal } = shortRouteSpot;
-        const center = [middle[0] + normal[0] * 35 / transform.k,
-          middle[1] + normal[1] * 35 / transform.k];
-        group.select(".trip-short-route-leader").attr("d",
-          `M${middle[0]},${middle[1]}Q${middle[0] + normal[0] * 13 / transform.k},${middle[1] + normal[1] * 13 / transform.k} ${center[0] - normal[0] * 15 / transform.k},${center[1] - normal[1] * 15 / transform.k}`);
-        group.selectAll("circle").attr("cx", center[0]).attr("cy", center[1]);
-        group.select(".trip-short-route-disc").attr("r", 16 / transform.k);
-        group.select(".trip-short-route-tap").attr("r", 22 / transform.k);
-        group.select("text").attr("x", center[0]).attr("y", center[1]).style("font-size", `${12 / transform.k}px`);
+        const { group, middle } = shortRouteSpot;
+        group.attr("transform", `translate(${middle}) scale(${1 / transform.k})`);
       }
-      hydro?.updateZoom(transform.k);
+      waterLabels?.updateZoom(transform.k);
       markerPositions.forEach(({ button, position }) => {
         const [x, y] = transform.apply(position);
         button.style.left = x + "px";
@@ -204,87 +200,83 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
         button.dataset.labelSide = x < 110 ? "right" : x > area.clientWidth - 110 ? "left" : "center";
       });
       area.dataset.zoom = transform.k.toFixed(3);
-      positionOverviewLabels(area, markerPositions, transform.k);
-      updateDecorationVisibility(area, transform.k);
+      positionOverviewLabels(area, markerPositions);
+      waterLabels?.avoidStops(markerPositions);
     };
     const zoom = d3.zoom().scaleExtent([0.55, 12]).clickDistance(5)
       .filter((event) => (!event.ctrlKey || event.type === "wheel") && !event.button &&
         (event.type === "wheel" || !event.target.closest("button")))
       .on("start", (event) => { if (event.sourceEvent) area.classList.add("is-dragging"); })
       .on("zoom", (event) => applyView(event.transform))
-      .on("end", () => area.classList.remove("is-dragging"));
+      .on("end", () => { area.classList.remove("is-dragging"); if (!focusing) pencil?.refine(view); });
     surface.call(zoom);
+    const finishFocus = () => {
+      focusing = false;
+      area.dataset.focusing = "false";
+      routeInk?.draw(view);
+      pencil?.refine(view);
+    };
     controls.current = {
+      cancelFocus: () => surface.interrupt(),
+      selectRoutes: (selection) => routeInk?.select(selection),
       zoomIn: () => surface.call(zoom.scaleBy, 1.35),
       zoomOut: () => surface.call(zoom.scaleBy, 1 / 1.35),
       reset: () => surface.call(zoom.transform, initialView(area.clientWidth, area.clientHeight)),
       focusPlace: (tag) => {
         const marker = markerPositions.find((item) => item.tag === tag);
-        if (marker) surface.call(zoom.transform, placeView(marker.position, area.clientWidth, area.clientHeight));
+        if (!marker) return;
+        surface.interrupt();
+        const target = placeView(marker.position, area.clientWidth, area.clientHeight);
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          (Math.abs(view.k - target.k) < .001 && Math.hypot(view.x - target.x, view.y - target.y) < .1)) {
+          surface.call(zoom.transform, target);
+          return;
+        }
+        focusing = true;
+        area.dataset.focusing = "true";
+        surface.transition().duration(FOCUS_DURATION).ease(d3.easeCubicInOut)
+          .call(zoom.transform, target)
+          .on("end.focus interrupt.focus cancel.focus", finishFocus);
       },
     };
     function draw() {
       const width = area.clientWidth, height = area.clientHeight;
       if (!width || !height) return;
+      surface.interrupt();
       // The view transform never depends on selection or the side panel.
       const scale = mapScale(width, height);
       const project = (point) => {
         const [x, y] = base(point);
         return [(x - (minX + maxX) / 2) * scale + width / 2, (y - (minY + maxY) / 2) * scale + height / 2];
       };
-      const coast = rings.map((ring) => "M" + ring.map((p) => project(p).map((n) => n.toFixed(2)).join(",")).join("L") + "Z").join("");
       svg.attr("viewBox", `0 0 ${width} ${height}`).selectAll("*").remove();
+      sea.attr("viewBox", `0 0 ${width} ${height}`).selectAll("*").remove();
       shortRouteSpot = null;
-      hydro = null;
+      waterLabels = null;
       world = svg.append("g").attr("class", "trip-world");
-      drawBathymetry(world, project);
-      const waves = svg.append("g").attr("aria-hidden", "true").lower();
-      for (let y = 105; y < height - 30; y += 108) for (let x = 35 + (Math.floor(y / 108) % 2) * 65; x < width - 35; x += 158) {
-        waves.append("path").attr("d", `M${x},${y}q8,-3 16,0t16,0`).attr("class", "trip-wave");
-      }
-      if (width >= 650) {
-        world.append("text").attr("x", width * 0.18).attr("y", height * 0.30).attr("text-anchor", "middle").attr("class", "trip-sea-label").text("塔斯曼海");
-        world.append("text").attr("x", width * 0.79).attr("y", height * 0.77).attr("text-anchor", "middle").attr("class", "trip-sea-label").text("太平洋");
-      }
-      world.append("path").attr("d", coast).attr("class", "trip-coast").style("stroke", "none");
-      const defs = svg.append("defs");
-      defs.append("clipPath").attr("id", "adventure-coast-clip").append("path").attr("d", coast);
-      const ground = world.append("g").attr("class", "trip-game-ground").attr("clip-path", "url(#adventure-coast-clip)");
-      drawTerrainBackground(ground, project);
-      if (width >= 650) {
-        const stopPoints = adventureStops.map((stop) => project([stop.position[1], stop.position[0]]));
-        terrain.mountains.forEach((mountain) => {
-          const [x, y] = project(terrainPointToGeo([mountain.x, mountain.y]));
-          if (stopPoints.some(([sx, sy]) => Math.hypot(x - sx, y - sy) < 38)) return;
-          ground.append("path").attr("d", `M${x - 12},${y + 4}l8,-12 6,9 5,-6 8,10M${x - 4},${y - 8}l1,6 3,-2`)
-            .attr("class", "trip-mountain-mark");
-        });
-      }
-      world.append("path").attr("d", coast).attr("fill", "none").attr("stroke", "#5c7c6e")
-        .attr("stroke-width", .45).attr("opacity", .22)
-        .attr("vector-effect", "non-scaling-stroke").attr("stroke-linejoin", "round");
-      drawSketchStroke(world, rings.map((ring) => ({ points: ring.map(project), closed: true })),
-        { kind: "coast", seed: "nz-coast-v1" });
-      drawTerrainDecorations(world, project, scale);
-      hydro = drawHydrography(world, project);
+      depthWorld = sea.append("g").attr("class", "trip-depth-world");
+      drawBathymetry(depthWorld, project);
+      pencil?.dispose();
+      pencil = createPencilMap(canvas, project, width, height);
       const routes = world.append("g").attr("class", "trip-routes");
+      const routeEntries = [];
       // Links remain in the same coordinate system as the coastline and dots.
       [...adventureRoutes].sort((a, b) => Number(b.transport === "flight") - Number(a.transport === "flight")).forEach((route) => {
         const path = projectedRoutePath(route, project);
-        const tags = [route.from, ...route.via, route.to];
-        const group = routes.append("g").attr("class", "trip-route-group");
-        group.append("path").attr("d", path).attr("class", "trip-route-underlay");
-        group.append("path").attr("d", path).attr("class", `trip-route trip-route--${route.transport}`)
-          .attr("data-route", route.id).attr("data-stops", tags.join(" "))
-          .attr("data-active", String(route.id === state.current.selectedRoute || tags.includes(state.current.selected)))
-          .append("title").text(`${route.date} · ${route.label}（站点连线示意）`);
-        if (route.transport === "road") group.append("path").attr("d", path).attr("class", "trip-route-ink");
-        drawSketchStroke(group, path, { kind: "route", seed: route.id });
+        routeEntries.push({ route, path, points: route.roadGeometry?.coordinates.map(project) });
+        const group = routes.append("g").attr("class", "trip-route-group")
+          .on("pointerenter", () => routeInk?.hover(route.id))
+          .on("pointerleave", () => routeInk?.hover(null))
+          .on("focusin", () => routeInk?.hover(route.id))
+          .on("focusout", () => routeInk?.hover(null));
+        group.append("title").text(`${route.date} · ${route.label}（${routeGeometryLabel(route)}）`);
         // The transparent stroke follows the same curve; station buttons sit
         // above this SVG so their hit targets keep priority on touch screens.
         // Keep pointer starts bubbling to D3 so this is still draggable.
         group.append("path").attr("d", path).attr("class", "trip-route-hit")
           .attr("data-route", route.id).attr("role", "button").attr("tabindex", 0)
+          .attr("data-geometry", route.roadGeometry ? "road-network" : "schematic")
+          .attr("data-transport", route.transport)
           .attr("aria-label", `查看路线：${route.label}`)
           .attr("aria-pressed", String(route.id === state.current.selectedRoute))
           .on("click", (event) => {
@@ -303,15 +295,16 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
           const last = project([route.points.at(-1)[1], route.points.at(-1)[0]]);
           const dx = last[0] - first[0], dy = last[1] - first[1];
           const length = Math.hypot(dx, dy) || 1;
-          const middle = [(first[0] + last[0]) / 2, (first[1] + last[1]) / 2];
+          const point = group.select(".trip-route-hit").node();
+          const midpoint = point.getPointAtLength(point.getTotalLength() / 2);
+          const middle = [midpoint.x, midpoint.y];
           const normal = [-dy / length, dx / length];
-          const center = [middle[0] + normal[0] * 35, middle[1] + normal[1] * 35];
+          const center = normal.map(value => value * 35);
           const spot = group.append("g").attr("class", "trip-short-route-spot").attr("aria-hidden", "true");
-          shortRouteSpot = { group: spot, middle, normal };
-          spot.append("path").attr("class", "trip-short-route-leader")
-            .attr("d", `M${middle[0]},${middle[1]}Q${middle[0] + normal[0] * 13},${middle[1] + normal[1] * 13} ${center[0] - normal[0] * 15},${center[1] - normal[1] * 15}`);
-          spot.append("circle").attr("class", "trip-short-route-disc").attr("cx", center[0]).attr("cy", center[1]).attr("r", 16);
-          spot.append("text").attr("class", "trip-short-route-date").attr("x", center[0]).attr("y", center[1]).text(route.date);
+          shortRouteSpot = { group: spot, middle };
+          spot.append("image").attr("class", "trip-short-route-art")
+            .attr("href", routeBadge(route.date, normal)).attr("x", -56).attr("y", -56)
+            .attr("width", 112).attr("height", 112);
           spot.append("circle").attr("class", "trip-short-route-tap")
             .attr("cx", center[0]).attr("cy", center[1]).attr("r", 22)
             .on("click", (event) => {
@@ -320,11 +313,10 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
             });
         }
       });
-      // Cutouts belong to the same zoom/pan world, above ground and routes.
-      // Transparent pixels never intercept marker, route or drag interactions.
-      drawLandmarks(world, project, scale);
-      drawDecorations(world, project, scale);
-      hydro.drawLabels();
+      routeInk?.dispose();
+      routeInk = createPencilRoutes(routeCanvas, routeEntries, width, height);
+      routeInk.select(state.current);
+      waterLabels = drawWaterLabels(world, project);
       buttons.replaceChildren();
       markerPositions = [];
       adventureStops.forEach((stop) => {
@@ -334,16 +326,21 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
         button.style.left = x + "px"; button.style.top = y + "px";
         button.setAttribute("aria-label", stop.name);
         button.setAttribute("aria-pressed", String(stop.tag === state.current.selected));
-        const dot = document.createElement("span"); dot.className = "trip-stop-dot"; dot.setAttribute("aria-hidden", "true");
+        const dot = createStopMarker(7201 + markerPositions.length * 97);
         const label = document.createElement("span"); label.className = "trip-stop-label";
-        label.textContent = stop.name.split(" · ")[0]; label.setAttribute("aria-hidden", "true");
+        fillStopLabel(label, stop.name.split(" · ")[0], 6100 + markerPositions.length);
+        label.setAttribute("aria-hidden", "true");
         const leader = document.createElement("span"); leader.className = "trip-stop-leader"; leader.setAttribute("aria-hidden", "true");
         button.append(leader, dot, label);
-        button.onclick = () => { controls.current?.focusPlace(stop.tag); state.current.onSelect(stop.tag); };
+        button.onclick = () => {
+          if (state.current.selected === stop.tag) controls.current?.focusPlace(stop.tag);
+          state.current.onSelect(stop.tag);
+        };
         buttons.append(button);
         markerPositions.push({ button, position: [x, y], tag: stop.tag });
       });
       zoom.extent([[0, 0], [width, height]]);
+      area._project = project;
       let nextView = initialView(width, height);
       if (!layout && state.current.selected) {
         const marker = markerPositions.find((item) => item.tag === state.current.selected);
@@ -358,11 +355,17 @@ export function AdventureMap({ selected, selectedRoute, onSelect, onRouteSelect,
       layout = { width, height, scale };
       surface.call(zoom.transform, nextView);
     }
-    const observer = new ResizeObserver(draw); observer.observe(area); draw();
-    return () => { observer.disconnect(); surface.on(".zoom", null); controls.current = null; buttons.replaceChildren(); svg.selectAll("*").remove(); };
+    let frame = 0, disposed = false;
+    const redraw = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(draw); };
+    const observer = new ResizeObserver(redraw); observer.observe(area); redraw();
+    document.fonts.ready.then(() => { if (!disposed) { clearPencilLabels(); redraw(); } });
+    return () => { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); surface.interrupt(); pencil?.dispose(); routeInk?.dispose(); surface.on(".zoom", null); controls.current = null; buttons.replaceChildren(); svg.selectAll("*").remove(); sea.selectAll("*").remove(); };
   }, []);
   return <div ref={container} className="trip-map-area">
-    <svg className="trip-map" role="group" aria-label="南北岛游戏地图及可点击路线；实线为自驾，短虚线为航班，长虚线为大巴；线路为站点示意" onClick={onClear} />
+    <svg className="trip-depth-map" aria-hidden="true" />
+    <canvas className="trip-pencil-map" role="img" aria-label="C 重描彩铅地表：林地、草地、农田、灌丛、裸地、冰雪、湿地与城镇；海洋按 200、1000、2000、4000 米深度分色" />
+    <canvas className="trip-pencil-routes" aria-hidden="true" />
+    <svg className="trip-map" role="group" aria-label="南北岛彩铅地图及可点击路线；实线为自驾公路参考路径，短虚线为航线示意，长虚线为大巴公路参考路径" onClick={onClear} />
     <div className="trip-point-buttons" />
     <nav className="trip-map-controls" aria-label="地图视图">
       <GameIconButton label="放大地图" onClick={() => controls.current?.zoomIn()}><ZoomInIcon /></GameIconButton>

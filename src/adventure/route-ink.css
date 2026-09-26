@@ -1,57 +1,6 @@
-/* Route ink stays in the map world; stroke widths stay legible while zooming. */
-.trip-map-area .trip-route-underlay {
-  stroke: #f1ebd7;
-  stroke-width: 3.6;
-  opacity: .72;
-}
-
-.trip-map-area .trip-route {
-  stroke-width: 1.8;
-  opacity: .88;
-}
-
-.trip-map-area .trip-route--flight { stroke-dasharray: 3 6; }
-.trip-map-area .trip-route--coach { stroke-dasharray: 10 6; }
-.trip-map-area .trip-route[data-active=true] { stroke-width: 2.5; opacity: 1; }
-
-.trip-route-ink {
-  fill: none;
-  stroke: #654f35;
-  stroke-width: .7;
-  stroke-dasharray: 24 5 13 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  opacity: .4;
-  pointer-events: none;
-}
-
 .trip-map-area .trip-route-hit[data-route="zqn-wanaka"] { stroke-width: 32; }
 .trip-short-route-spot { display: none; }
-.trip-short-route-leader {
-  fill: none;
-  stroke: #917343;
-  stroke-width: 1.2;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  opacity: .65;
-  pointer-events: none;
-}
-.trip-short-route-disc {
-  fill: #f1ebd7;
-  stroke: #917343;
-  stroke-width: 1.2;
-  vector-effect: non-scaling-stroke;
-  opacity: .94;
-  pointer-events: none;
-}
-.trip-short-route-date {
-  fill: #654f35;
-  font: 12px "Trip Map Hand", "Kaiti SC", serif;
-  text-anchor: middle;
-  dominant-baseline: central;
-  pointer-events: none;
-}
+.trip-short-route-art { pointer-events:none; }
 .trip-short-route-tap { fill: transparent; cursor: pointer; }
 @media (max-width: 650px), (max-height: 500px), (pointer: coarse) {
   .trip-short-route-spot { display: initial; }

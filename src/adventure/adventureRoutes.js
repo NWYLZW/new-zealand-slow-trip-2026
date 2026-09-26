@@ -1,13 +1,15 @@
 import { routeSegments } from "../data/mapRoutes";
 import { adventureStops } from "./adventureData";
+import { line } from "d3";
+import roadRoutes from "./data/road-routes.json";
 
 const stops = new Map(adventureStops.map((stop) => [stop.tag, stop]));
 const displayTag = (tag) => tag === "AKL" ? "AKC" : tag;
 const seen = new Set();
 
 // Connect the displayed city stops, using the original itinerary order and
-// waypoints. Airport transfers share a city dot; these are schematic links,
-// not turn-by-turn road geometry or actual flight tracks.
+// named waypoints. Road shapes come from the stored routing snapshot; flights are
+// city-to-city schematic arcs, not actual flight tracks.
 export const adventureRoutes = routeSegments.flatMap((segment) => {
   const from = displayTag(segment.from), to = displayTag(segment.to);
   if (from === to || !stops.has(from) || !stops.has(to)) return [];
@@ -19,10 +21,21 @@ export const adventureRoutes = routeSegments.flatMap((segment) => {
   const via = adventureStops.filter((stop) => waypoints.some((point) =>
     Math.abs(point.lat - stop.position[0]) < 0.0001 && Math.abs(point.lng - stop.position[1]) < 0.0001,
   )).map((stop) => stop.tag);
+  // Legacy intermediate coordinates also shape the schematic map. Only named
+  // itinerary stops constrain routing: Arrowtown and Tekapo, not off-road bends.
+  const routingWaypoints = waypoints.filter((point, index) =>
+    (segment.id === "zqn-wanaka" && index === 0) || via.some((tag) => {
+      const [lat, lng] = stops.get(tag).position;
+      return Math.abs(point.lat - lat) < 0.0001 && Math.abs(point.lng - lng) < 0.0001;
+    }),
+  );
   return [{
     id: segment.id, from, to, via, transport, date: segment.date,
     label: transport === "coach" ? "奥克兰 ⇄ 霍比屯 · 大巴" : segment.label,
     points: [stops.get(from).position, ...waypoints.map(({ lat, lng }) => [lat, lng]), stops.get(to).position],
+    routingPoints: [stops.get(from).position, ...routingWaypoints.map(({ lat, lng }) => [lat, lng]), stops.get(to).position],
+    roadGeometry: roadRoutes.routes[segment.id]?.geometry ?? null,
+    roadSource: roadRoutes.routes[segment.id] ?? null,
   }];
 });
 
@@ -37,36 +50,22 @@ export function projectedRoutePath(route, project) {
     return `M${pen(from)}Q${pen(control)} ${pen(to)}`;
   }
 
-  // Project the original stops and waypoints first. Small fixed bends between
-  // them soften the pen line without moving any itinerary point or changing
-  // the shape on hover, pan, or zoom.
-  const bend = [...route.id].reduce((seed, character) => seed + character.charCodeAt(0), 0) % 2 ? 1 : -1;
-  const ink = [points[0]];
-  for (let index = 0; index < points.length - 1; index += 1) {
-    const from = points[index], to = points[index + 1];
-    const dx = to[0] - from[0], dy = to[1] - from[1];
-    const length = Math.hypot(dx, dy);
-    if (length > 14) {
-      const offset = Math.min(4.5, length * 0.065) * bend * (index % 2 ? -1 : 1);
-      ink.push([(from[0] + to[0]) / 2 - dy / length * offset,
-        (from[1] + to[1]) / 2 + dx / length * offset]);
-    }
-    ink.push(to);
-  }
-  return ink.slice(0, -1).map((from, index) => {
-    const to = ink[index + 1];
-    const previous = ink[Math.max(0, index - 1)];
-    const next = ink[Math.min(ink.length - 1, index + 2)];
-    const length = Math.hypot(to[0] - from[0], to[1] - from[1]);
-    const fromDirection = [to[0] - previous[0], to[1] - previous[1]];
-    const toDirection = [next[0] - from[0], next[1] - from[1]];
-    const fromLength = Math.hypot(...fromDirection) || 1;
-    const toLength = Math.hypot(...toDirection) || 1;
-    const reach = length * 0.23;
-    const first = [from[0] + fromDirection[0] / fromLength * reach,
-      from[1] + fromDirection[1] / fromLength * reach];
-    const second = [to[0] - toDirection[0] / toLength * reach,
-      to[1] - toDirection[1] / toLength * reach];
-    return `${index ? "" : `M${pen(from)}`}C${pen(first)} ${pen(second)} ${pen(to)}`;
-  }).join("");
+  // Preserve every routing vertex and snapped endpoint, without spline shortcuts.
+  if (route.roadGeometry) return line()(route.roadGeometry.coordinates.map(project));
+  return line()(route.routingPoints.map(([lat, lng]) => project([lng, lat])));
+}
+
+export function routeGeometryLabel(route) {
+  if (route.transport === "flight") return "航线示意";
+  if (!route.roadGeometry) return "道路数据未加载 · 站点示意";
+  return route.transport === "coach" ? "公路参考路径 · 非运营商轨迹" : "实际道路参考路径";
+}
+
+export function routeDirectionsUrl(route) {
+  const points = route.routingPoints.map(point => point.join(","));
+  const url = new URL("https://www.google.com/maps/dir/");
+  url.search = new URLSearchParams({ api: "1", origin: points[0], destination: points.at(-1), travelmode: "driving",
+    ...(points.length > 2 ? { waypoints: points.slice(1, -1).join("|") } : {}),
+  }).toString();
+  return url.href;
 }

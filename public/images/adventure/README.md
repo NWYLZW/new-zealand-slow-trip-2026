@@ -1,6 +1,11 @@
 # Adventure map illustrations
 
-Eight destination cutouts are shown at the existing ZQN, WKA, AOR, TEK, OAM,
+Status (2026-09-26): archived source art, not loaded by the current pencil map.
+The old landmark, decoration and vegetation renderers have been removed.
+These files and manifests remain only for provenance; the notes below describe
+the former version. Runtime checks live in `test:adventure-pencil`.
+
+Eight destination cutouts were shown at the existing ZQN, WKA, AOR, TEK, OAM,
 CHC, AKC and HBT stops. Queenstown established the hand-inked, muted 2.5D
 style; the user approved that sample and requested matching art for the other
 destinations on 2026-09-23.
@@ -12,8 +17,8 @@ The generated images may have faint partially transparent edge halos.
 
 `src/adventure/data/landmarks.json` is the source of truth for each file's
 destination, bilingual label, dimensions, SHA-256, original generated filename,
-anchor and display width. `src/adventure/drawLandmarks.js` places them in the
-same SVG world as the terrain, routes and stops, so they follow pan and zoom.
+anchor and display width. The former renderer placed them in the
+same SVG world as the terrain, routes and stops.
 Run `npm run audit:adventure-assets` to verify the eight PNGs and manifest.
 
 Sixteen RGBA PNG cutouts are **map decoration only**. The first nine below are
@@ -80,7 +85,7 @@ and tī kōuka drafts had dark haze; they were not deployed. The audit checks
 deployed image dimensions, hashes, alpha edges, body opacity, land anchors,
 and the original-image provenance fields.
 
-At map zoom below 1.4×, `drawDecorations.js` compares all 16 decoration image
+At map zoom below 1.4×, the former renderer compared all 16 decoration image
 rectangles against the visible stop buttons and labels. An image that would
 cover one is hidden for that view; the fixed geographic anchor never moves.
 All decorations return at normal zoom, and every image remains non-interactive.
