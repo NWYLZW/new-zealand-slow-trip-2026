@@ -83,7 +83,7 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
       const style = getComputedStyle(canvas);
       const ink = style.color;
       const backdropInk = themeBackdrop
-        ? style.getPropertyValue('--trip-theme-accent').trim() || '#4b96aa'
+        ? style.getPropertyValue('--trip-pencil-icon-backdrop').trim() || '#fff'
         : null;
       const imageKey = JSON.stringify([geometryKey, kind, active, sourceSize, dpr, ink, backdropInk]);
       const cached = imageCache.get(imageKey);

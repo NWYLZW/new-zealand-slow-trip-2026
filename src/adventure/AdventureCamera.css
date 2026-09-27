@@ -45,6 +45,10 @@
   rotate:var(--trip-camera-icon-rotation);
   transition:rotate 100ms linear,transform 120ms ease,filter 120ms ease;
 }
+.trip-day--camera button > .trip-pencil-icon[data-theme-backdrop="true"] {
+  --trip-pencil-icon-backdrop:#fff;
+  color:var(--trip-theme-accent,#4b96aa);
+}
 .trip-camera-header-actions {
   position:absolute;
   grid-area:auto;
