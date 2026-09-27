@@ -84,6 +84,7 @@ async function controlled(page) {
   assert.equal(new URL(manifest.scope, new URL(manifestUrl, page.url())).href, base);
   assert.equal(manifest.id, basePath);
   assert.equal(manifest.start_url, "./");
+  assert.equal(manifest.display, "fullscreen", "Installed PWA requests a status-bar-free launch");
   assert(manifest.shortcuts.every(item => !item.url.includes("adventure")));
 }
 async function sameDocument(page) {

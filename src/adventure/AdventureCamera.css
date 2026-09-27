@@ -45,8 +45,10 @@
   rotate:var(--trip-camera-icon-rotation);
   transition:rotate 100ms linear,transform 120ms ease,filter 120ms ease;
 }
-.trip-day--camera button > .trip-pencil-icon[data-theme-backdrop="true"] {
+#trip-board-structure .trip-day--camera button > .trip-pencil-icon[data-theme-backdrop="true"] {
   --trip-pencil-icon-backdrop:#fff;
+  width:36px;
+  height:36px;
   color:var(--trip-theme-accent,#4b96aa);
 }
 .trip-camera-header-actions {
@@ -220,6 +222,7 @@
   transform:translate(-50%,-50%);
 }
 .trip-camera-shutter > .trip-pencil-icon { width:36px; height:36px; }
+#trip-board-structure .trip-camera-shutter > .trip-pencil-icon[data-theme-backdrop="true"] { width:44px; height:44px; }
 .trip-camera-record-dot {
   width:30px;
   height:30px;

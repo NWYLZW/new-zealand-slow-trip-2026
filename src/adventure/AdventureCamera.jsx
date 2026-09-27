@@ -595,7 +595,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       <div className="trip-camera-controls">
         <button type="button" className="trip-camera-control" data-icon-feedback="keyboard-only" onClick={openAlbum}
           aria-label={en ? "Album" : "相册"}>
-          <PhotoAlbumIcon themeBackdrop />
+          <PhotoAlbumIcon themeBackdrop strokeScale={1.4} />
         </button>
         <button type="button" className="trip-camera-control trip-camera-facing-toggle" data-icon-feedback="keyboard-only"
           onClick={switchCameraFacing}
@@ -603,7 +603,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
             ? en ? "Switch to front camera" : "切换到前置相机"
             : en ? "Switch to rear camera" : "切换到后置相机"}
           disabled={!active || previewState !== "ready" || facingSwitchBusy || recording || recordPending}>
-          <PencilIcon kind="camera-facing" themeBackdrop>
+          <PencilIcon kind="camera-facing" themeBackdrop strokeScale={1.4}>
             <path d="M7 12c2.7-4.1 7.3-6.2 12.1-5.2 2.1.4 4 1.4 5.5 2.9M22.3 5.9l2.6 3.9-4.6 1" />
             <path d="M25 20c-2.7 4.1-7.3 6.2-12.1 5.2-2.1-.4-4-1.4-5.5-2.9M9.7 26.1l-2.6-3.9 4.6-1" />
             <path d="M12 12.5h8v7h-8zM14 12.5l1-2h2l1 2M16 14.4a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4z" />
@@ -633,7 +633,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
           >
             {recording || recordPending
               ? <span className={`trip-camera-record-dot${recordPending ? " is-pending" : ""}`} aria-hidden="true" />
-              : <CameraIcon themeBackdrop />}
+              : <CameraIcon themeBackdrop strokeScale={1.4} />}
           </button>
         <input ref={systemCameraRef} type="file" accept="image/*,video/*" hidden
           capture={cameraFacing === "user" ? "user" : "environment"} className="trip-camera-upload-input"
@@ -642,7 +642,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
           onClick={() => systemCameraRef.current?.click()}
           aria-label={systemCameraBusy ? en ? "Importing system camera capture…" : "正在导入系统相机拍摄内容…"
             : en ? "Use system camera" : "使用系统相机"}
-          disabled={systemCameraBusy || !active}><PencilIcon kind="system-camera" themeBackdrop>
+          disabled={systemCameraBusy || !active}><PencilIcon kind="system-camera" themeBackdrop strokeScale={1.4}>
             <path d="M9 3.8h14v24.4H9zM13 7h6M16 20.5c-2 0-3.5 1.5-3.5 3.4h7c0-1.9-1.5-3.4-3.5-3.4zM25.5 8.5h5M28 6v5" />
           </PencilIcon></button>
       </div>

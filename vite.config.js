@@ -60,7 +60,7 @@ export default defineConfig({
         lang: "zh-CN",
         start_url: "./",
         scope: "./",
-        display: "standalone",
+        display: "fullscreen",
         background_color: "#bddadb",
         theme_color: "#bddadb",
         orientation: "any",

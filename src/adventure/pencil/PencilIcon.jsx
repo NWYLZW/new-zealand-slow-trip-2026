@@ -69,7 +69,7 @@ function cachedPathParts(data) {
 
 // Reuse the local icon's geometry, but deposit pigment with the map's pencil.
 export function PencilIcon({ children, className = '', kind = 'ink', active = false, sourceSize = 32,
-  themeBackdrop = false }) {
+  themeBackdrop = false, strokeScale = 1 }) {
   const ref = useRef(null);
   const paths = [];
   Children.forEach(children, child => {
@@ -85,7 +85,7 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
       const backdropInk = themeBackdrop
         ? style.getPropertyValue('--trip-pencil-icon-backdrop').trim() || '#fff'
         : null;
-      const imageKey = JSON.stringify([geometryKey, kind, active, sourceSize, dpr, ink, backdropInk]);
+      const imageKey = JSON.stringify([geometryKey, kind, active, sourceSize, strokeScale, dpr, ink, backdropInk]);
       const cached = imageCache.get(imageKey);
       canvas.width = canvas.height = Math.round(size * dpr);
       const ctx = canvas.getContext('2d');
@@ -100,9 +100,10 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
       for (const [data, pathClass] of JSON.parse(geometryKey)) {
         if (pathClass === 'sketch-wash') {
           ctx.save(); ctx.clip(new Path2D(data));
-          const pigment = { tasks: '#af823c', bag: '#69805c', photos: '#527e91', zoom: '#a38e58', reset: '#698376' }[kind] || '#698376';
+          const pigment = themeBackdrop ? ink
+            : { tasks: '#af823c', bag: '#69805c', photos: '#527e91', zoom: '#a38e58', reset: '#698376' }[kind] || '#698376';
           ctx.globalAlpha = active ? .85 : .32;
-          for (let y = 6; y < 32; y += 1.6) pencilStroke(ctx, [[5,y + 3], [27, y - 3]], pigment, 1.1, seed++, .25, 2, false,
+          for (let y = 6; y < 32; y += 1.6) pencilStroke(ctx, [[5,y + 3], [27, y - 3]], pigment, 1.1 * strokeScale, seed++, .25, 2, false,
             { variation: .85, breaks: .25, grain: .7, gain: 2.2, step: .35 });
           ctx.restore();
           continue;
@@ -110,11 +111,11 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
         const scuff = ['sketch-scuff', 'sketch-hatch'].includes(pathClass);
         for (const points of cachedPathParts(data)) {
           const strokeSeed = seed++;
-          pencilStroke(ctx, points, ink, scuff ? .55 : 1.65, strokeSeed, .3, scuff ? 1 : 3, false,
+          pencilStroke(ctx, points, ink, (scuff ? .55 : 1.65) * strokeScale, strokeSeed, .3, scuff ? 1 : 3, false,
             { variation: .82, breaks: .18, grain: .68, gain: scuff ? 1.5 : 3, step: .35, taperLength: .65 });
         }
       }
-      if (active) pencilStroke(ctx, [[7, 30], [16, 30.5], [25, 29.8]], ink, 1.1, 977, .25, 3, false,
+      if (active) pencilStroke(ctx, [[7, 30], [16, 30.5], [25, 29.8]], ink, 1.1 * strokeScale, 977, .25, 3, false,
         { variation: .8, breaks: .25, grain: .7, gain: 2.8, step: .35 });
       const bitmap = document.createElement('canvas');
       bitmap.width = canvas.width;
@@ -128,8 +129,8 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
       attributeFilter: ['data-adventure-appearance', 'data-adventure-theme'] });
     paint();
     return () => appearance.disconnect();
-  }, [geometryKey, kind, active, sourceSize, themeBackdrop]);
+  }, [geometryKey, kind, active, sourceSize, themeBackdrop, strokeScale]);
   return <canvas ref={ref} className={`trip-pencil-icon ${className}`.trim()}
     width="80" height="80" data-renderer="pressure-pencil" data-icon={kind} data-active={active}
-    data-theme-backdrop={themeBackdrop || undefined} aria-hidden="true" />;
+    data-theme-backdrop={themeBackdrop || undefined} data-stroke-scale={strokeScale} aria-hidden="true" />;
 }
