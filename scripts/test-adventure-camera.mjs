@@ -20,7 +20,7 @@ const [cameraCss, cameraSource, sketchIconsSource] = await Promise.all([
   readFile(new URL("../src/adventure/SketchIcons.jsx", import.meta.url), "utf8"),
 ]);
 assert.match(cameraCss, /\.trip-camera-header-actions\s*\{[^}]*grid-area:auto;[^}]*grid-column:auto;[^}]*grid-row:auto;/s);
-assert.match(cameraCss, /\.trip-camera-header-actions \.trip-close\s*\{[^}]*width:44px;[^}]*height:44px;/s);
+assert.match(cameraCss, /\.trip-camera-header-actions \.trip-pane-expand\s*\{[^}]*width:44px;[^}]*height:44px;/s);
 assert.match(cameraSource, /className="trip-camera-control trip-camera-facing-toggle"/);
 assert.match(cameraSource, /startPreview\(true, nextFacing, true\)/);
 assert.match(sketchIconsSource, /function SketchIcon\(props\)\s*\{\s*return <PencilIcon \{\.\.\.props\} \/>;/s);
@@ -278,6 +278,7 @@ try {
   assert.equal(await page.getByRole("button", { name: "使用系统相机", exact: true }).count(), 1);
   const facingToggle = page.getByRole("button", { name: "切换到前置相机", exact: true });
   assert.equal(await facingToggle.count(), 1);
+  assert.equal(await page.locator(".trip-camera-preview video").evaluate(video => getComputedStyle(video).transform), "none");
   const previousStreamCount = await page.evaluate(() => window.__testStreams.length);
   await facingToggle.click();
   await page.waitForFunction(expected => window.__testDeviceRequests.length === expected + 1
@@ -286,12 +287,14 @@ try {
   assert.equal(await page.getByRole("button", { name: "切换到后置相机", exact: true }).count(), 1);
   assert.equal(await page.locator(".trip-camera-facing-toggle .trip-pencil-icon").getAttribute("data-theme-backdrop"), "true");
   assert.equal(await page.locator(".trip-camera-status").innerText(), "");
+  await page.waitForFunction(() => getComputedStyle(document.querySelector(".trip-camera-preview video")).transform === "matrix(-1, 0, 0, 1, 0, 0)");
   await page.evaluate(() => { window.__testMismatchNextFacing = true; });
   await page.getByRole("button", { name: "切换到后置相机", exact: true }).click();
   await page.waitForFunction(() => window.__testDeviceRequests.length === 4
     && window.__testDeviceRequests.at(-1)?.video?.facingMode?.ideal === "user");
   assert.equal(await page.getByRole("button", { name: "切换到后置相机", exact: true }).count(), 1);
   assert.match(await page.locator(".trip-camera-status").innerText(), /无法切换镜头/);
+  assert.equal(await page.locator(".trip-camera-preview video").evaluate(video => getComputedStyle(video).transform), "matrix(-1, 0, 0, 1, 0, 0)");
   await page.evaluate(async () => {
     window.__mediaLibrary = await import("./src/adventure/media/library.js");
     await window.__mediaLibrary.initializeMediaLibrary();
@@ -301,7 +304,7 @@ try {
   const statusBackdrop = page.locator(".trip-camera-status canvas[data-theme-backdrop]");
   await statusBackdrop.waitFor();
   const originalStatusPixels = await statusBackdrop.evaluate(canvas => canvas.toDataURL());
-  const closeCanvas = page.locator(".trip-camera-header-actions canvas[data-theme-backdrop]");
+  const closeCanvas = page.locator(".trip-camera-header-actions .trip-close canvas[data-theme-backdrop]");
   const originalClosePixels = await closeCanvas.evaluate(canvas => canvas.toDataURL());
   await page.evaluate(() => { document.documentElement.dataset.adventureTheme = "fern"; });
   await page.waitForFunction(previous => document.querySelector(".trip-camera-status canvas[data-theme-backdrop]")?.toDataURL() !== previous, originalStatusPixels);

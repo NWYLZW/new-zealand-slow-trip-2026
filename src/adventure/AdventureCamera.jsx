@@ -58,6 +58,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   const cameraPermission = useBrowserPermission("camera");
   const locationPermission = useBrowserPermission("geolocation");
   const [previewState, setPreviewState] = useState("idle");
+  const [previewFacing, setPreviewFacing] = useState(null);
   const [recording, setRecording] = useState(false);
   const [recordPending, setRecordPending] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -174,6 +175,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
         return false;
       }
       previewStreamRef.current = stream;
+      setPreviewFacing(reportedFacing || requestedFacing);
       stream.getVideoTracks().forEach(track => {
         track.onended = () => {
           if (previewStreamRef.current !== stream) return;
@@ -571,7 +573,8 @@ export function AdventureCamera({ active, onOpenAlbum }) {
 
   return <section ref={cameraRef} className="trip-camera" aria-label={en ? "Camera" : "相机"} data-recording={recording || recordPending}>
       <div className="trip-camera-preview">
-        <video ref={videoRef} autoPlay muted playsInline aria-label={en ? "Live camera preview" : "相机实时取景"} />
+        <video ref={videoRef} data-facing={previewFacing} autoPlay muted playsInline
+          aria-label={en ? "Live camera preview" : "相机实时取景"} />
         {previewState === "ready" && cameraGrid && <div className="trip-camera-grid" aria-hidden="true">
           <span /><span /><span /><span />
         </div>}

@@ -1,21 +1,31 @@
 /* Corner-only fallback; never inset the map or narrow its projection viewport. */
 #trip-board-structure[data-device-cutout] {
   --trip-cutout-control-inset:calc(var(--trip-cutout-inset) + var(--trip-tool-inset));
+  --trip-cutout-alignment-offset:4px;
 }
 
 #trip-board-structure[data-device-cutout="top-right"]:not([data-side-open="true"]) .trip-game-tools {
-  top:calc(var(--trip-edge-top) + 4px);
+  top:calc(var(--trip-edge-top) + var(--trip-cutout-alignment-offset));
   right:max(var(--trip-edge-right),var(--trip-cutout-control-inset));
+}
+#trip-board-structure[data-device-cutout="top-right"] .trip-day:not(.trip-day--camera) {
+  padding-top:calc(max(var(--trip-panel-top-pad),env(safe-area-inset-top)) + var(--trip-cutout-alignment-offset));
 }
 #trip-board-structure[data-device-cutout="top-right"] .trip-day:not(.trip-day--camera) > .trip-panel-header {
   padding-right:max(0px,calc(var(--trip-cutout-control-inset) - var(--trip-panel-pad)));
 }
 #trip-board-structure[data-device-cutout="top-right"][data-fullscreen="calendar"] .trip-adventure-calendar-header {
+  padding-top:max(7px,calc(var(--trip-edge-top) + var(--trip-cutout-alignment-offset)));
   padding-right:max(9px,env(safe-area-inset-right),var(--trip-cutout-control-inset));
 }
-#trip-board-structure[data-device-cutout="top-right"] .trip-camera-control:first-child,
+#trip-board-structure[data-device-cutout="top-right"] .trip-day--camera {
+  --trip-camera-cutout-top-inset:max(var(--trip-camera-top-inset),calc(var(--trip-cutout-block-inset) + 9px));
+}
+#trip-board-structure[data-device-cutout="top-right"] .trip-camera-control:first-child {
+  top:var(--trip-camera-cutout-top-inset);
+}
 #trip-board-structure[data-device-cutout="top-right"] .trip-camera-facing-toggle {
-  right:max(0px,calc(var(--trip-cutout-control-inset) - var(--trip-camera-right-inset)));
+  top:calc(var(--trip-camera-cutout-top-inset) + 46px);
 }
 
 #trip-board-structure[data-device-cutout="top-left"] :is(.trip-home,.trip-international-view-toggle) {

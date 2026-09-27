@@ -12,7 +12,8 @@ export function resolveAdventureDeviceCutout({ platform, model, width, height, v
   const corner = corners[angle];
   if (!corner || (width > height) !== (angle === 90 || angle === 270)) return null;
   const inset = Math.ceil((width > height ? 140 : 164) * shortSide / 1672);
-  return { corner, inset };
+  const blockInset = Math.ceil((width > height ? 164 : 140) * shortSide / 1672);
+  return { corner, inset, blockInset };
 }
 
 export async function readAdventureDeviceModel(navigatorApi) {
@@ -38,7 +39,8 @@ export function useAdventureDeviceCutout() {
           viewportHeight: document.documentElement.clientHeight,
           angle: screen.orientation?.angle,
         });
-        setCutout(current => current?.corner === next?.corner && current?.inset === next?.inset ? current : next);
+        setCutout(current => current?.corner === next?.corner && current?.inset === next?.inset
+          && current?.blockInset === next?.blockInset ? current : next);
       });
     };
     readAdventureDeviceModel(navigator).then(result => {

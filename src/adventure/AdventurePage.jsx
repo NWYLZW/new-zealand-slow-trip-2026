@@ -230,7 +230,8 @@ function AdventureBoard() {
     else navigate(panel, place);
   }, [closeSide, navigate]);
   return <main id="trip-board-structure" style={{ '--trip-handwriting': mapHandwriting,
-    '--trip-cutout-inset': `${deviceCutout?.inset ?? 0}px` }} aria-label={adventureText("新西兰冒险地图", "New Zealand adventure map", language)}
+    '--trip-cutout-inset': `${deviceCutout?.inset ?? 0}px`,
+    '--trip-cutout-block-inset': `${deviceCutout?.blockInset ?? 0}px` }} aria-label={adventureText("新西兰冒险地图", "New Zealand adventure map", language)}
     data-device-cutout={deviceCutout?.corner}
     data-panel-open={calendarOpen || sideOpen} data-calendar-open={calendarVisible} data-side-open={sideVisible}
     data-responsive-layout={responsiveLayout} data-automatic-fullscreen={automaticFullscreen ?? undefined}

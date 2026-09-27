@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BoatIcon, BusIcon, CalendarIcon, CarIcon, CityIcon, DirectionsIcon, LocationMapIcon, RouteDistanceIcon,
-  ExternalLinkIcon, FlightIcon, HelicopterIcon, MountainIcon, MovieIcon, PreviousIcon, NextIcon, StarsIcon,
+  ExternalLinkIcon, FlightIcon, FullscreenIcon, HelicopterIcon, MountainIcon, MovieIcon, PreviousIcon, NextIcon, StarsIcon,
   BagIcon, CameraIcon, CloseIcon, HotelIcon, RoutePathIcon, MapSourcesIcon, OrderIcon } from "./SketchIcons";
 import { adventurePath } from "../siteNavigation";
 import { useLanguage } from "../LanguageContext";
@@ -360,9 +360,14 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
             onClick={() => navigate("camera-view", "device")}>
             <PencilIcon kind="device"><path d="M8 5.5h16v21H8zM12 9h8M13 23h6" /></PencilIcon>
           </button>}
-          {cameraPreview ? <button type="button" className="trip-close trip-adventure-calendar-close"
-            data-icon-feedback="keyboard-only" aria-label={adventureText("关闭面板", "Close panel", language)}
-            onClick={() => navigate()}><CloseIcon themeBackdrop /></button> : paneActions}
+          {cameraPreview ? <>
+            <button type="button" className="trip-close trip-adventure-calendar-close"
+              data-icon-feedback="keyboard-only" aria-label={adventureText("关闭面板", "Close panel", language)}
+              onClick={() => navigate()}><CloseIcon themeBackdrop /></button>
+            {!fullscreen && <button type="button" className="trip-route-header-action trip-pane-expand"
+              data-icon-feedback="keyboard-only" aria-label={adventureText("全屏相机", "Expand camera", language)}
+              onClick={onToggleFullscreen}><FullscreenIcon themeBackdrop /></button>}
+          </> : paneActions}
         </div> : view.rightPanel === "bag" ? <div className="trip-panel-header-actions">
           <button type="button" className="trip-route-header-action" aria-label={adventureText("地图数据来源", "Map data sources", language)}
             title={adventureText("地图数据来源", "Map data sources", language)} onClick={() => navigate("bag-sources")}><MapSourcesIcon /></button>
