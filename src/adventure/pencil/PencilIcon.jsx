@@ -25,27 +25,124 @@ function seededRandom(seed) {
   };
 }
 
-function paintThemeBackdrop(context, color, textureKey) {
+function paintThemeBackdrop(context, color, paths, sourceSize, textureKey) {
+  const offset = (40 - sourceSize) / 2;
+  let left = 40, top = 40, right = 0, bottom = 0;
+  for (const [data] of paths) {
+    for (const part of cachedPathParts(data)) {
+      for (const [x, y] of part) {
+        left = Math.min(left, x + offset);
+        top = Math.min(top, y + offset);
+        right = Math.max(right, x + offset);
+        bottom = Math.max(bottom, y + offset);
+      }
+    }
+  }
+  const strokePad = 2;
+  left -= strokePad;
+  top -= strokePad;
+  right += strokePad;
+  bottom += strokePad;
+  const glyphWidth = Math.max(1, right - left);
+  const glyphHeight = Math.max(1, bottom - top);
+  const outerWidth = glyphWidth * 1.25;
+  const outerHeight = glyphHeight * 1.25;
+  const centerX = (left + right) / 2, centerY = (top + bottom) / 2;
   const seed = stableHash(textureKey);
   const random = seededRandom(seed);
-  context.save();
-  context.globalAlpha = .9;
-  for (let index = 0; index < 8; index++) {
-    const y = 6 + index * 4 + (random() - .5) * 2.4;
-    const slope = (random() - .5) * 7;
-    const left = 2.5 + random() * 4.5;
-    const right = 33 + random() * 4;
-    const middle = left + (right - left) * (.38 + random() * .24);
-    pencilStroke(context, [[left, y - slope * .5], [middle, y + (random() - .5) * 2], [right, y + slope * .5]],
-      color, 1.25 + random() * .55, seed + index * 17, .3, 2, false,
-      { variation: .88, breaks: .1, grain: .72, gain: 2.45, step: .32, taperLength: .8 });
+  const canvasMin = 1.5, canvasMax = 38.5;
+  let outerLeft = centerX - outerWidth / 2;
+  let outerTop = centerY - outerHeight / 2;
+  const outerRight = outerLeft + outerWidth;
+  const outerBottom = outerTop + outerHeight;
+  const translateX = outerLeft < canvasMin ? canvasMin - outerLeft
+    : outerRight > canvasMax ? canvasMax - outerRight : 0;
+  const translateY = outerTop < canvasMin ? canvasMin - outerTop
+    : outerBottom > canvasMax ? canvasMax - outerBottom : 0;
+  left += translateX;
+  right += translateX;
+  top += translateY;
+  bottom += translateY;
+  outerLeft += translateX;
+  outerTop += translateY;
+  const shiftedOuterRight = outerLeft + outerWidth;
+  const shiftedOuterBottom = outerTop + outerHeight;
+  const horizontalMargin = (outerWidth - glyphWidth) / 2;
+  const verticalMargin = (outerHeight - glyphHeight) / 2;
+  const pointCount = 12 + seed % 5;
+  const sideCounts = Array.from({ length: 4 }, (_, side) =>
+    Math.floor(pointCount / 4) + (side < pointCount % 4 ? 1 : 0));
+  const points = [];
+  for (let side = 0; side < 4; side++) {
+    for (let index = 0; index < sideCounts[side]; index++) {
+      const progress = index / sideCounts[side];
+      const normalJitter = (random() - .35) * (side % 2 ? horizontalMargin : verticalMargin) * .38;
+      const tangentJitter = index === 0 ? 0
+        : (random() - .5) * (side % 2 ? outerHeight : outerWidth) / sideCounts[side] * .3;
+      if (side === 0) points.push([
+        Math.max(canvasMin, Math.min(canvasMax,
+          outerLeft + outerWidth * progress + tangentJitter)),
+        Math.max(canvasMin, Math.min(top - verticalMargin * .35, outerTop + normalJitter)),
+      ]);
+      else if (side === 1) points.push([
+        Math.min(canvasMax,
+          Math.max(right + horizontalMargin * .35, shiftedOuterRight - normalJitter)),
+        Math.max(canvasMin, Math.min(canvasMax,
+          outerTop + outerHeight * progress + tangentJitter)),
+      ]);
+      else if (side === 2) points.push([
+        Math.max(canvasMin, Math.min(canvasMax,
+          shiftedOuterRight - outerWidth * progress - tangentJitter)),
+        Math.min(canvasMax,
+          Math.max(bottom + verticalMargin * .35, shiftedOuterBottom - normalJitter)),
+      ]);
+      else points.push([
+        Math.max(canvasMin, Math.min(left - horizontalMargin * .35, outerLeft + normalJitter)),
+        Math.max(canvasMin, Math.min(canvasMax,
+          shiftedOuterBottom - outerHeight * progress - tangentJitter)),
+      ]);
+    }
   }
-  for (let index = 0; index < 3; index++) {
-    const x = 9 + index * 10 + (random() - .5) * 4;
-    const lean = (random() - .5) * 7;
-    pencilStroke(context, [[x - lean, 7 + random() * 3], [x + (random() - .5) * 2, 19], [x + lean, 30 + random() * 3]],
-      color, 1.05 + random() * .4, seed + 181 + index * 23, .28, 1, false,
-      { variation: .9, breaks: .16, grain: .75, gain: 2.2, step: .34, taperLength: .9 });
+  context.save();
+  context.fillStyle = color;
+  context.globalAlpha = .97;
+  context.beginPath();
+  context.moveTo(...points[0]);
+  for (const point of points.slice(1)) context.lineTo(...point);
+  context.closePath();
+  context.fill();
+  context.globalAlpha = .09;
+  for (let index = 0; index < 4; index++) {
+    const y = top + glyphHeight * (index + 1) / 5 + (random() - .5) * 1.2;
+    pencilStroke(context, [[left + .5, y], [right - .5, y + (random() - .5) * 1.4]],
+      color, .75, seed + index * 17, .2, 1, false,
+      { variation: .8, breaks: .1, grain: .65, gain: 1.5, step: .4, taperLength: .6 });
+  }
+  context.globalAlpha = .72;
+  const rayCount = 3 + Math.floor(random() * 3);
+  let raysPainted = 0;
+  for (let attempt = 0; attempt < rayCount * 6 && raysPainted < rayCount; attempt++) {
+    const side = Math.floor(random() * 4);
+    const progress = .18 + random() * .64;
+    const length = 2.4 + random() * 2.2;
+    let start, end;
+    if (side === 0) {
+      start = [outerLeft + outerWidth * progress, outerTop + .4];
+      end = [start[0] + (random() - .5) * 1.5, start[1] - length];
+    } else if (side === 1) {
+      start = [shiftedOuterRight - .4, outerTop + outerHeight * progress];
+      end = [start[0] + length, start[1] + (random() - .5) * 1.5];
+    } else if (side === 2) {
+      start = [outerLeft + outerWidth * progress, shiftedOuterBottom - .4];
+      end = [start[0] + (random() - .5) * 1.5, start[1] + length];
+    } else {
+      start = [outerLeft + .4, outerTop + outerHeight * progress];
+      end = [start[0] - length, start[1] + (random() - .5) * 1.5];
+    }
+    if ([...start, ...end].some(value => value < canvasMin || value > canvasMax)) continue;
+    pencilStroke(context, [start, end], color, .55, seed + 211 + raysPainted * 29, .16, 1, false,
+      { variation: .75, breaks: .08, grain: .55, gain: 1.25, step: .35, taperLength: .7 });
+    raysPainted++;
   }
   context.restore();
 }
@@ -94,7 +191,8 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
         return;
       }
       ctx.scale(dpr, dpr);
-      if (backdropInk) paintThemeBackdrop(ctx, backdropInk, `${kind}:${geometryKey}`);
+      if (backdropInk) paintThemeBackdrop(ctx, backdropInk, JSON.parse(geometryKey), sourceSize,
+        `${kind}:${geometryKey}:${sourceSize}`);
       ctx.translate((size - sourceSize) / 2, (size - sourceSize) / 2);
       let seed = 801;
       for (const [data, pathClass] of JSON.parse(geometryKey)) {
