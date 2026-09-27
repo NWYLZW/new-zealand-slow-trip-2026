@@ -45,20 +45,24 @@ function paintThemeBackdrop(context, color, paths, sourceSize, textureKey) {
   bottom += strokePad;
   const glyphWidth = Math.max(1, right - left);
   const glyphHeight = Math.max(1, bottom - top);
-  const outerWidth = glyphWidth * 1.25;
-  const outerHeight = glyphHeight * 1.25;
+  const strokeWidth = glyphWidth * 1.25;
+  const strokeHeight = glyphHeight * 1.25;
+  const outerWidth = glyphWidth * 1.08;
+  const outerHeight = glyphHeight * 1.08;
   const centerX = (left + right) / 2, centerY = (top + bottom) / 2;
   const seed = stableHash(textureKey);
   const random = seededRandom(seed);
   const canvasMin = 1.5, canvasMax = 38.5;
   let outerLeft = centerX - outerWidth / 2;
   let outerTop = centerY - outerHeight / 2;
-  const outerRight = outerLeft + outerWidth;
-  const outerBottom = outerTop + outerHeight;
-  const translateX = outerLeft < canvasMin ? canvasMin - outerLeft
-    : outerRight > canvasMax ? canvasMax - outerRight : 0;
-  const translateY = outerTop < canvasMin ? canvasMin - outerTop
-    : outerBottom > canvasMax ? canvasMax - outerBottom : 0;
+  const strokeLeft = centerX - strokeWidth / 2;
+  const strokeTop = centerY - strokeHeight / 2;
+  const strokeRight = strokeLeft + strokeWidth;
+  const strokeBottom = strokeTop + strokeHeight;
+  const translateX = strokeLeft < canvasMin ? canvasMin - strokeLeft
+    : strokeRight > canvasMax ? canvasMax - strokeRight : 0;
+  const translateY = strokeTop < canvasMin ? canvasMin - strokeTop
+    : strokeBottom > canvasMax ? canvasMax - strokeBottom : 0;
   left += translateX;
   right += translateX;
   top += translateY;
@@ -118,31 +122,62 @@ function paintThemeBackdrop(context, color, paths, sourceSize, textureKey) {
       color, .75, seed + index * 17, .2, 1, false,
       { variation: .8, breaks: .1, grain: .65, gain: 1.5, step: .4, taperLength: .6 });
   }
-  context.globalAlpha = .72;
-  const rayCount = 3 + Math.floor(random() * 3);
-  let raysPainted = 0;
-  for (let attempt = 0; attempt < rayCount * 6 && raysPainted < rayCount; attempt++) {
-    const side = Math.floor(random() * 4);
+  context.globalAlpha = .94;
+  const edgeStrokeCount = 16 + seed % 5;
+  const maxStrokeWidth = .7;
+  const maxNib = maxStrokeWidth * 1.95;
+  const edgeGrainReach = maxNib * .95 + .21;
+  const filamentReach = maxStrokeWidth * .55 + maxNib * (.3 + .145);
+  const strokeSafety = Math.ceil((.07 + .18 + Math.max(edgeGrainReach, filamentReach) + .35) * 4) / 4;
+  const strokeMin = canvasMin + strokeSafety, strokeMax = canvasMax - strokeSafety;
+  let strokesPainted = 0;
+  for (let attempt = 0; attempt < edgeStrokeCount * 5 && strokesPainted < edgeStrokeCount; attempt++) {
+    const side = (seed + attempt * 3) % 4;
     const progress = .18 + random() * .64;
-    const length = 2.4 + random() * 2.2;
-    let start, end;
+    const desiredSpan = 2.8 + random() * 3.2;
+    const extension = 2 + random() * 2;
+    const lean = (random() - .5) * 1.35;
+    let anchor, halfSpan, inner, tip, stroke;
     if (side === 0) {
-      start = [outerLeft + outerWidth * progress, outerTop + .4];
-      end = [start[0] + (random() - .5) * 1.5, start[1] - length];
+      anchor = outerLeft + outerWidth * progress;
+      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
+      inner = Math.min(strokeMax, outerTop + .8);
+      tip = Math.max(strokeMin, outerTop - extension);
+      stroke = [[anchor - halfSpan, inner], [anchor + lean, (inner + tip) / 2 - .25],
+        [anchor + halfSpan, tip]];
     } else if (side === 1) {
-      start = [shiftedOuterRight - .4, outerTop + outerHeight * progress];
-      end = [start[0] + length, start[1] + (random() - .5) * 1.5];
+      anchor = outerTop + outerHeight * progress;
+      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
+      inner = Math.max(strokeMin, shiftedOuterRight - .8);
+      tip = Math.min(strokeMax, shiftedOuterRight + extension);
+      stroke = [[inner, anchor - halfSpan], [(inner + tip) / 2 + .25, anchor + lean],
+        [tip, anchor + halfSpan]];
     } else if (side === 2) {
-      start = [outerLeft + outerWidth * progress, shiftedOuterBottom - .4];
-      end = [start[0] + (random() - .5) * 1.5, start[1] + length];
+      anchor = outerLeft + outerWidth * progress;
+      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
+      inner = Math.max(strokeMin, shiftedOuterBottom - .8);
+      tip = Math.min(strokeMax, shiftedOuterBottom + extension);
+      stroke = [[anchor + halfSpan, inner], [anchor + lean, (inner + tip) / 2 + .25],
+        [anchor - halfSpan, tip]];
     } else {
-      start = [outerLeft + .4, outerTop + outerHeight * progress];
-      end = [start[0] - length, start[1] + (random() - .5) * 1.5];
+      anchor = outerTop + outerHeight * progress;
+      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
+      inner = Math.min(strokeMax, outerLeft + .8);
+      tip = Math.max(strokeMin, outerLeft - extension);
+      stroke = [[inner, anchor + halfSpan], [(inner + tip) / 2 - .25, anchor + lean],
+        [tip, anchor - halfSpan]];
     }
-    if ([...start, ...end].some(value => value < canvasMin || value > canvasMax)) continue;
-    pencilStroke(context, [start, end], color, .55, seed + 211 + raysPainted * 29, .16, 1, false,
-      { variation: .75, breaks: .08, grain: .55, gain: 1.25, step: .35, taperLength: .7 });
-    raysPainted++;
+    if (halfSpan < .8 || stroke.flat().some(value => value < strokeMin || value > strokeMax)) continue;
+    const passes = 3 + (seed + attempt) % 2;
+    const width = .48 + random() * .22;
+    for (let pass = 0; pass < passes; pass++) {
+      const offset = (pass - (passes - 1) / 2) * .12;
+      const layeredStroke = stroke.map(([x, y]) => side % 2 ? [x, y + offset] : [x + offset, y]);
+      pencilStroke(context, layeredStroke, color, width, seed + 211 + attempt * 41 + pass * 7,
+        .14, 1, false,
+        { variation: .84, breaks: .04, grain: .58, gain: 2.8, step: .28, taperLength: .5 });
+    }
+    strokesPainted++;
   }
   context.restore();
 }
