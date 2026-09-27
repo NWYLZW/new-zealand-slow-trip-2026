@@ -410,6 +410,9 @@ export function AdventureDayDetails({ dateId, onSelectEvent }) {
         return { id: key, start: interval.start, end: interval.end, label, showTime: false,
           iconType: rowIconType ?? agendaItem?.iconType, mapsUrl: agendaItem?.mapsUrl,
           color: rowColor ?? event.color, groupId: event.urlId,
+          summaryGroup: !event.isFlightTransfer || event.flights?.length === 1
+            ? { id: event.urlId, label: adventureEventLabel(event), color: event.color,
+              iconType: event.icon, onSelect: () => onSelectEvent(event) } : null,
           title: [fullTimeLabel, fullLabel, fullDetails,
             `${interval.source} ${durationLabel(minutes)}${continuation}`].filter(Boolean).join(" · "),
           ariaLabel: [fullTimeLabel, fullLabel, fullDetails,
@@ -446,7 +449,7 @@ export function AdventureDayDetails({ dateId, onSelectEvent }) {
   const nextDateLabel = language === "en" ? `${nextDate} 00:00 ${zoneCity} (${model.primaryTimeZone})`
     : `${nextDate} 00:00 ${zoneCity}当地时间（${model.primaryTimeZone}）`;
   return <section className="trip-day-details" aria-label={`${entry.day.date}日程时间线`}>
-    <AdventureScheduleTimeline height="fill" range={{ start: model.axisStart, end: model.axisEnd }}
+    <AdventureScheduleTimeline height="fill" adaptiveDetail range={{ start: model.axisStart, end: model.axisEnd }}
       intervals={model.intervals} points={model.points}
       tickColumns={model.tickColumns}
       collapsedRanges={model.collapsedRanges}

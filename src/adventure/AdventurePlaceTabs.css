@@ -64,11 +64,19 @@
 }
 
 .trip-place-tabpanel[data-tab="calendar"],
+.trip-place-tabpanel[data-tab="map"],
 .trip-place-tabpanel[data-tab="hotels"],
 .trip-place-tabpanel[data-tab="photos"] {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.trip-place-tabs[data-map-layout="tab"] { gap: 8px; }
+.trip-place-tabpanel[data-tab="map"] > .trip-place-town-map {
+  flex: 1;
+  height: auto;
+  min-height: 0;
 }
 
 .trip-place-tabpanel[data-tab="calendar"] .trip-adventure-calendar--embedded {

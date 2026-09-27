@@ -64,7 +64,8 @@ export function pencilLabel(text, {size = 19, family = mapHandwriting, color, pa
   const key = JSON.stringify([text, size, family, color, paper, seed, params]);
   if (labels.has(key)) return labels.get(key);
   const mask = document.createElement('canvas');
-  const measure = mask.getContext('2d');
+  // Context options must be set on the first acquisition, before pixel reads.
+  const measure = mask.getContext('2d', {willReadFrequently:true});
   measure.fillStyle = color;
   measure.fillRect(0, 0, 1, 1);
   const rgb = measure.getImageData(0, 0, 1, 1).data;

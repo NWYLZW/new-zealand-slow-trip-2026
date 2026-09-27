@@ -9,12 +9,15 @@ import { drawTownVectorDetail, prepareTownMapData } from './drawPencilTown';
 import { waterFeatures } from './waterFeatures';
 
 const TILE_SIZE = 512;
+const OCEAN_TILE_DENSITY = 1;
+const OCEAN_TEXTURE_STROKES = 320;
 const OVERVIEW_MAX_ZOOM = 3.5;
 const REGIONAL_MAX_ZOOM = 9;
 const DETAIL_DELAY_MS = 150;
 const MAX_DETAIL_ENTRIES = 3;
 const MAX_DETAIL_PIXELS = 9000000;
 const MAX_TILE_PIXELS = 4000000;
+const MAX_OVERVIEW_PIXELS = 2000000;
 const DETAIL_TILE_SIZE = 192;
 const geographicRings = geometry => geometry.type === 'MultiPolygon' ? geometry.coordinates.flat() :
   geometry.type === 'Polygon' || geometry.type === 'MultiLineString' ? geometry.coordinates : [geometry.coordinates];
@@ -22,10 +25,11 @@ const geographicRings = geometry => geometry.type === 'MultiPolygon' ? geometry.
 function surface(width, height, density, canvas = document.createElement('canvas')) {
   canvas.width = Math.max(1, Math.ceil(width * density));
   canvas.height = Math.max(1, Math.ceil(height * density));
-  const ctx = canvas.getContext('2d');
+  const software = !canvas.isConnected;
+  const ctx = canvas.getContext('2d', software ? { willReadFrequently: true } : undefined);
   ctx.setTransform(density, 0, 0, density, 0, 0);
   ctx.lineJoin = 'round';
-  return { canvas, ctx, density };
+  return { canvas, ctx, density, software };
 }
 
 function pathFor(project, ctx) {
@@ -62,7 +66,7 @@ function anchoredGrain(ctx, viewport, anchor, color, seed, amount, density = 1) 
 function lodSettings(level) {
   if (level === 'local') return { textureDensity: 1.5, mountainCount: 760, mountainSpacing: 12, boundary: .46 };
   if (level === 'regional') return { textureDensity: 1.2, mountainCount: 360, mountainSpacing: 13, boundary: .38 };
-  return { textureDensity: 1, mountainCount: null, mountainSpacing: 11, boundary: 0 };
+  return { textureDensity: .55, mountainCount: 40, mountainSpacing: 16, boundary: 0 };
 }
 
 function paintTerrain(layer, project, options = {}) {
@@ -113,12 +117,16 @@ function paintTerrain(layer, project, options = {}) {
 let oceanTile;
 function seaTexture() {
   if (oceanTile) return oceanTile;
-  const { canvas, ctx } = surface(TILE_SIZE, TILE_SIZE, 3), rng = random(4801);
-  for (let index = 0; index < 3100; index++) {
+  const { canvas, ctx } = surface(TILE_SIZE, TILE_SIZE, OCEAN_TILE_DENSITY), rng = random(4801);
+  for (let index = 0; index < OCEAN_TEXTURE_STROKES; index++) {
     const x = rng() * TILE_SIZE, y = rng() * TILE_SIZE, length = 9 + rng() * 49;
     const points = [[x, y], [x + length * .5, y - length * .09], [x + length, y - length * .18]];
     ctx.globalAlpha = .1 + rng() * .2;
-    for (const dx of [0, -TILE_SIZE]) for (const dy of [0, TILE_SIZE]) {
+    const offsets = [[0, 0]];
+    if (x + length > TILE_SIZE) offsets.push([-TILE_SIZE, 0]);
+    if (y - length * .18 < 0) offsets.push([0, TILE_SIZE]);
+    if (x + length > TILE_SIZE && y - length * .18 < 0) offsets.push([-TILE_SIZE, TILE_SIZE]);
+    for (const [dx, dy] of offsets) {
       ctx.save(); ctx.translate(dx, dy);
       stroke(ctx, points, p.water, .5 + (index % 4) * .1, 8100 + index,
         { passes: 1, detail: 'fill', breaks: .78, gain: 1.15, amplitude: .35 });
@@ -190,7 +198,7 @@ export function createPencilMap(canvas, project, width, height) {
   const bounds = path.bounds(geography.land);
   const left = Math.floor(bounds[0][0]) - 20, top = Math.floor(bounds[0][1]) - 20;
   const w = Math.ceil(bounds[1][0] - left) + 20, h = Math.ceil(bounds[1][1] - top) + 20;
-  const density = Math.min(dpr * 4, Math.sqrt(14000000 / (w * h)));
+  const density = Math.min(dpr * 4, Math.sqrt(MAX_OVERVIEW_PIXELS / (w * h)));
   const layer = surface(w, h, density);
   const buildStart = performance.now();
   paintTerrain(layer, point => { const [x, y] = project(point); return [x - left, y - top]; }, {
@@ -203,7 +211,8 @@ export function createPencilMap(canvas, project, width, height) {
     { text: '南太平洋', point: [178.29757, -43.66757], size: 22, seed: 773 },
   ].map(label => ({ ...label, position: project(label.point), sprite: mapLabel(label.text, label.size, label.seed, p.water) }));
   const stats = { terrainBuilds: 1, detailBuilds: 0, frames: 0, buildMs: performance.now() - buildStart,
-    pixels: layer.canvas.width * layer.canvas.height, cachedDetails: 0, cachePixels: 0 };
+    pixels: layer.canvas.width * layer.canvas.height, cachedDetails: 0, cachePixels: 0,
+    overviewBackend: layer.software ? 'software' : 'display' };
   canvas.dataset.lettering = 'C';
   canvas.dataset.coverClasses = landCover.features.length + 1;
   canvas.dataset.waterRenderer = 'pressure-pencil';
@@ -245,7 +254,7 @@ export function createPencilMap(canvas, project, width, height) {
     if (cancelWork) cancelPending();
     const start = performance.now();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
-    const [ox, oy] = view.apply(origin), seaScale = unit * view.k / 3;
+    const [ox, oy] = view.apply(origin), seaScale = unit * view.k / OCEAN_TILE_DENSITY;
     pattern.setTransform(new DOMMatrix([seaScale, 0, 0, seaScale, ox, oy]));
     ctx.fillStyle = pattern; ctx.fillRect(0, 0, width, height);
     blit({ ...layer, left, top, w, h }, view);

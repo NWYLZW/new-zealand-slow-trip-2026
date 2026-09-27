@@ -4,6 +4,21 @@ import { GameIconButton } from "./GameIconButton";
 import { CloseIcon, MenuIcon, ResetIcon } from "./SketchIcons";
 import "./AdventureDeferredFeature.css";
 
+const featureLoadTimeout = 15000;
+
+function loadWithTimeout(load) {
+  return new Promise((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error("Feature loading timed out")), featureLoadTimeout);
+    Promise.resolve().then(load).then(result => {
+      window.clearTimeout(timer);
+      resolve(result);
+    }, error => {
+      window.clearTimeout(timer);
+      reject(error);
+    });
+  });
+}
+
 class FeatureBoundary extends Component {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
@@ -35,7 +50,7 @@ function FeatureStatus({ kind, failed, onRetry, onClose, onOpenMenu, hidden }) {
 export function AdventureDeferredFeature({ load, kind, defer = false, componentProps, onClose, onOpenMenu }) {
   const [ready, setReady] = useState(!defer);
   const [attempt, setAttempt] = useState(0);
-  const Feature = useMemo(() => lazy(load), [load, attempt]);
+  const Feature = useMemo(() => lazy(() => loadWithTimeout(load)), [load, attempt]);
   useEffect(() => {
     if (!defer) return;
     let secondFrame = 0, idle = 0, timer = 0;

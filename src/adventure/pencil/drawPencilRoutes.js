@@ -154,7 +154,7 @@ export function createPencilRoutes(canvas, entries, width, height) {
     canvas._mapView = { x: view.x, y: view.y, k: view.k };
   };
   function* paintTiles(image) {
-    const context = image.canvas.getContext('2d');
+    const context = image.canvas.getContext('2d', { willReadFrequently: true });
     context.scale(dpr, dpr);
     const w = image.canvas.width / dpr, h = image.canvas.height / dpr, tiles = [];
     const worldViewport=[[(image.left-margin-image.x)/image.k,(image.top-margin-image.y)/image.k],

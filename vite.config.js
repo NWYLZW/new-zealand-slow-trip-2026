@@ -49,6 +49,8 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // One migration release must take over clients stuck on the former large
+      // precache. The new app exposes manual update-and-refresh for later builds.
       registerType: "autoUpdate",
       manifest: {
         id: "/new-zealand-slow-trip-2026/",
@@ -97,10 +99,33 @@ export default defineConfig({
         skipWaiting: true,
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/\/(?:api|assets|images|icons)\//],
-        globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2}"],
+        // Keep installation atomic and small. Feature code is cached after use,
+        // so one optional multi-megabyte chunk cannot reject the whole update.
+        globPatterns: [
+          "**/*.html",
+          "assets/index-*.{js,css}",
+          "assets/AdventurePage-*.{js,css}",
+          "assets/AdventureMap-*.{js,css}",
+          "assets/AdventureCalendar-*.{js,css}",
+          "assets/townMapData-*.{js,css}",
+          "assets/rentalBookings-*.{js,css}",
+          "assets/preTripChecklist-*.js",
+          "manifest.webmanifest",
+          "icons/*.{png,ico}",
+        ],
         globIgnores: ["images/**/*"],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         runtimeCaching: [
+          {
+            urlPattern: ({ request, url }) => url.origin === self.location.origin
+              && ["script", "style", "font"].includes(request.destination),
+            handler: "CacheFirst",
+            options: {
+              cacheName: "nz-trip-app-assets-v1",
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: { maxEntries: 80, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
           {
             urlPattern: /^https?:\/\/[^/]+\/new-zealand-slow-trip-2026\/images\/.*\.(?:png|jpe?g|webp|avif)$/i,
             handler: "CacheFirst",

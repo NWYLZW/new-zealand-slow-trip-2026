@@ -21,6 +21,13 @@ const assertFullBounds = async (page, selector, viewport) => {
   assert(box && Math.abs(box.x) < 1 && Math.abs(box.y) < 1
     && Math.abs(box.width - viewport.width) < 1 && Math.abs(box.height - viewport.height) < 1, JSON.stringify(box));
 };
+const assertHeaderRow = async (page, contentSelector, actionsSelector) => {
+  const content = await page.locator(contentSelector).boundingBox();
+  const actions = await page.locator(actionsSelector).boundingBox();
+  assert(content && actions && Math.abs(content.y + content.height / 2 - actions.y - actions.height / 2) < 2,
+    JSON.stringify({ content, actions }));
+  assert(content.x + content.width <= actions.x + 1, "Header content overlaps its actions");
+};
 
 try {
   for (const viewport of [{ width: 1327, height: 964 }, { width: 1145, height: 964 }]) {
@@ -120,7 +127,7 @@ try {
     await page.close();
   }
 
-  for (const portrait of [{ width: 390, height: 844 }, { width: 436, height: 900 }]) {
+  for (const portrait of [{ width: 390, height: 844 }, { width: 436, height: 900 }, { width: 430, height: 932 }]) {
     const page = await browser.newPage({ viewport: portrait });
     page.on("pageerror", error => errors.push(error.message));
     page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
@@ -131,6 +138,7 @@ try {
     assert.equal(await page.locator("#trip-board-structure").getAttribute("data-automatic-fullscreen"), "calendar");
     assert.equal(new URL(page.url()).searchParams.has("fullscreen"), false);
     await assertFullBounds(page, "#trip-calendar-region", portrait);
+    await assertHeaderRow(page, ".trip-adventure-calendar-scopes", ".trip-calendar-header-actions");
     assert.equal(await page.getByRole("button", { name: /全屏|退出全屏/ }).count(), 0);
     assert.equal(await page.getByRole("button", { name: "菜单", exact: true }).count(), 1);
     assert.equal(await page.getByRole("button", { name: "关闭日历", exact: true }).count(), 1);
@@ -141,6 +149,7 @@ try {
     await settle(page);
     assert.equal(await page.locator("#trip-board-structure").getAttribute("data-automatic-fullscreen"), "right");
     await assertFullBounds(page, "#trip-right-panel", portrait);
+    await assertHeaderRow(page, ".trip-panel-heading", ".trip-panel-header-actions");
     assert.equal(await page.locator("#trip-calendar-region").getAttribute("inert"), "");
     assert.equal(await page.getByRole("button", { name: /全屏|退出全屏/ }).count(), 0);
     assert.equal(await page.locator(".trip-event-back").count(), 1);
@@ -149,7 +158,7 @@ try {
     const landscape = { width: portrait.height, height: portrait.width };
     await page.setViewportSize(landscape);
     await settle(page);
-    assert.equal(await page.locator("#trip-board-structure").getAttribute("data-responsive-layout"), "compact");
+    assert.equal(await page.locator("#trip-board-structure").getAttribute("data-responsive-layout"), "phone-landscape");
     assert.equal(await page.locator("#trip-board-structure").getAttribute("data-automatic-fullscreen"), null);
     assert.equal(await page.locator("#trip-board-structure").getAttribute("data-fullscreen"), null);
     assert.equal(await page.getByRole("button", { name: "全屏面板", exact: true }).count(), 1);
@@ -170,7 +179,16 @@ try {
     assert.equal(await page.locator("#trip-board-structure").getAttribute("data-automatic-fullscreen"), "right");
     assert.equal(await page.getByRole("button", { name: /全屏|退出全屏/ }).count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-    results.push({ ...portrait, phonePortraitAutomatic: true, landscapeSplit: true,
+    await page.setViewportSize(landscape);
+    await settle(page);
+    await page.getByRole("button", { name: "关闭面板", exact: true }).click();
+    await settle(page);
+    assert.equal(await page.locator("#trip-board-structure").getAttribute("data-automatic-fullscreen"), "calendar");
+    await assertFullBounds(page, "#trip-calendar-region", landscape);
+    await assertHeaderRow(page, ".trip-adventure-calendar-scopes", ".trip-calendar-header-actions");
+    assert.equal(new URL(page.url()).searchParams.has("fullscreen"), false);
+    assert.equal(await page.getByRole("button", { name: /全屏|退出全屏/ }).count(), 0);
+    results.push({ ...portrait, phonePortraitAutomatic: true, landscapeRightSplit: true, landscapeCalendarAutomatic: true,
       rotationHistoryStable: true, manualFullscreenPreserved: true, nestedBack: true });
     await page.close();
   }

@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { LanguageContext } from "../LanguageContext";
 import { isAdventurePath } from "../siteNavigation";
+import { applyOrientationPreference, orientationLockStillApplies, orientationPreferences } from "./orientationPreference";
 import "./AdventureMenu.css";
 import "./AdventureAppearance.css";
 
@@ -9,6 +10,7 @@ const themeKey = "nz-trip-adventure-theme";
 const appearanceKey = "nz-trip-adventure-appearance";
 const cameraFacingKey = "nz-trip-camera-facing";
 const cameraAudioKey = "nz-trip-camera-audio";
+const orientationKey = "nz-trip-adventure-orientation";
 
 export const adventureThemes = {
   lake: { color: "#bddadb" },
@@ -38,6 +40,12 @@ export function AdventurePreferencesProvider({ children }) {
   const [appearance, setAppearanceState] = useState(() => readPreference(appearanceKey, ["light", "dark", "system"], "system"));
   const [cameraFacing, setCameraFacingState] = useState(() => readPreference(cameraFacingKey, ["environment", "user"], "environment"));
   const [cameraAudio, setCameraAudioState] = useState(() => readPreference(cameraAudioKey, ["on", "off"], "on") === "on");
+  const [orientation, setOrientationState] = useState(() => readPreference(orientationKey, orientationPreferences, "portrait"));
+  const [orientationStatus, setOrientationStatus] = useState("idle");
+  const [orientationRequest, setOrientationRequest] = useState(0);
+  const orientationValueRef = useRef(orientation);
+  const orientationRunRef = useRef(0);
+  const orientationQueueRef = useRef(Promise.resolve());
   const [systemDark, setSystemDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
   const resolvedAppearance = appearance === "system" ? (systemDark ? "dark" : "light") : appearance;
 
@@ -55,11 +63,64 @@ export function AdventurePreferencesProvider({ children }) {
   }), []);
   const setCameraFacing = useCallback(value => setCameraFacingState(value === "user" ? "user" : "environment"), []);
   const setCameraAudio = useCallback(value => setCameraAudioState(Boolean(value)), []);
+  const setOrientation = useCallback(value => {
+    const resolved = orientationPreferences.includes(value) ? value : "system";
+    orientationValueRef.current = resolved;
+    setOrientationState(resolved);
+    setOrientationRequest(request => request + 1);
+  }, []);
 
   useEffect(() => {
     savePreference(cameraFacingKey, cameraFacing);
     savePreference(cameraAudioKey, cameraAudio ? "on" : "off");
   }, [cameraFacing, cameraAudio]);
+
+  useEffect(() => {
+    orientationValueRef.current = orientation;
+    savePreference(orientationKey, orientation);
+    const apply = () => {
+      const request = ++orientationRunRef.current;
+      if (isAdventurePath()) setOrientationStatus("applying");
+      orientationQueueRef.current = orientationQueueRef.current.catch(() => {}).then(async () => {
+        if (request !== orientationRunRef.current) return;
+        const onAdventure = isAdventurePath();
+        const desired = onAdventure ? orientationValueRef.current : "system";
+        const result = await applyOrientationPreference(desired);
+        if (request !== orientationRunRef.current) return;
+        if (!isAdventurePath()) {
+          setOrientationStatus("idle");
+          return;
+        }
+        setOrientationStatus(result.status);
+      });
+    };
+    apply();
+    const reapply = () => {
+      if (document.visibilityState === "visible") apply();
+    };
+    const orientationApi = screen.orientation;
+    document.addEventListener("visibilitychange", reapply);
+    document.addEventListener("fullscreenchange", reapply);
+    window.addEventListener("popstate", reapply);
+    const verify = () => {
+      if (!isAdventurePath() || orientationValueRef.current === "system") return;
+      if (!orientationLockStillApplies(orientationValueRef.current)) setOrientationStatus("restricted");
+    };
+    orientationApi?.addEventListener?.("change", verify);
+    return () => {
+      orientationRunRef.current += 1;
+      document.removeEventListener("visibilitychange", reapply);
+      document.removeEventListener("fullscreenchange", reapply);
+      window.removeEventListener("popstate", reapply);
+      orientationApi?.removeEventListener?.("change", verify);
+    };
+  }, [orientation, orientationRequest]);
+
+  useEffect(() => () => {
+    orientationRunRef.current += 1;
+    orientationQueueRef.current = orientationQueueRef.current.catch(() => {})
+      .then(() => applyOrientationPreference("system"));
+  }, []);
 
   useEffect(() => {
     savePreference(languageKey, language);
@@ -99,15 +160,16 @@ export function AdventurePreferencesProvider({ children }) {
       if (event.key === appearanceKey) setAppearanceState(readPreference(appearanceKey, ["light", "dark", "system"], "system"));
       if (event.key === cameraFacingKey) setCameraFacingState(readPreference(cameraFacingKey, ["environment", "user"], "environment"));
       if (event.key === cameraAudioKey) setCameraAudioState(readPreference(cameraAudioKey, ["on", "off"], "on") === "on");
+      if (event.key === orientationKey) setOrientationState(readPreference(orientationKey, orientationPreferences, "portrait"));
     };
     window.addEventListener("storage", sync);
     return () => window.removeEventListener("storage", sync);
   }, []);
 
   const value = useMemo(() => ({ language, setLanguage, theme, setTheme, appearance, setAppearance, resolvedAppearance,
-    cameraFacing, setCameraFacing, cameraAudio, setCameraAudio }),
+    cameraFacing, setCameraFacing, cameraAudio, setCameraAudio, orientation, setOrientation, orientationStatus }),
     [language, setLanguage, theme, setTheme, appearance, setAppearance, resolvedAppearance,
-      cameraFacing, setCameraFacing, cameraAudio, setCameraAudio]);
+      cameraFacing, setCameraFacing, cameraAudio, setCameraAudio, orientation, setOrientation, orientationStatus]);
   const languageValue = useMemo(() => ({ language, setLanguage }), [language, setLanguage]);
 
   return <AdventurePreferencesContext.Provider value={value}>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLanguage } from "../LanguageContext";
 import { usePrivateVault } from "../PrivateVaultContext";
 import { aucklandCityHotels } from "../data/aucklandCityHotels";
@@ -6,7 +6,7 @@ import { confirmedStayMedia } from "../data/confirmedStayMedia";
 import { regionalHotels } from "../data/regionalHotels";
 import { attractionPinsByRegion } from "../components/HotelComparisonDialog";
 import { AdventurePencilTabs } from "./AdventureCalendar";
-import { LockIcon, NextIcon, PreviousIcon } from "./SketchIcons";
+import { GoogleMapIcon, HotelIcon, LocationMapIcon, LockIcon, NextIcon, OrderIcon, PhotosIcon, PreviousIcon } from "./SketchIcons";
 import { PanelDivider } from "./pencil/PanelDivider";
 import { adventureStayName } from "./adventureStayName";
 import { PencilSurface } from "./pencil/PencilSurface";
@@ -50,20 +50,15 @@ function mapUrl(query) {
   return url.toString();
 }
 
-function FactSection({ title, primary, additional = [], language }) {
-  const [expanded, setExpanded] = useState(false);
+function FactSection({ title, primary, additional = [] }) {
   if (!primary.length && !additional.length) return null;
-  const facts = expanded ? [...primary, ...additional] : primary;
+  const facts = [...primary, ...additional];
   return <section className="trip-stay-section" aria-label={title}>
     <dl>{facts.map(([label, value, href]) => <div key={label}>
       <dt><PencilText>{label}</PencilText></dt>
       <dd>{href ? <a href={href} target="_blank" rel="noreferrer"><PencilText>{String(value)}</PencilText></a>
         : <PencilText>{String(value)}</PencilText>}</dd>
     </div>)}</dl>
-    {additional.length > 0 && <button className="trip-stay-more" type="button" aria-expanded={expanded}
-      onClick={() => setExpanded((value) => !value)}>
-      <PencilText>{expanded ? language === "en" ? "Less" : "收起" : language === "en" ? `More (${additional.length})` : `更多信息（${additional.length}）`}</PencilText>
-    </button>}
   </section>;
 }
 
@@ -109,9 +104,25 @@ export function AdventureStayDetails({ booking, placeName, placeTag, onStayLinkC
   const mapQuery = privateStay?.["准确地址"] ?? privateStay?.address ?? hotel?.mapQuery ?? booking.mapQuery ?? `${placeName}, New Zealand`;
   const mapHref = mapUrl(mapQuery);
   const propertyUrl = privateStay?.propertyUrl ?? hotel?.officialUrl ?? hotel?.bookingUrl;
+  const rootRef = useRef(null);
   const [activeTab, setActiveTab] = useState("stay");
+  const [layout, setLayout] = useState("tall");
   const linkChangeRef = useRef(onStayLinkChange);
   linkChangeRef.current = onStayLinkChange;
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const update = () => {
+      const { width, height } = root.getBoundingClientRect();
+      if (width < 1 || height < 1) return;
+      const next = height < 420 ? width >= 640 && images.length ? "wide-short" : "narrow-short" : "tall";
+      setLayout((current) => current === next ? current : next);
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(root);
+    update();
+    return () => observer.disconnect();
+  }, [booking.bookingId, images.length]);
   useEffect(() => {
     linkChangeRef.current?.(propertyUrl || mapHref ? {
       placeTag, bookingId: booking.bookingId,
@@ -145,36 +156,83 @@ export function AdventureStayDetails({ booking, placeName, placeTag, onStayLinkC
     ...[["PIN 码", "PIN 码"], ["付款提醒", "付款提醒"]]
       .map(([key, label]) => privateStay?.[key] && [label, privateStay[key]]),
   ].filter(Boolean);
+  const hasPolicy = Boolean(bookingPrimary.length || bookingAdditional.length);
   const tabs = [["stay", language === "en" ? "Stay" : "入住"]];
-  if (bookingPrimary.length || bookingAdditional.length) tabs.push(["policy", language === "en" ? "Booking & policy" : "预订与政策"]);
+  if (hasPolicy) tabs.push(["policy", language === "en" ? "Booking & policy" : "预订与政策"]);
   tabs.push(["location", language === "en" ? "Location" : "位置与附近"]);
-  const currentTab = tabs.some(([id]) => id === activeTab) ? activeTab : "stay";
+  const shortTabs = [
+    ["stay", language === "en" ? "Stay" : "入住", HotelIcon],
+    ...(layout === "narrow-short" && images.length ? [["photos", language === "en" ? "Photos" : "照片", PhotosIcon]] : []),
+    ...(hasPolicy ? [["policy", language === "en" ? "Booking & policy" : "预订与政策", OrderIcon]] : []),
+    ["location", language === "en" ? "Location and nearby" : "位置与附近", LocationMapIcon],
+  ];
+  const availableTabs = layout === "tall" ? tabs : shortTabs;
+  const currentTab = availableTabs.some(([id]) => id === activeTab) ? activeTab : "stay";
   const panelId = `trip-stay-${booking.bookingId}-panel`;
+  const shortTabRefs = useRef([]);
 
-  return <article className="trip-stay-detail">
+  useEffect(() => {
+    if (activeTab !== currentTab) setActiveTab(currentTab);
+  }, [activeTab, currentTab]);
+
+  const onShortTabKeyDown = (event, index) => {
+    let next = index;
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") next = (index + 1) % shortTabs.length;
+    else if (event.key === "ArrowUp" || event.key === "ArrowLeft") next = (index + shortTabs.length - 1) % shortTabs.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = shortTabs.length - 1;
+    else return;
+    event.preventDefault();
+    setActiveTab(shortTabs[next][0]);
+    shortTabRefs.current[next]?.focus();
+  };
+
+  const vaultPrompt = !vault.isUnlocked && vault.isConfigured && <div className="trip-stay-vault-prompt">
+    <span className="trip-stay-vault-icon" aria-hidden="true"><LockIcon /></span>
+    <PencilSurface as="button" variant="action" onClick={() => onRequestUnlock?.()}
+      disabled={!onRequestUnlock} aria-label={language === "en" ? "Unlock vault" : "解锁保险箱"}><PencilText>{language === "en" ? "Unlock vault" : "解锁保险箱"}</PencilText></PencilSurface>
+  </div>;
+  const tabContent = <>
+    {currentTab === "stay" && <FactSection title={language === "en" ? "Stay" : "入住"} primary={stayPrimary} additional={stayAdditional} />}
+    {currentTab === "photos" && <Gallery key={`${booking.bookingId}-tab`} images={images} title={title} language={language} />}
+    {currentTab === "policy" && <FactSection title={language === "en" ? "Booking & policy" : "预订与政策"} primary={bookingPrimary} additional={bookingAdditional} />}
+    {currentTab === "location" && <section className="trip-stay-section trip-stay-location" aria-label={language === "en" ? "Location and nearby" : "位置与附近"}>
+      <p className="trip-stay-location-name"><PencilText>{mapQuery}</PencilText></p>
+      {nearby.length > 0 && <ul>{nearby.map((place) => <li key={place.label}>
+        <a href={mapUrl(place.labelEn ?? place.label)} target="_blank" rel="noreferrer">
+          <span className="trip-stay-location-icon" aria-hidden="true"><GoogleMapIcon /></span>
+          <PencilText>{language === "en" ? place.labelEn ?? place.label : place.label}</PencilText>
+        </a>
+      </li>)}</ul>}
+    </section>}
+    {currentTab !== "photos" && vaultPrompt}
+  </>;
+
+  return <article ref={rootRef} className="trip-stay-detail" data-stay-layout={layout}>
     <h3 className="trip-stay-title"><PencilText>{title}</PencilText></h3>
-    <Gallery key={booking.bookingId} images={images} title={title} language={language} />
-    <div className="trip-stay-tab-frame">
+    {(layout === "tall" || layout === "wide-short") && <Gallery key={booking.bookingId} images={images} title={title} language={language} />}
+    {layout === "tall" && <div className="trip-stay-tab-frame">
       <div className="trip-stay-tab-scroll"><AdventurePencilTabs items={tabs} value={currentTab}
         onChange={setActiveTab} ariaLabel={language === "en" ? `${title} details` : `${title}详情`} idPrefix={`trip-stay-${booking.bookingId}`}
         controlsId={panelId} withInk /></div>
       <div className="trip-stay-tab-divider"><PanelDivider /></div>
-    </div>
-    <div className="trip-stay-content" role="tabpanel" id={panelId}
-      aria-labelledby={`trip-stay-${booking.bookingId}-tab-${currentTab}`} tabIndex={0}>
-      {currentTab === "stay" && <FactSection title={language === "en" ? "Stay" : "入住"} primary={stayPrimary} additional={stayAdditional} language={language} />}
-      {currentTab === "policy" && <FactSection title={language === "en" ? "Booking & policy" : "预订与政策"} primary={bookingPrimary} additional={bookingAdditional} language={language} />}
-      {currentTab === "location" && <section className="trip-stay-section trip-stay-location" aria-label={language === "en" ? "Location and nearby" : "位置与附近"}>
-        <p className="trip-stay-location-name"><PencilText>{mapQuery}</PencilText></p>
-        {nearby.length > 0 && <ul>{nearby.map((place) => <li key={place.label}>
-          <a href={mapUrl(place.labelEn ?? place.label)} target="_blank" rel="noreferrer"><PencilText>{language === "en" ? place.labelEn ?? place.label : place.label}</PencilText></a>
-        </li>)}</ul>}
-      </section>}
-      {!vault.isUnlocked && vault.isConfigured && <div className="trip-stay-vault-prompt">
-        <span className="trip-stay-vault-icon" aria-hidden="true"><LockIcon /></span>
-        <PencilSurface as="button" variant="action" onClick={() => onRequestUnlock?.()}
-          disabled={!onRequestUnlock} aria-label={language === "en" ? "Unlock vault" : "解锁保险箱"}><PencilText>{language === "en" ? "Unlock vault" : "解锁保险箱"}</PencilText></PencilSurface>
+    </div>}
+    {layout === "tall" ? <div className="trip-stay-content" role="tabpanel" id={panelId}
+      aria-labelledby={`trip-stay-${booking.bookingId}-tab-${currentTab}`} tabIndex={0}>{tabContent}</div>
+      : <div className="trip-stay-short-workspace">
+        <div className="trip-stay-content trip-stay-short-content" role="tabpanel" id={panelId}
+          aria-labelledby={`trip-stay-${booking.bookingId}-short-tab-${currentTab}`} tabIndex={0}>{tabContent}</div>
+        <nav className="trip-stay-short-tabs" role="tablist" aria-orientation="vertical"
+          aria-label={language === "en" ? `${title} details` : `${title}详情`}>
+          {shortTabs.map(([id, label, Icon], index) => <PencilSurface key={id} as="button"
+            variant={currentTab === id ? "action" : "quiet"} seed={1061 + index * 17}
+            className="trip-stay-short-tab" role="tab"
+            ref={(element) => { shortTabRefs.current[index] = element; }}
+            id={`trip-stay-${booking.bookingId}-short-tab-${id}`}
+            aria-label={label} title={label} aria-selected={currentTab === id} aria-controls={panelId}
+            tabIndex={currentTab === id ? 0 : -1} onClick={() => setActiveTab(id)}
+            onKeyDown={(event) => onShortTabKeyDown(event, index)}><Icon /></PencilSurface>)}
+        </nav>
       </div>}
-    </div>
   </article>;
 }

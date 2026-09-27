@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "../LanguageContext";
 import { usePrivateVault } from "../PrivateVaultContext";
 import { getAdventureCalendarDays } from "../components/calendar/tripCalendarData";
@@ -16,6 +16,7 @@ import { pencilStroke } from "./pencil/stroke";
 import "./AdventurePlaceTabs.css";
 
 const tabs = [["calendar", "日历"], ["hotels", "酒店"], ["activities", "活动"], ["photos", "照片"]];
+const englishTabs = [["calendar", "Calendar"], ["hotels", "Stays"], ["activities", "Activities"], ["photos", "Photos"]];
 
 function PlaceTabDivider() {
   const canvasRef = useRef(null);
@@ -80,6 +81,8 @@ function PlaceActivities({ activities, language }) {
 export function AdventurePlaceTabs({ stop, selectedTab, onTabChange, selectedDate, onDateChange, onSelectDay, onSelectEvent, onSelectMedia, onRequestCapture, onStayLinkChange, onRequestUnlock, onSelectStay }) {
   const { language } = useLanguage();
   const vault = usePrivateVault();
+  const rootRef = useRef(null);
+  const [compactHeight, setCompactHeight] = useState(() => typeof window !== "undefined" && window.innerHeight <= 600);
   const tag = stop?.tag;
   const days = useMemo(() => {
     const scoped = placeCalendarDays(tag);
@@ -109,6 +112,22 @@ export function AdventurePlaceTabs({ stop, selectedTab, onTabChange, selectedDat
   const townFocus = activeTab === "hotels" && selectedStayMarker
     ? { ...selectedStayMarker, kind: "hotel" } : null;
   const baseId = `trip-place-${tag ?? "unknown"}`;
+  const mapInTab = compactHeight || activeTab === "map";
+  const tabItems = language === "en" ? englishTabs : tabs;
+  const visibleTabs = mapInTab
+    ? [tabItems[0], ["map", language === "en" ? "Map" : "地图"], ...tabItems.slice(1)] : tabItems;
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const update = () => {
+      const height = root.clientHeight;
+      if (height > 0) setCompactHeight(height < 480);
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(root);
+    update();
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => { setLocalTab("calendar"); }, [tag]);
   useEffect(() => { setSelectedStayId(stays[0]?.bookingId); }, [tag, stays]);
@@ -126,18 +145,22 @@ export function AdventurePlaceTabs({ stop, selectedTab, onTabChange, selectedDat
     onDateChange?.(dateId);
   };
 
-  return <section className="trip-place-tabs" aria-label={language === "en" ? `${stop?.nameEn ?? stop?.name ?? "Place"} plans` : `${stop?.name ?? "地点"}安排`}>
-    <div className="trip-place-town-map"><AdventureTownMap place={stop} language={language}
-      focusTarget={townFocus} stayMarkers={stayMarkers} onSelectStay={onSelectStay} /></div>
+  const townMap = <div className="trip-place-town-map"><AdventureTownMap place={stop} language={language}
+    focusTarget={townFocus} stayMarkers={stayMarkers} onSelectStay={onSelectStay} /></div>;
+
+  return <section ref={rootRef} className="trip-place-tabs" data-map-layout={mapInTab ? "tab" : "inline"}
+    aria-label={language === "en" ? `${stop?.nameEn ?? stop?.name ?? "Place"} plans` : `${stop?.name ?? "地点"}安排`}>
+    {!mapInTab && townMap}
     <div className="trip-place-tab-frame">
       <div className="trip-place-tab-scroll">
-        <AdventurePencilTabs items={language === "en" ? [["calendar", "Calendar"], ["hotels", "Stays"], ["activities", "Activities"], ["photos", "Photos"]] : tabs} value={activeTab} onChange={changeTab}
+        <AdventurePencilTabs items={visibleTabs} value={activeTab} onChange={changeTab}
           ariaLabel={language === "en" ? "Place plans" : "地点安排"} idPrefix={baseId} controlsId={`${baseId}-panel`} withInk />
       </div>
       <PlaceTabDivider />
     </div>
     <div className="trip-place-tabpanel" data-tab={activeTab} role="tabpanel" id={`${baseId}-panel`}
       aria-labelledby={`${baseId}-tab-${activeTab}`} tabIndex={0}>
+      {activeTab === "map" && townMap}
       {activeTab === "calendar" && (days.length
         ? <AdventureCalendar embedded days={days} selectedDate={visibleDate}
           onSelectDate={changeDate} onSelectDay={onSelectDay} onSelectEvent={onSelectEvent} />

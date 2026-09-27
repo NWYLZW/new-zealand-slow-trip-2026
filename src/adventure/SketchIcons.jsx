@@ -35,6 +35,13 @@ export function InstallIcon(props) {
   </SketchIcon>;
 }
 
+export function RefreshIcon(props) {
+  return <SketchIcon kind="refresh" {...props}>
+    <path d="M24.6 10.7c-2.1-4.4-8-6.1-12.5-3.8-3.2 1.6-5.2 4.8-5 8.3M7.2 9.3l-.1 6.1 6-.2M7.4 21.2c2.2 4.3 8.1 5.9 12.5 3.6 3.1-1.7 5-4.8 4.8-8.2m-.1 5.8.1-6-6 .2" />
+    <path className="sketch-scuff" d="m10.1 7.9 2-.9m8.3 17 1.8-1.1" />
+  </SketchIcon>;
+}
+
 export function LegacyIcon(props) {
   return <SketchIcon kind="legacy" {...props}>
     <path d="M6.3 8.2c6.1-.5 13.3-.5 19.5.1l-.2 16.3c-5.7.7-13.4.7-19.2 0zM6.8 12.4l18.4-.1M12.1 17.1l-3.5 3.4 3.5 3.2m-3.3-3.3 8.2-.1" />
@@ -261,6 +268,18 @@ export function PaletteIcon(props) {
 
 export function AppearanceIcon(props) {
   return <MaterialPencilIcon kind="appearance" path="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12zM12 6.5v11c3.03 0 5.5-2.47 5.5-5.5S15.03 6.5 12 6.5" {...props} />;
+}
+
+export function OrientationPortraitIcon(props) {
+  return <MaterialPencilIcon kind="orientation-portrait" path="M10 16h4c.55 0 1-.45 1-1v-3c0-.55-.45-1-1-1v-1c0-1.11-.9-2-2-2-1.11 0-2 .9-2 2v1c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1m.8-6c0-.66.54-1.2 1.2-1.2s1.2.54 1.2 1.2v1h-2.4zM17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2m0 18H7V5h10z" {...props} />;
+}
+
+export function OrientationLandscapeIcon(props) {
+  return <MaterialPencilIcon kind="orientation-landscape" path="M21 5H3c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2m-2 12H5V7h14zm-9-1h4c.55 0 1-.45 1-1v-3c0-.55-.45-1-1-1v-1c0-1.11-.9-2-2-2-1.11 0-2 .9-2 2v1c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1m.8-6c0-.66.54-1.2 1.2-1.2s1.2.54 1.2 1.2v1h-2.4z" {...props} />;
+}
+
+export function OrientationSystemIcon(props) {
+  return <MaterialPencilIcon kind="orientation-system" path="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-.66.03 3.81 3.81zm-6.25-.77c-.59-.59-1.54-.59-2.12 0L1.75 8.11c-.59.59-.59 1.54 0 2.12l12.02 12.02c.59.59 1.54.59 2.12 0l6.36-6.36c.59-.59.59-1.54 0-2.12zm4.6 19.44L2.81 9.17l6.36-6.36 12.02 12.02zm-7.31.29C4.25 19.94 1.91 16.76 1.55 13H.05C.56 19.16 5.71 24 12 24l.66-.03-3.81-3.81z" {...props} />;
 }
 
 export function CityIcon(props) {

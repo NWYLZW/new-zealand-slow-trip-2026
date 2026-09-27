@@ -12,6 +12,10 @@ export const INTERNATIONAL_ROUTE_IDS = new Set(internationalFlightSegments.map(s
 export const internationalOverviewPositions = internationalMapStops.map(stop => stop.coordinate);
 const RASTER_OVERSCAN_MIN = 192;
 const RASTER_OVERSCAN_MAX = 480;
+const RASTER_REFINE_DELAY = 90;
+const RASTER_SLICE_BUDGET = 7;
+const RASTER_STROKE_CHUNK = 32;
+const RASTER_MAX_PIXELS = 4 * 1024 * 1024;
 
 const seedFor = value => [...value].reduce((seed, letter) =>
   Math.imul(seed ^ letter.charCodeAt(0), 16777619), 2166136261) >>> 0;
@@ -139,7 +143,8 @@ function anchorsEqual(left, right) {
 }
 
 function configureCanvas(canvas, width, height) {
-  const density = Math.min(devicePixelRatio || 1, 2);
+  const pixelBudgetDensity = Math.sqrt(RASTER_MAX_PIXELS / Math.max(1, width * height));
+  const density = Math.max(1, Math.min(devicePixelRatio || 1, 2, pixelBudgetDensity));
   const pixelWidth = Math.max(1, Math.round(width * density));
   const pixelHeight = Math.max(1, Math.round(height * density));
   if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
@@ -148,10 +153,105 @@ function configureCanvas(canvas, width, height) {
   }
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
-  const context = canvas.getContext("2d");
+  const softwareRaster = !canvas.isConnected;
+  const context = canvas.getContext("2d", softwareRaster ? { willReadFrequently: true } : undefined);
   context.setTransform(density, 0, 0, density, 0, 0);
+  context.globalAlpha = 1;
+  context.globalCompositeOperation = "source-over";
+  context.filter = "none";
   context.clearRect(0, 0, width, height);
+  canvas.dataset.rasterDensity = density.toFixed(2);
+  canvas.dataset.rasterBackend = softwareRaster ? "software" : "display";
   return { context, density };
+}
+
+function createRasterTaskQueue({ createTasks, complete, cancelled }) {
+  let tasks = null, taskIndex = 0, result = null, cleanup = null;
+  let timer = 0, idle = 0, stopped = false;
+  const cancel = () => {
+    if (stopped) return;
+    stopped = true;
+    clearTimeout(timer);
+    if (idle && window.cancelIdleCallback) window.cancelIdleCallback(idle);
+    cleanup?.();
+    tasks = result = cleanup = null;
+  };
+  const run = deadline => {
+    idle = 0;
+    if (stopped || cancelled()) { cancel(); return; }
+    if (!tasks) {
+      const work = createTasks();
+      tasks = work.tasks;
+      result = work.result;
+      cleanup = work.cleanup;
+    }
+    const started = performance.now();
+    while (taskIndex < tasks.length && !cancelled()) {
+      tasks[taskIndex++]();
+      const outOfTime = deadline?.timeRemaining
+        ? deadline.timeRemaining() < 2
+        : performance.now() - started >= RASTER_SLICE_BUDGET;
+      if (outOfTime) break;
+    }
+    if (stopped || cancelled()) { cancel(); return; }
+    if (taskIndex >= tasks.length) {
+      complete(result);
+      tasks = result = cleanup = null;
+      stopped = true;
+      return;
+    }
+    if (window.requestIdleCallback) idle = window.requestIdleCallback(run, { timeout: 80 });
+    else timer = window.setTimeout(run, 0);
+  };
+  timer = window.setTimeout(() => {
+    timer = 0;
+    if (window.requestIdleCallback) idle = window.requestIdleCallback(run, { timeout: 120 });
+    else run();
+  }, RASTER_REFINE_DELAY);
+  return { cancel };
+}
+
+function strokeChunks(points, closed = false, scale = 1, maxDistance = RASTER_STROKE_CHUNK) {
+  if (points.length < 2) return [];
+  const line = points.slice();
+  if (closed && Math.hypot(line[0][0] - line.at(-1)[0], line[0][1] - line.at(-1)[1]) > .01) {
+    line.push(line[0]);
+  }
+  const totalDistance = line.slice(1).reduce((total, point, index) =>
+    total + Math.hypot(point[0] - line[index][0], point[1] - line[index][1]) / scale, 0);
+  if (!totalDistance) return [];
+  const chunks = [];
+  let current = [line[0]], currentDistance = 0, distanceOffset = 0;
+  for (let index = 1; index < line.length; index++) {
+    let from = current.at(-1);
+    const to = line[index];
+    let segmentDistance = Math.hypot(to[0] - from[0], to[1] - from[1]) / scale;
+    while (segmentDistance > .0001) {
+      const used = Math.min(maxDistance - currentDistance, segmentDistance);
+      const ratio = used / segmentDistance;
+      const split = [from[0] + (to[0] - from[0]) * ratio, from[1] + (to[1] - from[1]) * ratio];
+      current.push(split);
+      currentDistance += used;
+      segmentDistance -= used;
+      from = split;
+      if (currentDistance >= maxDistance - .0001) {
+        chunks.push({ points: current, distanceOffset, totalDistance });
+        distanceOffset += currentDistance;
+        current = [split];
+        currentDistance = 0;
+      }
+    }
+  }
+  if (current.length > 1) chunks.push({ points: current, distanceOffset, totalDistance });
+  return chunks;
+}
+
+function addStrokeTasks(tasks, context, points, color, width, seed, amplitude,
+  passes = 2, closed = false, settings = {}) {
+  strokeChunks(points, closed, Math.max(.4, settings.scale ?? 1)).forEach(chunk => {
+    tasks.push(() => pencilStroke(context, chunk.points, color, width, seed, amplitude, passes, false,
+      { ...settings, distanceOffset: chunk.distanceOffset, totalDistance: chunk.totalDistance }));
+  });
 }
 
 function dashedParts(points, dash = 9, gap = 6) {
@@ -210,9 +310,12 @@ function paintViewIcon(canvas, international) {
 
 export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHost, project, width, height,
   language = "zh", onNodeSelect, onRouteSelect, onViewChange }) {
-  const baseRaster = document.createElement("canvas");
-  const routeRaster = document.createElement("canvas");
+  let baseRaster = document.createElement("canvas");
+  let routeRaster = document.createElement("canvas");
+  let baseCandidate = document.createElement("canvas");
+  let routeCandidate = document.createElement("canvas");
   let baseRasterView = null, routeRasterView = null, routeRasterParts = new Map();
+  let baseRefinement = null, routeRefinement = null, renderRevision = 0;
   const routeSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   routeSvg.classList.add("trip-international-route-hits");
   routeSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -285,13 +388,17 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
   const state = {
     width, height, language, selected: null, selectedRoute: null, mapMode: "international",
     theme: "", hoveredRoute: null, anchors: new Map(), anchorRevision: 0, lastDraw: null,
-    basePaintKey: "", routePaintKey: "",
+    basePaintKey: "", routePaintKey: "", baseContentKey: "", routeContentKey: "",
   };
 
   function viewKey(view, visibleRect) {
     return [view.x, view.y, view.k, state.width, state.height,
       visibleRect?.width ?? state.width, visibleRect?.height ?? state.height].map(Number).join(":");
   }
+
+  const baseContentKey = () => `${state.mapMode}:${state.theme}`;
+  const routeContentKey = () => [state.mapMode, state.theme, state.selectedRoute ?? "",
+    state.hoveredRoute ?? "", state.anchorRevision].join(":");
 
   function markerName(stop) {
     return state.language === "en" ? stop.nameEn : stop.name;
@@ -342,13 +449,118 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
     if (!cachedView || cachedView.viewportWidth !== state.width
       || cachedView.viewportHeight !== state.height || !raster.width) return false;
     const { context } = configureCanvas(canvas, state.width, state.height);
+    if (canvas === baseCanvas && state.mapMode === "international") {
+      context.fillStyle = state.theme === "dark" ? "#173239" : "#a9d7df";
+      context.fillRect(0, 0, state.width, state.height);
+    }
     const relative = relativeInternationalView(cachedView, view);
-    context.save();
-    context.translate(relative.x, relative.y);
-    context.scale(relative.scale, relative.scale);
-    context.drawImage(raster, 0, 0, cachedView.width, cachedView.height);
-    context.restore();
+    const sourceLeft = Math.max(0, -relative.x / relative.scale);
+    const sourceTop = Math.max(0, -relative.y / relative.scale);
+    const sourceRight = Math.min(cachedView.width, (state.width - relative.x) / relative.scale);
+    const sourceBottom = Math.min(cachedView.height, (state.height - relative.y) / relative.scale);
+    if (sourceRight > sourceLeft && sourceBottom > sourceTop) {
+      const sourceScaleX = raster.width / cachedView.width;
+      const sourceScaleY = raster.height / cachedView.height;
+      context.drawImage(raster, sourceLeft * sourceScaleX, sourceTop * sourceScaleY,
+        (sourceRight - sourceLeft) * sourceScaleX, (sourceBottom - sourceTop) * sourceScaleY,
+        relative.x + sourceLeft * relative.scale, relative.y + sourceTop * relative.scale,
+        (sourceRight - sourceLeft) * relative.scale, (sourceBottom - sourceTop) * relative.scale);
+    }
     return internationalRasterCoversViewport(cachedView, view, state.width, state.height);
+  }
+
+  function cancelRefinements() {
+    renderRevision++;
+    baseRefinement?.cancel();
+    routeRefinement?.cancel();
+    baseRefinement = routeRefinement = null;
+    delete baseCanvas.dataset.rasterRefining;
+    delete routeCanvas.dataset.rasterRefining;
+  }
+
+  function baseRasterTasks(view) {
+    const render = rasterView(view);
+    const candidate = baseCandidate;
+    const { context } = configureCanvas(candidate, render.width, render.height);
+    const tasks = [];
+    let clipped = false;
+    tasks.push(() => {
+      context.fillStyle = state.theme === "dark" ? "#173239" : "#a9d7df";
+      context.fillRect(0, 0, render.width, render.height);
+      context.globalAlpha = state.theme === "dark" ? .13 : .11;
+    });
+    for (let y = 7; y < render.height; y += 17) {
+      addStrokeTasks(tasks, context, [[-8, y], [render.width + 8, y + Math.sin(y) * .7]],
+        state.theme === "dark" ? "#79a5aa" : pencilPalette.water, .42, 12917 + y, .16, 1, false,
+        { variation: .76, breaks: .42, grain: .75, gain: 1.2, step: 2.2,
+          detail: "fill", filaments: 1,
+          viewport: [render.width, render.height], viewportTop: -8 });
+    }
+    const worldProjection = createInternationalWorldProjection(project, render);
+    const drawPath = geoPath(worldProjection, context);
+    tasks.push(() => {
+      context.globalAlpha = 1;
+      context.save();
+      context.beginPath();
+      drawPath(internationalBasemap);
+      context.fillStyle = state.theme === "dark" ? "#252820" : pencilPalette.land;
+      context.globalAlpha = state.theme === "dark" ? .9 : .82;
+      context.fill("evenodd");
+      context.clip("evenodd");
+      clipped = true;
+      context.globalAlpha = state.theme === "dark" ? .16 : .2;
+    });
+    const right = render.width, lower = render.height;
+    for (let offset = -lower; offset < right + lower; offset += 18) {
+      addStrokeTasks(tasks, context, [[offset, lower + 8], [offset + lower + 24, -8]],
+        state.theme === "dark" ? "#758168" : pencilPalette.green, .48, 13103 + offset, .16, 1, false,
+        { variation: .78, breaks: .31, grain: .74, gain: 1.35, step: 2.2,
+          detail: "fill", filaments: 1,
+          viewport: [render.width, render.height], viewportTop: -8 });
+    }
+    tasks.push(() => { context.restore(); clipped = false; });
+    projectInternationalBoundaryParts(internationalBasemap, worldProjection).forEach((points, index) => {
+      addStrokeTasks(tasks, context, points, state.theme === "dark" ? "#aab59a" : pencilPalette.coast,
+        .72, 13217 + index, .2, 2, true,
+        { variation: .82, breaks: .22, grain: .68, gain: 1.8, step: 1.4,
+          filaments: 1, edgeGrain: false,
+          viewport: [render.width, render.height], viewportTop: -8 });
+    });
+    return { tasks, result: { candidate, render }, cleanup: () => { if (clipped) context.restore(); } };
+  }
+
+  function scheduleBaseRefinement(view, visibleRect, revision) {
+    const contentKey = baseContentKey();
+    baseCanvas.dataset.rasterRefining = "true";
+    const cancelled = () => revision !== renderRevision || baseContentKey() !== contentKey;
+    baseRefinement = createRasterTaskQueue({ createTasks: () => baseRasterTasks(view), cancelled,
+      complete: ({ candidate, render }) => {
+      if (cancelled()) return;
+      const previousRaster = baseRaster;
+      baseRaster = candidate;
+      baseCandidate = previousRaster;
+      baseRasterView = render;
+      state.baseContentKey = contentKey;
+      state.basePaintKey = `${viewKey(view, visibleRect)}:${state.mapMode}:${state.theme}`;
+      baseCanvas.dataset.renderer = "international-pencil";
+      baseCanvas.dataset.rasterRenders = String((Number(baseCanvas.dataset.rasterRenders) || 0) + 1);
+      baseCanvas.dataset.rasterRefinements = String((Number(baseCanvas.dataset.rasterRefinements) || 0) + 1);
+      delete baseCanvas.dataset.rasterRefining;
+      composeRaster(baseCanvas, baseRaster, baseRasterView, state.lastDraw?.view ?? view);
+      baseRefinement = null;
+    } });
+  }
+
+  function paintBaseFallback(view) {
+    const { context } = configureCanvas(baseCanvas, state.width, state.height);
+    context.fillStyle = state.theme === "dark" ? "#173239" : "#a9d7df";
+    context.fillRect(0, 0, state.width, state.height);
+    context.beginPath();
+    geoPath(createInternationalWorldProjection(project, view), context)(internationalBasemap);
+    context.fillStyle = state.theme === "dark" ? "#252820" : pencilPalette.land;
+    context.globalAlpha = state.theme === "dark" ? .9 : .82;
+    context.fill("evenodd");
+    context.globalAlpha = 1;
   }
 
   function paintBase(view, visibleRect, force = false) {
@@ -402,8 +614,29 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
     baseCanvas.dataset.renderer = "international-pencil";
     baseCanvas.dataset.rasterRenders = String((Number(baseCanvas.dataset.rasterRenders) || 0) + 1);
     baseRasterView = render;
+    state.baseContentKey = baseContentKey();
     state.basePaintKey = paintKey;
     composeRaster(baseCanvas, baseRaster, baseRasterView, view);
+  }
+
+  function settleBase(view, visibleRect, revision) {
+    if (state.mapMode !== "international") {
+      configureCanvas(baseCanvas, state.width, state.height);
+      return;
+    }
+    if (!baseRasterView || !baseRaster.width) {
+      paintBaseFallback(view);
+      scheduleBaseRefinement(view, visibleRect, revision);
+      return;
+    }
+    const covered = composeRaster(baseCanvas, baseRaster, baseRasterView, view);
+    const reusable = covered && baseRasterView.k === view.k && state.baseContentKey === baseContentKey();
+    if (reusable) {
+      baseCanvas.dataset.rasterComposites = String((Number(baseCanvas.dataset.rasterComposites) || 0) + 1);
+      baseCanvas.dataset.rasterSettleReuses = String((Number(baseCanvas.dataset.rasterSettleReuses) || 0) + 1);
+      return;
+    }
+    scheduleBaseRefinement(view, visibleRect, revision);
   }
 
   function transformCachedRouteParts(parts, view) {
@@ -452,23 +685,115 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
     routeCanvas.dataset.renderer = "international-pressure-pencil";
     routeCanvas.dataset.rasterRenders = String((Number(routeCanvas.dataset.rasterRenders) || 0) + 1);
     routeRasterView = render;
+    state.routeContentKey = routeContentKey();
     state.routePaintKey = paintKey;
     composeRaster(routeCanvas, routeRaster, routeRasterView, view);
     syncRouteHits(view);
   }
 
+  function routeRasterTasks(view) {
+    const render = rasterView(view);
+    const candidate = routeCandidate;
+    const { context } = configureCanvas(candidate, render.width, render.height);
+    const partsByRoute = new Map();
+    const tasks = [];
+    hitRecords.forEach(({ segment, path }, index) => {
+      const parts = routeScreenParts(segment, render);
+      partsByRoute.set(segment.id, parts);
+      path.setAttribute("aria-pressed", String(segment.id === state.selectedRoute));
+      const active = segment.id === state.selectedRoute || segment.id === state.hoveredRoute;
+      clipInternationalRouteParts(parts, render.width, render.height, 36)
+        .flatMap(part => dashedParts(part)).forEach((points, partIndex) => {
+          addStrokeTasks(tasks, context, points, pencilPalette.paper, active ? 4.4 : 3.7,
+            seedFor(segment.id) + partIndex, .16, 1, false,
+            { variation: .78, breaks: .08, grain: .34, gain: 1.15, step: 1,
+              filaments: 1, edgeGrain: false,
+              viewport: [render.width, render.height], viewportTop: -8 });
+          addStrokeTasks(tasks, context, points, segment.color ?? "#366e91", active ? 2.8 : 2.05,
+            seedFor(segment.id) + partIndex, .45, 3, false,
+            { variation: .86, breaks: .17, grain: .72, gain: 2.05, step: 1,
+              filaments: 1, edgeGrain: false,
+              viewport: [render.width, render.height], viewportTop: -8 });
+        });
+      path.dataset.routeIndex = String(index);
+    });
+    return { tasks, result: { candidate, render, partsByRoute } };
+  }
+
+  function scheduleRouteRefinement(view, visibleRect, revision) {
+    const contentKey = routeContentKey();
+    routeCanvas.dataset.rasterRefining = "true";
+    routeRefinement = createRasterTaskQueue({
+      createTasks: () => routeRasterTasks(view),
+      cancelled: () => revision !== renderRevision || routeContentKey() !== contentKey,
+      complete: ({ candidate, render, partsByRoute }) => {
+        if (revision !== renderRevision || routeContentKey() !== contentKey) return;
+        const previousRaster = routeRaster;
+        routeRaster = candidate;
+        routeCandidate = previousRaster;
+        routeRasterView = render;
+        routeRasterParts = partsByRoute;
+        state.routeContentKey = contentKey;
+        state.routePaintKey = `${viewKey(view, visibleRect)}:${state.selectedRoute ?? ""}:${state.hoveredRoute ?? ""}:${state.anchorRevision}`;
+        routeCanvas.dataset.renderer = "international-pressure-pencil";
+        routeCanvas.dataset.rasterRenders = String((Number(routeCanvas.dataset.rasterRenders) || 0) + 1);
+        routeCanvas.dataset.rasterRefinements = String((Number(routeCanvas.dataset.rasterRefinements) || 0) + 1);
+        delete routeCanvas.dataset.rasterRefining;
+        composeRaster(routeCanvas, routeRaster, routeRasterView, state.lastDraw?.view ?? view);
+        syncRouteHits(state.lastDraw?.view ?? view);
+        routeRefinement = null;
+      },
+    });
+  }
+
+  function paintRouteFallback(view) {
+    const { context } = configureCanvas(routeCanvas, state.width, state.height);
+    context.lineCap = "round";
+    context.setLineDash([9, 6]);
+    hitRecords.forEach(({ segment }) => {
+      const active = segment.id === state.selectedRoute || segment.id === state.hoveredRoute;
+      context.beginPath();
+      clipInternationalRouteParts(routeScreenParts(segment, view), state.width, state.height, 36)
+        .forEach(points => points.forEach(([x, y], index) => index ? context.lineTo(x, y) : context.moveTo(x, y)));
+      context.strokeStyle = segment.color ?? "#366e91";
+      context.lineWidth = active ? 2.8 : 2.05;
+      context.globalAlpha = .84;
+      context.stroke();
+    });
+    context.setLineDash([]);
+    context.globalAlpha = 1;
+  }
+
+  function settleRoutes(view, visibleRect, revision) {
+    if (!routeRasterView || !routeRaster.width) {
+      paintRouteFallback(view);
+      syncRouteHits(view);
+      scheduleRouteRefinement(view, visibleRect, revision);
+      return;
+    }
+    const covered = composeRaster(routeCanvas, routeRaster, routeRasterView, view);
+    syncRouteHits(view);
+    const reusable = covered && routeRasterView.k === view.k && state.routeContentKey === routeContentKey();
+    if (reusable) {
+      routeCanvas.dataset.rasterSettleReuses = String((Number(routeCanvas.dataset.rasterSettleReuses) || 0) + 1);
+      return;
+    }
+    scheduleRouteRefinement(view, visibleRect, revision);
+  }
+
   function composeDuringMotion(view) {
+    cancelRefinements();
     if (state.mapMode === "international" && composeRaster(baseCanvas, baseRaster, baseRasterView, view)) {
       baseCanvas.dataset.rasterComposites = String((Number(baseCanvas.dataset.rasterComposites) || 0) + 1);
     } else if (state.mapMode === "international") {
       baseCanvas.dataset.rasterCacheMisses = String((Number(baseCanvas.dataset.rasterCacheMisses) || 0) + 1);
-      paintBase(view, state.lastDraw?.visibleRect, true);
+      composeRaster(baseCanvas, baseRaster, baseRasterView, view);
     }
     if (composeRaster(routeCanvas, routeRaster, routeRasterView, view)) {
       routeCanvas.dataset.rasterComposites = String((Number(routeCanvas.dataset.rasterComposites) || 0) + 1);
     } else {
       routeCanvas.dataset.rasterCacheMisses = String((Number(routeCanvas.dataset.rasterCacheMisses) || 0) + 1);
-      paintRoutes(view, state.lastDraw?.visibleRect, true);
+      composeRaster(routeCanvas, routeRaster, routeRasterView, view);
     }
     syncRouteHits(view);
   }
@@ -476,15 +801,26 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
   function redrawRoutes() {
     if (!state.lastDraw) return;
     if (state.lastDraw.moving) syncRouteHits(state.lastDraw.view);
-    else paintRoutes(state.lastDraw.view, state.lastDraw.visibleRect, true);
+    else {
+      routeRefinement?.cancel();
+      routeRefinement = null;
+      settleRoutes(state.lastDraw.view, state.lastDraw.visibleRect, renderRevision);
+    }
   }
 
   function redrawAll(visibleRect) {
     if (!state.lastDraw) return;
     const payload = { ...state.lastDraw, visibleRect: visibleRect ?? state.lastDraw.visibleRect };
     state.lastDraw = payload;
-    paintBase(payload.view, payload.visibleRect);
-    paintRoutes(payload.view, payload.visibleRect);
+    cancelRefinements();
+    if (state.mapMode !== "international") {
+      configureCanvas(baseCanvas, state.width, state.height);
+      settleRoutes(payload.view, payload.visibleRect, renderRevision);
+      return;
+    }
+    const revision = renderRevision;
+    settleBase(payload.view, payload.visibleRect, revision);
+    settleRoutes(payload.view, payload.visibleRect, revision);
   }
 
   toggle.addEventListener("click", event => {
@@ -524,8 +860,10 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
       state.lastDraw = payload;
       if (payload.moving) composeDuringMotion(payload.view);
       else {
-        paintBase(payload.view, payload.visibleRect);
-        paintRoutes(payload.view, payload.visibleRect);
+        cancelRefinements();
+        const revision = renderRevision;
+        settleBase(payload.view, payload.visibleRect, revision);
+        settleRoutes(payload.view, payload.visibleRect, revision);
       }
     },
     select,
@@ -556,6 +894,7 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
       if (!state.lastDraw?.moving) redrawRoutes();
     },
     dispose() {
+      cancelRefinements();
       baseCanvas.width = 0;
       routeCanvas.width = 0;
       markerRecords.forEach(({ button }) => button.remove());
@@ -564,8 +903,11 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
       state.anchors.clear();
       state.lastDraw = null;
       state.basePaintKey = state.routePaintKey = "";
+      state.baseContentKey = state.routeContentKey = "";
       baseRaster.width = baseRaster.height = 0;
       routeRaster.width = routeRaster.height = 0;
+      baseCandidate.width = baseCandidate.height = 0;
+      routeCandidate.width = routeCandidate.height = 0;
       baseRasterView = routeRasterView = null;
       routeRasterParts.clear();
     },

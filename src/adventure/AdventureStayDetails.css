@@ -25,8 +25,13 @@
 .trip-stay-section dl>div{display:grid;grid-template-columns:minmax(92px,30%) minmax(0,1fr);gap:8px;align-items:start;min-width:0}
 .trip-stay-section dt{color:#58705c;font-size:13px;line-height:1.5}
 .trip-stay-section dd{min-width:0;margin:0;font-size:15px;line-height:1.5;overflow-wrap:anywhere}
-.trip-stay-more{justify-self:start;padding:5px 0;border:0;background:transparent;color:#426b50;font-size:14px;text-decoration:underline;text-decoration-color:#91aa96;text-underline-offset:3px}
-.trip-stay-location ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px;margin:0;padding-left:17px;font-size:14px;line-height:1.4}
+.trip-panel-heading-date--stay{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trip-panel-heading-date--stay .trip-pencil-text{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trip-stay-location ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px;margin:0;padding:0;list-style:none;font-size:14px;line-height:1.4}
+.trip-stay-location li{min-width:0}
+.trip-stay-location li>a{display:grid;grid-template-columns:24px minmax(0,1fr);align-items:center;gap:6px;min-height:44px;min-width:0}
+.trip-stay-location-icon{display:grid;place-items:center;width:24px;height:24px;color:#456c54}
+.trip-stay-location-icon .trip-pencil-icon{width:23px;height:23px}
 .trip-stay-location-name{margin:0;color:#405a47;font-size:15px;line-height:1.5;overflow-wrap:anywhere}
 .trip-stay-vault-prompt{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:110px;margin:auto 0;text-align:center}
 .trip-stay-vault-icon{display:grid;place-items:center;width:40px;height:40px;color:#3b5946}
@@ -35,4 +40,22 @@
 .trip-place-stay-choices{display:flex;gap:8px;overflow-x:auto;margin-bottom:13px}
 .trip-place-stay-choices button{min-height:44px;max-width:230px;padding:5px 10px;border:0;background:transparent;color:#536456;font-size:15px}
 .trip-place-stay-choices button[aria-pressed=true]{color:#234d37;text-decoration:underline;text-decoration-color:#799981;text-underline-offset:4px}
+.trip-stay-detail[data-stay-layout="wide-short"]{display:grid;grid-template-columns:minmax(210px,42%) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);column-gap:12px;row-gap:7px}
+.trip-stay-detail[data-stay-layout="wide-short"]>.trip-stay-title{grid-column:1/-1;grid-row:1}
+.trip-stay-detail[data-stay-layout="wide-short"]>.trip-stay-gallery{grid-column:1;grid-row:2;min-height:0;overflow:hidden}
+.trip-stay-detail[data-stay-layout="wide-short"]>.trip-stay-gallery figure,
+.trip-stay-detail[data-stay-layout="wide-short"]>.trip-stay-gallery figure>a{height:100%;min-height:0}
+.trip-stay-detail[data-stay-layout="wide-short"]>.trip-stay-short-workspace{grid-column:2;grid-row:2}
+.trip-stay-detail[data-stay-layout="narrow-short"]{display:grid;grid-template-rows:auto minmax(0,1fr);gap:7px}
+.trip-stay-short-workspace{display:grid;grid-template-columns:minmax(0,1fr) 52px;gap:8px;min-width:0;min-height:0;overflow:hidden}
+.trip-stay-short-content{min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;padding:2px 3px 10px 0}
+.trip-stay-short-content>.trip-stay-gallery{height:100%;min-height:0;overflow:hidden}
+.trip-stay-short-content>.trip-stay-gallery figure,
+.trip-stay-short-content>.trip-stay-gallery figure>a{height:100%;min-height:0}
+.trip-stay-short-tabs{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;scrollbar-width:none}
+.trip-stay-short-tabs::-webkit-scrollbar{display:none}
+.trip-stay-short-tab.trip-pencil-surface{display:grid;place-items:center;flex:none;width:44px;height:44px;min-height:44px;padding:5px;color:#526a57}
+.trip-stay-short-tab[aria-selected="true"]{color:#244f36}
+.trip-stay-short-tab .trip-pencil-icon{width:25px;height:25px}
+.trip-stay-short-tab:focus-visible{outline:2px solid #2d6847;outline-offset:2px}
 @media(max-width:650px){.trip-stay-section dl>div{grid-template-columns:minmax(72px,29%) minmax(0,1fr)}.trip-stay-location ul{grid-template-columns:1fr}}

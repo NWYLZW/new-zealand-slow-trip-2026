@@ -14,7 +14,7 @@ import { eventAgendaItems } from "./adventureEventAgenda";
 
 const rightPanels = new Set(["bag", "camera", "photos"]);
 const scopes = new Set(["all", "south", "north"]);
-const placeTabs = new Set(["calendar", "hotels", "activities", "photos"]);
+const placeTabs = new Set(["calendar", "map", "hotels", "activities", "photos"]);
 const bagTabs = new Set(["stays", "car", "activities", "notes"]);
 const cameraViews = new Set(["preview", "album", "settings", "device"]);
 const eventById = new Map(getAdventureCalendarDays().flatMap(day => day.events.map(event => [event.urlId, event])));

@@ -4,9 +4,9 @@
   --trip-calendar-card-outline: #778375;
   --trip-calendar-card-selected-outline: #2e5c45;
   --trip-calendar-selected-tab: #769566;
-  --trip-calendar-transit: #86a8b2;
-  --trip-calendar-south: #a79f68;
-  --trip-calendar-north: #8fa474;
+  --trip-calendar-transit: #789198;
+  --trip-calendar-south: #918970;
+  --trip-calendar-north: #7e9278;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -181,7 +181,7 @@ html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-cal
   padding: 9px 12px;
   border: 0;
   background: transparent;
-  color: #263e32;
+  color: #1f382b;
   font-size: 17px;
   line-height: 1.2;
   text-align: left;
@@ -192,7 +192,7 @@ html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-cal
 .trip-adventure-calendar-month,
 .trip-adventure-calendar-day-number { display: inline-block; flex: none; }
 
-.trip-adventure-calendar-day[data-selected="true"] .trip-adventure-calendar-date { color: #173a2a; }
+.trip-adventure-calendar-day[data-selected="true"] .trip-adventure-calendar-date { color: #123322; }
 .trip-adventure-calendar-events { position: relative; z-index: 2; display: grid; gap: 2px; margin-top: 36px; pointer-events: none; }
 
 .trip-adventure-calendar-event {
@@ -204,7 +204,7 @@ html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-cal
   padding: 2px 6px 2px 8px;
   border: 0;
   background: transparent;
-  color: #263d33;
+  color: #1f372b;
   font-size: 14px;
   line-height: 1.4;
   text-align: left;
@@ -254,14 +254,10 @@ html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-cal
 }
 
 @container (max-width: 430px) {
-  .trip-adventure-calendar-header {
-    flex-wrap: wrap;
-  }
   .trip-adventure-calendar-header .trip-adventure-calendar-scopes {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    overflow-x: hidden;
+    flex: 0 1 auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
   }
-  .trip-adventure-calendar-header .trip-adventure-calendar-scope { min-width: 0; padding: 5px 2px; }
+  .trip-adventure-calendar-header .trip-adventure-calendar-scope { flex: none; min-width: 44px; padding: 5px 6px; }
 }

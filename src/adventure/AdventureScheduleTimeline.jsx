@@ -6,9 +6,16 @@ import { PencilSurface } from "./pencil/PencilSurface";
 import { PencilText } from "./pencil/PencilText";
 import { pencilStroke } from "./pencil/stroke";
 import { GoogleMapIcon } from "./SketchIcons";
+import { useAdventurePreferences } from "./AdventurePreferences";
+import { scheduleNeedsSummary, summarizeScheduleIntervals } from "./scheduleTimelineDensity";
 import "./AdventureScheduleTimeline.css";
 
 const HOUR = 60 * 60 * 1000;
+const LIGHT_PAPER_BY_THEME = {
+  lake: "#f4f0e3",
+  fern: "#edf0df",
+  sunset: "#f4e9d9",
+};
 const WAIT_ICON_DEFINITION = {
   kind: "wait",
   sourceSize: 24,
@@ -17,6 +24,17 @@ const WAIT_ICON_DEFINITION = {
     { d: "M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" },
   ],
 };
+
+function mixHexColors(color, paper, pigmentWeight) {
+  const source = /^#([0-9a-f]{6})$/i.exec(color?.trim() ?? "");
+  const background = /^#([0-9a-f]{6})$/i.exec(paper?.trim() ?? "");
+  if (!source || !background) return color;
+  const channel = (value, offset) => Number.parseInt(value.slice(offset, offset + 2), 16);
+  return `#${[0, 2, 4].map(offset => Math.round(
+    channel(source[1], offset) * pigmentWeight
+      + channel(background[1], offset) * (1 - pigmentWeight),
+  ).toString(16).padStart(2, "0")).join("")}`;
+}
 
 function normalizedCollapsedRanges(start, end, collapsedRanges) {
   const ranges = (Array.isArray(collapsedRanges) ? collapsedRanges : [])
@@ -255,8 +273,9 @@ export function scheduleTimelineAutoHeight(duration, pointCount, intervalCount =
 
 export function AdventureScheduleTimeline({
   range, points = [], intervals = [], formatTick, tickTitle, tickAriaLabel, endTick,
-  tickColumns, collapsedRanges = [], ariaLabel, className = "", height = "auto",
+  tickColumns, collapsedRanges = [], ariaLabel, className = "", height = "auto", adaptiveDetail = false,
 }) {
+  const { theme, resolvedAppearance } = useAdventurePreferences();
   const timelineRef = useRef(null);
   const [pixelHeight, setPixelHeight] = useState(0);
   const collapsedRangeKey = collapsedRanges.map(range => `${range.id ?? ""}:${range.start}:${range.end}`).join("|");
@@ -275,9 +294,12 @@ export function AdventureScheduleTimeline({
     ? layoutSchedulePoints(points.filter(item => item.time >= range.start && item.time <= range.end),
       pixelHeight, range, timeScale.position) : [],
     [duration, pixelHeight, points, range, timeScale]);
-  const intervalRows = useMemo(() => duration > 0
-    ? layoutIntervals(intervals.filter(item => item.end > range.start && item.start < range.end)) : [],
+  const visibleIntervals = useMemo(() => duration > 0
+    ? intervals.filter(item => item.end > range.start && item.start < range.end) : [],
   [duration, intervals, range]);
+  const condensed = adaptiveDetail && scheduleNeedsSummary(visibleIntervals, pixelHeight);
+  const intervalRows = useMemo(() => layoutIntervals(condensed
+    ? summarizeScheduleIntervals(visibleIntervals) : visibleIntervals), [condensed, visibleIntervals]);
   const timelineHeight = useMemo(() => {
     if (height === "fill") return undefined;
     if (typeof height === "number") return `${height}px`;
@@ -285,6 +307,8 @@ export function AdventureScheduleTimeline({
     return `${scheduleTimelineAutoHeight(timeScale.displayDuration, points.length, intervals.length)}px`;
   }, [height, intervals.length, points.length, timeScale]);
   const dualTickColumns = Array.isArray(tickColumns) && tickColumns.length === 2 ? tickColumns : null;
+  const scheduleWash = color => resolvedAppearance === "dark" ? color
+    : mixHexColors(color, LIGHT_PAPER_BY_THEME[theme] ?? LIGHT_PAPER_BY_THEME.lake, .5);
 
   useLayoutEffect(() => {
     const timeline = timelineRef.current;
@@ -298,6 +322,7 @@ export function AdventureScheduleTimeline({
   if (!(duration > 0)) return null;
   return <div className={`trip-schedule-timeline ${className}`.trim()} role="group" aria-label={ariaLabel}
     data-height={height === "fill" ? "fill" : "fixed"}
+    data-detail={condensed ? "summary" : "full"}
     data-tick-columns={dualTickColumns ? "dual" : "single"}
     style={timelineHeight ? { height: timelineHeight } : undefined}>
     {dualTickColumns && <>
@@ -387,20 +412,26 @@ export function AdventureScheduleTimeline({
           const visibleEnd = Math.min(end, range.end);
           const top = timeScale.position(visibleStart) * 100;
           const height = (timeScale.position(visibleEnd) - timeScale.position(visibleStart)) * 100;
-          const compact = pixelHeight * height / 100 < 48;
+          const rowPixels = pixelHeight * height / 100;
+          const compact = rowPixels < 48;
+          const minimal = adaptiveDetail && pixelHeight > 0 && rowPixels < 24;
+          const showMap = mapsUrl && (!adaptiveDetail || !condensed && rowPixels >= 44);
+          const clock = instant => formatTick?.(instant) ?? new Date(instant).toISOString().slice(11, 16);
+          const rowTitle = row.summaryCount ? `${clock(visibleStart)} — ${clock(visibleEnd)} · ${label}` : title;
           return <div key={id} className="trip-schedule-timeline-slot"
+            data-summary-count={row.summaryCount} data-minimal={minimal || undefined}
             style={{ top: `${top}%`, height: `${height}%`, left: `${lane / lanes * 100}%`, width: `${100 / lanes}%` }}>
             <PencilSurface variant="badge"
-              className={`trip-schedule-timeline-interval${compact ? " is-compact" : ""}`}
-              data-active={Boolean(active)} style={{ "--trip-surface-badge-wash": color }}>
-              {content ? <div className="trip-schedule-timeline-interval-main trip-schedule-timeline-row-content">
+              className={`trip-schedule-timeline-interval${compact ? " is-compact" : ""}${adaptiveDetail ? " is-adaptive" : ""}${minimal ? " is-minimal" : ""}`}
+              data-active={Boolean(active)} style={{ "--trip-surface-badge-wash": scheduleWash(color) }}>
+              {content && !minimal ? <div className="trip-schedule-timeline-interval-main trip-schedule-timeline-row-content">
                 {content}
               </div> : <>
                 {onSelect && <button type="button" className="trip-schedule-timeline-interval-hit"
-                  title={title} aria-label={rowAriaLabel ?? (timeLabel ? `${timeLabel} · ${label}` : label)}
+                  title={rowTitle} aria-label={row.summaryCount ? rowTitle : rowAriaLabel ?? (timeLabel ? `${timeLabel} · ${label}` : label)}
                   onClick={onSelect} />}
-                <div className="trip-schedule-timeline-interval-copy"
-                  title={onSelect ? undefined : title} aria-label={onSelect ? undefined : rowAriaLabel}>
+                {!minimal && <div className="trip-schedule-timeline-interval-copy"
+                  title={onSelect ? undefined : rowTitle} aria-label={onSelect ? undefined : rowAriaLabel}>
                   <div className="trip-schedule-timeline-interval-main">
                     {iconType && <span className="trip-schedule-timeline-point-icon"><ScheduleIcon type={iconType} /></span>}
                     <strong><PencilText ellipsis>{showTime && timeLabel ? `${timeLabel} · ${label}` : label}</PencilText></strong>
@@ -409,13 +440,13 @@ export function AdventureScheduleTimeline({
                   {!compact && meta && <span><PencilText>{meta}</PencilText></span>}
                   {!compact && detailsList(details).map((detail, index) =>
                     <span key={`${id}-detail-${index}`}><PencilText ellipsis>{detail}</PencilText></span>)}
-                </div>
+                </div>}
               </>}
-              {milestones.length > 0 && <div className="trip-schedule-timeline-milestones">
+              {!minimal && (!adaptiveDetail || !condensed && !compact) && milestones.length > 0 && <div className="trip-schedule-timeline-milestones">
                 {milestones.map(milestone => <ScheduleMilestone key={milestone.id}
                   row={milestone} formatTick={formatTick} />)}
               </div>}
-              {mapsUrl && <a className="trip-schedule-timeline-map-link" href={mapsUrl} target="_blank"
+              {showMap && <a className="trip-schedule-timeline-map-link" href={mapsUrl} target="_blank"
                 rel="noopener noreferrer" aria-label={`${label} · Google Maps`} title="Google Maps"><GoogleMapIcon /></a>}
             </PencilSurface>
           </div>;
@@ -429,7 +460,7 @@ export function AdventureScheduleTimeline({
           return <div key={id} className="trip-schedule-timeline-point"
           data-active={Boolean(active)} style={{ top: `${displayTop * 100}%` }}>
           <PencilSurface variant="badge" className="trip-schedule-timeline-point-surface"
-            style={{ "--trip-surface-badge-wash": color }}>
+            style={{ "--trip-surface-badge-wash": scheduleWash(color) }}>
             {content ? <div className="trip-schedule-timeline-point-main trip-schedule-timeline-row-content">
               {content}
             </div> : onSelect ? <button type="button" className="trip-schedule-timeline-point-main" onClick={onSelect}

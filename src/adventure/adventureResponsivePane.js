@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { transitionAdventurePane } from "./adventurePaneTransition";
 
-const PHONE_PORTRAIT_MAX_WIDTH = 480;
-const PHONE_PORTRAIT_MIN_ASPECT = 1.3;
+const PHONE_MAX_SHORT_SIDE = 480;
+const PHONE_MIN_ASPECT = 1.3;
 
 export function classifyAdventureViewport({ width, height }) {
   const inline = Math.max(1, Math.round(width));
   const block = Math.max(1, Math.round(height));
   const shortSide = Math.min(inline, block);
   const longSide = Math.max(inline, block);
-  if (block > inline && inline <= PHONE_PORTRAIT_MAX_WIDTH && block / inline >= PHONE_PORTRAIT_MIN_ASPECT) {
-    return "phone-portrait";
+  if (shortSide <= PHONE_MAX_SHORT_SIDE && longSide / shortSide >= PHONE_MIN_ASPECT) {
+    return block > inline ? "phone-portrait" : "phone-landscape";
   }
   if (shortSide <= 600 && longSide <= 920) return "compact";
   if (shortSide <= 820 && longSide <= 1180) return "tablet";
@@ -18,6 +18,9 @@ export function classifyAdventureViewport({ width, height }) {
 }
 
 export function responsiveFullscreenPane(view, layout) {
+  if (layout === "phone-landscape") {
+    return view.calendarOpen && (!view.rightPanel || view.front === "tasks") ? "calendar" : null;
+  }
   if (layout !== "phone-portrait") return null;
   if (view.calendarOpen && view.rightPanel) return view.front === "tasks" ? "calendar" : "right";
   if (view.rightPanel) return "right";

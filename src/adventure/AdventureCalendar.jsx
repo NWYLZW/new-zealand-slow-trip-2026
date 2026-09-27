@@ -17,8 +17,19 @@ function seedFor(value) {
   return Array.from(value).reduce((seed, character) => Math.imul(seed ^ character.codePointAt(0), 16777619), 73) >>> 0;
 }
 
-function eventPigment(color, dark) {
-  if (!dark) return color;
+function mixHexColors(color, paper, pigmentWeight) {
+  const source = /^#([0-9a-f]{6})$/i.exec(color?.trim() ?? "");
+  const background = /^#([0-9a-f]{6})$/i.exec(paper?.trim() ?? "");
+  if (!source || !background) return color;
+  const channel = (value, offset) => Number.parseInt(value.slice(offset, offset + 2), 16);
+  return `#${[0, 2, 4].map(offset => Math.round(
+    channel(source[1], offset) * pigmentWeight
+      + channel(background[1], offset) * (1 - pigmentWeight),
+  ).toString(16).padStart(2, "0")).join("")}`;
+}
+
+function eventPigment(color, dark, paper) {
+  if (!dark) return mixHexColors(color, paper, .62);
   const match = /^#([0-9a-f]{6})$/i.exec(color.trim());
   if (!match) return color;
   // Lift every source category by the same amount, retaining its hue and identity.
@@ -74,6 +85,7 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       const css = getComputedStyle(parent);
       const dark = document.documentElement.dataset.adventureAppearance === "dark";
+      const paperColor = css.getPropertyValue("--trip-calendar-paper").trim() || "#faf9f3";
       const pigment = (key, light, night) => css.getPropertyValue(`--trip-calendar-${key}`).trim()
         || (dark ? night : light);
       const selectedTab = pigment("selected-tab", "#769566", "#c6b873");
@@ -88,7 +100,6 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
           if (x === width) break;
         }
         // The paper and its pencil outline share one boundary; above it stays transparent.
-        const paperColor = css.getPropertyValue("--trip-calendar-paper").trim() || "#faf9f3";
         context.fillStyle = context.createPattern(calendarPaper(paperColor, { dark }).canvas, "repeat");
         context.beginPath();
         context.moveTo(topEdge[0][0], topEdge[0][1]);
@@ -118,9 +129,11 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
         drawPencilWash(context, {
           x: rect.left - box.left, y: rect.top - box.top,
           width: rect.width, height: rect.height,
-        }, regionInk[cell.dataset.region] ?? "#a79f68", seedFor(`day:${cell.dataset.date}`),
+        }, dark ? regionInk[cell.dataset.region] ?? "#a79f68"
+          : mixHexColors(regionInk[cell.dataset.region] ?? "#a79f68", paperColor, .58),
+        seedFor(`day:${cell.dataset.date}`),
         { strength: dark ? cell.dataset.selected === "true" ? .43 : .28
-          : cell.dataset.selected === "true" ? .24 : .18,
+          : cell.dataset.selected === "true" ? .2 : .13,
           spacing: 2, roughness: 3.5, inset: 3, radius: 8 });
       }
       for (const event of events) {
@@ -128,8 +141,8 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
         drawPencilWash(context, {
           x: rect.left - box.left, y: rect.top - box.top,
           width: rect.width, height: rect.height,
-        }, eventPigment(event.style.getPropertyValue("--event-ink") || "#718e79", dark), seedFor(`event:${event.dataset.eventId}`),
-        { strength: dark ? .42 : .14, spacing: 2.2, roughness: 2.8, inset: 2 });
+        }, eventPigment(event.style.getPropertyValue("--event-ink") || "#718e79", dark, paperColor), seedFor(`event:${event.dataset.eventId}`),
+        { strength: dark ? .42 : .11, spacing: 2.2, roughness: 2.8, inset: 2 });
       }
       for (const cell of cells) {
         const rect = cell.getBoundingClientRect();
@@ -147,7 +160,7 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
         if (getComputedStyle(event).display === "none") continue;
         const rect = event.getBoundingClientRect();
         const x = rect.left - box.left + 2, y = rect.top - box.top;
-        const color = eventPigment(event.style.getPropertyValue("--event-ink") || "#496855", dark);
+        const color = eventPigment(event.style.getPropertyValue("--event-ink") || "#496855", dark, paperColor);
         pencilStroke(context, [[x, y + 4], [x, y + rect.height - 4]], color, dark ? 1.7 : 1.3,
           seedFor(event.dataset.eventId), .3, 3, false,
           { variation: .8, breaks: .2, grain: .7, gain: 3, step: .55 });

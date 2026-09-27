@@ -4,7 +4,8 @@ import { pencilStroke } from './stroke';
 export function random(seed){let n=seed>>>0;return()=>{n+=0x6d2b79f5;let t=Math.imul(n^n>>>15,n|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 
 export function stroke(ctx,points,color,width,seed,options={}){
-  pencilStroke(ctx,points,color,width,seed,options.amplitude??.6,options.passes??2,options.closed??false,{variation:1,breaks:.62,grain:.78,gain:1.7,scale:1,...options});
+  pencilStroke(ctx,points,color,width,seed,options.amplitude??.6,options.passes??2,options.closed??false,
+    {variation:1,breaks:.62,grain:.78,gain:1.7,scale:1,filaments:1,...options});
 }
 
 export function grain(ctx,w,h,color,seed,amount){

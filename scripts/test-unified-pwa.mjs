@@ -40,7 +40,39 @@ const origin = "http://127.0.0.1:" + server.address().port;
 const base = origin + basePath;
 let browser;
 const errors = [];
-const readyMap = page => page.waitForFunction(() => document.querySelector(".trip-pencil-map")?._pencilStats?.frames > 0);
+const failedAssets = [];
+const readyMap = async page => {
+  try {
+    await page.waitForFunction(() => {
+      const pencil = document.querySelector(".trip-pencil-map");
+      const international = document.querySelector(".trip-international-map");
+      return Boolean((pencil && !pencil.hidden && pencil._pencilStats?.frames > 0) ||
+        (international && !international.hidden && Number(international.dataset.rasterRenders) > 0));
+    });
+  } catch (error) {
+    const visibleText = await page.locator("body").innerText().catch(() => "");
+    const mapState = await page.evaluate(() => {
+      const area = document.querySelector(".trip-map-area");
+      const canvas = document.querySelector(".trip-pencil-map");
+      const international = document.querySelector(".trip-international-map");
+      return {
+        url: location.href,
+        area: area && { width: area.clientWidth, height: area.clientHeight, zoom: area.dataset.zoom },
+        canvas: canvas && { width: canvas.width, height: canvas.height, hidden: canvas.hidden,
+          stats: canvas._pencilStats ?? null },
+        international: international && { width: international.width, height: international.height,
+          hidden: international.hidden, renders: international.dataset.rasterRenders ?? null },
+      };
+    }).catch(() => null);
+    throw new Error([
+      error.message,
+      errors.length ? `Page errors: ${errors.join(" | ")}` : "",
+      failedAssets.length ? `Failed assets: ${failedAssets.join(" | ")}` : "",
+      mapState ? `Map state: ${JSON.stringify(mapState)}` : "",
+      visibleText ? `Visible text: ${visibleText.slice(0, 500)}` : "",
+    ].filter(Boolean).join("\n"));
+  }
+};
 const readyMain = page => page.locator(".page-header").waitFor();
 const screenshot = async (page, name) => { if (output) await page.screenshot({ path: output + "/" + name + ".png" }); };
 async function controlled(page) {
@@ -121,6 +153,11 @@ try {
   const context = await browser.newContext({ viewport: { width: 1324, height: 964 }, deviceScaleFactor: 1 });
   const page = await context.newPage();
   page.on("pageerror", error => errors.push(error.message));
+  page.on("requestfailed", request => {
+    if (["script", "stylesheet", "font"].includes(request.resourceType())) {
+      failedAssets.push(`${request.resourceType()}: ${request.url()} (${request.failure()?.errorText ?? "failed"})`);
+    }
+  });
   const scripts = [];
   page.on("request", request => { if (request.resourceType() === "script") scripts.push(request.url()); });
   assert.equal((await page.goto(base + "?place=ZQN", { waitUntil: "domcontentloaded" })).status(), 200);

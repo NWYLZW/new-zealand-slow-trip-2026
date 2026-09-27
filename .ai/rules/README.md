@@ -24,6 +24,7 @@
 | 从线上站点、ZIP、旧项目或远端分支同步内容 | [`developing/external-artifacts.md`](developing/external-artifacts.md) | 数据管线、Git、验证 |
 | 新增/替换图片视频、处理来源许可或重复资产 | [`developing/media-assets.md`](developing/media-assets.md) | 数据管线、验证 |
 | 调整样式、交互、地图、日历、弹窗、移动端 | [`design/interface.md`](design/interface.md) | 架构、验证 |
+| 冒险地图移动端面板、菜单、手势与短高度布局 | [`design/adventure-mobile.md`](design/adventure-mobile.md) | 设计、验证 |
 | 新增或修正中英文、专名、日期货币格式 | [`design/localization.md`](design/localization.md) | 架构、验证 |
 | 更新日期、航班、租车、住宿段或活动 | [`travel/itinerary-data.md`](travel/itinerary-data.md) | 证据、验证 |
 | 判断来源可信度、写调研结论 | [`research/evidence.md`](research/evidence.md) | 对应专项规则 |

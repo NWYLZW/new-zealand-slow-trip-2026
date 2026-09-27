@@ -93,6 +93,18 @@ function separatedVisitPeriods(tag) {
   return periods.map(([first, last]) => first === last ? label(first) : `${label(first)}—${label(last)}`).join("、");
 }
 
+function compactStayDateRange(booking) {
+  if (!booking?.checkIn || !booking?.checkOut) return null;
+  const compact = (dateId) => {
+    const [, month, day] = dateId.split("-").map(Number);
+    return Number.isFinite(month) && Number.isFinite(day) ? `${month}/${day}` : dateId;
+  };
+  return {
+    label: `${compact(booking.checkIn)} — ${compact(booking.checkOut)}`,
+    full: `${booking.checkIn} — ${booking.checkOut}`,
+  };
+}
+
 function dayIcon(entry) {
   if (!entry) return null;
   const scores = new Map();
@@ -128,7 +140,19 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const vaultUnlocked = useRef(vault.isUnlocked);
   vaultUnlocked.current = vault.isUnlocked;
   const [stayLink, setStayLink] = useState(null);
+  const panelRef = useRef(null);
+  const [shortHeight, setShortHeight] = useState(() => window.innerHeight <= 520);
   const mediaAlbumRef = useRef(null);
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const update = () => {
+      if (panel.clientHeight > 0) setShortHeight(panel.clientHeight <= 520);
+    };
+    const resize = new ResizeObserver(update);
+    resize.observe(panel);
+    update();
+    return () => resize.disconnect();
+  }, []);
   const onStayLinkChange = useCallback((action) => {
     setStayLink((previous) => {
       const next = action ? { ...action, vaultUnlocked: vaultUnlocked.current } : null;
@@ -201,9 +225,10 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
     ?? (cameraNested ? view.cameraView === "album" ? adventureText("相册", "Album", language) : adventureText("设置", "Settings", language) : null)
     ?? { bag: adventureText("背包", "Backpack", language), camera: adventureText("相机", "Camera", language),
       "map-sources": adventureText("地图数据来源", "Map data sources", language) }[view.rightPanel];
+  const stayDate = compactStayDateRange(bagBooking);
   const date = mediaDetail ? null : event ? `${event.day.date} · ${event.day.weekday}`
     : route?.date ?? (calendarDay ? `${calendarDay.day.date} · ${calendarDay.day.weekday}` : null)
-      ?? (bagBooking ? `${bagBooking.checkIn} — ${bagBooking.checkOut}` : null) ?? placePeriods ?? stop?.date;
+      ?? stayDate?.label ?? placePeriods ?? stop?.date;
   const DayIcon = dayIcon(calendarDay ?? (event ? { day: event.day, events: [event] } : null));
   const nested = clusterChild || mediaDetail || waypoint || cameraNested || event || (calendarDay && view.dayFrom === "place")
     || ["bag-stay", "map-sources", "bag-note"].includes(view.rightPanel);
@@ -215,8 +240,31 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const dayIndex = calendarDay ? calendarDays.findIndex(day => day.dateId === view.day) : -1;
   const previousDay = dayIndex > 0 ? calendarDays[dayIndex - 1] : null;
   const nextDay = dayIndex >= 0 && dayIndex < calendarDays.length - 1 ? calendarDays[dayIndex + 1] : null;
-  const paneActions = <AdventurePaneActions fullscreen={fullscreen} automaticFullscreen={automaticFullscreen} onToggleFullscreen={onToggleFullscreen}
-    onOpenMenu={onOpenMenu} onClose={() => navigate()} />;
+  const step = (delta) => navigate("place", adventureStops[(index + delta + adventureStops.length) % adventureStops.length].tag);
+  const placeNavigation = stop && view.rightPanel === "place" && !mediaDetail;
+  const compactNavigation = shortHeight && (calendarDay || placeNavigation);
+  const paneActions = <>
+    {compactNavigation && <>
+      <button type="button" className="trip-route-header-action trip-panel-sequence-previous"
+        disabled={Boolean(calendarDay && !previousDay)}
+        aria-label={calendarDay ? adventureText("上一天", "Previous day", language) : adventureText("上一站", "Previous stop", language)}
+        title={calendarDay ? previousDay ? `${adventureText("上一天", "Previous day", language)}: ${previousDay.day.date}`
+          : adventureText("已是第一天", "First day", language) : adventureText("上一站", "Previous stop", language)}
+        onClick={() => calendarDay ? previousDay && navigate(view.dayFrom === "place" ? "place-day" : "day", previousDay.dateId) : step(-1)}>
+        <PreviousIcon />
+      </button>
+      <button type="button" className="trip-route-header-action trip-panel-sequence-next"
+        disabled={Boolean(calendarDay && !nextDay)}
+        aria-label={calendarDay ? adventureText("下一天", "Next day", language) : adventureText("下一站", "Next stop", language)}
+        title={calendarDay ? nextDay ? `${adventureText("下一天", "Next day", language)}: ${nextDay.day.date}`
+          : adventureText("已是最后一天", "Last day", language) : adventureText("下一站", "Next stop", language)}
+        onClick={() => calendarDay ? nextDay && navigate(view.dayFrom === "place" ? "place-day" : "day", nextDay.dateId) : step(1)}>
+        <NextIcon />
+      </button>
+    </>}
+    <AdventurePaneActions fullscreen={fullscreen} automaticFullscreen={automaticFullscreen} onToggleFullscreen={onToggleFullscreen}
+      onOpenMenu={onOpenMenu} onClose={() => navigate()} />
+  </>;
   const cameraBackLabel = mediaDetail ? adventureText("返回相册", "Back to album", language)
     : cameraDevice ? adventureText("返回相机设置", "Back to camera settings", language)
       : adventureText("返回相机", "Back to camera", language);
@@ -226,8 +274,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const mediaAlbum = <AdventureMediaAlbum ref={mediaAlbumRef} placeTag={view.rightPanel === "place" ? stop?.tag : null}
     selectedId={view.mediaId} onSelect={id => navigate("media-select", id)} detailTab={view.mediaTab}
     onTabChange={tab => navigate("media-tab", tab)} />;
-  const step = (delta) => navigate("place", adventureStops[(index + delta + adventureStops.length) % adventureStops.length].tag);
-  return <aside {...props} id="trip-right-panel" className="trip-panel" aria-label={title}>
+  return <aside {...props} ref={panelRef} id="trip-right-panel" className="trip-panel" data-short-height={shortHeight} aria-label={title}>
     <PencilSurface variant={fullscreen ? "full" : "sheet"} className={`trip-day${cameraPreview ? " trip-day--camera" : ""}`}>
       <header ref={closeButtonRef} className={`trip-panel-header${nested ? " trip-panel-header--nested" : ""}${route ? " trip-panel-header--route" : ""}${hasStayActions ? " trip-panel-header--stay-actions" : ""}${view.rightPanel === "bag-note" ? " trip-panel-header--bag-note" : ""}${view.rightPanel === "camera" || (view.rightPanel === "bag" && view.bagTab === "car") ? " trip-panel-header--multi-actions" : ""}`}>
         {nested ? <button type="button" className="trip-panel-leading trip-event-back"
@@ -284,7 +331,8 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
                 <RouteMetaSeparator />
                 <span className="trip-panel-heading-icon"><RouteDistanceIcon /></span><PencilText>约{routeDistance}km</PencilText>
               </span>}
-          </div> : date && <span className="trip-panel-heading-date"><PencilText>{date}</PencilText></span>}
+          </div> : date && <span className={`trip-panel-heading-date${stayDate ? " trip-panel-heading-date--stay" : ""}`}
+            title={stayDate?.full} aria-label={stayDate?.full}><PencilText ellipsis={Boolean(stayDate)}>{date}</PencilText></span>}
         </div>
         {mediaDetail ? <div className="trip-panel-header-actions">
           <button type="button" className="trip-route-header-action" onClick={() => mediaAlbumRef.current?.requestDelete()}
@@ -364,7 +412,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
         {view.rightPanel === "camera" && ["settings", "device"].includes(view.cameraView)
           && <AdventureCameraSettings view={view.cameraView} />}
       </div>
-      {calendarDay && <footer className="trip-panel-footer trip-day-footer">
+      {calendarDay && !shortHeight && <footer className="trip-panel-footer trip-day-footer">
         <div className="trip-panel-footer-divider"><PanelDivider /></div>
         <PencilSurface as="button" variant="quiet" disabled={!previousDay} aria-label="上一天"
           title={previousDay ? `上一天：${previousDay.day.date}` : "已是第一天"}
@@ -374,7 +422,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
           title={nextDay ? `下一天：${nextDay.day.date}` : "已是最后一天"}
           onClick={() => nextDay && navigate(view.dayFrom === "place" ? "place-day" : "day", nextDay.dateId)}><NextIcon /></PencilSurface>
       </footer>}
-      {stop && view.rightPanel === "place" && !mediaDetail && <footer className="trip-panel-footer trip-place-footer">
+      {placeNavigation && !shortHeight && <footer className="trip-panel-footer trip-place-footer">
         <div className="trip-panel-footer-divider"><PanelDivider /></div>
         <div className="trip-card-actions">
           <PencilSurface as="button" variant="quiet" className="trip-prev" aria-label="上一站" onClick={() => step(-1)}><PreviousIcon /></PencilSurface>

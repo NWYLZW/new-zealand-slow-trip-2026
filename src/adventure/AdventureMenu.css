@@ -118,6 +118,7 @@ html[data-adventure-theme="sunset"] #trip-board-structure {
 .trip-adventure-menu-leading .trip-pencil-icon,
 .trip-adventure-menu-back .trip-pencil-icon,
 .trip-adventure-menu-close .trip-pencil-icon { width: 30px; height: 30px; }
+.trip-adventure-menu-leading { cursor: default; touch-action: manipulation; user-select: none; }
 
 .trip-adventure-menu-settings { display: grid; flex: none; gap: 20px; }
 .trip-adventure-menu-setting { display: grid; gap: 7px; }
@@ -134,8 +135,14 @@ html[data-adventure-theme="sunset"] #trip-board-structure {
   color: var(--trip-ink-color);
   font-size: 16px;
 }
-.trip-adventure-menu-theme.trip-pencil-surface { min-width: 125px; }
-.trip-adventure-menu-swatch { display: block; flex: none; width: 18px; height: 18px; background: #a9d7df; clip-path: polygon(8% 11%, 74% 3%, 99% 25%, 92% 83%, 67% 98%, 4% 80%, 0 42%); }
+.trip-adventure-menu-choice.trip-pencil-surface { width: auto; min-width: 125px; padding: 0; font-size: 16px; }
+.trip-adventure-menu-choice > .trip-pencil-surface-content { display: flex; align-items: center; justify-content: center; gap: 7px; min-width: 0; padding: 7px 13px; }
+.trip-adventure-menu-choice[aria-pressed="false"] > .trip-pencil-surface-ink { opacity: 0; }
+.trip-adventure-menu-choice .trip-pencil-icon { flex: none; width: 25px; height: 25px; }
+.trip-adventure-menu-choice-icon-slot { display: grid; place-items: center; flex: none; width: 25px; height: 25px; }
+.trip-adventure-menu-choice-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trip-adventure-menu-choice-label .trip-pencil-text { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trip-adventure-menu-swatch { display: block; width: 18px; height: 18px; background: #a9d7df; clip-path: polygon(8% 11%, 74% 3%, 99% 25%, 92% 83%, 67% 98%, 4% 80%, 0 42%); }
 .trip-adventure-menu-theme[data-theme-choice="fern"] .trip-adventure-menu-swatch { background: #94bd9d; }
 .trip-adventure-menu-theme[data-theme-choice="sunset"] .trip-adventure-menu-swatch { background: #d4a978; }
 
@@ -143,26 +150,43 @@ html[data-adventure-theme="sunset"] #trip-board-structure {
 .trip-adventure-menu-appearance.trip-pencil-surface { display: flex; flex-direction: column; gap: 7px; min-width: 0; min-height: 44px; padding: 8px; font-size: 15px; }
 .trip-adventure-appearance-preview { display: block; width: 100%; height: auto; aspect-ratio: 200 / 118; border-radius: 4px; }
 .trip-adventure-menu-appearance .trip-pencil-text { max-width: 100%; overflow-wrap: anywhere; text-align: center; }
+.trip-adventure-menu-orientation-status,
+.trip-adventure-menu-update-status { margin: 0; color: var(--trip-ink-muted); font-size: 14px; line-height: 1.45; }
+.trip-adventure-menu-update-status.is-error { color: #934b43; }
 
-.trip-adventure-menu-links { --menu-row-padding: 4px; --menu-row-icon: 34px; --menu-row-gap: 12px; display: grid; flex: none; gap: 2px; padding-top: 8px; }
+.trip-adventure-menu-links { --menu-row-padding: 4px; --menu-row-icon: 30px; --menu-row-gap: 10px; display: grid; flex: none; gap: 0; padding-top: 4px; }
 .trip-adventure-menu-link {
   display: flex;
   align-items: center;
   gap: var(--menu-row-gap);
   width: 100%;
-  min-height: 56px;
-  padding: 6px var(--menu-row-padding);
+  min-height: 44px;
+  padding: 4px var(--menu-row-padding);
   border: 0;
   background: transparent;
   color: var(--trip-ink-color);
-  font-size: 19px;
+  font-size: 15px;
   text-align: left;
 }
 .trip-adventure-menu-link:disabled { opacity: .6; cursor: default; }
+.trip-adventure-menu-update-link:disabled .trip-pencil-icon { animation: trip-update-spin 1.1s linear infinite; }
 .trip-adventure-menu-link .trip-pencil-icon { width: var(--menu-row-icon); height: var(--menu-row-icon); flex: none; }
-.trip-adventure-menu-row-divider { position: relative; height: 8px; margin: 1px 0; }
+.trip-adventure-menu-link-label { flex: none; min-width: 0; }
+.trip-adventure-menu-update-status {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--trip-ink-muted);
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trip-adventure-menu-update-status .trip-pencil-text { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trip-adventure-menu-row-divider { position: relative; height: 6px; margin: 0; }
 .trip-adventure-menu-row-divider .trip-panel-divider-ink { position: absolute; inset: 0; width: 100%; height: 8px; }
-.trip-adventure-menu-install-help { display: grid; gap: 5px; padding: 0 var(--menu-row-padding) 12px calc(var(--menu-row-padding) + var(--menu-row-icon) + var(--menu-row-gap)); color: var(--trip-ink-muted); font-size: 14px; line-height: 1.5; }
+.trip-adventure-menu-install-help { display: grid; gap: 5px; padding-block: 0 8px; color: var(--trip-ink-muted); font-size: 14px; line-height: 1.5; }
+.trip-adventure-menu-install-help { padding-inline: calc(var(--menu-row-padding) + var(--menu-row-icon) + var(--menu-row-gap)) var(--menu-row-padding); }
 .trip-adventure-menu-install-help strong { font-weight: 400; color: var(--trip-ink-color); }
 .trip-adventure-menu-install-help p { margin: 0; }
 .trip-adventure-menu :is(button,a):focus-visible { outline: 2px solid var(--trip-focus-color, #355c46); outline-offset: 3px; }
@@ -170,8 +194,19 @@ html[data-adventure-theme="sunset"] #trip-board-structure {
 @media (max-width: 650px) {
   .trip-adventure-menu-inner { padding-block: max(16px, env(safe-area-inset-top), env(safe-area-inset-bottom)); padding-inline: 16px; }
   .trip-adventure-menu-header h1 { font-size: 21px; }
-  .trip-adventure-menu-theme.trip-pencil-surface { min-width: 100px; }
 }
+#trip-board-structure[data-responsive-layout^="phone-"] .trip-adventure-menu-inner {
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 100dvh;
+    margin: 0;
+    padding-block: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-bottom));
+}
+#trip-board-structure[data-responsive-layout^="phone-"] .trip-adventure-menu-header { margin-bottom: 10px; }
+#trip-board-structure[data-responsive-layout^="phone-"] .trip-adventure-menu-settings { flex: 1; align-content: start; gap: 14px; padding-bottom: 8px; }
+#trip-board-structure[data-responsive-layout^="phone-"] .trip-adventure-menu-links { flex: 1; align-content: start; }
+@keyframes trip-update-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   .trip-adventure-menu,.trip-adventure-menu::backdrop { transition: none; }
+  .trip-adventure-menu-update-link:disabled .trip-pencil-icon { animation: none; }
 }

@@ -48,6 +48,8 @@ export function pencilStroke(ctx, points, color, width, seed, amplitude,
     total += length;
   }
   if (!total) return;
+  const distanceOffset = settings.distanceOffset ?? 0;
+  const totalDistance = settings.totalDistance ?? distanceOffset + total;
   const step = settings.step ?? (settings.detail === 'fill' ? 2.1 : 1.05);
   const samples = [];
   let segmentIndex = 0;
@@ -55,15 +57,17 @@ export function pencilStroke(ctx, points, color, width, seed, amplitude,
     while (segmentIndex < segments.length - 1 && at > segments[segmentIndex].start + segments[segmentIndex].length) segmentIndex++;
     const s = segments[segmentIndex], t = clamp((at - s.start) / s.length);
     const nx = -(s.b[1] - s.a[1]) / (s.length * scale), ny = (s.b[0] - s.a[0]) / (s.length * scale);
-    const offset = (noise(at / 8, seed + 503) - .5) * amplitude * Math.sqrt(scale);
-    samples.push({at, x:s.a[0] + (s.b[0] - s.a[0]) * t + nx * offset,
+    const globalAt = distanceOffset + at;
+    const offset = (noise(globalAt / 8, seed + 503) - .5) * amplitude * Math.sqrt(scale);
+    samples.push({at:globalAt, x:s.a[0] + (s.b[0] - s.a[0]) * t + nx * offset,
       y:s.a[1] + (s.b[1] - s.a[1]) * t + ny * offset, nx, ny,
-      ...strokeProfile(at, total, seed, settings)});
+      ...strokeProfile(globalAt, totalDistance, seed, settings)});
     if (at === total) break;
   }
   const inheritedAlpha = ctx.globalAlpha;
   const material = .65 + hash(0, seed + 619) * .65;
   const viewport = settings.viewport;
+  const filaments = Math.max(0, settings.filaments ?? 3);
   ctx.save();ctx.strokeStyle = color;ctx.lineCap = 'round';
   for (let pass = 0; pass < passes; pass++) {
     for (let i = 1; i < samples.length; i++) {
@@ -86,10 +90,10 @@ export function pencilStroke(ctx, points, color, width, seed, amplitude,
       ctx.beginPath();ctx.moveTo(a.x + a.nx * drift, a.y + a.ny * drift);
       ctx.lineTo(b.x + b.nx * drift, b.y + b.ny * drift);ctx.stroke();
       if(grain>.05){
-        for(let filament=0;filament<3;filament++){
+        for(let filament=0;filament<filaments;filament++){
           const tooth=noise(a.at*2.7,seed+filament*191+pass*317);
           if(tooth<.28)continue;
-          const offset=drift+(filament-1)*nib*.3;
+          const offset=drift+(filament-(filaments-1)/2)*nib*.3;
           ctx.globalAlpha=baseAlpha*grain*tooth;
           ctx.lineWidth=Math.max(.15,nib*(.12+tooth*.17));
           ctx.beginPath();ctx.moveTo(a.x+a.nx*offset,a.y+a.ny*offset);
@@ -97,7 +101,8 @@ export function pencilStroke(ctx, points, color, width, seed, amplitude,
         }
       }
       // Sparse off-centre graphite grains roughen the edge without filling pen lifts.
-      if (pass === 0 && settings.detail !== 'fill' && a.deposit > .52 && (settings.grain ?? .7) > .05) {
+      if (pass === 0 && settings.detail !== 'fill' && settings.edgeGrain !== false
+        && a.deposit > .52 && (settings.grain ?? .7) > .05) {
         const toothOffset = (noise(a.at * 2, seed + 727) - .5) * nib * 1.9;
         ctx.lineWidth = .18 + pressure * .24;
         ctx.globalAlpha = baseAlpha*.55;
