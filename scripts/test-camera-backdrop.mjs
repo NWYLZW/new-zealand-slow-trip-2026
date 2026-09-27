@@ -6,7 +6,7 @@ const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 430, height: 932 }, deviceScaleFactor: 2 });
   const errors = [];
-  page.on("pageerror", error => errors.push(error.message));
+  page.on("pageerror", error => { errors.push(error.message); console.error(error.message); });
   await page.route(`${base}?icon-backdrop-probe`, route => route.fulfill({
     contentType: "text/html",
     body: '<!doctype html><html><head><style>body{margin:24px;background:repeating-conic-gradient(#23382d 0% 25%,#c6a946 0% 50%) 0/13px 13px}#root{display:flex;gap:20px;flex-wrap:wrap}section{display:flex;gap:8px;padding:12px}canvas{width:30px;height:30px;color:#4b96aa;--trip-pencil-icon-backdrop:#fff}.shutter canvas{width:36px;height:36px}</style></head><body><div id="root"></div></body></html>',
@@ -52,9 +52,16 @@ try {
     };
     const glyph = bounds(foreground, plain.width, 96), backing = bounds(composite, backed.width, 96);
     let minimumCoreAlpha = 255;
+    const supportRadius = Math.max(1, Math.round(backed.width / 40 * .5));
     for (let y = glyph.top; y <= glyph.bottom; y++) {
       for (let x = glyph.left; x <= glyph.right; x++) {
-        minimumCoreAlpha = Math.min(minimumCoreAlpha, composite[(y * backed.width + x) * 4 + 3]);
+        if (foreground[(y * plain.width + x) * 4 + 3] < 96) continue;
+        for (let dy = -supportRadius; dy <= supportRadius; dy++) {
+          for (let dx = -supportRadius; dx <= supportRadius; dx++) {
+            minimumCoreAlpha = Math.min(minimumCoreAlpha,
+              composite[((y + dy) * backed.width + x + dx) * 4 + 3]);
+          }
+        }
       }
     }
     const edgeAlpha = [];
@@ -68,6 +75,9 @@ try {
       widthRatio: backing.width / glyph.width, heightRatio: backing.height / glyph.height,
       edgeAlpha: Math.max(...edgeAlpha), image: backed.toDataURL() };
   }));
+  if (process.env.ADVENTURE_TEST_SCREENSHOT) await page.screenshot({ path: process.env.ADVENTURE_TEST_SCREENSHOT,
+    clip: { x: 0, y: 0, width: 430, height: 290 } });
+  console.log(JSON.stringify(evidence.map(({ image, ...row }) => row), null, 2));
   for (const row of evidence) {
     assert.equal(row.size, row.id === "shutter" ? "36px" : "30px");
     assert(row.minimumCoreAlpha >= 235, `${row.id}: backing has a transparent core (${row.minimumCoreAlpha})`);
@@ -79,9 +89,6 @@ try {
   const repainted = await page.locator("section canvas[data-theme-backdrop]").evaluateAll(elements => elements.map(el => el.toDataURL()));
   assert.deepEqual(repainted, evidence.map(row => row.image), "Same inputs repaint deterministically");
   assert.deepEqual(errors, [], "The isolated icon render has no runtime errors");
-  if (process.env.ADVENTURE_TEST_SCREENSHOT) await page.screenshot({ path: process.env.ADVENTURE_TEST_SCREENSHOT,
-    clip: { x: 0, y: 0, width: 430, height: 290 } });
-  console.log(JSON.stringify(evidence.map(({ image, ...row }) => row), null, 2));
 } finally {
   await browser.close();
 }

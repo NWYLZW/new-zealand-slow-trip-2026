@@ -27,157 +27,182 @@ function seededRandom(seed) {
 
 function paintThemeBackdrop(context, color, paths, sourceSize, textureKey) {
   const offset = (40 - sourceSize) / 2;
+  const parts = [];
   let left = 40, top = 40, right = 0, bottom = 0;
   for (const [data] of paths) {
     for (const part of cachedPathParts(data)) {
-      for (const [x, y] of part) {
-        left = Math.min(left, x + offset);
-        top = Math.min(top, y + offset);
-        right = Math.max(right, x + offset);
-        bottom = Math.max(bottom, y + offset);
+      const shifted = part.map(([x, y]) => [x + offset, y + offset]);
+      parts.push(shifted);
+      for (const [x, y] of shifted) {
+        left = Math.min(left, x);
+        top = Math.min(top, y);
+        right = Math.max(right, x);
+        bottom = Math.max(bottom, y);
       }
     }
   }
-  const strokePad = 2;
-  left -= strokePad;
-  top -= strokePad;
-  right += strokePad;
-  bottom += strokePad;
+  if (!parts.length) return;
   const glyphWidth = Math.max(1, right - left);
   const glyphHeight = Math.max(1, bottom - top);
-  const strokeWidth = glyphWidth * 1.25;
-  const strokeHeight = glyphHeight * 1.25;
-  const outerWidth = glyphWidth * 1.08;
-  const outerHeight = glyphHeight * 1.08;
   const centerX = (left + right) / 2, centerY = (top + bottom) / 2;
   const seed = stableHash(textureKey);
   const random = seededRandom(seed);
   const canvasMin = 1.5, canvasMax = 38.5;
-  let outerLeft = centerX - outerWidth / 2;
-  let outerTop = centerY - outerHeight / 2;
-  const strokeLeft = centerX - strokeWidth / 2;
-  const strokeTop = centerY - strokeHeight / 2;
-  const strokeRight = strokeLeft + strokeWidth;
-  const strokeBottom = strokeTop + strokeHeight;
-  const translateX = strokeLeft < canvasMin ? canvasMin - strokeLeft
-    : strokeRight > canvasMax ? canvasMax - strokeRight : 0;
-  const translateY = strokeTop < canvasMin ? canvasMin - strokeTop
-    : strokeBottom > canvasMax ? canvasMax - strokeBottom : 0;
-  left += translateX;
-  right += translateX;
-  top += translateY;
-  bottom += translateY;
-  outerLeft += translateX;
-  outerTop += translateY;
-  const shiftedOuterRight = outerLeft + outerWidth;
-  const shiftedOuterBottom = outerTop + outerHeight;
-  const horizontalMargin = (outerWidth - glyphWidth) / 2;
-  const verticalMargin = (outerHeight - glyphHeight) / 2;
-  const pointCount = 12 + seed % 5;
-  const sideCounts = Array.from({ length: 4 }, (_, side) =>
-    Math.floor(pointCount / 4) + (side < pointCount % 4 ? 1 : 0));
-  const points = [];
-  for (let side = 0; side < 4; side++) {
-    for (let index = 0; index < sideCounts[side]; index++) {
-      const progress = index / sideCounts[side];
-      const normalJitter = (random() - .35) * (side % 2 ? horizontalMargin : verticalMargin) * .38;
-      const tangentJitter = index === 0 ? 0
-        : (random() - .5) * (side % 2 ? outerHeight : outerWidth) / sideCounts[side] * .3;
-      if (side === 0) points.push([
+  const corePadding = 4.75;
+  const paddedPoints = [];
+  for (const part of parts) {
+    const step = Math.max(1, Math.floor(part.length / 24));
+    for (let index = 0; index < part.length; index += step) {
+      const [x, y] = part[index];
+      for (let spoke = 0; spoke < 8; spoke++) {
+        const angle = Math.PI * 2 * spoke / 8 + (random() - .5) * .16;
+        const desiredRadius = corePadding + random() * .85;
+        const cos = Math.cos(angle), sin = Math.sin(angle);
+        const horizontalRoom = cos > 0 ? (canvasMax - x) / cos : (canvasMin - x) / cos;
+        const verticalRoom = sin > 0 ? (canvasMax - y) / sin : (canvasMin - y) / sin;
+        const radius = Math.max(0, Math.min(desiredRadius, horizontalRoom, verticalRoom) - .2);
+        paddedPoints.push([x + cos * radius, y + sin * radius]);
+      }
+    }
+  }
+  const ordered = paddedPoints.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const cross = (origin, a, b) => (a[0] - origin[0]) * (b[1] - origin[1])
+    - (a[1] - origin[1]) * (b[0] - origin[0]);
+  const lower = [], upper = [];
+  for (const point of ordered) {
+    while (lower.length > 1 && cross(lower.at(-2), lower.at(-1), point) <= 0) lower.pop();
+    lower.push(point);
+  }
+  for (let index = ordered.length - 1; index >= 0; index--) {
+    const point = ordered[index];
+    while (upper.length > 1 && cross(upper.at(-2), upper.at(-1), point) <= 0) upper.pop();
+    upper.push(point);
+  }
+  const hull = lower.slice(0, -1).concat(upper.slice(0, -1));
+  const drawBlob = (points, alpha) => {
+    context.globalAlpha = alpha;
+    context.beginPath();
+    context.moveTo(...points[0]);
+    for (const point of points.slice(1)) context.lineTo(...point);
+    context.closePath();
+    context.fill();
+  };
+  const area = hull.reduce((total, [x, y], index) => {
+    const next = hull[(index + 1) % hull.length];
+    return total + x * next[1] - next[0] * y;
+  }, 0);
+  const orientation = area >= 0 ? 1 : -1;
+  const ruffledHull = [];
+  for (let index = 0; index < hull.length; index++) {
+    const start = hull[index], end = hull[(index + 1) % hull.length];
+    const dx = end[0] - start[0], dy = end[1] - start[1];
+    const length = Math.max(.001, Math.hypot(dx, dy));
+    const outward = [orientation * dy / length, -orientation * dx / length];
+    const tangent = [dx / length, dy / length];
+    ruffledHull.push(start);
+    const divisions = 2 + Math.floor(random() * 3);
+    for (let division = 1; division < divisions; division++) {
+      const progress = division / divisions;
+      const notch = (index + division + seed) % 5 === 0;
+      const lift = notch ? .08 + random() * .18 : .35 + random() * 1.35;
+      const drift = (random() - .5) * .65;
+      ruffledHull.push([
         Math.max(canvasMin, Math.min(canvasMax,
-          outerLeft + outerWidth * progress + tangentJitter)),
-        Math.max(canvasMin, Math.min(top - verticalMargin * .35, outerTop + normalJitter)),
-      ]);
-      else if (side === 1) points.push([
-        Math.min(canvasMax,
-          Math.max(right + horizontalMargin * .35, shiftedOuterRight - normalJitter)),
+          start[0] + dx * progress + outward[0] * lift + tangent[0] * drift)),
         Math.max(canvasMin, Math.min(canvasMax,
-          outerTop + outerHeight * progress + tangentJitter)),
-      ]);
-      else if (side === 2) points.push([
-        Math.max(canvasMin, Math.min(canvasMax,
-          shiftedOuterRight - outerWidth * progress - tangentJitter)),
-        Math.min(canvasMax,
-          Math.max(bottom + verticalMargin * .35, shiftedOuterBottom - normalJitter)),
-      ]);
-      else points.push([
-        Math.max(canvasMin, Math.min(left - horizontalMargin * .35, outerLeft + normalJitter)),
-        Math.max(canvasMin, Math.min(canvasMax,
-          shiftedOuterBottom - outerHeight * progress - tangentJitter)),
+          start[1] + dy * progress + outward[1] * lift + tangent[1] * drift)),
       ]);
     }
   }
   context.save();
   context.fillStyle = color;
-  context.globalAlpha = .97;
-  context.beginPath();
-  context.moveTo(...points[0]);
-  for (const point of points.slice(1)) context.lineTo(...point);
-  context.closePath();
-  context.fill();
-  context.globalAlpha = .09;
-  for (let index = 0; index < 4; index++) {
-    const y = top + glyphHeight * (index + 1) / 5 + (random() - .5) * 1.2;
-    pencilStroke(context, [[left + .5, y], [right - .5, y + (random() - .5) * 1.4]],
-      color, .75, seed + index * 17, .2, 1, false,
-      { variation: .8, breaks: .1, grain: .65, gain: 1.5, step: .4, taperLength: .6 });
+  const featherPatchCount = 3 + seed % 3;
+  for (let patch = 0; patch < featherPatchCount; patch++) {
+    const startIndex = Math.floor(random() * hull.length);
+    const span = Math.min(hull.length - 1, 2 + Math.floor(random() * 4));
+    const inner = Array.from({ length: span + 1 }, (_, offsetIndex) =>
+      hull[(startIndex + offsetIndex) % hull.length]);
+    const outer = inner.map(([x, y]) => {
+      const angle = Math.atan2(y - centerY, x - centerX);
+      const distance = .55 + random() * 1.35;
+      return [Math.max(canvasMin, Math.min(canvasMax, x + Math.cos(angle) * distance)),
+        Math.max(canvasMin, Math.min(canvasMax, y + Math.sin(angle) * distance))];
+    }).reverse();
+    drawBlob(inner.concat(outer), .08 + random() * .13);
   }
-  context.globalAlpha = .94;
-  const edgeStrokeCount = 16 + seed % 5;
-  const maxStrokeWidth = .7;
-  const maxNib = maxStrokeWidth * 1.95;
-  const edgeGrainReach = maxNib * .95 + .21;
-  const filamentReach = maxStrokeWidth * .55 + maxNib * (.3 + .145);
-  const strokeSafety = Math.ceil((.07 + .18 + Math.max(edgeGrainReach, filamentReach) + .35) * 4) / 4;
+  drawBlob(hull, .97);
+  drawBlob(ruffledHull, .97);
+
+  const maxEdgeWidth = .52;
+  const maxNib = maxEdgeWidth * 1.95;
+  const strokeSafety = Math.ceil((.07 + maxNib * .95 + .21 + .35) * 4) / 4;
   const strokeMin = canvasMin + strokeSafety, strokeMax = canvasMax - strokeSafety;
-  let strokesPainted = 0;
-  for (let attempt = 0; attempt < edgeStrokeCount * 5 && strokesPainted < edgeStrokeCount; attempt++) {
-    const side = (seed + attempt * 3) % 4;
-    const progress = .18 + random() * .64;
-    const desiredSpan = 2.8 + random() * 3.2;
-    const extension = 2 + random() * 2;
-    const lean = (random() - .5) * 1.35;
-    let anchor, halfSpan, inner, tip, stroke;
-    if (side === 0) {
-      anchor = outerLeft + outerWidth * progress;
-      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
-      inner = Math.min(strokeMax, outerTop + .8);
-      tip = Math.max(strokeMin, outerTop - extension);
-      stroke = [[anchor - halfSpan, inner], [anchor + lean, (inner + tip) / 2 - .25],
-        [anchor + halfSpan, tip]];
-    } else if (side === 1) {
-      anchor = outerTop + outerHeight * progress;
-      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
-      inner = Math.max(strokeMin, shiftedOuterRight - .8);
-      tip = Math.min(strokeMax, shiftedOuterRight + extension);
-      stroke = [[inner, anchor - halfSpan], [(inner + tip) / 2 + .25, anchor + lean],
-        [tip, anchor + halfSpan]];
-    } else if (side === 2) {
-      anchor = outerLeft + outerWidth * progress;
-      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
-      inner = Math.max(strokeMin, shiftedOuterBottom - .8);
-      tip = Math.min(strokeMax, shiftedOuterBottom + extension);
-      stroke = [[anchor + halfSpan, inner], [anchor + lean, (inner + tip) / 2 + .25],
-        [anchor - halfSpan, tip]];
-    } else {
-      anchor = outerTop + outerHeight * progress;
-      halfSpan = Math.min(desiredSpan / 2, anchor - strokeMin, strokeMax - anchor);
-      inner = Math.min(strokeMax, outerLeft + .8);
-      tip = Math.max(strokeMin, outerLeft - extension);
-      stroke = [[inner, anchor + halfSpan], [(inner + tip) / 2 - .25, anchor + lean],
-        [tip, anchor - halfSpan]];
+  const rayRoom = ([x, y], angle) => {
+    const cos = Math.cos(angle), sin = Math.sin(angle);
+    const horizontalRoom = cos > 0 ? (strokeMax - x) / cos : (strokeMin - x) / cos;
+    const verticalRoom = sin > 0 ? (strokeMax - y) / sin : (strokeMin - y) / sin;
+    return Math.min(horizontalRoom, verticalRoom);
+  };
+  const candidates = hull.map((anchor, anchorIndex) => {
+    const outward = Math.atan2(anchor[1] - centerY, anchor[0] - centerX);
+    const inset = [anchor[0] - Math.cos(outward) * .9, anchor[1] - Math.sin(outward) * .9];
+    return { anchorIndex, outward, room: rayRoom(inset, outward) };
+  }).filter(candidate => candidate.room > .85)
+    .sort((a, b) => b.room - a.room);
+  const clusterCount = Math.min(3, candidates.length);
+  const clusters = [];
+  while (clusters.length < clusterCount && candidates.length) {
+    const poolSize = Math.max(1, Math.ceil(candidates.length * .55));
+    const [candidate] = candidates.splice(Math.floor(random() * poolSize), 1);
+    clusters.push({ ...candidate, angle: candidate.outward + (random() - .5) * 1.5 });
+  }
+  for (let clusterIndex = 0; clusterIndex < clusters.length; clusterIndex++) {
+    const cluster = clusters[clusterIndex];
+    const targetCount = 3 + Math.floor(random() * 3);
+    let painted = 0;
+    for (let attempt = 0; attempt < targetCount * 7 && painted < targetCount; attempt++) {
+      const pointOffset = Math.round((random() - .5) * Math.max(2, hull.length * .1));
+      const anchor = hull[(cluster.anchorIndex + pointOffset + hull.length) % hull.length];
+      const outward = Math.atan2(anchor[1] - centerY, anchor[0] - centerX);
+      const angle = cluster.angle + (random() - .5) * (attempt % 3 === 0 ? 1.35 : .55);
+      const start = [anchor[0] - Math.cos(outward) * (.45 + random() * .5),
+        anchor[1] - Math.sin(outward) * (.45 + random() * .5)];
+      const available = rayRoom(start, angle) - .15;
+      const length = Math.min(.9 + random() * 2.3, available);
+      if (length < .7) continue;
+      const end = [start[0] + Math.cos(angle) * length, start[1] + Math.sin(angle) * length];
+      const middle = [(start[0] + end[0]) / 2
+        + Math.cos(angle + Math.PI / 2) * (random() - .5) * .9,
+        (start[1] + end[1]) / 2 + Math.sin(angle + Math.PI / 2) * (random() - .5) * .9];
+      const stroke = [start, middle, end];
+      if (stroke.flat().some(value => value < strokeMin || value > strokeMax)) continue;
+      context.globalAlpha = .38 + random() * .32;
+      pencilStroke(context, stroke, color, .28 + random() * .24,
+        seed + 211 + clusterIndex * 313 + attempt * 41, .12, 1 + (attempt + seed) % 2, false,
+        { variation: .88, breaks: .12, grain: .7, gain: 2, step: .3, taperLength: .6 });
+      painted++;
     }
-    if (halfSpan < .8 || stroke.flat().some(value => value < strokeMin || value > strokeMax)) continue;
-    const passes = 3 + (seed + attempt) % 2;
-    const width = .48 + random() * .22;
-    for (let pass = 0; pass < passes; pass++) {
-      const offset = (pass - (passes - 1) / 2) * .12;
-      const layeredStroke = stroke.map(([x, y]) => side % 2 ? [x, y + offset] : [x + offset, y]);
-      pencilStroke(context, layeredStroke, color, width, seed + 211 + attempt * 41 + pass * 7,
-        .14, 1, false,
-        { variation: .84, breaks: .04, grain: .58, gain: 2.8, step: .28, taperLength: .5 });
-    }
-    strokesPainted++;
+  }
+
+  const particleCount = 20 + seed % 17;
+  for (let index = 0; index < particleCount; index++) {
+    const anchorIndex = clusters.length ? clusters[index % clusters.length].anchorIndex
+      : Math.floor(random() * hull.length);
+    const anchor = hull[(anchorIndex + Math.round((random() - .5) * hull.length * .16)
+      + hull.length) % hull.length];
+    const outward = Math.atan2(anchor[1] - centerY, anchor[0] - centerX);
+    const angle = outward + (random() - .5) * 1.8;
+    const distance = .4 + random() * 3.8;
+    const radius = .14 + random() * .34;
+    const x = anchor[0] + Math.cos(angle) * distance;
+    const y = anchor[1] + Math.sin(angle) * distance;
+    if (x - radius < canvasMin || x + radius > canvasMax
+      || y - radius < canvasMin || y + radius > canvasMax) continue;
+    const fade = 1 - Math.min(1, distance / 3.8);
+    context.globalAlpha = .05 + fade * .22;
+    context.beginPath();
+    context.arc(x, y, radius, 0, Math.PI * 2);
+    context.fill();
   }
   context.restore();
 }
