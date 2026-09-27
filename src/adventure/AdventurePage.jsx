@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { isItineraryPath, itineraryPath, navigateSite } from "../siteNavigation";
 import { PrivateVaultProvider } from "../PrivateVaultContext";
 import "./adventure.css";
+import "./AdventureDeviceCutout.css";
 import { AdventureDeferredFeature } from "./AdventureDeferredFeature";
 import { AdventureMenu } from "./AdventureMenu";
 import { AdventureIconFeedback } from "./AdventureIconFeedback";
@@ -14,6 +15,7 @@ import { GameIconButton } from "./GameIconButton";
 import { MenuIcon, TasksIcon, BagIcon, CameraIcon } from "./SketchIcons";
 import { useAdventureNavigation } from "./useAdventureNavigation";
 import { responsiveFullscreenPane, useAdventureResponsiveLayout } from "./adventureResponsivePane";
+import { useAdventureDeviceCutout } from "./adventureDeviceCutout";
 import { mapHandwriting } from "./pencil/label";
 import { internationalFlightSegments, internationalMapStops } from "./internationalMapData";
 
@@ -58,6 +60,7 @@ function AdventureBoard() {
   const calendarOpen = view.calendarOpen, sideOpen = Boolean(view.rightPanel);
   const fullscreen = view.fullscreen;
   const responsiveLayout = useAdventureResponsiveLayout(view);
+  const deviceCutout = useAdventureDeviceCutout();
   const automaticFullscreen = fullscreen ? null : responsiveFullscreenPane(view, responsiveLayout);
   const effectiveFullscreen = fullscreen ?? automaticFullscreen;
   const [calendarMounted, setCalendarMounted] = useState(calendarOpen);
@@ -226,7 +229,9 @@ function AdventureBoard() {
     if (!panel) closeSide();
     else navigate(panel, place);
   }, [closeSide, navigate]);
-  return <main id="trip-board-structure" style={{ '--trip-handwriting': mapHandwriting }} aria-label={adventureText("新西兰冒险地图", "New Zealand adventure map", language)}
+  return <main id="trip-board-structure" style={{ '--trip-handwriting': mapHandwriting,
+    '--trip-cutout-inset': `${deviceCutout?.inset ?? 0}px` }} aria-label={adventureText("新西兰冒险地图", "New Zealand adventure map", language)}
+    data-device-cutout={deviceCutout?.corner}
     data-panel-open={calendarOpen || sideOpen} data-calendar-open={calendarVisible} data-side-open={sideVisible}
     data-responsive-layout={responsiveLayout} data-automatic-fullscreen={automaticFullscreen ?? undefined}
     data-fullscreen={effectiveFullscreen ?? undefined}>

@@ -1,0 +1,41 @@
+/* Corner-only fallback; never inset the map or narrow its projection viewport. */
+#trip-board-structure[data-device-cutout] {
+  --trip-cutout-control-inset:calc(var(--trip-cutout-inset) + var(--trip-tool-inset));
+}
+
+#trip-board-structure[data-device-cutout="top-right"]:not([data-side-open="true"]) .trip-game-tools {
+  right:max(var(--trip-edge-right),var(--trip-cutout-control-inset));
+}
+#trip-board-structure[data-device-cutout="top-right"] .trip-day:not(.trip-day--camera) > .trip-panel-header {
+  padding-right:max(0px,calc(var(--trip-cutout-control-inset) - var(--trip-panel-pad)));
+}
+#trip-board-structure[data-device-cutout="top-right"][data-fullscreen="calendar"] .trip-adventure-calendar-header {
+  padding-right:max(9px,env(safe-area-inset-right),var(--trip-cutout-control-inset));
+}
+#trip-board-structure[data-device-cutout="top-right"] .trip-camera-control:first-child,
+#trip-board-structure[data-device-cutout="top-right"] .trip-camera-facing-toggle {
+  right:max(0px,calc(var(--trip-cutout-control-inset) - var(--trip-camera-right-inset)));
+}
+
+#trip-board-structure[data-device-cutout="top-left"] :is(.trip-home,.trip-international-view-toggle) {
+  left:max(var(--trip-edge-left),var(--trip-cutout-control-inset));
+}
+#trip-board-structure[data-device-cutout="top-left"][data-fullscreen="right"] .trip-day:not(.trip-day--camera) > .trip-panel-header {
+  padding-left:max(0px,calc(var(--trip-cutout-control-inset) - var(--trip-panel-pad)));
+}
+#trip-board-structure[data-device-cutout="top-left"][data-fullscreen="calendar"] .trip-adventure-calendar-header {
+  padding-left:max(9px,env(safe-area-inset-left),var(--trip-cutout-control-inset));
+}
+#trip-board-structure[data-device-cutout="top-left"][data-fullscreen="right"] .trip-camera-settings-entry {
+  margin-left:max(0px,calc(var(--trip-cutout-control-inset) - var(--trip-camera-left-inset)));
+}
+
+#trip-board-structure[data-device-cutout="bottom-left"]:not([data-calendar-open="true"]) .trip-map-controls {
+  left:max(var(--trip-edge-left),var(--trip-cutout-control-inset));
+}
+#trip-board-structure[data-device-cutout="bottom-left"][data-fullscreen="right"] .trip-camera-header-actions {
+  left:max(var(--trip-camera-left-inset),var(--trip-cutout-control-inset));
+}
+#trip-board-structure[data-device-cutout="bottom-right"] .trip-camera-system-capture {
+  right:max(0px,calc(var(--trip-cutout-control-inset) - var(--trip-camera-right-inset)));
+}
