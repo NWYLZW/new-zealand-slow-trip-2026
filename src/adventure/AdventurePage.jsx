@@ -2,9 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { isItineraryPath, itineraryPath, navigateSite } from "../siteNavigation";
 import { PrivateVaultProvider } from "../PrivateVaultContext";
 import "./adventure.css";
-import { AdventureMap } from "./AdventureMap";
-import { AdventurePanel } from "./AdventurePanel";
-import { AdventureCalendar } from "./AdventureCalendar";
+import { AdventureDeferredFeature } from "./AdventureDeferredFeature";
 import { AdventureMenu } from "./AdventureMenu";
 import { AdventureIconFeedback } from "./AdventureIconFeedback";
 import { AdventurePreferencesProvider, useAdventurePreferences } from "./AdventurePreferences";
@@ -20,6 +18,9 @@ import { mapHandwriting } from "./pencil/label";
 import { internationalFlightSegments, internationalMapStops } from "./internationalMapData";
 
 const internationalRouteIds = new Set(internationalFlightSegments.map(segment => segment.id));
+const loadMap = () => import("./AdventureMap").then(module => ({ default: module.AdventureMap }));
+const loadPanel = () => import("./AdventurePanel").then(module => ({ default: module.AdventurePanel }));
+const loadCalendar = () => import("./AdventureCalendar").then(module => ({ default: module.AdventureCalendar }));
 
 const tools = [
   { id: "tasks", Icon: TasksIcon },
@@ -70,6 +71,13 @@ function AdventureBoard() {
   const returnFromUnlock = useRef(unlockEntry.returnUrl);
   const lastCalendarView = useRef(view);
   const lastSideView = useRef(view);
+  useEffect(() => {
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => window.dispatchEvent(new Event("trip-ui-ready")));
+    });
+    return () => { cancelAnimationFrame(firstFrame); cancelAnimationFrame(secondFrame); };
+  }, []);
   useEffect(() => {
     if (!unlockEntry.requested) return;
     const url = new URL(window.location.href);
@@ -222,16 +230,19 @@ function AdventureBoard() {
     data-panel-open={calendarOpen || sideOpen} data-calendar-open={calendarVisible} data-side-open={sideVisible}
     data-responsive-layout={responsiveLayout} data-automatic-fullscreen={automaticFullscreen ?? undefined}
     data-fullscreen={effectiveFullscreen ?? undefined}>
-    <AdventureMap selected={view.airport ? `a:${view.airport}` : view.place}
-      selectedRoute={view.focus?.kind === 'date' ? null : view.flightRoute ?? view.route} selectedWaypoint={view.waypoint} focusLocations={focusLocations}
-      focusRoute={view.focus?.kind === 'route' ? view.focus.value : null}
-      focusNode={view.focus?.kind === 'node' ? { key: view.focus.value, token: view.focus.token } : null}
-      focusKey={view.focus ? `${view.focus.kind}:${view.focus.value}:${view.focus.token}` : null}
-      mapMode={view.mapMode} onMapModeChange={mode => navigate("map-mode", mode)}
-      mapView={view.mapView} onMapViewChange={mapView => navigate("map-view", mapView)}
-      calendarOpen={calendarOpen} sideOpen={sideOpen} language={language} obscured={Boolean(effectiveFullscreen)}
-      onSelect={select} onInternationalNodeSelect={selectInternationalNode} onRouteSelect={selectRoute}
-      onWaypointSelect={selectWaypoint} onClusterSelect={selectCluster} onClear={sideOpen ? closeSide : undefined} />
+    <AdventureDeferredFeature load={loadMap} kind="map" defer componentProps={{
+      selected: view.airport ? `a:${view.airport}` : view.place,
+      selectedRoute: view.focus?.kind === 'date' ? null : view.flightRoute ?? view.route,
+      selectedWaypoint: view.waypoint, focusLocations,
+      focusRoute: view.focus?.kind === 'route' ? view.focus.value : null,
+      focusNode: view.focus?.kind === 'node' ? { key: view.focus.value, token: view.focus.token } : null,
+      focusKey: view.focus ? `${view.focus.kind}:${view.focus.value}:${view.focus.token}` : null,
+      mapMode: view.mapMode, onMapModeChange: mode => navigate("map-mode", mode),
+      mapView: view.mapView, onMapViewChange: mapView => navigate("map-view", mapView),
+      calendarOpen, sideOpen, language, obscured: Boolean(effectiveFullscreen),
+      onSelect: select, onInternationalNodeSelect: selectInternationalNode, onRouteSelect: selectRoute,
+      onWaypointSelect: selectWaypoint, onClusterSelect: selectCluster, onClear: sideOpen ? closeSide : undefined,
+    }} />
     <GameIconButton className="trip-home" label={adventureLabel("menu", language)} hidden={Boolean(effectiveFullscreen)}
       aria-expanded={menuOpen} aria-controls="trip-adventure-menu"
       onClick={openMenu}><MenuIcon /></GameIconButton>
@@ -253,21 +264,26 @@ function AdventureBoard() {
         <Icon />
       </GameIconButton>)}
     </nav>
-    {(sideOpen || sideMounted) && <AdventurePanel view={sideView} navigate={panelNavigation}
-      cameraActive={sideOpen && sideVisible && effectiveFullscreen !== "calendar" && view.rightPanel === "camera" && view.cameraView === "preview" && !menuOpen}
-      closeButtonRef={closeButton} onRequestUnlock={requestUnlock}
-      fullscreen={effectiveFullscreen === "right"} automaticFullscreen={automaticFullscreen === "right"}
-      onToggleFullscreen={() => navigate("fullscreen", "right")} onOpenMenu={openMenu}
-      aria-hidden={!sideOpen || effectiveFullscreen === "calendar"} inert={sideOpen && effectiveFullscreen !== "calendar" ? undefined : ''} />}
+    {(sideOpen || sideMounted) && <AdventureDeferredFeature load={loadPanel} kind="panel"
+      onClose={closeSide} onOpenMenu={openMenu} componentProps={{
+        view: sideView, navigate: panelNavigation,
+        cameraActive: sideOpen && sideVisible && effectiveFullscreen !== "calendar" && view.rightPanel === "camera" && view.cameraView === "preview" && !menuOpen,
+        closeButtonRef: closeButton, onRequestUnlock: requestUnlock,
+        fullscreen: effectiveFullscreen === "right", automaticFullscreen: automaticFullscreen === "right",
+        onToggleFullscreen: () => navigate("fullscreen", "right"), onOpenMenu: openMenu,
+        "aria-hidden": !sideOpen || effectiveFullscreen === "calendar",
+        inert: sideOpen && effectiveFullscreen !== "calendar" ? undefined : '',
+      }} />}
     {(calendarOpen || calendarMounted) && <section ref={calendarRegion} id="trip-calendar-region"
       className="trip-calendar-region" aria-label={adventureText("行程日历", "Itinerary calendar", language)} aria-hidden={!calendarOpen || effectiveFullscreen === "right"}
       inert={calendarOpen && effectiveFullscreen !== "right" ? undefined : ""}>
-      <AdventureCalendar selectedDate={calendarView.date} scope={calendarView.scope ?? "all"}
-        onScopeChange={scope => navigate("tasks", null, scope)}
-        onSelectDate={date => navigate("day", date)}
-        onSelectEvent={(event, agendaItem) => navigate("event", { event, agendaItem }, { from: "calendar", agendaItem })} onClose={closeCalendar}
-        fullscreen={effectiveFullscreen === "calendar"} automaticFullscreen={automaticFullscreen === "calendar"}
-        onToggleFullscreen={() => navigate("fullscreen", "calendar")} onOpenMenu={openMenu} />
+      <AdventureDeferredFeature load={loadCalendar} kind="calendar" onClose={closeCalendar} onOpenMenu={openMenu}
+        componentProps={{ selectedDate: calendarView.date, scope: calendarView.scope ?? "all",
+          onScopeChange: scope => navigate("tasks", null, scope), onSelectDate: date => navigate("day", date),
+          onSelectEvent: (event, agendaItem) => navigate("event", { event, agendaItem }, { from: "calendar", agendaItem }),
+          onClose: closeCalendar, fullscreen: effectiveFullscreen === "calendar", automaticFullscreen: automaticFullscreen === "calendar",
+          onToggleFullscreen: () => navigate("fullscreen", "calendar"), onOpenMenu: openMenu,
+        }} />
     </section>}
     <AdventureMenu open={menuOpen} screen={menuScreen} unlockOrigin={unlockOrigin}
       onScreenChange={(screen, origin = "menu") => {

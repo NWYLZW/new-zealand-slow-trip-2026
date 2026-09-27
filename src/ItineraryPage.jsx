@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import App from "./App.jsx";
@@ -44,6 +44,10 @@ const theme = createTheme({
 });
 
 export default function ItineraryPage() {
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => window.dispatchEvent(new Event("trip-ui-ready")));
+    return () => cancelAnimationFrame(frame);
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { adventureStops } from "./adventureData";
-import { adventureRoutes } from "./adventureRoutes";
+import { adventureRouteIndex } from "./adventureRouteIndex";
 import { eventDateId, getAdventureCalendarDays, getTripCalendarDay } from "../components/calendar/tripCalendarData";
 import { southDays, northDays } from "../tripData";
 import { socialGuidesByEvent } from "../socialGuides";
@@ -65,7 +65,7 @@ function readLocation() {
   const requestedAgenda = params.get("agenda");
   const eventAgenda = eventAgendaItems(event).some((item) => item.id === requestedAgenda) ? requestedAgenda : null;
   const eventTab = eventTabs(event).includes(params.get("eventTab")) ? params.get("eventTab") : "schedule";
-  const route = adventureRoutes.some(item => item.id === params.get("route")) ? params.get("route") : null;
+  const route = adventureRouteIndex.some(item => item.id === params.get("route")) ? params.get("route") : null;
   const requestedWaypoint = route ? getAdventureWaypoint(params.get("waypoint")) : null;
   const waypoint = requestedWaypoint?.routeId === route ? requestedWaypoint.id : null;
   const place = !route && adventureStops.some(stop => stop.tag === params.get("place")) ? params.get("place") : null;

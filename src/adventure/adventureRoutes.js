@@ -1,52 +1,12 @@
-import { routeSegments } from "../data/mapRoutes";
-import { adventureStops } from "./adventureData";
+import { adventureRouteIndex } from "./adventureRouteIndex";
 import { line } from "d3";
 import roadRoutes from "./data/road-routes.json";
 
-const stops = new Map(adventureStops.map((stop) => [stop.tag, stop]));
-const displayTag = (tag) => tag === "AKL" ? "AKC" : tag;
-const seen = new Set();
-
-function endpointPosition(segment, side, displayedTag) {
-  const explicit = segment[`${side}Position`];
-  if (segment.transport === "flight" && explicit) return [explicit.lat, explicit.lng];
-  return stops.get(displayedTag)?.position ?? null;
-}
-
-// Connect the displayed city stops, using the original itinerary order and
-// named waypoints. Road shapes come from the stored routing snapshot; flights use
-// their source-backed airport endpoints and remain schematic, not actual tracks.
-export const adventureRoutes = routeSegments.flatMap((segment) => {
-  const from = displayTag(segment.from), to = displayTag(segment.to);
-  if (from === to || !stops.has(from) || !stops.has(to)) return [];
-  const transport = segment.id.includes("coach") ? "coach" : segment.transport;
-  const key = [transport, ...[from, to].sort()].join(":");
-  if (seen.has(key)) return [];
-  seen.add(key);
-  const fromPosition = endpointPosition(segment, "from", from);
-  const toPosition = endpointPosition(segment, "to", to);
-  if (!fromPosition || !toPosition) return [];
-  const waypoints = segment.waypoints ?? [];
-  const via = adventureStops.filter((stop) => waypoints.some((point) =>
-    Math.abs(point.lat - stop.position[0]) < 0.0001 && Math.abs(point.lng - stop.position[1]) < 0.0001,
-  )).map((stop) => stop.tag);
-  // Legacy intermediate coordinates also shape the schematic map. Only named
-  // itinerary stops constrain routing: Arrowtown and Tekapo, not off-road bends.
-  const routingWaypoints = waypoints.filter((point, index) =>
-    (segment.id === "zqn-wanaka" && index === 0) || via.some((tag) => {
-      const [lat, lng] = stops.get(tag).position;
-      return Math.abs(point.lat - lat) < 0.0001 && Math.abs(point.lng - lng) < 0.0001;
-    }),
-  );
-  return [{
-    id: segment.id, from, to, via, transport, date: segment.date,
-    label: transport === "coach" ? "奥克兰 ⇄ 霍比屯 · 大巴" : segment.label,
-    points: [fromPosition, ...waypoints.map(({ lat, lng }) => [lat, lng]), toPosition],
-    routingPoints: [fromPosition, ...routingWaypoints.map(({ lat, lng }) => [lat, lng]), toPosition],
-    roadGeometry: roadRoutes.routes[segment.id]?.geometry ?? null,
-    roadSource: roadRoutes.routes[segment.id] ?? null,
-  }];
-});
+export const adventureRoutes = adventureRouteIndex.map(route => ({
+  ...route,
+  roadGeometry: roadRoutes.routes[route.id]?.geometry ?? null,
+  roadSource: roadRoutes.routes[route.id] ?? null,
+}));
 
 export function projectedRoutePath(route, project) {
   const points = route.points.map(([lat, lng]) => project([lng, lat]));

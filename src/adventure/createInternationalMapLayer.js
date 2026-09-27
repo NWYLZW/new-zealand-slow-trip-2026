@@ -1,5 +1,6 @@
 import { geoMercator, geoPath, geoStream } from "d3";
-import { internationalBasemap, internationalFlightSegments, internationalMapStops } from "./internationalMapData";
+import { internationalFlightSegments, internationalMapStops } from "./internationalMapData";
+import internationalBasemap from "./data/international-basemap.json";
 import { fillStopLabel } from "./pencil/mapLabels";
 import { pencilPalette } from "./pencil/palette";
 import { pencilStroke } from "./pencil/stroke";

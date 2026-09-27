@@ -1,5 +1,4 @@
 import airportData from "./data/international-airports.json";
-import basemap from "./data/international-basemap.json";
 import { routeSegments } from "../data/mapRoutes";
 import { getAdventureCalendarDays } from "../components/calendar/tripCalendarData";
 import { createSchematicGreatCircle, internationalCoordinateBounds,
@@ -133,8 +132,6 @@ export const internationalMapStops = internationalStopRecords.map(stop => ({
 }));
 
 export const internationalMapBounds = internationalCoordinateBounds(internationalMapStops);
-export const internationalBasemap = basemap;
-export const internationalMapSources = [basemap.source, airportData.source];
 
 export function getInternationalMapNode(key) {
   if (typeof key !== "string") return null;
