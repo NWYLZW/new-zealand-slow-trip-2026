@@ -55,15 +55,17 @@ function hasVisibleLabel(control) {
   return false;
 }
 
-function tooltipControl(target) {
+function tooltipControl(target, keyboard = false) {
   const control = iconControl(target);
+  if (control?.dataset.iconFeedback === "none") return null;
+  if (control?.dataset.iconFeedback === "keyboard-only" && !keyboard) return null;
   return control && !hasVisibleLabel(control) ? control : null;
 }
 
 export function AdventureIconFeedback() {
   const [active, setActive] = useState(null);
   const [position, setPosition] = useState(null);
-  const tooltip = useRef(null), activeRef = useRef(null), hideTimer = useRef(null);
+  const tooltip = useRef(null), activeRef = useRef(null), hideTimer = useRef(null), keyboardInput = useRef(false);
   activeRef.current = active;
 
   useEffect(() => {
@@ -106,6 +108,7 @@ export function AdventureIconFeedback() {
       setActive({ control, label, host: control.closest("dialog[open]") || document.getElementById("trip-board-structure") });
     };
     const over = event => {
+      keyboardInput.current = false;
       if (event.pointerType === "touch") return;
       const control = tooltipControl(event.target);
       if (control) {
@@ -140,11 +143,15 @@ export function AdventureIconFeedback() {
       }
     };
     const focus = event => {
-      const control = tooltipControl(event.target);
+      const control = tooltipControl(event.target, keyboardInput.current);
       if (control?.matches(":focus-visible")) show(control);
       else if (iconControl(event.target)) hide();
     };
-    const key = event => { if (event.key === "Escape") hide(); };
+    const pointerDown = () => { keyboardInput.current = false; hide(); };
+    const key = event => {
+      keyboardInput.current = true;
+      if (event.key === "Escape") hide();
+    };
     const observe = new MutationObserver(mutations => {
       for (const mutation of mutations) {
         if (mutation.type === "attributes" && mutation.attributeName === "title") suppressTitle(mutation.target);
@@ -161,7 +168,7 @@ export function AdventureIconFeedback() {
     document.addEventListener("pointermove", move);
     document.addEventListener("focusin", focus);
     document.addEventListener("focusout", hide);
-    document.addEventListener("pointerdown", hide, true);
+    document.addEventListener("pointerdown", pointerDown, true);
     document.addEventListener("keydown", key, true);
     window.addEventListener("scroll", hide, true);
     window.addEventListener("resize", hide);
@@ -178,7 +185,7 @@ export function AdventureIconFeedback() {
       document.removeEventListener("pointermove", move);
       document.removeEventListener("focusin", focus);
       document.removeEventListener("focusout", hide);
-      document.removeEventListener("pointerdown", hide, true);
+      document.removeEventListener("pointerdown", pointerDown, true);
       document.removeEventListener("keydown", key, true);
       window.removeEventListener("scroll", hide, true);
       window.removeEventListener("resize", hide);
@@ -205,7 +212,7 @@ export function AdventureIconFeedback() {
         x = right + box.width <= innerWidth - 8 ? right : left >= 8 ? left : Math.max(8, Math.min(maxX, right));
         y = Math.max(8, Math.min(maxY, rect.top + (rect.height - box.height) / 2));
       } else {
-        const anchor = header?.getBoundingClientRect() || rect;
+        const anchor = header?.classList.contains("trip-camera-header") ? rect : header?.getBoundingClientRect() || rect;
         x = Math.max(8, Math.min(maxX, rect.left + (rect.width - box.width) / 2));
         y = anchor.bottom + box.height + 16 <= innerHeight ? anchor.bottom + 8 : Math.max(8, anchor.top - box.height - 8);
       }

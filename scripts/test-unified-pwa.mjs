@@ -277,6 +277,25 @@ try {
     await fresh.close();
   }
   assert.deepEqual(errors, []);
+  const shortcuts = await browser.newContext({ timezoneId: "Pacific/Auckland" });
+  const shortcutPage = await shortcuts.newPage();
+  shortcutPage.on("pageerror", error => errors.push(error.message));
+  await shortcutPage.clock.setFixedTime(new Date("2026-10-02T23:01:00+13:00"));
+  await shortcutPage.goto(base + "?shortcut=today-schedule", { waitUntil: "domcontentloaded" });
+  await shortcutPage.locator(".trip-day-details").waitFor();
+  await shortcutPage.waitForURL(url => url.searchParams.get("day") === "2026-10-02" && !url.searchParams.has("shortcut"));
+  await controlled(shortcutPage);
+  await shortcutPage.clock.setFixedTime(new Date("2026-10-03T00:01:00+13:00"));
+  await shortcutPage.goto(base + "?shortcut=today-stay", { waitUntil: "domcontentloaded" });
+  await shortcutPage.locator(".trip-stay-detail").waitFor();
+  await shortcutPage.waitForURL(url => url.searchParams.get("bagStay") === "hotel-wanaka" && !url.searchParams.has("shortcut"));
+  await shortcuts.setOffline(true);
+  await shortcutPage.goto(base + "?shortcut=today-schedule", { waitUntil: "domcontentloaded" });
+  await shortcutPage.locator(".trip-day-details").waitFor();
+  await shortcutPage.waitForURL(url => url.searchParams.get("day") === "2026-10-03");
+  await shortcuts.close();
+  assert.deepEqual(errors, []);
+  console.log("Dynamic PWA shortcuts resolve on each launch, transfer-day hotel and offline daily entry passed");
   console.log(JSON.stringify({ staticAliases: true, singleShell: true, sharedServiceWorker: true,
     offlineBothDirections: true, deepLinks: true, history: true, installCapture: true, responsive: true, errors }));
 } finally {

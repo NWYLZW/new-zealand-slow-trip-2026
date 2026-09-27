@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { transitionAdventurePane } from "./adventurePaneTransition";
+import { transitionAdventurePane } from "./adventurePaneTransition.js";
 
 const PHONE_MAX_SHORT_SIDE = 480;
 const PHONE_MIN_ASPECT = 1.3;
@@ -18,7 +18,9 @@ export function classifyAdventureViewport({ width, height }) {
 }
 
 export function responsiveFullscreenPane(view, layout) {
+  const cameraPanel = view.rightPanel === "camera";
   if (layout === "phone-landscape") {
+    if (cameraPanel && (!view.calendarOpen || view.front !== "tasks")) return "right";
     return view.calendarOpen && (!view.rightPanel || view.front === "tasks") ? "calendar" : null;
   }
   if (layout !== "phone-portrait") return null;

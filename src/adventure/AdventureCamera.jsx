@@ -3,12 +3,17 @@ import { useLanguage } from "../LanguageContext";
 import { initializeMediaLibrary, saveCapturedMedia, saveUploadedMedia } from "./media/library";
 import { useAdventurePreferences } from "./AdventurePreferences";
 import { cameraPermissionPromptGate, observeBrowserPermission } from "./cameraPermissionLifecycle";
-import { useCameraLocationPreference } from "./cameraPreferences";
-import { CameraIcon, LocationMapIcon, PhotoAlbumIcon, UploadIcon } from "./SketchIcons";
+import { useCameraIconOrientation } from "./cameraIconOrientation";
+import { useCameraGridPreference, useCameraLocationPreference } from "./cameraPreferences";
+import { CameraPencilLabel } from "./CameraPencilLabel";
+import { CameraIcon, PhotoAlbumIcon } from "./SketchIcons";
 import { PencilSurface } from "./pencil/PencilSurface";
 import { PencilIcon } from "./pencil/PencilIcon";
 import { PencilText } from "./pencil/PencilText";
 import "./AdventureCamera.css";
+
+const HOLD_TO_RECORD_MS = 1000;
+const SYNTHETIC_CLICK_WINDOW_MS = 650;
 
 function stopTracks(stream) {
   stream?.getTracks().forEach(track => track.stop());
@@ -47,21 +52,24 @@ function useBrowserPermission(name) {
 export function AdventureCamera({ active, onOpenAlbum }) {
   const { language } = useLanguage();
   const en = language === "en";
-  const { cameraFacing, cameraAudio } = useAdventurePreferences();
-  const { captureLocation, setCaptureLocation } = useCameraLocationPreference();
+  const { cameraFacing, setCameraFacing, cameraAudio } = useAdventurePreferences();
+  const { captureLocation } = useCameraLocationPreference();
+  const { cameraGrid } = useCameraGridPreference();
   const cameraPermission = useBrowserPermission("camera");
   const locationPermission = useBrowserPermission("geolocation");
   const [previewState, setPreviewState] = useState("idle");
   const [recording, setRecording] = useState(false);
   const [recordPending, setRecordPending] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  const [locationState, setLocationState] = useState("");
   const [message, setMessage] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const videoRef = useRef(null), uploadRef = useRef(null);
+  const [systemCameraBusy, setSystemCameraBusy] = useState(false);
+  const [facingSwitchBusy, setFacingSwitchBusy] = useState(false);
+  const [cameraCount, setCameraCount] = useState(null);
+  const cameraRef = useRef(null), videoRef = useRef(null), systemCameraRef = useRef(null);
   const previewStreamRef = useRef(null), micStreamRef = useRef(null), recorderRef = useRef(null);
   const sessionRef = useRef(0), recordAttemptRef = useRef(0), holdTimerRef = useRef(0), elapsedTimerRef = useRef(0);
-  const heldPointerRef = useRef(null), longHoldRef = useRef(false), suppressPointerClickRef = useRef(false);
+  const clickSuppressionTimerRef = useRef(0);
+  const heldPointerRef = useRef(null), longHoldRef = useRef(false), suppressClickRef = useRef(false);
   const recordIntentRef = useRef(false);
   const locationFixRef = useRef(null), locationWatchRef = useRef(null), locationAttemptRef = useRef(0);
   const locationRefreshTimerRef = useRef(0);
@@ -70,6 +78,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   const automaticStartAttemptedRef = useRef(false);
   const activeRef = useRef(active), mountedRef = useRef(false);
   activeRef.current = active;
+  useCameraIconOrientation(active, cameraRef);
 
   const showMessage = useCallback(text => {
     if (mountedRef.current && activeRef.current) setMessage(text);
@@ -100,9 +109,10 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     sessionRef.current += 1;
     clearTimeout(automaticStartTimerRef.current);
     clearTimeout(holdTimerRef.current);
+    clearTimeout(clickSuppressionTimerRef.current);
     heldPointerRef.current = null;
     longHoldRef.current = false;
-    suppressPointerClickRef.current = false;
+    suppressClickRef.current = false;
     stopRecording();
     stopTracks(previewStreamRef.current);
     previewStreamRef.current = null;
@@ -115,10 +125,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     locationFixRef.current = null;
     if (!locationDeniedRef.current) locationAutoAttemptedRef.current = false;
     if (videoRef.current) videoRef.current.srcObject = null;
-    if (mountedRef.current) {
-      setPreviewState("idle");
-      setLocationState("");
-    }
+    if (mountedRef.current) setPreviewState("idle");
   }, [stopRecording]);
 
   useEffect(() => {
@@ -134,19 +141,19 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     else initializeMediaLibrary().catch(() => showMessage(en ? "Local media storage is unavailable." : "本地媒体存储不可用。"));
   }, [active, en, showMessage, stopAll]);
 
-  const startPreview = useCallback(async (userInitiated = false) => {
-    if (!activeRef.current) return;
+  const startPreview = useCallback(async (userInitiated = false, requestedFacing = cameraFacing, requireFacingMatch = false) => {
+    if (!activeRef.current) return false;
     if (!navigator.mediaDevices?.getUserMedia) {
       setPreviewState("unsupported");
       setMessage(en ? "This browser does not support camera access." : "此浏览器不支持相机访问。");
-      return;
+      return false;
     }
     if (!userInitiated && !cameraPermissionPromptGate.canAutoRequest("camera", cameraPermission)) {
       if (cameraPermission === "denied") {
         setPreviewState("error");
         setMessage(en ? "Camera permission was denied." : "相机权限被拒绝。");
       }
-      return;
+      return false;
     }
     cameraPermissionPromptGate.noteRequest("camera", cameraPermission, { userInitiated });
     stopAll();
@@ -154,10 +161,17 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     setPreviewState("requesting");
     setMessage("");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: cameraFacing } }, audio: false });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: requestedFacing } }, audio: false });
+      const reportedFacing = stream.getVideoTracks()[0]?.getSettings?.().facingMode;
+      if (requireFacingMatch && ["user", "environment"].includes(reportedFacing) && reportedFacing !== requestedFacing) {
+        stopTracks(stream);
+        const mismatch = new Error(`Requested ${requestedFacing} camera, received ${reportedFacing}.`);
+        mismatch.name = "CameraFacingMismatchError";
+        throw mismatch;
+      }
       if (session !== sessionRef.current || !activeRef.current || document.hidden) {
         stopTracks(stream);
-        return;
+        return false;
       }
       previewStreamRef.current = stream;
       stream.getVideoTracks().forEach(track => {
@@ -174,15 +188,25 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       if (session !== sessionRef.current || !activeRef.current || document.hidden) {
         stopTracks(stream);
         if (previewStreamRef.current === stream) previewStreamRef.current = null;
-        return;
+        return false;
       }
       setPreviewState("ready");
+      if (navigator.mediaDevices.enumerateDevices) {
+        navigator.mediaDevices.enumerateDevices()
+          .then(devices => {
+            if (session === sessionRef.current && activeRef.current)
+              setCameraCount(devices.filter(device => device.kind === "videoinput").length);
+          })
+          .catch(() => setCameraCount(null));
+      }
+      return true;
     } catch (error) {
-      if (session !== sessionRef.current || !activeRef.current) return;
+      if (session !== sessionRef.current || !activeRef.current) return false;
       if (error?.name === "NotAllowedError" || error?.name === "PermissionDeniedError")
         cameraPermissionPromptGate.blockAutomatic("camera");
       setPreviewState("error");
       setMessage(cameraError(error, en));
+      return false;
     }
   }, [cameraFacing, cameraPermission, en, showMessage, stopAll]);
 
@@ -236,18 +260,16 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       ? { lat: fix.lat, lng: fix.lng, accuracyMeters: fix.accuracyMeters } : null;
   };
 
-  const stopLocation = useCallback((state = "") => {
+  const stopLocation = useCallback(() => {
     locationAttemptRef.current += 1;
     clearInterval(locationRefreshTimerRef.current);
     if (locationWatchRef.current !== null) navigator.geolocation?.clearWatch(locationWatchRef.current);
     locationWatchRef.current = null;
     locationFixRef.current = null;
-    if (mountedRef.current) setLocationState(state);
   }, []);
 
   const requestLocation = useCallback((userInitiated = false) => {
     if (!activeRef.current || !navigator.geolocation) {
-      setLocationState(en ? "Location unavailable" : "无法获取位置");
       return;
     }
     if (locationWatchRef.current !== null) return;
@@ -255,7 +277,6 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     cameraPermissionPromptGate.noteRequest("geolocation", locationPermission, { userInitiated });
     const session = sessionRef.current;
     const attempt = ++locationAttemptRef.current;
-    setLocationState(en ? "Finding location…" : "正在定位…");
     const updateFix = position => {
       if (attempt !== locationAttemptRef.current || !activeRef.current
         || session !== sessionRef.current) return;
@@ -265,12 +286,10 @@ export function AdventureCamera({ active, onOpenAlbum }) {
         accuracyMeters: Number.isFinite(position.coords.accuracy) ? position.coords.accuracy : null,
         timestamp: position.timestamp,
       };
-      setLocationState(en ? "Location on for captures" : "拍摄定位已开启");
     };
     const locationError = error => {
       if (attempt !== locationAttemptRef.current) return;
       if (error?.code === 3) {
-        setLocationState(en ? "Waiting for a fresh location…" : "正在等待新的位置…");
         return;
       }
       if (error?.code === 1) {
@@ -282,12 +301,10 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       locationAttemptRef.current += 1;
       clearInterval(locationRefreshTimerRef.current);
       locationFixRef.current = null;
-      if (activeRef.current && session === sessionRef.current)
-        setLocationState(en ? "Location unavailable" : "无法获取位置");
     };
     try { locationWatchRef.current = navigator.geolocation.watchPosition(updateFix, locationError,
       { enableHighAccuracy: true, timeout: 10_000, maximumAge: 0 }); }
-    catch { setLocationState(en ? "Location unavailable" : "无法获取位置"); }
+    catch { locationError(); }
     if (locationWatchRef.current !== null) {
       // A stationary watch may not emit another fix; refresh it while opted in.
       locationRefreshTimerRef.current = window.setInterval(() => {
@@ -299,7 +316,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
         } catch { locationError(); }
       }, 45_000);
     }
-  }, [en, locationPermission]);
+  }, [locationPermission]);
 
   const previousLocationPermissionRef = useRef("checking");
   useEffect(() => {
@@ -312,15 +329,15 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     }
     if (locationPermission === "denied" || previous === "granted") {
       locationDeniedRef.current = true;
-      stopLocation(en ? "Location permission required" : "需要位置权限");
+      stopLocation();
     }
-  }, [en, locationPermission, stopLocation]);
+  }, [locationPermission, stopLocation]);
 
   useEffect(() => {
     if (!captureLocation) {
       locationAutoAttemptedRef.current = false;
       locationDeniedRef.current = false;
-      stopLocation(en ? "Location off" : "拍摄定位已关闭");
+      stopLocation();
       return;
     }
     if (!active || previewState !== "ready" || document.hidden || locationPermission === "checking"
@@ -328,19 +345,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     if (!cameraPermissionPromptGate.canAutoRequest("geolocation", locationPermission)) return;
     locationAutoAttemptedRef.current = true;
     requestLocation(false);
-  }, [active, captureLocation, en, locationPermission, previewState, requestLocation, stopLocation]);
-
-  const toggleCaptureLocation = () => {
-    if (captureLocation) {
-      setCaptureLocation(false);
-      return;
-    }
-    cameraPermissionPromptGate.allowNextRequest("geolocation");
-    locationDeniedRef.current = false;
-    locationAutoAttemptedRef.current = true;
-    setCaptureLocation(true);
-    requestLocation(true);
-  };
+  }, [active, captureLocation, locationPermission, previewState, requestLocation, stopLocation]);
 
   const capturePhoto = async () => {
     const video = videoRef.current;
@@ -451,11 +456,20 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     }
   };
 
+  const suppressSyntheticClick = () => {
+    suppressClickRef.current = true;
+    clearTimeout(clickSuppressionTimerRef.current);
+    clickSuppressionTimerRef.current = window.setTimeout(() => {
+      suppressClickRef.current = false;
+    }, SYNTHETIC_CLICK_WINDOW_MS);
+  };
+
   const beginHold = event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    suppressPointerClickRef.current = false;
     if (previewState !== "ready" || heldPointerRef.current !== null
       || recorderRef.current || recordIntentRef.current) return;
+    suppressClickRef.current = false;
+    clearTimeout(clickSuppressionTimerRef.current);
     heldPointerRef.current = event.pointerId;
     longHoldRef.current = false;
     event.currentTarget.setPointerCapture?.(event.pointerId);
@@ -464,26 +478,27 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       if (heldPointerRef.current !== event.pointerId) return;
       longHoldRef.current = true;
       startRecording();
-    }, 350);
+    }, HOLD_TO_RECORD_MS);
   };
 
   const endHold = event => {
     if (heldPointerRef.current !== event.pointerId) return;
     heldPointerRef.current = null;
     clearTimeout(holdTimerRef.current);
-    if (event.type !== "pointerup") suppressPointerClickRef.current = true;
-    if (longHoldRef.current) {
-      suppressPointerClickRef.current = true;
-      stopRecording();
-      longHoldRef.current = false;
-    }
+    try { event.currentTarget.releasePointerCapture?.(event.pointerId); } catch { /* Capture may already be released. */ }
+    if (event.type === "pointerup" && !longHoldRef.current) capturePhoto();
+    suppressSyntheticClick();
+    longHoldRef.current = false;
   };
 
   const beginKeyboardHold = event => {
     if (![" ", "Enter"].includes(event.key)) return;
     event.preventDefault();
-    if (event.repeat || previewState !== "ready" || heldPointerRef.current !== null
-      || recorderRef.current || recordIntentRef.current) return;
+    if (event.repeat || previewState !== "ready" || heldPointerRef.current !== null) return;
+    if (recorderRef.current || recordIntentRef.current) {
+      heldPointerRef.current = `stop:${event.key}`;
+      return;
+    }
     const key = `key:${event.key}`;
     heldPointerRef.current = key;
     longHoldRef.current = false;
@@ -491,36 +506,40 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       if (heldPointerRef.current !== key) return;
       longHoldRef.current = true;
       startRecording();
-    }, 350);
+    }, HOLD_TO_RECORD_MS);
   };
 
   const endKeyboardHold = event => {
     if (![" ", "Enter"].includes(event.key)) return;
     event.preventDefault();
+    if (heldPointerRef.current === `stop:${event.key}`) {
+      heldPointerRef.current = null;
+      stopRecording();
+      suppressSyntheticClick();
+      return;
+    }
     if (heldPointerRef.current !== `key:${event.key}`) return;
     heldPointerRef.current = null;
     clearTimeout(holdTimerRef.current);
-    if (longHoldRef.current) stopRecording();
-    else capturePhoto();
+    if (!longHoldRef.current) capturePhoto();
+    suppressSyntheticClick();
     longHoldRef.current = false;
   };
 
-  const uploadFiles = async event => {
-    const files = [...(event.target.files ?? [])];
+  const importSystemCameraMedia = async event => {
+    const file = event.target.files?.[0] ?? null;
     event.target.value = "";
-    if (!files.length || !activeRef.current) return;
-    setUploading(true);
-    let added = 0, duplicates = 0, failed = 0;
-    for (const file of files) {
-      try {
-        const result = await saveUploadedMedia(file);
-        if (result.status === "duplicate") duplicates += 1;
-        else added += 1;
-      } catch { failed += 1; }
+    if (!file || !activeRef.current) return;
+    setSystemCameraBusy(true);
+    try {
+      const result = await saveUploadedMedia(file);
+      showMessage(result.status === "duplicate"
+        ? en ? "This capture is already in the album." : "这次拍摄已在相册中。"
+        : en ? "System camera capture added to the local album." : "系统相机拍摄内容已加入本地相册。");
+    } catch {
+      showMessage(en ? "Could not import the system camera capture." : "无法导入系统相机拍摄内容。");
     }
-    if (mountedRef.current) setUploading(false);
-    showMessage(en ? `Added ${added}; ${duplicates} duplicate; ${failed} failed.`
-      : `已加入 ${added} 项；重复 ${duplicates} 项；失败 ${failed} 项。`);
+    if (mountedRef.current) setSystemCameraBusy(false);
   };
 
   const openAlbum = () => {
@@ -528,9 +547,34 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     onOpenAlbum?.();
   };
 
-  return <section className="trip-camera" aria-label={en ? "Camera" : "相机"} data-recording={recording || recordPending}>
+  const switchCameraFacing = async () => {
+    if (!activeRef.current || previewState !== "ready" || facingSwitchBusy || recording || recordPending
+      || recorderRef.current || recordIntentRef.current) return;
+    if (cameraCount === 1) {
+      showMessage(en ? "Only one camera is available on this device." : "此设备只检测到一个相机。");
+      return;
+    }
+    const previousFacing = cameraFacing;
+    const nextFacing = previousFacing === "environment" ? "user" : "environment";
+    setFacingSwitchBusy(true);
+    const switched = await startPreview(true, nextFacing, true);
+    if (switched) {
+      setCameraFacing(nextFacing);
+    } else if (activeRef.current) {
+      const restored = await startPreview(true, previousFacing);
+      showMessage(restored
+        ? en ? "Could not switch cameras; the previous camera was restored." : "无法切换镜头，已恢复原镜头。"
+        : en ? "Could not switch cameras or restore the previous camera." : "无法切换镜头，也无法恢复原镜头。");
+    }
+    if (mountedRef.current) setFacingSwitchBusy(false);
+  };
+
+  return <section ref={cameraRef} className="trip-camera" aria-label={en ? "Camera" : "相机"} data-recording={recording || recordPending}>
       <div className="trip-camera-preview">
         <video ref={videoRef} autoPlay muted playsInline aria-label={en ? "Live camera preview" : "相机实时取景"} />
+        {previewState === "ready" && cameraGrid && <div className="trip-camera-grid" aria-hidden="true">
+          <span /><span /><span /><span />
+        </div>}
         {previewState !== "ready" && <div className="trip-camera-preview-state">
           <PencilText>{previewState === "requesting" ? en ? "Waiting for camera permission…" : "等待相机权限…"
             : previewState === "unsupported" ? en ? "Camera unavailable" : "相机不可用"
@@ -539,59 +583,68 @@ export function AdventureCamera({ active, onOpenAlbum }) {
             <CameraIcon /><PencilText>{en ? "Start camera" : "开启相机"}</PencilText>
           </PencilSurface>
         </div>}
-        {previewState === "ready" && <button type="button" className="trip-camera-location"
-          onClick={toggleCaptureLocation} aria-pressed={captureLocation}
-          aria-label={captureLocation
-            ? en ? "Turn off capture location" : "关闭拍摄定位"
-            : en ? "Enable location for captures" : "开启拍摄定位"}
-          title={captureLocation
-            ? en ? "Turn off capture location" : "关闭拍摄定位"
-            : en ? "Enable location for captures" : "开启拍摄定位"}><LocationMapIcon /></button>}
-        {(recording || recordPending) && <span className="trip-camera-recording" role="timer"
+        {(recording || recordPending) && <CameraPencilLabel className="trip-camera-recording" textureKey="recording-timer" role="timer"
           aria-label={en ? "Recording time" : "录像时长"}>
           <PencilText>{recordPending ? en ? "Starting video…" : "正在准备录制…"
             : `${en ? "Recording" : "录制中"} ${formatElapsed(elapsed)}`}</PencilText>
-        </span>}
+        </CameraPencilLabel>}
       </div>
       <div className="trip-camera-status" aria-live="polite">
-        {locationState && <span><PencilText>{locationState}</PencilText></span>}
-        {message && <span role="status"><PencilText>{message}</PencilText></span>}
+        {message && <CameraPencilLabel textureKey="camera-status" role="status"><PencilText>{message}</PencilText></CameraPencilLabel>}
       </div>
       <div className="trip-camera-controls">
-        <button type="button" className="trip-camera-control" onClick={openAlbum}
-          aria-label={en ? "Album" : "相册"} title={en ? "Album" : "相册"}>
-          <PhotoAlbumIcon />
+        <button type="button" className="trip-camera-control" data-icon-feedback="keyboard-only" onClick={openAlbum}
+          aria-label={en ? "Album" : "相册"}>
+          <PhotoAlbumIcon themeBackdrop />
         </button>
-          <button type="button" className="trip-camera-shutter" disabled={previewState !== "ready" || !active}
+        <button type="button" className="trip-camera-control trip-camera-facing-toggle" data-icon-feedback="keyboard-only"
+          onClick={switchCameraFacing}
+          aria-label={cameraFacing === "environment"
+            ? en ? "Switch to front camera" : "切换到前置相机"
+            : en ? "Switch to rear camera" : "切换到后置相机"}
+          disabled={!active || previewState !== "ready" || facingSwitchBusy || recording || recordPending}>
+          <PencilIcon kind="camera-facing" themeBackdrop>
+            <path d="M7 12c2.7-4.1 7.3-6.2 12.1-5.2 2.1.4 4 1.4 5.5 2.9M22.3 5.9l2.6 3.9-4.6 1" />
+            <path d="M25 20c-2.7 4.1-7.3 6.2-12.1 5.2-2.1-.4-4-1.4-5.5-2.9M9.7 26.1l-2.6-3.9 4.6-1" />
+            <path d="M12 12.5h8v7h-8zM14 12.5l1-2h2l1 2M16 14.4a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4z" />
+          </PencilIcon>
+        </button>
+          <button type="button" className="trip-camera-shutter" data-icon-feedback="keyboard-only"
+            disabled={previewState !== "ready" || !active}
             onPointerDown={beginHold} onPointerUp={endHold} onPointerCancel={endHold} onLostPointerCapture={endHold}
             onKeyDown={beginKeyboardHold} onKeyUp={endKeyboardHold}
             onBlur={() => {
               if (typeof heldPointerRef.current !== "string") return;
               heldPointerRef.current = null;
               clearTimeout(holdTimerRef.current);
-              if (longHoldRef.current) stopRecording();
+              if (longHoldRef.current) suppressSyntheticClick();
               longHoldRef.current = false;
             }}
-            onClick={event => {
-              if (event.detail > 0 && suppressPointerClickRef.current) {
-                suppressPointerClickRef.current = false;
+            onClick={() => {
+              if (suppressClickRef.current) {
+                suppressClickRef.current = false;
+                clearTimeout(clickSuppressionTimerRef.current);
                 return;
               }
-              if (recorderRef.current || recordIntentRef.current) return;
-              capturePhoto();
+              if (recorderRef.current || recordIntentRef.current) stopRecording();
+              else capturePhoto();
             }}
             aria-label={en ? "Take photo; hold to record video" : "拍照；长按录制视频"}
-            title={en ? "Click photo, hold video" : "点击拍照，长按录像"}>
-            <span className="trip-camera-shutter-ring" aria-hidden="true"><PencilIcon kind="shutter-ring">
-              <path d="M16 3C8.8 3 3 8.8 3 16s5.8 13 13 13 13-5.8 13-13c0-4.6-2.4-8.8-6.2-11.1" />
-            </PencilIcon></span>
-            <CameraIcon />
+          >
+            {recording || recordPending
+              ? <span className={`trip-camera-record-dot${recordPending ? " is-pending" : ""}`} aria-hidden="true" />
+              : <CameraIcon themeBackdrop />}
           </button>
-        <input ref={uploadRef} type="file" accept="image/*,video/*" multiple tabIndex={-1} className="trip-camera-upload-input"
-          aria-label={en ? "Choose local photos or videos" : "选择本地照片或视频"} onChange={uploadFiles} />
-        <button type="button" className="trip-camera-control" onClick={() => uploadRef.current?.click()}
-          aria-label={uploading ? en ? "Saving…" : "保存中…" : en ? "Upload" : "上传"}
-          title={en ? "Upload" : "上传"} disabled={uploading || !active}><UploadIcon /></button>
+        <input ref={systemCameraRef} type="file" accept="image/*,video/*" hidden
+          capture={cameraFacing === "user" ? "user" : "environment"} className="trip-camera-upload-input"
+          onChange={importSystemCameraMedia} />
+        <button type="button" className="trip-camera-control trip-camera-system-capture" data-icon-feedback="keyboard-only"
+          onClick={() => systemCameraRef.current?.click()}
+          aria-label={systemCameraBusy ? en ? "Importing system camera capture…" : "正在导入系统相机拍摄内容…"
+            : en ? "Use system camera" : "使用系统相机"}
+          disabled={systemCameraBusy || !active}><PencilIcon kind="system-camera" themeBackdrop>
+            <path d="M9 3.8h14v24.4H9zM13 7h6M16 20.5c-2 0-3.5 1.5-3.5 3.4h7c0-1.9-1.5-3.4-3.5-3.4zM25.5 8.5h5M28 6v5" />
+          </PencilIcon></button>
       </div>
   </section>;
 }

@@ -1,32 +1,300 @@
-.trip-day--camera { padding-bottom:0; }
-.trip-day--camera > .trip-panel-header { margin-bottom:0; }
-.trip-day--camera > .trip-panel-body { margin-inline:calc(-1 * var(--trip-panel-pad)); gap:0; }
-.trip-camera { --trip-camera-ink:#fffbea; position:relative; isolation:isolate; flex:1; min-width:0; min-height:0; height:100%; color:var(--trip-camera-ink); font-family:var(--trip-handwriting); }
+.trip-day--camera {
+  --trip-camera-top-inset:max(9px,env(safe-area-inset-top));
+  --trip-camera-right-inset:max(9px,env(safe-area-inset-right));
+  --trip-camera-bottom-inset:max(9px,env(safe-area-inset-bottom));
+  --trip-camera-left-inset:max(9px,env(safe-area-inset-left));
+  --trip-camera-control-slot:44px;
+  --trip-camera-icon-rotation:0deg;
+  position:relative;
+  overflow:hidden;
+  padding:0 !important;
+  background:#13130f;
+  color:#fffbea;
+}
+.trip-day--camera > .trip-pencil-surface-ink { display:none; }
+.trip-day--camera > .trip-panel-body {
+  position:absolute;
+  inset:0;
+  margin:0 !important;
+  overflow:hidden;
+  gap:0;
+}
+.trip-day--camera > .trip-camera-header {
+  position:absolute;
+  z-index:5;
+  inset:0;
+  min-height:0;
+  margin:0;
+  padding:var(--trip-camera-top-inset) var(--trip-camera-right-inset) var(--trip-camera-bottom-inset) var(--trip-camera-left-inset);
+  align-items:start;
+  color:#fffbea;
+  text-shadow:0 1px 4px rgba(0,0,0,.92);
+  pointer-events:none;
+}
+.trip-day--camera > .trip-camera-header > :not(.trip-panel-divider-ink) { pointer-events:auto; }
+.trip-camera-header .trip-panel-leading,
+.trip-camera-header .trip-panel-heading,
+.trip-camera-header .trip-panel-header-actions { align-self:start; }
+.trip-camera-header .trip-panel-heading { display:none; min-height:44px; justify-content:center; }
+.trip-camera-header .trip-panel-heading-title { color:inherit; }
+.trip-camera-header :is(.trip-panel-leading,.trip-route-header-action,.trip-close) {
+  color:#fffbea;
+}
+.trip-day--camera button > .trip-pencil-icon {
+  filter:none !important;
+  rotate:var(--trip-camera-icon-rotation);
+  transition:rotate 100ms linear,transform 120ms ease,filter 120ms ease;
+}
+.trip-camera-header-actions {
+  position:absolute;
+  grid-area:auto;
+  grid-column:auto;
+  grid-row:auto;
+  z-index:7;
+  top:auto;
+  right:auto;
+  bottom:var(--trip-camera-bottom-inset);
+  left:var(--trip-camera-left-inset);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-self:auto;
+  align-self:auto;
+  width:44px;
+  height:44px;
+  margin:0;
+  gap:2px;
+  border:0;
+  background:transparent;
+  pointer-events:auto;
+}
+.trip-camera-header-actions .trip-close {
+  position:relative;
+  grid-area:auto;
+  grid-column:auto;
+  grid-row:auto;
+  flex:none;
+  width:44px;
+  height:44px;
+  margin:0;
+}
+.trip-camera-settings-entry { z-index:7; }
+
+.trip-camera {
+  --trip-camera-ink:#fffbea;
+  position:relative;
+  isolation:isolate;
+  flex:1;
+  min-width:0;
+  min-height:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  color:var(--trip-camera-ink);
+  font-family:var(--trip-handwriting);
+}
 .trip-camera-preview { position:absolute; inset:0; overflow:hidden; background:#13130f; }
 .trip-camera-preview > video { display:block; width:100%; height:100%; object-fit:cover; filter:none; }
-.trip-camera-preview-state { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:72px 14px 120px; color:var(--trip-camera-ink); font-size:16px; text-align:center; }
+.trip-camera-preview-state {
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:72px 96px 72px 70px;
+  color:var(--trip-camera-ink);
+  font-size:16px;
+  text-align:center;
+}
 .trip-camera-preview-state .trip-pencil-surface { gap:8px; min-height:44px; padding:8px 14px; }
 .trip-camera-preview-state .trip-pencil-icon { width:28px; height:28px; }
-.trip-camera-location { position:absolute; top:12px; right:12px; display:grid; place-items:center; width:44px; height:44px; padding:0; border:0; background:transparent; color:var(--trip-camera-ink); cursor:pointer; }
-.trip-camera-location .trip-pencil-icon { width:30px; height:30px; }
-.trip-camera-location[aria-pressed=true] { color:#d8ef9a; }
-.trip-camera-recording { position:absolute; top:12px; left:16px; display:flex; align-items:center; min-height:44px; padding:0; color:var(--trip-camera-ink); font-size:14px; font-variant-numeric:tabular-nums; text-shadow:0 1px 3px #000; }
-.trip-camera-status { position:absolute; bottom:108px; left:16px; right:16px; display:flex; justify-content:center; flex-wrap:wrap; gap:2px 12px; min-width:0; color:var(--trip-camera-ink); font-size:13px; line-height:1.4; text-align:center; text-shadow:0 1px 3px #000; pointer-events:none; }
+.trip-camera-grid { position:absolute; inset:0; pointer-events:none; opacity:.58; }
+.trip-camera-grid span { position:absolute; display:block; background:rgba(255,255,245,.72); box-shadow:0 0 1px rgba(0,0,0,.7); }
+.trip-camera-grid span:nth-child(1),.trip-camera-grid span:nth-child(2) { top:0; bottom:0; width:1px; }
+.trip-camera-grid span:nth-child(1) { left:33.333%; }
+.trip-camera-grid span:nth-child(2) { left:66.667%; }
+.trip-camera-grid span:nth-child(3),.trip-camera-grid span:nth-child(4) { left:0; right:0; height:1px; }
+.trip-camera-grid span:nth-child(3) { top:33.333%; }
+.trip-camera-grid span:nth-child(4) { top:66.667%; }
+.trip-camera-recording {
+  position:absolute;
+  z-index:3;
+  top:max(12px,env(safe-area-inset-top));
+  left:50%;
+  display:flex;
+  align-items:center;
+  min-height:44px;
+  padding:4px 9px;
+  color:var(--trip-camera-ink);
+  font-size:14px;
+  font-variant-numeric:tabular-nums;
+  transform:translateX(-50%);
+  white-space:nowrap;
+}
+.trip-camera-status {
+  position:absolute;
+  z-index:3;
+  bottom:max(14px,env(safe-area-inset-bottom));
+  left:max(68px,calc(env(safe-area-inset-left) + 58px));
+  right:max(106px,calc(env(safe-area-inset-right) + 96px));
+  min-width:0;
+  color:var(--trip-camera-ink);
+  font-size:13px;
+  line-height:1.4;
+  text-align:center;
+  pointer-events:none;
+}
 .trip-camera-status:empty { display:none; }
-.trip-camera-status span { overflow-wrap:anywhere; }
-.trip-camera-controls { position:absolute; bottom:max(20px,env(safe-area-inset-bottom)); left:16px; right:16px; display:grid; grid-template-columns:1fr 76px 1fr; align-items:center; justify-items:center; gap:12px; min-width:0; background:transparent; pointer-events:none; }
+.trip-camera-status > .trip-camera-pencil-label { padding:5px 10px; }
+.trip-camera-status .trip-camera-pencil-label-content { overflow-wrap:anywhere; }
+.trip-camera-pencil-label {
+  position:relative;
+  isolation:isolate;
+  display:inline-flex;
+  max-width:100%;
+  align-items:center;
+  justify-content:center;
+  background:transparent;
+}
+.trip-camera-pencil-label-backdrop {
+  position:absolute;
+  z-index:0;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+.trip-camera-pencil-label-content { position:relative; z-index:1; min-width:0; }
+.trip-camera-controls {
+  position:absolute;
+  z-index:4;
+  inset:0 var(--trip-camera-right-inset) 0 auto;
+  width:var(--trip-camera-control-slot);
+  background:transparent;
+  pointer-events:none;
+}
 .trip-camera-controls > button { pointer-events:auto; }
-.trip-camera-control { display:grid; place-items:center; width:44px; height:44px; padding:0; border:0; background:transparent; color:var(--trip-camera-ink); cursor:pointer; }
+.trip-camera-control {
+  position:absolute;
+  right:0;
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--trip-camera-ink);
+  cursor:pointer;
+}
 .trip-camera-control .trip-pencil-icon { width:30px; height:30px; }
 .trip-camera-control:disabled { opacity:.55; cursor:wait; }
-.trip-camera-shutter { position:relative; display:grid; place-items:center; width:76px; height:76px; padding:0; border:0; background:transparent; color:var(--trip-camera-ink); cursor:pointer; touch-action:none; user-select:none; -webkit-user-select:none; }
+.trip-camera-control:first-child { top:var(--trip-camera-top-inset); }
+.trip-camera-facing-toggle { top:calc(var(--trip-camera-top-inset) + 46px); }
+.trip-camera-system-capture { bottom:var(--trip-camera-bottom-inset); }
+.trip-camera-shutter {
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:76px;
+  height:76px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--trip-camera-ink);
+  cursor:pointer;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.trip-camera-controls .trip-camera-shutter {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
 .trip-camera-shutter > .trip-pencil-icon { width:36px; height:36px; }
-.trip-camera-shutter-ring { position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
-.trip-camera-shutter-ring .trip-pencil-icon { width:100%; height:100%; }
-.trip-camera[data-recording=true] .trip-camera-shutter-ring { animation:trip-camera-recording-spin 1.4s linear infinite; }
+.trip-camera-record-dot {
+  width:30px;
+  height:30px;
+  border:3px solid rgba(255,255,245,.94);
+  border-radius:50%;
+  background:#df382f;
+  box-shadow:0 1px 3px #000,0 0 0 2px rgba(0,0,0,.18);
+}
+.trip-camera-record-dot.is-pending { background:#f0b44f; }
 .trip-camera-shutter:disabled { opacity:.45; cursor:not-allowed; }
-.trip-camera :is(.trip-camera-controls,.trip-camera-location,.trip-camera-recording,.trip-camera-status) .trip-pencil-icon { filter:drop-shadow(0 1px 1px #000) drop-shadow(0 0 2px #000); }
-.trip-camera-upload-input { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.trip-camera :is(.trip-camera-controls,.trip-camera-recording,.trip-camera-status) .trip-pencil-icon { filter:none !important; }
+.trip-camera-upload-input { display:none; }
 .trip-camera :is(button,input):focus-visible { outline:2px solid var(--trip-camera-ink); outline-offset:2px; }
-@keyframes trip-camera-recording-spin { to { transform:rotate(360deg); } }
-@media(prefers-reduced-motion:reduce) { .trip-camera[data-recording=true] .trip-camera-shutter-ring { animation:none; } }
+
+#trip-board-structure[data-responsive-layout=phone-landscape] .trip-camera-preview-state {
+  padding-top:48px;
+  padding-bottom:48px;
+}
+#trip-board-structure[data-responsive-layout=phone-landscape] .trip-camera-settings-entry {
+  position:absolute;
+  top:auto;
+  bottom:var(--trip-camera-bottom-inset);
+  left:var(--trip-camera-left-inset);
+}
+#trip-board-structure[data-responsive-layout=phone-landscape] .trip-camera-header-actions {
+  top:var(--trip-camera-top-inset);
+  bottom:auto;
+  left:var(--trip-camera-left-inset);
+}
+
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-controls {
+  inset:0;
+  width:auto;
+  height:auto;
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-control,
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-controls .trip-camera-shutter {
+  position:absolute;
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-control:first-child {
+  top:auto;
+  right:auto;
+  bottom:var(--trip-camera-bottom-inset);
+  left:calc(var(--trip-camera-left-inset) + 46px);
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-facing-toggle {
+  top:auto;
+  right:auto;
+  bottom:var(--trip-camera-bottom-inset);
+  left:var(--trip-camera-left-inset);
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-controls .trip-camera-shutter {
+  top:auto;
+  right:auto;
+  bottom:var(--trip-camera-bottom-inset);
+  left:50%;
+  transform:translateX(-50%);
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-system-capture {
+  top:auto;
+  right:var(--trip-camera-right-inset);
+  bottom:var(--trip-camera-bottom-inset);
+  left:auto;
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-header-actions {
+  top:var(--trip-camera-top-inset);
+  right:var(--trip-camera-right-inset);
+  bottom:auto;
+  left:auto;
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-status {
+  bottom:calc(88px + var(--trip-camera-bottom-inset));
+  left:max(16px,var(--trip-camera-left-inset));
+  right:max(16px,var(--trip-camera-right-inset));
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-preview-state {
+  padding:64px 24px calc(116px + var(--trip-camera-bottom-inset));
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .trip-day--camera button > .trip-pencil-icon { transition:none; }
+}

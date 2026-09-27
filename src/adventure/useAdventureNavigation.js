@@ -11,6 +11,7 @@ import { getAdventureWaypoint } from "./adventureWaypoints";
 import { getMapNode, normalizeMapCluster } from "./adventureMapNodes";
 import { getInternationalMapNode, internationalFlightSegments, internationalMapStops } from "./internationalMapData";
 import { eventAgendaItems } from "./adventureEventAgenda";
+import { isDailyAdventureShortcut, resolveAdventureShortcut } from "./adventureShortcuts";
 
 const rightPanels = new Set(["bag", "camera", "photos"]);
 const scopes = new Set(["all", "south", "north"]);
@@ -18,6 +19,8 @@ const placeTabs = new Set(["calendar", "map", "hotels", "activities", "photos"])
 const bagTabs = new Set(["stays", "car", "activities", "notes"]);
 const cameraViews = new Set(["preview", "album", "settings", "device"]);
 const eventById = new Map(getAdventureCalendarDays().flatMap(day => day.events.map(event => [event.urlId, event])));
+const shortcutDayIds = new Set(getAdventureCalendarDays().map(day => day.dateId));
+const shortcutBookings = Object.values(confirmedAccommodationBookings);
 const internationalDateIds = new Set(internationalFlightSegments.map(segment => segment.itinerary?.dateId).filter(Boolean));
 const MAP_ZOOM_RANGE = [.035, 384];
 const eventTabs = event => ["schedule", event?.flights?.length && "flight",
@@ -47,7 +50,9 @@ export function normalizeAdventureMapView(value) {
   };
 }
 function readLocation() {
-  const params = new URLSearchParams(window.location.search);
+  const params = resolveAdventureShortcut(new URLSearchParams(window.location.search), {
+    dayIds: shortcutDayIds, bookings: shortcutBookings,
+  });
   const requestedMapMode = params.get("map");
   const mapView = normalizeAdventureMapView({
     zoom: params.get("zoom"), center: [params.get("lat"), params.get("lng")],
@@ -124,7 +129,7 @@ function writeLocation(view, { replace = false } = {}) {
   const url = new URL(window.location.href);
   for (const key of ["panel", "right", "place", "route", "waypoint", "airport", "flightRoute", "map", "zoom", "lat", "lng", "cluster", "nodeFrom", "day", "date", "scope", "front",
     "event", "eventTab", "agenda", "eventFrom", "dayFrom", "placeTab", "placeDate",
-    "bagTab", "bagDate", "bagStay", "stayFrom", "bagSources", "bagNote", "cameraView", "mediaId", "mediaTab", "fullscreen"]) {
+    "bagTab", "bagDate", "bagStay", "stayFrom", "bagSources", "bagNote", "cameraView", "mediaId", "mediaTab", "fullscreen", "shortcut"]) {
     url.searchParams.delete(key);
   }
   if (view.calendarOpen) {
@@ -205,8 +210,15 @@ export function useAdventureNavigation() {
   const current = useRef(view);
   current.current = view;
   useEffect(() => {
+    const consumeShortcut = next => {
+      if (isDailyAdventureShortcut(new URLSearchParams(window.location.search).get("shortcut"))) {
+        writeLocation(next, { replace: true });
+      }
+    };
+    consumeShortcut(current.current);
     const sync = () => {
       const next = readLocation();
+      consumeShortcut(next);
       const previous = current.current;
       current.current = next;
       transitionAdventurePane(previous, next, () => setView(next));

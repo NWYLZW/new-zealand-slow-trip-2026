@@ -1,9 +1,30 @@
 import assert from "node:assert/strict";
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { chromium } from "playwright";
 import { createCameraNicknameAutosave } from "../src/adventure/cameraNicknameAutosave.js";
 import { downloadMediaBlob, mediaDownloadName } from "../src/adventure/cameraMediaDownload.js";
 import { createPermissionPromptGate, observeBrowserPermission } from "../src/adventure/cameraPermissionLifecycle.js";
+import { cameraDeviceRoll, cameraIconCompensation, normalizeCameraAngle } from "../src/adventure/cameraIconOrientation.js";
+
+assert.equal(normalizeCameraAngle(270), -90);
+assert.equal(cameraDeviceRoll(90, 0), 0);
+assert.equal(Math.round(cameraDeviceRoll(90, 45)), 0);
+assert.equal(Math.round(cameraDeviceRoll(60, 60)), 27);
+assert.equal(Math.round(cameraIconCompensation(60, 60, 0)), -27);
+assert.equal(Math.round(cameraIconCompensation(0, 90, 90)), 0);
+assert.equal(cameraIconCompensation(0, 0, 0), null);
+
+const [cameraCss, cameraSource, sketchIconsSource] = await Promise.all([
+  readFile(new URL("../src/adventure/AdventureCamera.css", import.meta.url), "utf8"),
+  readFile(new URL("../src/adventure/AdventureCamera.jsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/adventure/SketchIcons.jsx", import.meta.url), "utf8"),
+]);
+assert.match(cameraCss, /\.trip-camera-header-actions\s*\{[^}]*grid-area:auto;[^}]*grid-column:auto;[^}]*grid-row:auto;/s);
+assert.match(cameraCss, /\.trip-camera-header-actions \.trip-close\s*\{[^}]*width:44px;[^}]*height:44px;/s);
+assert.match(cameraSource, /className="trip-camera-control trip-camera-facing-toggle"/);
+assert.match(cameraSource, /startPreview\(true, nextFacing, true\)/);
+assert.match(sketchIconsSource, /function SketchIcon\(props\)\s*\{\s*return <PencilIcon \{\.\.\.props\} \/>;/s);
+assert.match(sketchIconsSource, /export function PhotoAlbumIcon\(props\) \{ return <PhotosIcon \{\.\.\.props\} \/>; \}/);
 
 const writes = [];
 let releaseFirstWrite;
@@ -87,7 +108,8 @@ await assert.rejects(() => downloadMediaBlob({ id: "missing", originalName: "mis
 
 if (process.env.ADVENTURE_STATIC_ONLY === "1") {
   console.log(JSON.stringify({ nicknameAutosave: true, emptyAttribution: true,
-    permissionPromptGate: true, permissionChangeSubscription: true, mediaDownload: true }));
+    permissionPromptGate: true, permissionChangeSubscription: true, mediaDownload: true,
+    cameraOrientationCompensation: true, cameraControlStructure: true, iconPropForwarding: true }));
   process.exit(0);
 }
 
@@ -102,6 +124,47 @@ page.on("pageerror", error => errors.push(error.message));
 page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
 page.on("response", response => { if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`); });
 
+async function closeControlEvidence() {
+  return page.evaluate(() => {
+    const actions = document.querySelector(".trip-camera-header-actions");
+    const button = actions?.querySelector(".trip-close");
+    const canvas = button?.querySelector("canvas.trip-pencil-icon");
+    if (!actions || !button || !canvas) return null;
+    const rect = button.getBoundingClientRect();
+    const style = getComputedStyle(button);
+    const actionStyle = getComputedStyle(actions);
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const pixels = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
+    let lightPixels = 0, coloredPixels = 0, opaquePixels = 0;
+    for (let index = 0; index < pixels.length; index += 4) {
+      if (pixels[index + 3] < 32) continue;
+      opaquePixels += 1;
+      const luminance = pixels[index] * .299 + pixels[index + 1] * .587 + pixels[index + 2] * .114;
+      if (luminance >= 180) lightPixels += 1;
+      if (Math.max(pixels[index], pixels[index + 1], pixels[index + 2])
+        - Math.min(pixels[index], pixels[index + 1], pixels[index + 2]) > 30) coloredPixels += 1;
+    }
+    return {
+      rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom,
+        width: rect.width, height: rect.height },
+      display: style.display,
+      visibility: style.visibility,
+      opacity: style.opacity,
+      pointerEvents: style.pointerEvents,
+      zIndex: style.zIndex,
+      actionsZIndex: actionStyle.zIndex,
+      actionsGridColumnStart: actionStyle.gridColumnStart,
+      actionsGridRowStart: actionStyle.gridRowStart,
+      hit: button.contains(document.elementFromPoint(centerX, centerY)),
+      opaquePixels,
+      lightPixels,
+      coloredPixels,
+      backdropAttribute: canvas.dataset.themeBackdrop ?? null,
+    };
+  });
+}
+
 try {
   await page.addInitScript(() => {
     localStorage.setItem("nz-trip-camera-audio", "off");
@@ -110,6 +173,7 @@ try {
     window.__testCapabilityReads = [];
     window.__testLocationRequests = [];
     window.__testClearedLocationWatches = [];
+    window.__testMismatchNextFacing = false;
     let nextLocationWatchId = 1;
     navigator.mediaDevices.getUserMedia = async constraints => {
       window.__testDeviceRequests.push(constraints);
@@ -130,14 +194,23 @@ try {
       draw();
       const interval = setInterval(draw, 60);
       const stream = canvas.captureStream(15);
-      stream.getVideoTracks()[0].addEventListener("ended", () => clearInterval(interval));
+      const videoTrack = stream.getVideoTracks()[0];
+      const requestedFacing = constraints.video?.facingMode?.ideal;
+      const reportedFacing = window.__testMismatchNextFacing
+        ? requestedFacing === "user" ? "environment" : "user"
+        : requestedFacing;
+      window.__testMismatchNextFacing = false;
+      Object.defineProperty(videoTrack, "getSettings", { configurable: true,
+        value: () => ({ facingMode: reportedFacing }) });
+      videoTrack.addEventListener("ended", () => clearInterval(interval));
       window.__testStreams.push(stream);
       return stream;
     };
     navigator.mediaDevices.enumerateDevices = async () => {
       window.__testCapabilityReads.push("devices");
       return [
-        { kind: "videoinput", deviceId: "synthetic-camera", label: "Synthetic camera" },
+        { kind: "videoinput", deviceId: "synthetic-rear-camera", label: "Synthetic rear camera" },
+        { kind: "videoinput", deviceId: "synthetic-front-camera", label: "Synthetic front camera" },
         { kind: "audioinput", deviceId: "synthetic-microphone", label: "Synthetic microphone" },
       ];
     };
@@ -175,32 +248,88 @@ try {
     const camera = node.getBoundingClientRect();
     const video = node.querySelector("video").getBoundingClientRect();
     const controls = node.querySelector(".trip-camera-controls").getBoundingClientRect();
+    const leading = document.querySelector(".trip-camera-header .trip-panel-leading").getBoundingClientRect();
+    const album = node.querySelector(".trip-camera-control:first-child").getBoundingClientRect();
+    const shutter = node.querySelector(".trip-camera-shutter").getBoundingClientRect();
+    const systemCamera = node.querySelector(".trip-camera-system-capture").getBoundingClientRect();
     return { objectFit: getComputedStyle(node.querySelector("video")).objectFit,
       fullFrame: camera.width === video.width && camera.height === video.height,
-      controlsOverlay: controls.top > video.top && controls.bottom < video.bottom,
-      locationBackground: getComputedStyle(node.querySelector(".trip-camera-location")).backgroundColor,
+      controlsOverlay: album.top >= video.top && systemCamera.bottom <= video.bottom
+        && shutter.top > video.top && shutter.bottom < video.bottom,
+      controlsAtRight: controls.right <= video.right && controls.left > video.left + video.width / 2,
+      albumAlignedToLeading: Math.abs(album.top + album.height / 2 - leading.top - leading.height / 2) < 1,
+      rightControlCentersAligned: Math.max(album.left + album.width / 2, shutter.left + shutter.width / 2,
+        systemCamera.left + systemCamera.width / 2) - Math.min(album.left + album.width / 2,
+        shutter.left + shutter.width / 2, systemCamera.left + systemCamera.width / 2) < 1,
+      locationControlCount: node.querySelectorAll(".trip-camera-location").length,
+      gridLineCount: node.querySelectorAll(".trip-camera-grid span").length,
       controlsBackground: getComputedStyle(node.querySelector(".trip-camera-controls")).backgroundColor };
   });
   assert.equal(before.objectFit, "cover");
-  assert(before.fullFrame && before.controlsOverlay);
-  assert.equal(before.locationBackground, "rgba(0, 0, 0, 0)");
+  assert(before.fullFrame && before.controlsOverlay && before.controlsAtRight
+    && before.albumAlignedToLeading && before.rightControlCentersAligned);
+  assert.equal(before.locationControlCount, 0);
+  assert.equal(before.gridLineCount, 4);
   assert.equal(before.controlsBackground, "rgba(0, 0, 0, 0)");
+  const systemCameraInput = page.locator(".trip-camera-upload-input");
+  assert.equal(await systemCameraInput.getAttribute("multiple"), null);
+  assert.equal(await systemCameraInput.getAttribute("accept"), "image/*,video/*");
+  assert.equal(await systemCameraInput.getAttribute("capture"), "environment");
+  assert.equal(await page.getByRole("button", { name: "使用系统相机", exact: true }).count(), 1);
+  const facingToggle = page.getByRole("button", { name: "切换到前置相机", exact: true });
+  assert.equal(await facingToggle.count(), 1);
+  const previousStreamCount = await page.evaluate(() => window.__testStreams.length);
+  await facingToggle.click();
+  await page.waitForFunction(expected => window.__testDeviceRequests.length === expected + 1
+    && window.__testDeviceRequests.at(-1)?.video?.facingMode?.ideal === "user", previousStreamCount);
+  assert.equal(await page.evaluate(() => window.__testStreams[0].getTracks().every(track => track.readyState === "ended")), true);
+  assert.equal(await page.getByRole("button", { name: "切换到后置相机", exact: true }).count(), 1);
+  assert.equal(await page.locator(".trip-camera-facing-toggle .trip-pencil-icon").getAttribute("data-theme-backdrop"), "true");
+  assert.equal(await page.locator(".trip-camera-status").innerText(), "");
+  await page.evaluate(() => { window.__testMismatchNextFacing = true; });
+  await page.getByRole("button", { name: "切换到后置相机", exact: true }).click();
+  await page.waitForFunction(() => window.__testDeviceRequests.length === 4
+    && window.__testDeviceRequests.at(-1)?.video?.facingMode?.ideal === "user");
+  assert.equal(await page.getByRole("button", { name: "切换到后置相机", exact: true }).count(), 1);
+  assert.match(await page.locator(".trip-camera-status").innerText(), /无法切换镜头/);
   await page.evaluate(async () => {
     window.__mediaLibrary = await import("./src/adventure/media/library.js");
     await window.__mediaLibrary.initializeMediaLibrary();
   });
   await shutter.click();
   await page.waitForFunction(() => window.__mediaLibrary.getMediaSnapshot().items.length === 1);
+  const statusBackdrop = page.locator(".trip-camera-status canvas[data-theme-backdrop]");
+  await statusBackdrop.waitFor();
+  const originalStatusPixels = await statusBackdrop.evaluate(canvas => canvas.toDataURL());
+  const closeCanvas = page.locator(".trip-camera-header-actions canvas[data-theme-backdrop]");
+  const originalClosePixels = await closeCanvas.evaluate(canvas => canvas.toDataURL());
+  await page.evaluate(() => { document.documentElement.dataset.adventureTheme = "fern"; });
+  await page.waitForFunction(previous => document.querySelector(".trip-camera-status canvas[data-theme-backdrop]")?.toDataURL() !== previous, originalStatusPixels);
+  assert.notEqual(await closeCanvas.evaluate(canvas => canvas.toDataURL()), originalClosePixels);
+  const stableStatusPixels = await statusBackdrop.evaluate(canvas => canvas.toDataURL());
+  await page.waitForTimeout(150);
+  assert.equal(await statusBackdrop.evaluate(canvas => canvas.toDataURL()), stableStatusPixels);
   const center = await shutter.boundingBox();
   await page.mouse.move(center.x + center.width / 2, center.y + center.height / 2);
   await page.mouse.down();
   await page.waitForFunction(() => document.querySelector(".trip-camera-recording")?.textContent.includes("00:01"));
-  assert.equal(await page.locator(".trip-camera-shutter-ring").evaluate(node => getComputedStyle(node).animationName), "trip-camera-recording-spin");
-  const rotation = await page.locator(".trip-camera-shutter-ring").evaluate(node => getComputedStyle(node).transform);
-  await page.waitForFunction(previous => getComputedStyle(document.querySelector(".trip-camera-shutter-ring")).transform !== previous, rotation);
+  assert.equal(await page.locator(".trip-camera-facing-toggle").isDisabled(), true);
+  assert.equal(await shutter.locator(".trip-camera-record-dot:not(.is-pending)").count(), 1);
+  assert.equal(await shutter.locator(".trip-pencil-icon").count(), 0);
+  assert.equal(await shutter.evaluate(node => getComputedStyle(node).animationName), "none");
+  const recordingBox = await shutter.boundingBox();
+  assert.equal(recordingBox.width, center.width);
+  assert.equal(recordingBox.height, center.height);
   if (output) await page.screenshot({ path: `${output}/camera-recording-desktop.png` });
   await page.mouse.up();
+  await page.waitForTimeout(100);
+  assert.equal(await page.locator(".trip-camera-recording").count(), 1);
+  assert.equal(await page.evaluate(() => window.__mediaLibrary.getMediaSnapshot().items.length), 1);
+  await shutter.click();
   await page.locator(".trip-camera-recording").waitFor({ state: "detached" });
+  assert.equal(await page.locator(".trip-camera-facing-toggle").isDisabled(), false);
+  assert.equal(await shutter.locator(".trip-camera-record-dot").count(), 0);
+  assert.equal(await shutter.locator(".trip-pencil-icon").count(), 1);
   await page.waitForFunction(() => window.__mediaLibrary.getMediaSnapshot().items.length === 2);
   assert.deepEqual(await page.evaluate(() => window.__mediaLibrary.getMediaSnapshot().items.map(item => item.kind).sort()), ["image", "video"]);
 
@@ -208,6 +337,9 @@ try {
   await page.keyboard.down("Space");
   await page.waitForFunction(() => document.querySelector(".trip-camera-recording")?.textContent.includes("00:01"));
   await page.keyboard.up("Space");
+  await page.waitForTimeout(100);
+  assert.equal(await page.locator(".trip-camera-recording").count(), 1);
+  await page.keyboard.press("Space");
   await page.waitForFunction(() => window.__mediaLibrary.getMediaSnapshot().items.length === 3);
   assert.deepEqual(await page.evaluate(() => window.__mediaLibrary.getMediaSnapshot().items.map(item => item.kind).sort()), ["image", "video", "video"]);
   await page.getByRole("button", { name: "相册", exact: true }).click();
@@ -236,8 +368,8 @@ try {
   await page.getByRole("menuitem", { name: "编辑补充信息" }).waitFor();
   await page.keyboard.press("Escape");
   await page.getByRole("menuitem", { name: "查看拍摄信息" }).waitFor({ state: "detached" });
-  assert.equal(await firstItem.evaluate(node => document.activeElement === node), true);
-  await firstItem.click();
+  await page.waitForFunction(id => document.activeElement?.dataset.mediaId === id, favoriteId);
+  await firstItem.click({ position: { x: 12, y: 12 } });
   await page.getByRole("tab", { name: "拍摄信息" }).waitFor();
   assert.equal(await page.getByRole("tab", { name: "拍摄信息" }).getAttribute("class"), "trip-adventure-calendar-scope");
   assert.equal(await page.locator(".trip-media-back").count(), 0);
@@ -281,7 +413,7 @@ try {
 
   await page.getByRole("button", { name: "返回相机", exact: true }).click();
   await page.waitForFunction(() => document.querySelector(".trip-camera-preview video")?.videoWidth > 0);
-  assert.equal(await page.evaluate(() => window.__testDeviceRequests.length), 2);
+  assert.equal(await page.evaluate(() => window.__testDeviceRequests.length), 5);
   await page.getByRole("button", { name: "相机设置", exact: true }).click();
   const nickname = page.getByLabel("摄影者昵称", { exact: true });
   await nickname.fill("Test photographer");
@@ -299,12 +431,17 @@ try {
   const locationRequestsBeforeSettings = await page.evaluate(() => window.__testLocationRequests.length);
   const captureLocation = page.getByRole("checkbox", { name: "拍摄定位", exact: true });
   assert.equal(await captureLocation.isChecked(), true);
+  const compositionGrid = page.getByRole("checkbox", { name: "构图九宫格", exact: true });
+  assert.equal(await compositionGrid.isChecked(), true);
+  await compositionGrid.uncheck();
+  await page.waitForFunction(() => localStorage.getItem("nz-trip-camera-grid") === "off");
   await captureLocation.uncheck();
   await page.waitForFunction(() => localStorage.getItem("nz-trip-camera-location") === "off"
     && window.__testClearedLocationWatches.length >= 1);
   const deviceRequestsBeforeInfo = await page.evaluate(() => window.__testDeviceRequests.length);
   await page.getByRole("button", { name: "设备信息", exact: true }).click();
-  await page.getByText("Synthetic camera", { exact: true }).waitFor();
+  await page.getByText("Synthetic rear camera", { exact: true }).waitFor();
+  await page.getByText("Synthetic front camera", { exact: true }).waitFor();
   assert.equal(await page.evaluate(() => window.__testDeviceRequests.length), deviceRequestsBeforeInfo);
   const capabilityReads = await page.evaluate(() => window.__testCapabilityReads);
   for (const expected of ["devices", "permission:camera", "permission:geolocation", "permission:microphone", "storage"])
@@ -316,21 +453,30 @@ try {
   await page.getByRole("button", { name: "返回相机设置", exact: true }).click();
   await page.getByRole("button", { name: "返回相机", exact: true }).click();
   await page.waitForFunction(() => document.querySelector(".trip-camera-preview video")?.videoWidth > 0);
-  assert.equal(await page.evaluate(() => window.__testDeviceRequests.length), 3);
+  assert.equal(await page.evaluate(() => window.__testDeviceRequests.length), 6);
   assert.equal(await page.evaluate(() => window.__testLocationRequests.length), locationRequestsBeforeSettings);
   const locationWatchesBeforeEnable = await page.evaluate(() => window.__testLocationRequests.filter(request => request.kind === "watch").length);
-  await page.getByRole("button", { name: "开启拍摄定位", exact: true }).click();
+  assert.equal(await page.locator(".trip-camera-location").count(), 0);
+  assert.equal(await page.locator(".trip-camera-grid").count(), 0);
+  await page.getByRole("button", { name: "相机设置", exact: true }).click();
+  await page.getByRole("checkbox", { name: "拍摄定位", exact: true }).check();
+  await page.getByRole("checkbox", { name: "构图九宫格", exact: true }).check();
+  await page.getByRole("button", { name: "返回相机", exact: true }).click();
   await page.waitForFunction(expected => localStorage.getItem("nz-trip-camera-location") === "on"
     && window.__testLocationRequests.filter(request => request.kind === "watch").length === expected + 1,
   locationWatchesBeforeEnable);
+  await page.locator(".trip-camera-grid").waitFor();
   await page.evaluate(() => {
     window.__originalStorageSetItem = Storage.prototype.setItem;
     Storage.prototype.setItem = function setItem() { throw new DOMException("Quota exceeded", "QuotaExceededError"); };
   });
-  await page.getByRole("button", { name: "关闭拍摄定位", exact: true }).click();
-  assert.equal(await page.getByRole("button", { name: "开启拍摄定位", exact: true }).getAttribute("aria-pressed"), "false");
+  await page.getByRole("button", { name: "相机设置", exact: true }).click();
+  await page.getByRole("checkbox", { name: "拍摄定位", exact: true }).uncheck();
+  assert.equal(await page.getByRole("checkbox", { name: "拍摄定位", exact: true }).isChecked(), false);
   await page.evaluate(() => { Storage.prototype.setItem = window.__originalStorageSetItem; });
-  await page.getByRole("button", { name: "开启拍摄定位", exact: true }).click();
+  await page.getByRole("checkbox", { name: "拍摄定位", exact: true }).check();
+  await page.getByRole("button", { name: "返回相机", exact: true }).click();
+  const deviceRequestsBeforeVisibility = await page.evaluate(() => window.__testDeviceRequests.length);
   await page.evaluate(() => {
     let hidden = true;
     Object.defineProperty(document, "hidden", { configurable: true, get: () => hidden });
@@ -339,15 +485,116 @@ try {
   });
   await page.waitForFunction(() => window.__testStreams.flatMap(stream => stream.getTracks()).every(track => track.readyState === "ended"));
   await page.evaluate(() => window.__setTestHidden(false));
-  await page.waitForFunction(() => window.__testDeviceRequests.length === 4
-    && document.querySelector(".trip-camera-preview video")?.videoWidth > 0);
+  await page.waitForFunction(previous => window.__testDeviceRequests.length === previous + 1
+    && document.querySelector(".trip-camera-preview video")?.videoWidth > 0, deviceRequestsBeforeVisibility);
+  await page.setViewportSize({ width: 430, height: 932 });
+  await page.waitForFunction(() => document.querySelector("#trip-board-structure")?.dataset.responsiveLayout === "phone-portrait");
+  const portraitControls = await page.evaluate(() => {
+    const root = document.querySelector(".trip-camera").getBoundingClientRect();
+    const settings = document.querySelector(".trip-camera-settings-entry").getBoundingClientRect();
+    const close = document.querySelector(".trip-camera-header-actions .trip-close").getBoundingClientRect();
+    const album = document.querySelector(".trip-camera-control:first-child").getBoundingClientRect();
+    const facing = document.querySelector(".trip-camera-facing-toggle").getBoundingClientRect();
+    const shutterBox = document.querySelector(".trip-camera-shutter").getBoundingClientRect();
+    const systemCamera = document.querySelector(".trip-camera-system-capture").getBoundingClientRect();
+    return {
+      settingsTopLeft: settings.left < root.left + root.width / 2 && settings.top < root.top + root.height / 2,
+      closeTopRight: close.left > root.left + root.width / 2 && close.top < root.top + root.height / 2,
+      albumBottomLeft: album.left < root.left + root.width / 2 && album.top > root.top + root.height / 2,
+      facingAdjacentToAlbum: album.left >= facing.right && album.left - facing.right <= 4
+        && facing.top === album.top && facing.left >= root.left && album.right < shutterBox.left,
+      systemBottomRight: systemCamera.left > root.left + root.width / 2 && systemCamera.top > root.top + root.height / 2,
+      shutterBottomCenter: Math.abs(shutterBox.left + shutterBox.width / 2 - root.left - root.width / 2) < 1
+        && root.bottom - shutterBox.bottom >= 0 && root.bottom - shutterBox.bottom < 80,
+      settingsIcon: document.querySelector(".trip-camera-settings-entry .trip-pencil-icon")?.dataset.icon,
+      titleHidden: getComputedStyle(document.querySelector(".trip-camera-header .trip-panel-heading")).display === "none",
+    };
+  });
+  assert(portraitControls.settingsTopLeft && portraitControls.closeTopRight && portraitControls.albumBottomLeft
+    && portraitControls.facingAdjacentToAlbum && portraitControls.systemBottomRight
+    && portraitControls.shutterBottomCenter && portraitControls.titleHidden);
+  assert.equal(portraitControls.settingsIcon, "camera");
+  const portraitCloseEvidence = await closeControlEvidence();
+  assert(portraitCloseEvidence);
+  assert.equal(portraitCloseEvidence.rect.width, 44);
+  assert.equal(portraitCloseEvidence.rect.height, 44);
+  assert.notEqual(portraitCloseEvidence.display, "none");
+  assert.equal(portraitCloseEvidence.visibility, "visible");
+  assert.equal(portraitCloseEvidence.opacity, "1");
+  assert.notEqual(portraitCloseEvidence.pointerEvents, "none");
+  assert.equal(portraitCloseEvidence.actionsGridColumnStart, "auto");
+  assert.equal(portraitCloseEvidence.actionsGridRowStart, "auto");
+  assert(portraitCloseEvidence.hit && portraitCloseEvidence.opaquePixels > 0
+    && portraitCloseEvidence.lightPixels > 0 && portraitCloseEvidence.coloredPixels > 0);
+  assert.equal(portraitCloseEvidence.backdropAttribute, "true");
+  await page.setViewportSize({ width: 932, height: 430 });
+  await page.waitForFunction(() => document.querySelector("#trip-board-structure")?.dataset.automaticFullscreen === "right");
+  const landscapeControls = await page.evaluate(() => {
+    const root = document.querySelector(".trip-camera").getBoundingClientRect();
+    const leading = document.querySelector(".trip-camera-header .trip-panel-leading").getBoundingClientRect();
+    const close = document.querySelector(".trip-camera-header-actions .trip-close").getBoundingClientRect();
+    const album = document.querySelector(".trip-camera-control:first-child").getBoundingClientRect();
+    const facing = document.querySelector(".trip-camera-facing-toggle").getBoundingClientRect();
+    const shutterBox = document.querySelector(".trip-camera-shutter").getBoundingClientRect();
+    const systemCamera = document.querySelector(".trip-camera-system-capture").getBoundingClientRect();
+    return {
+      albumAlignedToClose: Math.abs(album.top + album.height / 2 - close.top - close.height / 2) < 1,
+      facingBelowAlbum: facing.top >= album.bottom && facing.top - album.bottom <= 4
+        && Math.abs(facing.left + facing.width / 2 - album.left - album.width / 2) < 1,
+      systemAlignedToSettings: Math.abs(systemCamera.top + systemCamera.height / 2 - leading.top - leading.height / 2) < 1,
+      rightCentersAligned: Math.max(album.left + album.width / 2, shutterBox.left + shutterBox.width / 2,
+        systemCamera.left + systemCamera.width / 2) - Math.min(album.left + album.width / 2,
+        shutterBox.left + shutterBox.width / 2, systemCamera.left + systemCamera.width / 2) < 1,
+      shutterVerticallyCentered: Math.abs(shutterBox.top + shutterBox.height / 2 - root.top - root.height / 2) < 1,
+      titleHidden: getComputedStyle(document.querySelector(".trip-camera-header .trip-panel-heading")).display === "none",
+      settingsIcon: document.querySelector(".trip-camera-settings-entry .trip-pencil-icon")?.dataset.icon,
+      systemBottomInset: Math.round(root.bottom - systemCamera.bottom),
+      albumRightInset: Math.round(root.right - album.right),
+      systemRightInset: Math.round(root.right - systemCamera.right),
+    };
+  });
+  assert(landscapeControls.albumAlignedToClose && landscapeControls.systemAlignedToSettings
+    && landscapeControls.facingBelowAlbum && landscapeControls.rightCentersAligned && landscapeControls.shutterVerticallyCentered
+    && landscapeControls.titleHidden);
+  assert.equal(landscapeControls.settingsIcon, "camera");
+  assert.equal(landscapeControls.albumRightInset, landscapeControls.systemRightInset);
+  assert.equal(landscapeControls.albumRightInset, landscapeControls.systemBottomInset);
+  assert.equal(await page.getByRole("button", { name: "相机设置", exact: true }).count(), 1);
+  assert.equal(await page.getByRole("button", { name: "关闭面板", exact: true }).count(), 1);
+  assert.equal(await page.getByRole("button", { name: "菜单", exact: true }).count(), 0);
+  assert.equal(await page.getByRole("button", { name: /全屏面板|退出全屏/ }).count(), 0);
+  const landscapeCloseEvidence = await closeControlEvidence();
+  assert(landscapeCloseEvidence);
+  assert.equal(landscapeCloseEvidence.rect.width, 44);
+  assert.equal(landscapeCloseEvidence.rect.height, 44);
+  assert.notEqual(landscapeCloseEvidence.display, "none");
+  assert.equal(landscapeCloseEvidence.visibility, "visible");
+  assert.equal(landscapeCloseEvidence.opacity, "1");
+  assert.notEqual(landscapeCloseEvidence.pointerEvents, "none");
+  assert.equal(landscapeCloseEvidence.actionsGridColumnStart, "auto");
+  assert.equal(landscapeCloseEvidence.actionsGridRowStart, "auto");
+  assert(landscapeCloseEvidence.hit && landscapeCloseEvidence.opaquePixels > 0
+    && landscapeCloseEvidence.lightPixels > 0 && landscapeCloseEvidence.coloredPixels > 0);
+  assert.equal(landscapeCloseEvidence.backdropAttribute, "true");
+  assert.equal(await page.locator(".trip-camera-settings-entry .trip-pencil-icon").getAttribute("data-theme-backdrop"), "true");
+  assert.equal(await page.locator(".trip-camera-control:first-child .trip-pencil-icon").getAttribute("data-theme-backdrop"), "true");
+  console.log(JSON.stringify({ cameraCloseEvidence: { portrait: portraitCloseEvidence, landscape: landscapeCloseEvidence } }));
   if (output) await page.screenshot({ path: `${output}/camera-preview-mobile.png` });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+
+  await page.getByRole("button", { name: "相机设置", exact: true }).click();
+  await page.getByLabel("摄影者昵称", { exact: true }).waitFor();
+  assert.equal(await page.locator("#trip-board-structure").getAttribute("data-automatic-fullscreen"), "right");
+  assert.equal(new URL(page.url()).searchParams.has("fullscreen"), false);
+  await page.getByRole("button", { name: "返回相机", exact: true }).click();
+  await page.waitForFunction(() => document.querySelector(".trip-camera-preview video")?.videoWidth > 0);
+  await page.getByRole("button", { name: "关闭面板", exact: true }).click();
+  await page.locator(".trip-camera").waitFor({ state: "detached" });
+  assert.equal(await page.evaluate(() => window.__testStreams.flatMap(stream => stream.getTracks()).some(track => track.readyState === "live")), false);
 
   await page.setViewportSize({ width: 1145, height: 964 });
   await page.goto(`${base}?panel=tasks&date=2026-09-29`);
   await page.locator("#trip-calendar-region").waitFor();
-  await page.waitForFunction(() => document.querySelector(".trip-pencil-map")?._pencilStats?.frames > 0);
   for (const appearance of ["light", "dark"]) {
     await page.emulateMedia({ colorScheme: appearance });
     await page.waitForFunction(value => document.documentElement.dataset.adventureAppearance === value, appearance);
@@ -368,11 +615,13 @@ try {
   }
   assert.deepEqual(errors, []);
   console.log(JSON.stringify({ syntheticPhoto: true, pointerVideo: true, keyboardVideo: true,
-    recordingTimerAndAnimation: true, stoppedOnAlbum: true, controlledMediaDetail: true,
+    recordingTimerAndStaticState: true, stoppedOnAlbum: true, controlledMediaDetail: true,
     confirmedSyntheticDelete: true, cameraSettingsAutosave: true, mediaAttributionAutosave: true,
     clippedThumbnailAndActions: true, persistentFavorite: true, sharedMediaTabs: true, alignedFormLabels: true,
     deviceInfoReadOnly: true,
     automaticPreviewAndVisibilityRestart: true, persistentSyntheticLocation: true,
+    cameraFacingSwitch: true, cameraFacingMismatchRecovery: true,
+    closeControlEvidence: { portrait: portraitCloseEvidence, landscape: landscapeCloseEvidence },
     fullBleedOverlay: before, calendarClipping: true, errors }));
 } finally {
   await browser.close();

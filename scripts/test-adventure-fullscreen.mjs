@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
 import { chromium } from "playwright";
+import { responsiveFullscreenPane } from "../src/adventure/adventureResponsivePane.js";
+
+const cameraPreview = { rightPanel: "camera", cameraView: "preview", calendarOpen: false, front: "right" };
+assert.equal(responsiveFullscreenPane(cameraPreview, "phone-portrait"), "right");
+assert.equal(responsiveFullscreenPane(cameraPreview, "phone-landscape"), "right");
+assert.equal(responsiveFullscreenPane({ ...cameraPreview, cameraView: "settings" }, "phone-landscape"), "right");
+assert.equal(responsiveFullscreenPane({ ...cameraPreview, cameraView: "album" }, "phone-landscape"), "right");
+assert.equal(responsiveFullscreenPane({ ...cameraPreview, cameraView: "device" }, "phone-landscape"), "right");
+assert.equal(responsiveFullscreenPane({ ...cameraPreview, calendarOpen: true, front: "tasks" }, "phone-landscape"), "calendar");
+assert.equal(responsiveFullscreenPane({ ...cameraPreview, calendarOpen: true, front: "right" }, "phone-landscape"), "right");
 
 const base = process.env.ADVENTURE_TEST_URL || "http://127.0.0.1:4174/new-zealand-slow-trip-2026/adventure";
 const output = process.env.ADVENTURE_TEST_OUTPUT;
@@ -237,8 +247,13 @@ try {
       const body = document.querySelector(".trip-day--camera > .trip-panel-body").getBoundingClientRect();
       return Math.round(body.left - panel.left);
     });
-    assert(splitInset >= 4, `Camera preview must leave the split-pane pencil edge visible: ${splitInset}`);
-    await page.getByRole("button", { name: "全屏面板", exact: true }).click();
+    assert.equal(splitInset, 0);
+    assert.equal(await page.getByRole("button", { name: "全屏面板", exact: true }).count(), 0);
+    assert.equal(await page.getByRole("button", { name: "菜单", exact: true }).count(), 0);
+    assert.equal(await page.getByRole("button", { name: "相机设置", exact: true }).count(), 1);
+    assert.equal(await page.getByRole("button", { name: "关闭面板", exact: true }).count(), 1);
+    await page.goto(`${base}?right=camera&fullscreen=right`);
+    await page.locator(".trip-camera").waitFor();
     await settle(page);
     const fullscreenInset = await page.evaluate(() => {
       const panel = document.querySelector("#trip-right-panel").getBoundingClientRect();
@@ -246,7 +261,7 @@ try {
       return Math.round(body.left - panel.left);
     });
     assert.equal(fullscreenInset, 0);
-    results.push({ width: viewport.width, cameraSplitEdge: true, cameraFullscreenEdgeRemoved: true });
+    results.push({ width: viewport.width, cameraFullBleed: true, cameraMinimalNavigation: true });
     await page.close();
   }
   assert.deepEqual(errors, []);

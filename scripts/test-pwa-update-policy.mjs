@@ -27,6 +27,10 @@ const urls = [...precacheSource.matchAll(/url:\"([^\"]+)\"/g)].map(match => matc
 assert(urls.includes("index.html"), "The navigation shell must remain available offline");
 assert(urls.includes("manifest.webmanifest"), "The install manifest must work offline");
 assert(urls.includes("icons/pencil-favicon-32.png"), "The primary favicon must work offline");
+for (const filename of ["pencil-app-192.png", "pencil-app-512.png", "pencil-app-maskable-512.png", "pencil-apple-touch-icon.png"]) {
+  assert(urls.includes(`icons/${filename}`), "Current installation icons must work offline");
+}
+assert(!urls.some(url => /^icons\/(?:icon-|apple-touch-icon)/.test(url)), "Legacy icons must not consume the precache budget");
 assert(urls.length <= 32, `Precache should stay bounded; found ${urls.length} entries`);
 
 console.log(JSON.stringify({ precacheEntries: urls.length, runtimeEntry: entry, manualUpdateUi: true }));

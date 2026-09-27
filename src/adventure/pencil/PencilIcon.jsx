@@ -5,6 +5,51 @@ import './iconAlignment.css';
 const geometryCache = new Map();
 const imageCache = new Map();
 
+function stableHash(value) {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index++) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seededRandom(seed) {
+  let state = seed || 1;
+  return () => {
+    state += 0x6d2b79f5;
+    let value = state;
+    value = Math.imul(value ^ value >>> 15, value | 1);
+    value ^= value + Math.imul(value ^ value >>> 7, value | 61);
+    return ((value ^ value >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function paintThemeBackdrop(context, color, textureKey) {
+  const seed = stableHash(textureKey);
+  const random = seededRandom(seed);
+  context.save();
+  context.globalAlpha = .9;
+  for (let index = 0; index < 8; index++) {
+    const y = 6 + index * 4 + (random() - .5) * 2.4;
+    const slope = (random() - .5) * 7;
+    const left = 2.5 + random() * 4.5;
+    const right = 33 + random() * 4;
+    const middle = left + (right - left) * (.38 + random() * .24);
+    pencilStroke(context, [[left, y - slope * .5], [middle, y + (random() - .5) * 2], [right, y + slope * .5]],
+      color, 1.25 + random() * .55, seed + index * 17, .3, 2, false,
+      { variation: .88, breaks: .1, grain: .72, gain: 2.45, step: .32, taperLength: .8 });
+  }
+  for (let index = 0; index < 3; index++) {
+    const x = 9 + index * 10 + (random() - .5) * 4;
+    const lean = (random() - .5) * 7;
+    pencilStroke(context, [[x - lean, 7 + random() * 3], [x + (random() - .5) * 2, 19], [x + lean, 30 + random() * 3]],
+      color, 1.05 + random() * .4, seed + 181 + index * 23, .28, 1, false,
+      { variation: .9, breaks: .16, grain: .75, gain: 2.2, step: .34, taperLength: .9 });
+  }
+  context.restore();
+}
+
 function cachedPathParts(data) {
   if (geometryCache.has(data)) return geometryCache.get(data);
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -23,7 +68,8 @@ function cachedPathParts(data) {
 }
 
 // Reuse the local icon's geometry, but deposit pigment with the map's pencil.
-export function PencilIcon({ children, className = '', kind = 'ink', active = false, sourceSize = 32 }) {
+export function PencilIcon({ children, className = '', kind = 'ink', active = false, sourceSize = 32,
+  themeBackdrop = false }) {
   const ref = useRef(null);
   const paths = [];
   Children.forEach(children, child => {
@@ -34,8 +80,12 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
     const canvas = ref.current;
     const paint = () => {
       const size = 40, dpr = Math.min(devicePixelRatio || 1, 3);
-      const ink = getComputedStyle(canvas).color;
-      const imageKey = JSON.stringify([geometryKey, kind, active, sourceSize, dpr, ink]);
+      const style = getComputedStyle(canvas);
+      const ink = style.color;
+      const backdropInk = themeBackdrop
+        ? style.getPropertyValue('--trip-theme-accent').trim() || '#4b96aa'
+        : null;
+      const imageKey = JSON.stringify([geometryKey, kind, active, sourceSize, dpr, ink, backdropInk]);
       const cached = imageCache.get(imageKey);
       canvas.width = canvas.height = Math.round(size * dpr);
       const ctx = canvas.getContext('2d');
@@ -44,6 +94,7 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
         return;
       }
       ctx.scale(dpr, dpr);
+      if (backdropInk) paintThemeBackdrop(ctx, backdropInk, `${kind}:${geometryKey}`);
       ctx.translate((size - sourceSize) / 2, (size - sourceSize) / 2);
       let seed = 801;
       for (const [data, pathClass] of JSON.parse(geometryKey)) {
@@ -58,7 +109,8 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
         }
         const scuff = ['sketch-scuff', 'sketch-hatch'].includes(pathClass);
         for (const points of cachedPathParts(data)) {
-          pencilStroke(ctx, points, ink, scuff ? .55 : 1.65, seed++, .3, scuff ? 1 : 3, false,
+          const strokeSeed = seed++;
+          pencilStroke(ctx, points, ink, scuff ? .55 : 1.65, strokeSeed, .3, scuff ? 1 : 3, false,
             { variation: .82, breaks: .18, grain: .68, gain: scuff ? 1.5 : 3, step: .35, taperLength: .65 });
         }
       }
@@ -76,7 +128,8 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
       attributeFilter: ['data-adventure-appearance', 'data-adventure-theme'] });
     paint();
     return () => appearance.disconnect();
-  }, [geometryKey, kind, active, sourceSize]);
+  }, [geometryKey, kind, active, sourceSize, themeBackdrop]);
   return <canvas ref={ref} className={`trip-pencil-icon ${className}`.trim()}
-    width="80" height="80" data-renderer="pressure-pencil" data-icon={kind} data-active={active} aria-hidden="true" />;
+    width="80" height="80" data-renderer="pressure-pencil" data-icon={kind} data-active={active}
+    data-theme-backdrop={themeBackdrop || undefined} aria-hidden="true" />;
 }

@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BoatIcon, BusIcon, CalendarIcon, CarIcon, CityIcon, DirectionsIcon, LocationMapIcon, RouteDistanceIcon,
   ExternalLinkIcon, FlightIcon, HelicopterIcon, MountainIcon, MovieIcon, PreviousIcon, NextIcon, StarsIcon,
-  BagIcon, CameraIcon, HotelIcon, RoutePathIcon, MapSourcesIcon, OrderIcon, SettingsIcon } from "./SketchIcons";
+  BagIcon, CameraIcon, CloseIcon, HotelIcon, RoutePathIcon, MapSourcesIcon, OrderIcon } from "./SketchIcons";
 import { adventurePath } from "../siteNavigation";
 import { useLanguage } from "../LanguageContext";
 import { usePrivateVault } from "../PrivateVaultContext";
@@ -276,8 +276,11 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
     onTabChange={tab => navigate("media-tab", tab)} />;
   return <aside {...props} ref={panelRef} id="trip-right-panel" className="trip-panel" data-short-height={shortHeight} aria-label={title}>
     <PencilSurface variant={fullscreen ? "full" : "sheet"} className={`trip-day${cameraPreview ? " trip-day--camera" : ""}`}>
-      <header ref={closeButtonRef} className={`trip-panel-header${nested ? " trip-panel-header--nested" : ""}${route ? " trip-panel-header--route" : ""}${hasStayActions ? " trip-panel-header--stay-actions" : ""}${view.rightPanel === "bag-note" ? " trip-panel-header--bag-note" : ""}${view.rightPanel === "camera" || (view.rightPanel === "bag" && view.bagTab === "car") ? " trip-panel-header--multi-actions" : ""}`}>
-        {nested ? <button type="button" className="trip-panel-leading trip-event-back"
+      <header ref={closeButtonRef} className={`trip-panel-header${cameraPreview ? " trip-camera-header" : ""}${nested ? " trip-panel-header--nested" : ""}${route ? " trip-panel-header--route" : ""}${hasStayActions ? " trip-panel-header--stay-actions" : ""}${view.rightPanel === "bag-note" ? " trip-panel-header--bag-note" : ""}${view.rightPanel === "camera" || (view.rightPanel === "bag" && view.bagTab === "car") ? " trip-panel-header--multi-actions" : ""}`}>
+        {cameraPreview ? <button type="button" className="trip-panel-leading trip-camera-settings-entry"
+          data-icon-feedback="keyboard-only" aria-label={adventureText("相机设置", "Camera settings", language)}
+          onClick={() => navigate("camera-view", "settings")}><CameraIcon themeBackdrop /></button>
+          : nested ? <button type="button" className="trip-panel-leading trip-event-back"
           aria-label={clusterChild ? adventureText("返回地点列表", "Back to locations", language) : waypoint ? adventureText("返回路线", "Back to route", language) : mediaDetail || cameraNested ? cameraBackLabel : view.rightPanel === "bag-note" ? adventureText("返回备忘", "Back to notes", language)
             : view.rightPanel === "bag-stay" ? stayBackLabel : view.rightPanel === "map-sources" ? adventureText("返回背包", "Back to backpack", language)
             : event ? adventureText("返回上一层行程", "Back to itinerary", language) : adventureText("返回地点日历", "Back to place calendar", language)}
@@ -350,17 +353,16 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
           {isRoadRoute && <a className="trip-route-header-action" href={routeDirectionsUrl(route)} target="_blank" rel="noreferrer"
             aria-label={`在 Google 地图打开${route.label}驾车导航（新窗口）`} title="在 Google 地图打开驾车导航（新窗口）"><DirectionsIcon /></a>}
           {paneActions}
-        </div> : view.rightPanel === "camera" ? <div className="trip-panel-header-actions">
+        </div> : view.rightPanel === "camera" ? <div className={`trip-panel-header-actions${cameraPreview ? " trip-camera-header-actions" : ""}`}>
           {view.cameraView === "album" && <AdventureMediaArchiveActions />}
-          {cameraPreview && <button type="button" className="trip-route-header-action"
-            aria-label={adventureText("相机设置", "Camera settings", language)} title={adventureText("相机设置", "Camera settings", language)}
-            onClick={() => navigate("camera-view", "settings")}><SettingsIcon /></button>}
           {view.cameraView === "settings" && <button type="button" className="trip-route-header-action"
             aria-label={adventureText("设备信息", "Device information", language)}
             onClick={() => navigate("camera-view", "device")}>
             <PencilIcon kind="device"><path d="M8 5.5h16v21H8zM12 9h8M13 23h6" /></PencilIcon>
           </button>}
-          {paneActions}
+          {cameraPreview ? <button type="button" className="trip-close trip-adventure-calendar-close"
+            data-icon-feedback="keyboard-only" aria-label={adventureText("关闭面板", "Close panel", language)}
+            onClick={() => navigate()}><CloseIcon themeBackdrop /></button> : paneActions}
         </div> : view.rightPanel === "bag" ? <div className="trip-panel-header-actions">
           <button type="button" className="trip-route-header-action" aria-label={adventureText("地图数据来源", "Map data sources", language)}
             title={adventureText("地图数据来源", "Map data sources", language)} onClick={() => navigate("bag-sources")}><MapSourcesIcon /></button>
@@ -375,7 +377,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
             aria-label="在新标签页用 Google 地图查看酒店位置" title="在新标签页用 Google 地图查看酒店位置"><LocationMapIcon /></a>}
           {paneActions}
         </div> : <div className="trip-panel-header-actions">{paneActions}</div>}
-        <PanelDivider />
+        {!cameraPreview && <PanelDivider />}
       </header>
       <div className={`trip-panel-body${calendarDay ? " trip-panel-body--day" : ""}${event ? " trip-panel-body--event" : ""}${["place", "bag", "bag-stay", "bag-note", "camera"].includes(view.rightPanel) ? " trip-panel-body--place" : ""}`}>
         {view.rightPanel === "cluster" && <AdventureClusterDetails keys={view.cluster ?? []} language={language}
