@@ -279,7 +279,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
       <header ref={closeButtonRef} className={`trip-panel-header${cameraPreview ? " trip-camera-header" : ""}${nested ? " trip-panel-header--nested" : ""}${route ? " trip-panel-header--route" : ""}${hasStayActions ? " trip-panel-header--stay-actions" : ""}${view.rightPanel === "bag-note" ? " trip-panel-header--bag-note" : ""}${view.rightPanel === "camera" || (view.rightPanel === "bag" && view.bagTab === "car") ? " trip-panel-header--multi-actions" : ""}`}>
         {cameraPreview ? <button type="button" className="trip-panel-leading trip-camera-settings-entry"
           data-icon-feedback="keyboard-only" aria-label={adventureText("相机设置", "Camera settings", language)}
-          onClick={() => navigate("camera-view", "settings")}><CameraIcon themeBackdrop strokeScale={1.4} /></button>
+          onClick={() => navigate("camera-view", "settings")}><CameraIcon themeBackdrop /></button>
           : nested ? <button type="button" className="trip-panel-leading trip-event-back"
           aria-label={clusterChild ? adventureText("返回地点列表", "Back to locations", language) : waypoint ? adventureText("返回路线", "Back to route", language) : mediaDetail || cameraNested ? cameraBackLabel : view.rightPanel === "bag-note" ? adventureText("返回备忘", "Back to notes", language)
             : view.rightPanel === "bag-stay" ? stayBackLabel : view.rightPanel === "map-sources" ? adventureText("返回背包", "Back to backpack", language)
@@ -362,7 +362,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
           </button>}
           {cameraPreview ? <button type="button" className="trip-close trip-adventure-calendar-close"
             data-icon-feedback="keyboard-only" aria-label={adventureText("关闭面板", "Close panel", language)}
-            onClick={() => navigate()}><CloseIcon themeBackdrop strokeScale={1.4} /></button> : paneActions}
+            onClick={() => navigate()}><CloseIcon themeBackdrop /></button> : paneActions}
         </div> : view.rightPanel === "bag" ? <div className="trip-panel-header-actions">
           <button type="button" className="trip-route-header-action" aria-label={adventureText("地图数据来源", "Map data sources", language)}
             title={adventureText("地图数据来源", "Map data sources", language)} onClick={() => navigate("bag-sources")}><MapSourcesIcon /></button>
