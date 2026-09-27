@@ -4,6 +4,7 @@
 }
 
 #trip-board-structure[data-device-cutout="top-right"]:not([data-side-open="true"]) .trip-game-tools {
+  top:calc(var(--trip-edge-top) + 4px);
   right:max(var(--trip-edge-right),var(--trip-cutout-control-inset));
 }
 #trip-board-structure[data-device-cutout="top-right"] .trip-day:not(.trip-day--camera) > .trip-panel-header {
