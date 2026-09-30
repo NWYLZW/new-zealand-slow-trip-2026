@@ -3,6 +3,12 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 const storageKey = "nz-trip-camera-hardware";
 const stillFlashModes = ["off", "auto", "flash"];
 const automaticFocusModes = ["continuous", "single-shot"];
+const imageCaptureConstraintNames = new Set([
+  "whiteBalanceMode", "exposureMode", "focusMode", "pointsOfInterest", "exposureCompensation",
+  "exposureTime", "colorTemperature", "iso", "brightness", "contrast", "saturation", "sharpness",
+  "focusDistance", "pan", "tilt", "zoom", "torch", "backgroundBlur", "backgroundSegmentationMask",
+  "eyeGazeCorrection", "faceFraming",
+]);
 const listeners = new Set();
 const defaultPreferences = Object.freeze({ zoom: null, focusMode: "auto", focusDistance: null });
 const trackPreferenceKeys = new WeakMap();
@@ -175,11 +181,13 @@ export async function applyVerifiedCameraConstraints(track, constraints, expecte
   try { currentConstraints = track.getConstraints?.() ?? {}; } catch { /* Apply the requested fields alone. */ }
   const currentAdvanced = Array.isArray(currentConstraints.advanced) ? currentConstraints.advanced : [];
   const replacedKeys = new Set(Object.keys(constraints));
-  const preservedAdvanced = currentAdvanced.map(entry => Object.fromEntries(
-    Object.entries(entry).filter(([name]) => !replacedKeys.has(name)),
-  )).filter(entry => Object.keys(entry).length);
+  // Chromium rejects capture controls mixed with stream constraints such as width/facingMode.
+  // Retain only other ImageCapture controls; the negotiated video stream stays untouched.
+  const preserveHardware = entry => Object.fromEntries(Object.entries(entry)
+    .filter(([name]) => imageCaptureConstraintNames.has(name) && !replacedKeys.has(name)));
+  const preservedAdvanced = currentAdvanced.map(preserveHardware).filter(entry => Object.keys(entry).length);
   await track.applyConstraints({
-    ...currentConstraints,
+    ...preserveHardware(currentConstraints),
     ...constraints,
     advanced: [...preservedAdvanced, constraints],
   });
@@ -230,14 +238,21 @@ export async function inspectCameraHardwareTrack(track, ImageCaptureCtor = globa
   };
 }
 
+export function cameraHardwareErrorMessage(error, en = false) {
+  if (typeof error === "string") return error;
+  const messages = {
+    camera: ["无法读取相机硬件能力。", "Could not read the camera capabilities."],
+    zoom: ["无法应用相机变焦。", "Could not apply camera zoom."],
+    torch: ["无法切换相机常亮灯。", "Could not switch the camera torch."],
+    focus: ["无法应用相机对焦设置。", "Could not apply the camera focus setting."],
+  };
+  return messages[error?.kind]?.[en ? 1 : 0]
+    ?? (en ? "Could not apply the camera setting." : "无法应用相机设置。");
+}
+
 function hardwareError(kind, cause) {
-  const message = {
-    camera: "Camera capabilities could not be read / 无法读取相机硬件能力。",
-    zoom: "Camera zoom could not be applied / 无法应用相机变焦。",
-    torch: "Camera torch could not be applied / 无法切换相机常亮灯。",
-    focus: "Camera focus could not be applied / 无法应用相机对焦设置。",
-  }[kind] ?? "Camera setting could not be applied / 无法应用相机设置。";
-  const error = new Error(message);
+  const error = new Error(cameraHardwareErrorMessage({ kind }, true));
+  error.kind = kind;
   error.name = cause?.name || "CameraHardwareError";
   error.cause = cause;
   return error;
@@ -365,10 +380,12 @@ export function useCameraHardware({ track, active, recording, disabled, onError 
             expected.focusDistance = focusDistance;
             ranges.focusDistance = capabilities.focusDistance;
           }
-          try {
-            settings = await applyVerifiedCameraConstraints(currentTrack, constraints, expected, ranges);
-            if (!isCurrent()) return;
-          } catch (error) { if (isCurrent()) reportError("focus", error); }
+          if (Object.entries(expected).some(([name, value]) => !cameraSettingMatches(settings[name], value, ranges[name]))) {
+            try {
+              settings = await applyVerifiedCameraConstraints(currentTrack, constraints, expected, ranges);
+              if (!isCurrent()) return;
+            } catch (error) { if (isCurrent()) reportError("focus", error); }
+          }
         }
       }
       if (!isCurrent()) return;

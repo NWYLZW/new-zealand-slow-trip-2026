@@ -9,7 +9,7 @@ import { CameraPencilLabel } from "./CameraPencilLabel";
 import { CameraLevel, useCameraLevel } from "./CameraLevel.jsx";
 import { captureCameraPhoto, requestCameraPreview } from "./cameraCapture";
 import { CameraShutterIcon } from "./CameraShutterIcon";
-import { useCameraHardware } from "./cameraHardware";
+import { cameraHardwareErrorMessage, useCameraHardware } from "./cameraHardware";
 import { CameraHardwareControls } from "./CameraHardwareControls";
 import { CameraIcon, PhotoAlbumIcon } from "./SketchIcons";
 import { PencilSurface } from "./pencil/PencilSurface";
@@ -111,8 +111,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       messageTimerRef.current = timer;
     }
   }, []);
-  const onHardwareError = useCallback(error => showMessage(typeof error === "string" ? error
-    : en ? "Could not apply the camera setting." : "无法应用相机设置。"), [en, showMessage]);
+  const onHardwareError = useCallback(error => showMessage(cameraHardwareErrorMessage(error, en)), [en, showMessage]);
   const hardware = useCameraHardware({ track: videoTrack, active: active && previewState === "ready",
     recording, disabled: photoBusy || facingSwitchBusy || systemCameraBusy || recordPending, onError: onHardwareError });
 

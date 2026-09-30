@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   applyVerifiedCameraConstraints,
+  cameraHardwareErrorMessage,
   cameraSettingMatches,
   clampCameraValue,
   createCameraHardwareTaskQueue,
@@ -70,7 +71,10 @@ const settings = { zoom: 1, torch: false };
 const applications = [];
 const track = {
   readyState: "live",
-  getConstraints: () => ({ width: { ideal: 1920 }, advanced: [{ zoom: 2, torch: true }] }),
+  getConstraints: () => ({
+    width: { ideal: 1920 }, height: 1080, facingMode: "environment", focusMode: "continuous",
+    advanced: [{ zoom: 2, torch: true, frameRate: 30 }, { height: 1080 }],
+  }),
   getSettings: () => ({ ...settings }),
   async applyConstraints(nextConstraints) {
     applications.push(nextConstraints);
@@ -108,9 +112,36 @@ release();
 await Promise.all([first, second, third.catch(() => {}), fourth]);
 assert.deepEqual(order, ["first-start", "first-end", "second", "third", "fourth"]);
 assert.deepEqual(applications, [{
-  width: { ideal: 1920 },
+  focusMode: "continuous",
   zoom: 2.5,
   advanced: [{ torch: true }, { zoom: 2.5 }],
 }]);
+
+// Match the phone's initial stream constraints and Chromium's mixed-constraint rejection.
+for (const requested of [{ focusMode: "continuous" }, { zoom: 2 }, { torch: false }]) {
+  const deviceSettings = { width: 1920, height: 1080, facingMode: "environment", ...requested };
+  await applyVerifiedCameraConstraints({
+    readyState: "live",
+    getConstraints: () => ({ width: 1920, height: 1080, facingMode: "environment" }),
+    getSettings: () => ({ ...deviceSettings }),
+    async applyConstraints(next) {
+      for (const entry of [next, ...next.advanced]) {
+        if (["width", "height", "facingMode"].some(name => name in entry)) {
+          throw new DOMException("Mixing ImageCapture and non-ImageCapture constraints is not currently supported", "OverconstrainedError");
+        }
+      }
+      assert.deepEqual(next, { ...requested, advanced: [requested] });
+      Object.assign(deviceSettings, next.advanced.at(-1));
+    },
+  }, requested, requested);
+  assert.equal(deviceSettings.width, 1920);
+  assert.equal(deviceSettings.height, 1080);
+}
+
+assert.equal(cameraHardwareErrorMessage({ kind: "focus" }), "无法应用相机对焦设置。");
+assert.equal(cameraHardwareErrorMessage({ kind: "zoom" }, true), "Could not apply camera zoom.");
+assert.equal(cameraHardwareErrorMessage({ kind: "torch" }), "无法切换相机常亮灯。");
+assert.equal(cameraHardwareErrorMessage(new Error("private device details")), "无法应用相机设置。");
+assert.equal(cameraHardwareErrorMessage("Explicit error"), "Explicit error");
 
 console.log("camera hardware helpers passed");
