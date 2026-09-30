@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import * as d3 from "d3";
 import geo from "./data/coastline.json";
 import { adventureStops } from "./adventureData";
@@ -6,7 +6,9 @@ import { drawWaterLabels } from "./pencil/drawWaterLabels";
 import { drawBathymetry } from "./drawBathymetry";
 import { ZoomInIcon, ZoomOutIcon, ResetIcon } from "./SketchIcons";
 import { GameIconButton } from "./GameIconButton";
-import { adventureRoutes, projectedRoutePath, routeGeometryLabel, focusLocationPositions } from "./adventureRoutes";
+import { projectedRoutePath, routeGeometryLabel, focusLocationPositions } from "./adventureRoutes";
+import { useAdventureRoutes } from "./AdventureResolvedRoutes.jsx";
+import { routeFocusPositions } from "./adventureHotelRoutes";
 import { createPencilMap } from "./pencil/drawPencilMap";
 import { createPencilRoutes, routeBadge } from "./pencil/drawPencilRoutes";
 import { fillStopLabel, mapLabel } from "./pencil/mapLabels";
@@ -198,13 +200,14 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
   focusNode, mapView, onMapViewChange,
   calendarOpen, sideOpen, language = "zh", onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
   onInternationalNodeSelect, mapMode = "new-zealand", onMapModeChange, onClear, obscured = false }) {
+  const routes = useAdventureRoutes();
   const container = useRef(null);
   const controls = useRef(null);
   const scaleControl = useRef(null);
   const state = useRef({ selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView,
     calendarOpen, sideOpen, language, onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
     onInternationalNodeSelect, mapMode, onMapModeChange, onMapViewChange });
-  state.current = { selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView,
+  state.current = { routes, selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView,
     calendarOpen, sideOpen, language, onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
     onInternationalNodeSelect, mapMode, onMapModeChange, onMapViewChange };
   useEffect(() => {
@@ -231,6 +234,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
   useEffect(() => {
     if (focusNode?.key) controls.current?.focusNode(focusNode.key);
   }, [focusNode?.key, focusNode?.token]);
+  useLayoutEffect(() => { controls.current?.updateRoutes(); }, [routes, selectedRoute, focusLocations, focusRoute]);
   useEffect(() => {
     const area = container.current, svg = d3.select(area.querySelector("svg.trip-map"));
     const sea = d3.select(area.querySelector("svg.trip-depth-map"));
@@ -242,6 +246,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
     const buttons = area.querySelector(".trip-point-buttons");
     const surface = d3.select(area);
     let world, depthWorld, pencil, routeInk, international, waterLabels, markerPositions = [], layout = null, shortRouteSpot = null;
+    let renderedRoutes = null, hotelMarkers = [], privateView = false, publicView = null;
     let view = d3.zoomIdentity, focusing = false, userMoved = false, viewFrame = 0, pendingView = null;
     let activeMapMode = state.current.mapMode, newZealandView = null;
     let restoringMapView = null, lastPublishedMapView = null;
@@ -309,6 +314,8 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
       Math.abs(left.center[0] - right.center[0]) < .000001 &&
       Math.abs(left.center[1] - right.center[1]) < .000001);
     const publishMapView = transform => {
+      // A hotel-centered view must not copy private coordinates into URL/history.
+      if (privateView || state.current.routes.some(route => route.hotelEndpoints)) return;
       const next = settledMapView(transform);
       if (!next) return;
       if (equivalentMapView(next, restoringMapView)) {
@@ -504,10 +511,15 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         button.style.top = y + "px";
         button.dataset.labelSide = x < 110 ? "right" : x > viewportWidth - 110 ? "left" : "center";
         });
+      hotelMarkers.forEach(({ button, position }) => {
+        button.hidden = internationalMode;
+        const [x, y] = transform.apply(position);
+        button.style.left = `${x}px`; button.style.top = `${y}px`;
+      });
       syncClusters();
       area.dataset.zoom = transform.k.toFixed(3);
       if (!settled) return;
-      const visibleMarkers = markerPositions.filter(({ button }) => !button.hidden);
+      const visibleMarkers = [...markerPositions, ...hotelMarkers].filter(({ button }) => !button.hidden);
       visibleMarkers.filter(({ waypoint }) => waypoint && waypoint.id !== state.current.selectedWaypoint)
         .forEach(({ button }) => {
           const label = button.querySelector(".trip-stop-label");
@@ -718,6 +730,28 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
       });
     };
     controls.current = {
+      updateRoutes: () => {
+        if (!area._project || !world || !layout) return;
+        const wasPrivate = privateView;
+        const nowPrivate = state.current.routes.some(route => route.hotelEndpoints);
+        if (nowPrivate && !wasPrivate) publicView = settledMapView(view);
+        // Refresh only route ink and its hit geometry. Terrain and the user's view stay intact.
+        if (renderedRoutes !== state.current.routes) {
+          surface.interrupt();
+          drawRoutes(area._project, layout.width, layout.height);
+        }
+        if (wasPrivate && !nowPrivate) {
+          const restored = mapViewTransform(publicView)?.transform
+            ?? initialView(layout.width, layout.height, focusRect());
+          newZealandView = activeMapMode === "new-zealand" ? restored
+            : initialView(layout.width, layout.height, focusRect());
+          surface.call(zoom.transform, restored);
+          publicView = null;
+        }
+        privateView = nowPrivate;
+        syncHotelMarkers(area._project);
+        settleView(view);
+      },
       cancelFocus: () => surface.interrupt(),
       selectRoutes: (selection) => {
         if (activeMapMode === "new-zealand") routeInk?.select(selection);
@@ -780,17 +814,105 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
           rect.center[1] - marker.position[1] * PLACE_ZOOM).scale(PLACE_ZOOM));
       },
       focusLocations: (focus) => {
-        const positions = focusLocationPositions(focus);
+        const positions = focusLocationPositions(focus, state.current.routes);
         if (!area._project || !positions.length) return;
         animateFocus(locationsView(positions, area._project, focusRect()));
       },
       focusRoute: (id) => {
-        const route = adventureRoutes.find(item => item.id === id);
+        const route = state.current.routes.find(item => item.id === id);
         if (!route || !area._project) return;
-        const positions = route.roadGeometry?.coordinates ?? route.points.map(([lat, lng]) => [lng, lat]);
+        const positions = routeFocusPositions(route);
         animateFocus(locationsView(positions, area._project, focusRect()));
       },
     };
+    function syncHotelMarkers(project) {
+      hotelMarkers.forEach(({ button }) => button.remove());
+      hotelMarkers = [];
+      const ids = state.current.selectedRoute ? [state.current.selectedRoute]
+        : state.current.focusLocations?.routeIds ?? (state.current.focusRoute ? [state.current.focusRoute] : []);
+      const endpoints = new Map();
+      state.current.routes.filter(route => ids.includes(route.id)).forEach(route => {
+        Object.entries(route.hotelEndpoints ?? {}).forEach(([side, endpoint]) => {
+          if (!endpoint) return;
+          const current = endpoints.get(endpoint.bookingId);
+          if (current) current.sides.add(side);
+          else endpoints.set(endpoint.bookingId, { ...endpoint, sides: new Set([side]) });
+        });
+      });
+      for (const endpoint of endpoints.values()) {
+        const en = state.current.language === "en";
+        const role = endpoint.sides.size > 1 ? (en ? "Start / finish hotel" : "起终点 · 酒店")
+          : endpoint.sides.has("origin") ? (en ? "Start hotel" : "起点 · 酒店") : (en ? "Destination hotel" : "终点 · 酒店");
+        const button = document.createElement("button");
+        button.type = "button"; button.className = "trip-stop trip-route-hotel";
+        button.dataset.routeHotel = endpoint.bookingId;
+        button.setAttribute("aria-label", `${role}: ${endpoint.name}`);
+        const position = project([endpoint.position[1], endpoint.position[0]]);
+        const label = document.createElement("span"); label.className = "trip-stop-label";
+        fillStopLabel(label, role, 9801 + hotelMarkers.length);
+        label.setAttribute("aria-hidden", "true");
+        const leader = document.createElement("span"); leader.className = "trip-stop-leader";
+        leader.setAttribute("aria-hidden", "true");
+        button.append(leader, createStopMarker(9801 + hotelMarkers.length, { type: "town", iconType: "hotel" }), label);
+        button.onclick = event => { event.stopPropagation(); animateFocus(placeView(position, focusRect())); };
+        buttons.append(button);
+        hotelMarkers.push({ button, position, tag: endpoint.bookingId });
+      }
+    }
+    function drawRoutes(project, width, height) {
+      world.select(".trip-routes").remove();
+      shortRouteSpot = null;
+      const routesLayer = world.append("g").attr("class", "trip-routes");
+      const routeEntries = [];
+      [...state.current.routes].filter(route => !international.handledRouteIds.has(route.id))
+        .sort((a, b) => Number(b.transport === "flight") - Number(a.transport === "flight")).forEach((route) => {
+        const path = projectedRoutePath(route, project);
+        const group = routesLayer.append("g").attr("class", "trip-route-group")
+          .on("pointerenter", () => routeInk?.hover(route.id))
+          .on("pointerleave", () => routeInk?.hover(null))
+          .on("focusin", () => routeInk?.hover(route.id))
+          .on("focusout", () => routeInk?.hover(null));
+        group.append("title").text(`${route.date} · ${route.label}（${routeGeometryLabel(route)}）`);
+        const hitPath = group.append("path").attr("d", path).attr("class", "trip-route-hit")
+          .attr("data-route", route.id).attr("role", "button").attr("tabindex", 0)
+          .attr("data-geometry", route.roadGeometry ? "road-network" : "schematic")
+          .attr("data-transport", route.transport)
+          .attr("aria-label", `查看路线：${route.label}`)
+          .attr("aria-pressed", String(route.id === state.current.selectedRoute))
+          .on("click", (event) => {
+            event.stopPropagation();
+            if (!event.defaultPrevented) state.current.onRouteSelect(route.id);
+          })
+          .on("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault(); event.stopPropagation();
+            state.current.onRouteSelect(route.id);
+          });
+        routeEntries.push({ route, path, points: route.roadGeometry?.coordinates.map(project), hitPath: hitPath.node() });
+        if (route.id === "zqn-wanaka") {
+          const first = project([route.points[0][1], route.points[0][0]]);
+          const last = project([route.points.at(-1)[1], route.points.at(-1)[0]]);
+          const dx = last[0] - first[0], dy = last[1] - first[1], length = Math.hypot(dx, dy) || 1;
+          const point = hitPath.node(), midpoint = point.getPointAtLength(point.getTotalLength() / 2);
+          const middle = [midpoint.x, midpoint.y], normal = [-dy / length, dx / length];
+          const center = normal.map(value => value * 35);
+          const spot = group.append("g").attr("class", "trip-short-route-spot").attr("aria-hidden", "true");
+          shortRouteSpot = { group: spot, middle };
+          spot.append("image").attr("class", "trip-short-route-art")
+            .attr("href", routeBadge(route.date, normal)).attr("x", -56).attr("y", -56).attr("width", 112).attr("height", 112);
+          spot.append("circle").attr("class", "trip-short-route-tap")
+            .attr("cx", center[0]).attr("cy", center[1]).attr("r", 22)
+            .on("click", event => {
+              event.stopPropagation();
+              if (!event.defaultPrevented) state.current.onRouteSelect(route.id);
+            });
+        }
+      });
+      routeInk?.dispose();
+      routeInk = createPencilRoutes(routeCanvas, routeEntries, width, height);
+      routeInk.select(state.current);
+      renderedRoutes = state.current.routes;
+    }
     function draw() {
       const width = area.clientWidth, height = area.clientHeight;
       if (!width || !height) return;
@@ -842,65 +964,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
       international.update({ mapMode: activeMapMode, language: state.current.language,
         selected: state.current.selected, selectedRoute: state.current.selectedRoute,
         theme: document.documentElement.dataset.adventureAppearance ?? "", width, height, visibleRect: focusRect() });
-      const routes = world.append("g").attr("class", "trip-routes");
-      const routeEntries = [];
-      // Links remain in the same coordinate system as the coastline and dots.
-      [...adventureRoutes].filter(route => !international.handledRouteIds.has(route.id))
-        .sort((a, b) => Number(b.transport === "flight") - Number(a.transport === "flight")).forEach((route) => {
-        const path = projectedRoutePath(route, project);
-        const group = routes.append("g").attr("class", "trip-route-group")
-          .on("pointerenter", () => routeInk?.hover(route.id))
-          .on("pointerleave", () => routeInk?.hover(null))
-          .on("focusin", () => routeInk?.hover(route.id))
-          .on("focusout", () => routeInk?.hover(null));
-        group.append("title").text(`${route.date} · ${route.label}（${routeGeometryLabel(route)}）`);
-        // The transparent stroke follows the same curve; station buttons sit
-        // above this SVG so their hit targets keep priority on touch screens.
-        // Keep pointer starts bubbling to D3 so this is still draggable.
-        const hitPath = group.append("path").attr("d", path).attr("class", "trip-route-hit")
-          .attr("data-route", route.id).attr("role", "button").attr("tabindex", 0)
-          .attr("data-geometry", route.roadGeometry ? "road-network" : "schematic")
-          .attr("data-transport", route.transport)
-          .attr("aria-label", `查看路线：${route.label}`)
-          .attr("aria-pressed", String(route.id === state.current.selectedRoute))
-          .on("click", (event) => {
-            event.stopPropagation();
-            if (!event.defaultPrevented) state.current.onRouteSelect(route.id);
-          })
-          .on("keydown", (event) => {
-            if (event.key !== "Enter" && event.key !== " ") return;
-            event.preventDefault(); event.stopPropagation();
-            state.current.onRouteSelect(route.id);
-          });
-        routeEntries.push({ route, path, points: route.roadGeometry?.coordinates.map(project), hitPath: hitPath.node() });
-        if (route.id === "zqn-wanaka") {
-          // At an island-wide phone scale the two stop buttons nearly touch.
-          // Give this short route its own visible 44px tap target below them.
-          const first = project([route.points[0][1], route.points[0][0]]);
-          const last = project([route.points.at(-1)[1], route.points.at(-1)[0]]);
-          const dx = last[0] - first[0], dy = last[1] - first[1];
-          const length = Math.hypot(dx, dy) || 1;
-          const point = group.select(".trip-route-hit").node();
-          const midpoint = point.getPointAtLength(point.getTotalLength() / 2);
-          const middle = [midpoint.x, midpoint.y];
-          const normal = [-dy / length, dx / length];
-          const center = normal.map(value => value * 35);
-          const spot = group.append("g").attr("class", "trip-short-route-spot").attr("aria-hidden", "true");
-          shortRouteSpot = { group: spot, middle };
-          spot.append("image").attr("class", "trip-short-route-art")
-            .attr("href", routeBadge(route.date, normal)).attr("x", -56).attr("y", -56)
-            .attr("width", 112).attr("height", 112);
-          spot.append("circle").attr("class", "trip-short-route-tap")
-            .attr("cx", center[0]).attr("cy", center[1]).attr("r", 22)
-            .on("click", (event) => {
-              event.stopPropagation();
-              if (!event.defaultPrevented) state.current.onRouteSelect(route.id);
-            });
-        }
-      });
-      routeInk?.dispose();
-      routeInk = createPencilRoutes(routeCanvas, routeEntries, width, height);
-      routeInk.select(state.current);
+      drawRoutes(project, width, height);
       waterLabels = drawWaterLabels(world, project);
       buttons.replaceChildren();
       markerPositions = [];
@@ -974,6 +1038,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         }, { capture: true });
         markerPositions.push(marker);
       });
+      syncHotelMarkers(project);
       syncLayerVisibility();
       zoom.extent([[0, 0], [width, height]]);
       area._project = project;
@@ -996,12 +1061,11 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         if (marker) nextView = placeView(marker.position, rect);
       }
       if (!restored && activeMapMode !== "international" && !layout && state.current.focusLocations) {
-        nextView = locationsView(focusLocationPositions(state.current.focusLocations), project, rect);
+        nextView = locationsView(focusLocationPositions(state.current.focusLocations, state.current.routes), project, rect);
       }
       if (!restored && activeMapMode !== "international" && !layout && state.current.focusRoute) {
-        const route = adventureRoutes.find(item => item.id === state.current.focusRoute);
-        if (route) nextView = locationsView(route.roadGeometry?.coordinates ??
-          route.points.map(([lat, lng]) => [lng, lat]), project, rect);
+        const route = state.current.routes.find(item => item.id === state.current.focusRoute);
+        if (route) nextView = locationsView(routeFocusPositions(route), project, rect);
       }
       if (!restored && layout && activeMapMode !== "international") {
         const center = view.invert(layout.rect.center);
@@ -1013,14 +1077,17 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
           const marker = markerPositions.find((item) => item.tag === state.current.selected);
           if (marker) nextView = placeView(marker.position, rect);
         } else if (activeMapMode !== "international" && !userMoved && !resumeFocus && state.current.focusLocations) {
-          nextView = locationsView(focusLocationPositions(state.current.focusLocations), project, rect);
+          nextView = locationsView(focusLocationPositions(state.current.focusLocations, state.current.routes), project, rect);
         } else if (activeMapMode !== "international" && !userMoved && !resumeFocus && state.current.focusRoute) {
-          const route = adventureRoutes.find(item => item.id === state.current.focusRoute);
-          if (route) nextView = locationsView(route.roadGeometry?.coordinates ??
-            route.points.map(([lat, lng]) => [lng, lat]), project, rect);
+          const route = state.current.routes.find(item => item.id === state.current.focusRoute);
+          if (route) nextView = locationsView(routeFocusPositions(route), project, rect);
         }
       }
       layout = { width, height, scale, rect };
+      if (!privateView && state.current.routes.some(route => route.hotelEndpoints)) {
+        publicView = normalizeMapView(state.current.mapView);
+        privateView = true;
+      }
       surface.call(zoom.transform, nextView);
       if (activeMapMode === "new-zealand") newZealandView = nextView;
       if (resumeFocus && state.current.selected) controls.current?.focusPlace(state.current.selected);

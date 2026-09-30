@@ -1,6 +1,7 @@
 import { adventureRouteIndex } from "./adventureRouteIndex";
 import { line } from "d3";
 import roadRoutes from "./data/road-routes.json";
+import { routeFocusPositions } from "./adventureHotelRoutes";
 
 export const adventureRoutes = adventureRouteIndex.map(route => ({
   ...route,
@@ -8,10 +9,10 @@ export const adventureRoutes = adventureRouteIndex.map(route => ({
   roadSource: roadRoutes.routes[route.id] ?? null,
 }));
 
-export function focusLocationPositions(focus) {
+export function focusLocationPositions(focus, routes = adventureRoutes) {
   return [...(focus.positions ?? []), ...(focus.routeIds ?? []).flatMap(id => {
-    const route = adventureRoutes.find(item => item.id === id);
-    return route?.roadGeometry?.coordinates ?? route?.points.map(([lat, lng]) => [lng, lat]) ?? [];
+    const route = routes.find(item => item.id === id);
+    return route ? routeFocusPositions(route) : [];
   })];
 }
 
@@ -32,6 +33,9 @@ export function projectedRoutePath(route, project) {
 }
 
 export function routeGeometryLabel(route) {
+  if (route.hotelRoadStatus === "loading") return "酒店连接加载中 · 城际道路参考路径";
+  if (route.hotelRoadStatus === "partial") return "酒店附近道路连接不完整 · 城际道路参考路径";
+  if (route.hotelRoadStatus === "connected") return "含酒店附近道路 · 非实时导航";
   if (route.transport === "flight") return "航线示意";
   if (!route.roadGeometry) return "道路数据未加载 · 站点示意";
   return route.transport === "coach" ? "公路参考路径 · 非运营商轨迹" : "实际道路参考路径";

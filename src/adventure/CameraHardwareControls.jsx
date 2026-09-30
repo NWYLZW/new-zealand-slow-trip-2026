@@ -1,6 +1,5 @@
 import { PencilIcon } from "./pencil/PencilIcon";
-import { PencilSurface } from "./pencil/PencilSurface";
-import { PencilText } from "./pencil/PencilText";
+import { CameraZoomDial } from "./CameraZoomDial.jsx";
 import "./CameraHardwareControls.css";
 
 const flashLabels = {
@@ -20,12 +19,6 @@ function FlashIcon({ mode }) {
 function TorchIcon({ active }) {
   return <PencilIcon kind="torch" active={active} themeBackdrop>
     <path d="M11 5.2h10l-1.3 7.1H12.3zM13.1 12.4h5.8v14.1h-5.8zM11.7 26.6h8.6M11 5.2l-2.8-2M21 5.2l2.8-2M16 4.5V1.7" />
-  </PencilIcon>;
-}
-
-function ZoomIcon() {
-  return <PencilIcon kind="hardware-zoom" themeBackdrop>
-    <path d="M13.8 5.5a8.3 8.3 0 1 0 0 16.6 8.3 8.3 0 0 0 0-16.6zM19.8 19.7l7 7M9.6 13.8h8.4M13.8 9.6V18" />
   </PencilIcon>;
 }
 
@@ -50,20 +43,11 @@ export function CameraHardwareControls({ controller, en = false, children }) {
         : en ? "Turn on preview torch" : "开启取景常亮灯"}
       onClick={() => controller.torch.setValue(!controller.torch.value)}><TorchIcon active={controller.torch.value} /></button>);
   }
-  if (controller.zoom) {
-    const value = Number(controller.zoom.value);
-    controls.push(<PencilSurface key="zoom" as="label" variant="quiet" className="trip-camera-hardware-zoom">
-      <span className="trip-camera-hardware-zoom-icon"><ZoomIcon /></span>
-      <input type="range" min={controller.zoom.min} max={controller.zoom.max} step={controller.zoom.step}
-        value={value} disabled={controller.zoom.disabled}
-        aria-label={en ? "Camera zoom" : "相机变焦"}
-        onChange={event => controller.zoom.setValue(Number(event.target.value))} />
-      <output><PencilText>{Number.isFinite(value) ? `${value.toFixed(value < 10 ? 1 : 0)}×` : "—"}</PencilText></output>
-    </PencilSurface>);
-  }
-  if (!controls.length && !children) return null;
-  return <div className="trip-camera-hardware-controls" aria-label={en ? "Camera hardware controls" : "相机硬件控制"}>
-    {controls}
-    {children}
-  </div>;
+  return <>
+    {(controls.length > 0 || children) && <div className="trip-camera-hardware-controls" aria-label={en ? "Camera hardware controls" : "相机硬件控制"}>
+      {controls}
+      {children}
+    </div>}
+    {controller.zoom && <CameraZoomDial zoom={controller.zoom} en={en} />}
+  </>;
 }

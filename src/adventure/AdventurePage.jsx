@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { isItineraryPath, itineraryPath, navigateSite } from "../siteNavigation";
 import { PrivateVaultProvider } from "../PrivateVaultContext";
+import { AdventureResolvedRoutes } from "./AdventureResolvedRoutes.jsx";
 import "./adventure.css";
 import "./AdventureDeviceCutout.css";
 import { AdventureDeferredFeature } from "./AdventureDeferredFeature";
@@ -49,7 +50,9 @@ function readUnlockEntry() {
 }
 
 export function AdventurePage() {
-  return <PrivateVaultProvider><AdventurePreferencesProvider><AdventureBoard /></AdventurePreferencesProvider></PrivateVaultProvider>;
+  return <PrivateVaultProvider><AdventurePreferencesProvider><AdventureResolvedRoutes>
+    <AdventureBoard />
+  </AdventureResolvedRoutes></AdventurePreferencesProvider></PrivateVaultProvider>;
 }
 
 function AdventureBoard() {

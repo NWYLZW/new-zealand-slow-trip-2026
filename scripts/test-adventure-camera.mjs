@@ -14,10 +14,13 @@ assert.equal(Math.round(cameraIconCompensation(60, 60, 0)), -27);
 assert.equal(Math.round(cameraIconCompensation(0, 90, 90)), 0);
 assert.equal(cameraIconCompensation(0, 0, 0), null);
 
-const [cameraCss, cameraSource, sketchIconsSource] = await Promise.all([
+const [cameraCss, cameraSource, sketchIconsSource, hardwareSource, hardwareCss, cutoutCss] = await Promise.all([
   readFile(new URL("../src/adventure/AdventureCamera.css", import.meta.url), "utf8"),
   readFile(new URL("../src/adventure/AdventureCamera.jsx", import.meta.url), "utf8"),
   readFile(new URL("../src/adventure/SketchIcons.jsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/adventure/CameraHardwareControls.jsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/adventure/CameraHardwareControls.css", import.meta.url), "utf8"),
+  readFile(new URL("../src/adventure/AdventureDeviceCutout.css", import.meta.url), "utf8"),
 ]);
 assert.match(cameraCss, /\.trip-camera-header-actions\s*\{[^}]*grid-area:auto;[^}]*grid-column:auto;[^}]*grid-row:auto;/s);
 assert.match(cameraCss, /\.trip-camera-header-actions \.trip-pane-expand\s*\{[^}]*width:44px;[^}]*height:44px;/s);
@@ -25,6 +28,21 @@ assert.match(cameraSource, /className="trip-camera-control trip-camera-facing-to
 assert.match(cameraSource, /startPreview\(true, nextFacing, true\)/);
 assert.match(sketchIconsSource, /function SketchIcon\(props\)\s*\{\s*return <PencilIcon \{\.\.\.props\} \/>;/s);
 assert.match(sketchIconsSource, /export function PhotoAlbumIcon\(props\) \{ return <PhotosIcon \{\.\.\.props\} \/>; \}/);
+assert.match(hardwareSource, /import \{ CameraZoomDial \} from "\.\/CameraZoomDial\.jsx"/);
+assert.match(hardwareSource, /<\/div>\}\s*\{controller\.zoom && <CameraZoomDial zoom=\{controller\.zoom\} en=\{en\} \/>\}/);
+assert.doesNotMatch(hardwareSource, /type="range"|trip-camera-hardware-zoom|function ZoomIcon/);
+assert.doesNotMatch(hardwareCss, /trip-camera-hardware-zoom|flex-wrap/);
+assert.match(hardwareCss, /\.trip-camera-hardware-controls\s*\{[^}]*top:calc\(var\(--trip-camera-settings-top\)[^;]+;[^}]*left:var\(--trip-camera-settings-left\);[^}]*flex-direction:column;/s);
+assert.match(hardwareCss, /\.trip-camera-hardware-button\s*\{[^}]*flex:0 0 44px;[^}]*width:44px;[^}]*height:44px;/s);
+assert.match(cameraCss, /\.trip-camera-settings-entry\s*\{[^}]*grid-area:auto;[^}]*top:var\(--trip-camera-settings-top\);[^}]*left:var\(--trip-camera-settings-left\);/s);
+assert.doesNotMatch(cameraCss, /\[data-responsive-layout=phone-landscape\] \.trip-camera-(?:settings-entry|header-actions)\s*\{/);
+assert.match(cameraCss, /--trip-camera-shutter-x:calc\(100% - var\(--trip-camera-right-inset\) - 22px\);/);
+assert.match(cameraCss, /--trip-camera-shutter-y:calc\(100% - var\(--trip-camera-bottom-inset\) - 38px\);/);
+assert.match(cameraCss, /\.trip-camera-controls \.trip-camera-shutter\s*\{[^}]*top:var\(--trip-camera-shutter-y\);[^}]*left:var\(--trip-camera-shutter-x\);/s);
+assert.match(cameraCss, /@container camera-preview \(max-width:320px\)[\s\S]*--trip-camera-album-bottom:max\(/);
+assert.match(cutoutCss, /\[data-device-cutout="top-left"\][^{]*\.trip-day--camera\s*\{\s*--trip-camera-settings-top:max\(/);
+assert.match(cutoutCss, /\[data-device-cutout="top-right"\] \.trip-day--camera\s*\{\s*--trip-camera-right-top-inset:max\(/);
+assert.doesNotMatch(cutoutCss, /\.trip-camera-(?:control:first-child|facing-toggle)\s*\{/);
 
 const writes = [];
 let releaseFirstWrite;
@@ -247,7 +265,6 @@ try {
   const before = await page.locator(".trip-camera").evaluate(node => {
     const camera = node.getBoundingClientRect();
     const video = node.querySelector("video").getBoundingClientRect();
-    const controls = node.querySelector(".trip-camera-controls").getBoundingClientRect();
     const leading = document.querySelector(".trip-camera-header .trip-panel-leading").getBoundingClientRect();
     const album = node.querySelector(".trip-camera-control:first-child").getBoundingClientRect();
     const shutter = node.querySelector(".trip-camera-shutter").getBoundingClientRect();
@@ -256,7 +273,8 @@ try {
       fullFrame: camera.width === video.width && camera.height === video.height,
       controlsOverlay: album.top >= video.top && systemCamera.bottom <= video.bottom
         && shutter.top > video.top && shutter.bottom < video.bottom,
-      controlsAtRight: controls.right <= video.right && controls.left > video.left + video.width / 2,
+      controlsAtRight: [album, shutter, systemCamera].every(rect => rect.right <= video.right
+        && rect.left > video.left + video.width / 2),
       albumAlignedToLeading: Math.abs(album.top + album.height / 2 - leading.top - leading.height / 2) < 1,
       rightControlCentersAligned: Math.max(album.left + album.width / 2, shutter.left + shutter.width / 2,
         systemCamera.left + systemCamera.width / 2) - Math.min(album.left + album.width / 2,
@@ -504,8 +522,8 @@ try {
       settingsTopLeft: settings.left < root.left + root.width / 2 && settings.top < root.top + root.height / 2,
       closeTopRight: close.left > root.left + root.width / 2 && close.top < root.top + root.height / 2,
       albumBottomLeft: album.left < root.left + root.width / 2 && album.top > root.top + root.height / 2,
-      facingAdjacentToAlbum: album.left >= facing.right && album.left - facing.right <= 4
-        && facing.top === album.top && facing.left >= root.left && album.right < shutterBox.left,
+      facingAboveAlbum: album.top >= facing.bottom && album.top - facing.bottom <= 4
+        && facing.left === album.left && facing.left >= root.left && album.right < shutterBox.left,
       systemBottomRight: systemCamera.left > root.left + root.width / 2 && systemCamera.top > root.top + root.height / 2,
       shutterBottomCenter: Math.abs(shutterBox.left + shutterBox.width / 2 - root.left - root.width / 2) < 1
         && root.bottom - shutterBox.bottom >= 0 && root.bottom - shutterBox.bottom < 80,
@@ -514,7 +532,7 @@ try {
     };
   });
   assert(portraitControls.settingsTopLeft && portraitControls.closeTopRight && portraitControls.albumBottomLeft
-    && portraitControls.facingAdjacentToAlbum && portraitControls.systemBottomRight
+    && portraitControls.facingAboveAlbum && portraitControls.systemBottomRight
     && portraitControls.shutterBottomCenter && portraitControls.titleHidden);
   assert.equal(portraitControls.settingsIcon, "camera");
   const portraitCloseEvidence = await closeControlEvidence();
@@ -541,10 +559,12 @@ try {
     const shutterBox = document.querySelector(".trip-camera-shutter").getBoundingClientRect();
     const systemCamera = document.querySelector(".trip-camera-system-capture").getBoundingClientRect();
     return {
-      albumAlignedToClose: Math.abs(album.top + album.height / 2 - close.top - close.height / 2) < 1,
+      settingsTopLeft: leading.left < root.left + root.width / 2 && leading.top < root.top + root.height / 2,
+      closeBottomLeft: close.left < root.left + root.width / 2 && close.top > root.top + root.height / 2,
+      albumAlignedToSettings: Math.abs(album.top + album.height / 2 - leading.top - leading.height / 2) < 1,
       facingBelowAlbum: facing.top >= album.bottom && facing.top - album.bottom <= 4
         && Math.abs(facing.left + facing.width / 2 - album.left - album.width / 2) < 1,
-      systemAlignedToSettings: Math.abs(systemCamera.top + systemCamera.height / 2 - leading.top - leading.height / 2) < 1,
+      systemAlignedToClose: Math.abs(systemCamera.top + systemCamera.height / 2 - close.top - close.height / 2) < 1,
       rightCentersAligned: Math.max(album.left + album.width / 2, shutterBox.left + shutterBox.width / 2,
         systemCamera.left + systemCamera.width / 2) - Math.min(album.left + album.width / 2,
         shutterBox.left + shutterBox.width / 2, systemCamera.left + systemCamera.width / 2) < 1,
@@ -556,12 +576,13 @@ try {
       systemRightInset: Math.round(root.right - systemCamera.right),
     };
   });
-  assert(landscapeControls.albumAlignedToClose && landscapeControls.systemAlignedToSettings
+  assert(landscapeControls.settingsTopLeft && landscapeControls.closeBottomLeft
+    && landscapeControls.albumAlignedToSettings && landscapeControls.systemAlignedToClose
     && landscapeControls.facingBelowAlbum && landscapeControls.rightCentersAligned && landscapeControls.shutterVerticallyCentered
     && landscapeControls.titleHidden);
   assert.equal(landscapeControls.settingsIcon, "camera");
   assert.equal(landscapeControls.albumRightInset, landscapeControls.systemRightInset);
-  assert.equal(landscapeControls.albumRightInset, landscapeControls.systemBottomInset);
+  assert(landscapeControls.albumRightInset >= 16 && landscapeControls.systemBottomInset >= 9);
   assert.equal(await page.getByRole("button", { name: "相机设置", exact: true }).count(), 1);
   assert.equal(await page.getByRole("button", { name: "关闭面板", exact: true }).count(), 1);
   assert.equal(await page.getByRole("button", { name: "菜单", exact: true }).count(), 0);

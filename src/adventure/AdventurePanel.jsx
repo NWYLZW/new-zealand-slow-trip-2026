@@ -9,7 +9,8 @@ import { confirmedAccommodationBookings } from "../data/confirmedAccommodationBo
 import { confirmedStayTransitionsOn } from "../data/confirmedStayTimeline";
 import { preTripChecklist } from "../data/preTripChecklist";
 import { adventureDays, adventureStops } from "./adventureData";
-import { adventureRoutes, routeDirectionsUrl } from "./adventureRoutes";
+import { routeDirectionsUrl } from "./adventureRoutes";
+import { useAdventureRoutes } from "./AdventureResolvedRoutes.jsx";
 import { AdventureRouteDetails } from "./AdventureRouteDetails";
 import { AdventureWaypointDetails } from "./AdventureWaypointDetails";
 import { AdventureClusterDetails } from "./AdventureClusterDetails";
@@ -137,6 +138,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   fullscreen = false, automaticFullscreen = false, onToggleFullscreen, onOpenMenu, ...props }) {
   const { language } = useLanguage();
   const vault = usePrivateVault();
+  const adventureRoutes = useAdventureRoutes();
   const vaultUnlocked = useRef(vault.isUnlocked);
   vaultUnlocked.current = vault.isUnlocked;
   const [stayLink, setStayLink] = useState(null);
@@ -190,7 +192,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const routeDateId = routeItinerary ? eventDateId({ day: routeItinerary }) : null;
   const hasRouteDay = Boolean(routeDateId && getTripCalendarDay(routeDateId));
   const isRoadRoute = route?.transport === "road" || route?.transport === "coach";
-  const routeDistance = isRoadRoute && route.roadSource?.distanceM > 0 ? Math.round(route.roadSource.distanceM / 1000) : null;
+  const routeDistance = isRoadRoute && !route.hotelEndpoints && route.roadSource?.distanceM > 0 ? Math.round(route.roadSource.distanceM / 1000) : null;
   const RouteModeIcon = route?.transport === "flight" ? FlightIcon : route?.transport === "coach" ? BusIcon : CarIcon;
   const routeModeLabel = route?.transport === "flight" ? adventureText("航班", "Flight", language)
     : route?.transport === "coach" ? adventureText("大巴往返", "Coach return", language)

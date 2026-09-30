@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { createLatestCameraZoomQueue, snapCameraZoom } from "./cameraZoomDial.js";
 
 const storageKey = "nz-trip-camera-hardware";
 const stillFlashModes = ["off", "auto", "flash"];
@@ -266,10 +267,12 @@ export function useCameraHardware({ track, active, recording, disabled, onError 
   const [hardware, setHardware] = useState(emptyControllerState);
   const generationRef = useRef(0);
   const queueRef = useRef(null);
+  const zoomQueueRef = useRef(null);
   const pendingRef = useRef(0);
   const mountedRef = useRef(true);
   const configRef = useRef({ track, active, recording, disabled, onError });
   if (!queueRef.current) queueRef.current = createCameraHardwareTaskQueue();
+  if (!zoomQueueRef.current) zoomQueueRef.current = createLatestCameraZoomQueue(task => queueRef.current.enqueue(task));
   configRef.current = { track, active, recording, disabled, onError };
 
   const setBusy = useCallback(delta => {
@@ -333,6 +336,15 @@ export function useCameraHardware({ track, active, recording, disabled, onError 
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
   }, []);
+
+  useLayoutEffect(() => {
+    const cancel = () => zoomQueueRef.current.cancel();
+    track?.addEventListener?.("ended", cancel);
+    return () => {
+      cancel();
+      track?.removeEventListener?.("ended", cancel);
+    };
+  }, [active, disabled, track]);
 
   useEffect(() => {
     const generation = ++generationRef.current;
@@ -428,13 +440,40 @@ export function useCameraHardware({ track, active, recording, disabled, onError 
   const blocked = unavailable || hardware.busy;
   const recordingBlocked = unavailable || recording;
 
-  const setZoom = useCallback(value => {
-    const range = hardware.capabilities?.zoom;
-    if (!range) return Promise.resolve(false);
-    const zoom = clampCameraValue(value, range);
-    return runConstraint("zoom", { zoom }, { zoom }, { zoom: range },
-      () => setPreference("zoom", zoom), { allowRecording: true });
-  }, [hardware.capabilities, runConstraint]);
+  const zoomMin = capabilities?.zoom?.min, zoomMax = capabilities?.zoom?.max, zoomStep = capabilities?.zoom?.step;
+  const setZoom = useCallback((value, { signal } = {}) => {
+    if (zoomMin == null || unavailable || configRef.current.track !== track) return Promise.resolve(false);
+    const range = { min: zoomMin, max: zoomMax, step: zoomStep };
+    const zoom = snapCameraZoom(value, range);
+    const generation = generationRef.current;
+    return zoomQueueRef.current.enqueue(async isCurrentRequest => {
+      const isCurrent = () => isCurrentRequest() && mountedRef.current
+        && generation === generationRef.current && configRef.current.track === track
+        && configRef.current.active && !configRef.current.disabled && liveTrack(track);
+      if (!isCurrent()) return false;
+      setBusy(1);
+      try {
+        const settings = await applyVerifiedCameraConstraints(track, { zoom }, { zoom }, { zoom: range });
+        if (!isCurrent()) return false;
+        updateFromSettings(settings);
+        setPreference("zoom", finiteSetting(settings.zoom));
+        return true;
+      } catch (error) {
+        if (isCurrent()) {
+          try { updateFromSettings(track.getSettings?.() ?? {}); } catch { /* Keep the last confirmed reading. */ }
+          reportError("zoom", error);
+        }
+        return false;
+      } finally {
+        // An aborted native call can still alter the live track; read it without saving a preference.
+        if (!isCurrentRequest() && mountedRef.current && generation === generationRef.current
+          && configRef.current.track === track && configRef.current.active && liveTrack(track)) {
+          try { updateFromSettings(track.getSettings?.() ?? {}); } catch { /* Keep the last confirmed reading. */ }
+        }
+        setBusy(-1);
+      }
+    }, { signal });
+  }, [reportError, setBusy, track, unavailable, updateFromSettings, zoomMax, zoomMin, zoomStep]);
 
   const setTorch = useCallback(value => {
     if (!hardware.capabilities?.torch) return Promise.resolve(false);
@@ -497,7 +536,7 @@ export function useCameraHardware({ track, active, recording, disabled, onError 
     settings: hardware.settings,
     photoSettings,
     zoom: capabilities?.zoom ? { ...capabilities.zoom, disabled: unavailable,
-      value: finiteSetting(hardware.settings.zoom) ?? capabilities.zoom.min, setValue: setZoom } : null,
+      value: finiteSetting(hardware.settings.zoom), setValue: setZoom } : null,
     torch: capabilities?.torch ? { disabled: unavailable, value: hardware.settings.torch === true, setValue: setTorch } : null,
     flash: selectableFlashModes.length ? { disabled: recordingBlocked,
       modes: selectableFlashModes, value: flashValue, setValue: setFlash } : null,

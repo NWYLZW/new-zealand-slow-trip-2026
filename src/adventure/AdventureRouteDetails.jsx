@@ -1,4 +1,5 @@
 import { adventureDays, adventureStops } from "./adventureData";
+import { useLanguage } from "../LanguageContext";
 import { AdventureRouteInk } from "./AdventureRouteInk";
 import { PanelDivider } from "./pencil/PanelDivider";
 import { PencilIcon } from "./pencil/PencilIcon";
@@ -14,11 +15,15 @@ function AgendaIcon({ type }) {
   </PencilIcon>;
 }
 
-function routeNodes(route, itinerary) {
+function routeNodes(route, itinerary, en) {
   const byTag = new Map(adventureStops.map(stop => [stop.tag, stop]));
   const tags = [route.from, ...(route.via ?? []), route.to];
   const cities = route.transport === "flight" ? route.label.split(" → ") : [];
   const nodes = tags.map((tag, index) => {
+    const hotel = index === 0 ? route.hotelEndpoints?.origin
+      : index === tags.length - 1 ? route.hotelEndpoints?.destination : null;
+    if (hotel) return { key: `${hotel.bookingId}-${index}`, name: hotel.name,
+      role: index === 0 ? (en ? "Start hotel" : "起点 · 酒店") : (en ? "Destination hotel" : "终点 · 酒店") };
     const stop = byTag.get(tag);
     return { key: `${tag}-${index}`, tag: stop?.tag ?? null,
       name: cities[index] || stop?.name || tag,
@@ -28,7 +33,8 @@ function routeNodes(route, itinerary) {
     nodes.splice(1, 0, ...(route.waypointIds ?? []).map(getAdventureWaypoint).filter(Boolean)
       .map(point => ({ key: point.id, waypoint: point.id, name: point.name,
         role: point.drivingStop ? "途经" : "步行停留" })));
-    nodes.at(-1).role = "返程";
+    nodes.at(-1).role = route.hotelEndpoints?.destination
+      ? (en ? "Return hotel" : "返程 · 酒店") : "返程";
   }
   // Arrowtown is named in this day's itinerary; it is not an adventure map stop.
   if (route.id === "zqn-wanaka" && !route.via?.length && itinerary?.title.includes("箭镇")) {
@@ -49,11 +55,21 @@ function SectionHeading({ children }) {
 }
 
 export function AdventureRouteDetails({ route, navigate }) {
+  const { language } = useLanguage();
+  const en = language === "en";
   const [month, day] = route.date.split("/");
   const itinerary = adventureDays.find(item => item.date === `${Number(month)}月${Number(day)}日`);
-  const nodes = routeNodes(route, itinerary);
+  const nodes = routeNodes(route, itinerary, en);
+  const hotelSourceDates = [...new Set(Object.values(route.hotelConnections ?? {})
+    .map(item => item.source?.retrievedAt?.slice(0, 10)).filter(Boolean))];
 
   return <article className="trip-route-detail">
+    {route.hotelEndpoints && route.hotelRoadStatus !== "connected" && <p role="status"><PencilText>
+      {route.hotelRoadStatus === "loading"
+        ? (en ? "Loading roads near the hotels." : "酒店附近道路连接加载中。")
+        : (en ? "Some hotel road connections are unavailable. Check the route in Maps."
+          : "部分酒店附近道路连接缺失，请用外部地图核对。")}
+    </PencilText></p>}
     {nodes.length > 1 && <section className="trip-route-section" aria-label="途经站点">
       <SectionHeading>行进路线</SectionHeading>
       <ol className="trip-route-diagram">
@@ -111,6 +127,10 @@ export function AdventureRouteDetails({ route, navigate }) {
     <details className="trip-route-provenance">
       <summary><PencilText>路线来源与限制</PencilText></summary>
       <div>
+        {route.hotelEndpoints && <p><PencilText>{en
+          ? "Hotel connections use local OpenStreetMap roads, snapped near the property. Entrances, one-way roads and turn restrictions are not verified. Missing connections retain the city road reference."
+          : "酒店附近采用本地 OpenStreetMap 道路参考线，端点吸附至邻近道路；入口、单行及转向限制未核验。缺失连接处保留城市道路参考线。"}</PencilText></p>}
+        {hotelSourceDates.length > 0 && <p><PencilText>OpenStreetMap · {hotelSourceDates.join(", ")}</PencilText></p>}
         {route.transport === "flight" ? <p><PencilText>航线为城市间示意，并非实际飞行轨迹。</PencilText></p>
           : route.roadSource ? <>
             <p><PencilText>OSRM / FOSSGIS · 采集于 {route.roadSource.retrievedAt.slice(0, 10)}。</PencilText></p>

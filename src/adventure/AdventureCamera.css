@@ -1,10 +1,16 @@
 .trip-day--camera {
   --trip-camera-top-inset:max(9px,env(safe-area-inset-top));
-  --trip-camera-right-inset:max(9px,env(safe-area-inset-right));
+  /* Keep the 76px shutter hitbox inside the 44px right-hand control axis. */
+  --trip-camera-right-inset:max(16px,env(safe-area-inset-right));
   --trip-camera-bottom-inset:max(9px,env(safe-area-inset-bottom));
   --trip-camera-left-inset:max(9px,env(safe-area-inset-left));
   --trip-camera-control-slot:44px;
   --trip-camera-control-gap:2px;
+  --trip-camera-settings-top:var(--trip-camera-top-inset);
+  --trip-camera-settings-left:var(--trip-camera-left-inset);
+  --trip-camera-right-top-inset:var(--trip-camera-top-inset);
+  --trip-camera-left-bottom-inset:var(--trip-camera-bottom-inset);
+  --trip-camera-right-bottom-inset:var(--trip-camera-bottom-inset);
   --trip-camera-icon-size:45px;
   --trip-camera-shutter-icon-size:var(--trip-camera-icon-size);
   --trip-camera-icon-rotation:0deg;
@@ -68,7 +74,7 @@
   z-index:7;
   top:auto;
   right:auto;
-  bottom:var(--trip-camera-bottom-inset);
+  bottom:var(--trip-camera-left-bottom-inset);
   left:var(--trip-camera-left-inset);
   display:flex;
   flex-direction:column;
@@ -102,10 +108,25 @@
 }
 .trip-camera-header-actions .trip-pane-expand { order:0; }
 .trip-camera-header-actions .trip-close { order:1; }
-.trip-camera-settings-entry { z-index:7; }
+.trip-camera-settings-entry {
+  position:absolute;
+  grid-area:auto;
+  grid-column:auto;
+  grid-row:auto;
+  z-index:7;
+  top:var(--trip-camera-settings-top);
+  left:var(--trip-camera-settings-left);
+  width:44px;
+  height:44px;
+  margin:0;
+}
 
 .trip-camera {
   --trip-camera-ink:#fffbea;
+  --trip-camera-shutter-x:calc(100% - var(--trip-camera-right-inset) - 22px);
+  --trip-camera-shutter-y:50%;
+  container-name:camera-preview;
+  container-type:inline-size;
   position:relative;
   isolation:isolate;
   flex:1;
@@ -164,9 +185,6 @@
   pointer-events:none;
 }
 .trip-camera-status:empty { display:none; }
-.trip-camera:has(.trip-camera-hardware-controls) .trip-camera-status {
-  bottom:calc(var(--trip-camera-bottom-inset,9px) + 144px);
-}
 .trip-camera-status > .trip-camera-pencil-label { padding:5px 10px; }
 .trip-camera-status .trip-camera-pencil-label-content { overflow-wrap:anywhere; }
 .trip-camera-pencil-label {
@@ -190,15 +208,14 @@
 .trip-camera-controls {
   position:absolute;
   z-index:4;
-  inset:0 var(--trip-camera-right-inset) 0 auto;
-  width:var(--trip-camera-control-slot);
+  inset:0;
   background:transparent;
   pointer-events:none;
 }
 .trip-camera-controls > button { pointer-events:auto; }
 .trip-camera-control {
   position:absolute;
-  right:0;
+  right:var(--trip-camera-right-inset);
   display:grid;
   place-items:center;
   width:44px;
@@ -211,9 +228,9 @@
 }
 .trip-camera-control .trip-pencil-icon { width:var(--trip-camera-icon-size); height:var(--trip-camera-icon-size); }
 .trip-camera-control:disabled { opacity:.55; cursor:wait; }
-.trip-camera-control:first-child { top:var(--trip-camera-top-inset); }
-.trip-camera-facing-toggle { top:calc(var(--trip-camera-top-inset) + var(--trip-camera-control-slot) + var(--trip-camera-control-gap)); }
-.trip-camera-system-capture { bottom:var(--trip-camera-bottom-inset); }
+.trip-camera-control:first-child { top:var(--trip-camera-right-top-inset); }
+.trip-camera-facing-toggle { top:calc(var(--trip-camera-right-top-inset) + var(--trip-camera-control-slot) + var(--trip-camera-control-gap)); }
+.trip-camera-system-capture { bottom:var(--trip-camera-right-bottom-inset); }
 .trip-camera-shutter {
   position:relative;
   display:grid;
@@ -231,8 +248,8 @@
 }
 .trip-camera-controls .trip-camera-shutter {
   position:absolute;
-  top:50%;
-  left:50%;
+  top:var(--trip-camera-shutter-y);
+  left:var(--trip-camera-shutter-x);
   transform:translate(-50%,-50%);
 }
 .trip-camera-shutter > .trip-pencil-icon { width:var(--trip-camera-shutter-icon-size); height:var(--trip-camera-shutter-icon-size); }
@@ -245,65 +262,49 @@
   padding-top:48px;
   padding-bottom:48px;
 }
-#trip-board-structure[data-responsive-layout=phone-landscape] .trip-camera-settings-entry {
-  position:absolute;
-  top:auto;
-  bottom:var(--trip-camera-bottom-inset);
-  left:var(--trip-camera-left-inset);
-}
-#trip-board-structure[data-responsive-layout=phone-landscape] .trip-camera-header-actions {
-  top:var(--trip-camera-top-inset);
-  bottom:auto;
-  left:var(--trip-camera-left-inset);
-}
-
-#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-controls {
-  inset:0;
-  width:auto;
-  height:auto;
-}
-#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-control,
-#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-controls .trip-camera-shutter {
-  position:absolute;
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera {
+  --trip-camera-shutter-x:50%;
+  --trip-camera-shutter-y:calc(100% - var(--trip-camera-bottom-inset) - 38px);
+  --trip-camera-album-bottom:var(--trip-camera-left-bottom-inset);
 }
 #trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-control:first-child {
   top:auto;
   right:auto;
-  bottom:var(--trip-camera-bottom-inset);
-  left:calc(var(--trip-camera-left-inset) + 46px);
+  bottom:var(--trip-camera-album-bottom);
+  left:var(--trip-camera-left-inset);
 }
 #trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-facing-toggle {
   top:auto;
   right:auto;
-  bottom:var(--trip-camera-bottom-inset);
+  bottom:calc(var(--trip-camera-album-bottom) + var(--trip-camera-control-slot) + var(--trip-camera-control-gap));
   left:var(--trip-camera-left-inset);
-}
-#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-controls .trip-camera-shutter {
-  top:auto;
-  right:auto;
-  bottom:var(--trip-camera-bottom-inset);
-  left:50%;
-  transform:translateX(-50%);
 }
 #trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-system-capture {
   top:auto;
   right:var(--trip-camera-right-inset);
-  bottom:var(--trip-camera-bottom-inset);
+  bottom:var(--trip-camera-right-bottom-inset);
   left:auto;
 }
 #trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-header-actions {
-  top:var(--trip-camera-top-inset);
+  top:var(--trip-camera-right-top-inset);
   right:var(--trip-camera-right-inset);
   bottom:auto;
   left:auto;
 }
 #trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-status {
   bottom:calc(88px + var(--trip-camera-bottom-inset));
-  left:max(16px,var(--trip-camera-left-inset));
-  right:max(16px,var(--trip-camera-right-inset));
+  left:calc(var(--trip-camera-left-inset) + 52px);
+  right:calc(var(--trip-camera-right-inset) + 52px);
 }
 #trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-preview-state {
   padding:64px 24px calc(116px + var(--trip-camera-bottom-inset));
+}
+
+/* A manually narrowed portrait panel needs vertical clearance beside the dial. */
+@container camera-preview (max-width:320px) {
+  #trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-controls {
+    --trip-camera-album-bottom:max(var(--trip-camera-left-bottom-inset),calc(var(--trip-camera-bottom-inset) + 84px));
+  }
 }
 
 @media (prefers-reduced-motion:reduce) {
