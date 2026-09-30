@@ -6,6 +6,11 @@ import { cameraPermissionPromptGate, observeBrowserPermission } from "./cameraPe
 import { useCameraIconOrientation } from "./cameraIconOrientation";
 import { useCameraGridPreference, useCameraLocationPreference } from "./cameraPreferences";
 import { CameraPencilLabel } from "./CameraPencilLabel";
+import { CameraLevel, useCameraLevel } from "./CameraLevel.jsx";
+import { captureCameraPhoto, requestCameraPreview } from "./cameraCapture";
+import { CameraShutterIcon } from "./CameraShutterIcon";
+import { useCameraHardware } from "./cameraHardware";
+import { CameraHardwareControls } from "./CameraHardwareControls";
 import { CameraIcon, PhotoAlbumIcon } from "./SketchIcons";
 import { PencilSurface } from "./pencil/PencilSurface";
 import { PencilIcon } from "./pencil/PencilIcon";
@@ -14,6 +19,7 @@ import "./AdventureCamera.css";
 
 const HOLD_TO_RECORD_MS = 1000;
 const SYNTHETIC_CLICK_WINDOW_MS = 650;
+const RESULT_MESSAGE_DURATION_MS = 4000;
 
 function stopTracks(stream) {
   stream?.getTracks().forEach(track => track.stop());
@@ -63,9 +69,13 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   const [recordPending, setRecordPending] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [message, setMessage] = useState("");
+  const messageTimerRef = useRef(0);
   const [systemCameraBusy, setSystemCameraBusy] = useState(false);
   const [facingSwitchBusy, setFacingSwitchBusy] = useState(false);
   const [cameraCount, setCameraCount] = useState(null);
+  const [videoTrack, setVideoTrack] = useState(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const photoAttemptRef = useRef(null);
   const cameraRef = useRef(null), videoRef = useRef(null), systemCameraRef = useRef(null);
   const previewStreamRef = useRef(null), micStreamRef = useRef(null), recorderRef = useRef(null);
   const sessionRef = useRef(0), recordAttemptRef = useRef(0), holdTimerRef = useRef(0), elapsedTimerRef = useRef(0);
@@ -80,10 +90,31 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   const activeRef = useRef(active), mountedRef = useRef(false);
   activeRef.current = active;
   useCameraIconOrientation(active, cameraRef);
+  const level = useCameraLevel(active && previewState === "ready" && cameraGrid);
 
-  const showMessage = useCallback(text => {
-    if (mountedRef.current && activeRef.current) setMessage(text);
+  const clearMessage = useCallback(() => {
+    clearTimeout(messageTimerRef.current);
+    messageTimerRef.current = 0;
+    if (mountedRef.current) setMessage("");
   }, []);
+  const showMessage = useCallback((text, duration = 0) => {
+    if (!mountedRef.current || !activeRef.current || document.hidden) return;
+    clearTimeout(messageTimerRef.current);
+    messageTimerRef.current = 0;
+    setMessage(text);
+    if (text && duration > 0) {
+      const timer = window.setTimeout(() => {
+        if (messageTimerRef.current !== timer) return;
+        messageTimerRef.current = 0;
+        if (mountedRef.current) setMessage("");
+      }, duration);
+      messageTimerRef.current = timer;
+    }
+  }, []);
+  const onHardwareError = useCallback(error => showMessage(typeof error === "string" ? error
+    : en ? "Could not apply the camera setting." : "无法应用相机设置。"), [en, showMessage]);
+  const hardware = useCameraHardware({ track: videoTrack, active: active && previewState === "ready",
+    recording, disabled: photoBusy || facingSwitchBusy || systemCameraBusy || recordPending, onError: onHardwareError });
 
   const stopRecording = useCallback(() => {
     recordAttemptRef.current += 1;
@@ -108,6 +139,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
 
   const stopAll = useCallback(() => {
     sessionRef.current += 1;
+    clearMessage();
     clearTimeout(automaticStartTimerRef.current);
     clearTimeout(holdTimerRef.current);
     clearTimeout(clickSuppressionTimerRef.current);
@@ -117,6 +149,8 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     stopRecording();
     stopTracks(previewStreamRef.current);
     previewStreamRef.current = null;
+    photoAttemptRef.current = null;
+    if (mountedRef.current) { setVideoTrack(null); setPhotoBusy(false); }
     stopTracks(micStreamRef.current);
     micStreamRef.current = null;
     locationAttemptRef.current += 1;
@@ -127,7 +161,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     if (!locationDeniedRef.current) locationAutoAttemptedRef.current = false;
     if (videoRef.current) videoRef.current.srcObject = null;
     if (mountedRef.current) setPreviewState("idle");
-  }, [stopRecording]);
+  }, [clearMessage, stopRecording]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -146,13 +180,13 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     if (!activeRef.current) return false;
     if (!navigator.mediaDevices?.getUserMedia) {
       setPreviewState("unsupported");
-      setMessage(en ? "This browser does not support camera access." : "此浏览器不支持相机访问。");
+      showMessage(en ? "This browser does not support camera access." : "此浏览器不支持相机访问。");
       return false;
     }
     if (!userInitiated && !cameraPermissionPromptGate.canAutoRequest("camera", cameraPermission)) {
       if (cameraPermission === "denied") {
         setPreviewState("error");
-        setMessage(en ? "Camera permission was denied." : "相机权限被拒绝。");
+        showMessage(en ? "Camera permission was denied." : "相机权限被拒绝。");
       }
       return false;
     }
@@ -160,9 +194,10 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     stopAll();
     const session = ++sessionRef.current;
     setPreviewState("requesting");
-    setMessage("");
+    showMessage("");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: requestedFacing } }, audio: false });
+      const stream = await requestCameraPreview({ mediaDevices: navigator.mediaDevices, facingMode: requestedFacing,
+        isCurrent: () => session === sessionRef.current && activeRef.current && !document.hidden });
       const reportedFacing = stream.getVideoTracks()[0]?.getSettings?.().facingMode;
       if (requireFacingMatch && ["user", "environment"].includes(reportedFacing) && reportedFacing !== requestedFacing) {
         stopTracks(stream);
@@ -193,6 +228,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
         return false;
       }
       setPreviewState("ready");
+      setVideoTrack(stream.getVideoTracks()[0] ?? null);
       if (navigator.mediaDevices.enumerateDevices) {
         navigator.mediaDevices.enumerateDevices()
           .then(devices => {
@@ -207,7 +243,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       if (error?.name === "NotAllowedError" || error?.name === "PermissionDeniedError")
         cameraPermissionPromptGate.blockAutomatic("camera");
       setPreviewState("error");
-      setMessage(cameraError(error, en));
+      showMessage(cameraError(error, en));
       return false;
     }
   }, [cameraFacing, cameraPermission, en, showMessage, stopAll]);
@@ -351,32 +387,49 @@ export function AdventureCamera({ active, onOpenAlbum }) {
 
   const capturePhoto = async () => {
     const video = videoRef.current;
-    if (!activeRef.current || !previewStreamRef.current || !video?.videoWidth || recorderRef.current || recordIntentRef.current) return;
+    const track = previewStreamRef.current?.getVideoTracks()[0];
+    if (!activeRef.current || !track || !video?.videoWidth || photoAttemptRef.current || hardware.busy || !hardware.ready
+      || recorderRef.current || recordIntentRef.current) return;
     const session = sessionRef.current;
-    const report = text => { if (session === sessionRef.current) showMessage(text); };
+    const attempt = {};
+    photoAttemptRef.current = attempt;
+    setPhotoBusy(true);
+    clearMessage();
+    const isCurrent = () => session === sessionRef.current && activeRef.current && !document.hidden
+      && previewStreamRef.current?.getVideoTracks()[0] === track && photoAttemptRef.current === attempt;
+    const report = (text, duration = 0) => { if (session === sessionRef.current) showMessage(text, duration); };
     const captured = new Date();
     const gps = freshGps();
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext("2d");
-    if (!context) { report(en ? "Could not capture a photo." : "无法拍摄照片。"); return; }
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", .95));
-    if (!blob) { report(en ? "Could not capture a photo." : "无法拍摄照片。"); return; }
+    let capturedBlob = false;
     try {
+      const photoSettings = hardware.photoSettings;
+      const { blob, source } = await captureCameraPhoto({ track, video, isCurrent, photoSettings });
+      if (!isCurrent()) return;
+      capturedBlob = true;
       const saved = await saveCapturedMedia({ blob, capturedAt: captured.toISOString(),
         captureOffsetMinutes: -captured.getTimezoneOffset(), gps });
       report(saved.status === "duplicate"
         ? en ? "This photo is already in the album." : "这张照片已在相册中。"
-        : en ? "Photo saved to the local album." : "照片已保存到本地相册。");
-    } catch {
-      report(en ? "Could not save photo; local storage may be full." : "无法保存照片，本地存储空间可能已满。");
+        : source === "video-frame"
+          ? photoSettings.fillLightMode && photoSettings.fillLightMode !== "off"
+            ? en ? "Saved a preview frame; still capture and flash were unavailable." : "已保存预览帧，原片拍摄及闪光灯未能生效。"
+            : en ? "Saved a preview frame; full-resolution capture was unavailable." : "已保存预览帧，当前无法获取高分辨率照片。"
+          : en ? "Photo saved to the local album." : "照片已保存到本地相册。", RESULT_MESSAGE_DURATION_MS);
+    } catch (error) {
+      if (error?.name !== "AbortError") report(capturedBlob
+        ? en ? "Could not save photo; local storage may be full." : "无法保存照片，本地存储空间可能已满。"
+        : en ? "Could not capture a photo." : "无法拍摄照片。");
+    } finally {
+      if (photoAttemptRef.current === attempt) {
+        photoAttemptRef.current = null;
+        if (mountedRef.current) setPhotoBusy(false);
+      }
     }
   };
 
   const startRecording = async () => {
-    if (!activeRef.current || !previewStreamRef.current || recorderRef.current || recordIntentRef.current) return;
+    if (!activeRef.current || !previewStreamRef.current || photoAttemptRef.current || hardware.busy || !hardware.ready
+      || recorderRef.current || recordIntentRef.current) return;
     if (typeof MediaRecorder === "undefined") {
       showMessage(en ? "Video recording is not supported here." : "此浏览器不支持视频录制。");
       return;
@@ -384,9 +437,9 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     recordIntentRef.current = true;
     const attempt = ++recordAttemptRef.current;
     setRecordPending(true);
-    setMessage("");
+    clearMessage();
     const session = sessionRef.current;
-    const report = text => { if (session === sessionRef.current) showMessage(text); };
+    const report = (text, duration = 0) => { if (session === sessionRef.current) showMessage(text, duration); };
     let mic = null;
     let silent = false;
     if (cameraAudio) {
@@ -435,7 +488,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
             captureOffsetMinutes: -captured.getTimezoneOffset(), gps });
           report(saved.status === "duplicate"
             ? en ? "This video is already in the album." : "这段视频已在相册中。"
-            : en ? "Video saved to the local album." : "视频已保存到本地相册。");
+            : en ? "Video saved to the local album." : "视频已保存到本地相册。", RESULT_MESSAGE_DURATION_MS);
         } catch {
           report(en ? "Could not save video; local storage may be full." : "无法保存视频，本地存储空间可能已满。");
         }
@@ -468,7 +521,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
 
   const beginHold = event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (previewState !== "ready" || heldPointerRef.current !== null
+    if (previewState !== "ready" || photoAttemptRef.current || heldPointerRef.current !== null
       || recorderRef.current || recordIntentRef.current) return;
     suppressClickRef.current = false;
     clearTimeout(clickSuppressionTimerRef.current);
@@ -496,7 +549,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   const beginKeyboardHold = event => {
     if (![" ", "Enter"].includes(event.key)) return;
     event.preventDefault();
-    if (event.repeat || previewState !== "ready" || heldPointerRef.current !== null) return;
+    if (event.repeat || previewState !== "ready" || photoAttemptRef.current || heldPointerRef.current !== null) return;
     if (recorderRef.current || recordIntentRef.current) {
       heldPointerRef.current = `stop:${event.key}`;
       return;
@@ -533,11 +586,12 @@ export function AdventureCamera({ active, onOpenAlbum }) {
     event.target.value = "";
     if (!file || !activeRef.current) return;
     setSystemCameraBusy(true);
+    clearMessage();
     try {
       const result = await saveUploadedMedia(file);
       showMessage(result.status === "duplicate"
         ? en ? "This capture is already in the album." : "这次拍摄已在相册中。"
-        : en ? "System camera capture added to the local album." : "系统相机拍摄内容已加入本地相册。");
+        : en ? "System camera capture added to the local album." : "系统相机拍摄内容已加入本地相册。", RESULT_MESSAGE_DURATION_MS);
     } catch {
       showMessage(en ? "Could not import the system camera capture." : "无法导入系统相机拍摄内容。");
     }
@@ -550,7 +604,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   };
 
   const switchCameraFacing = async () => {
-    if (!activeRef.current || previewState !== "ready" || facingSwitchBusy || recording || recordPending
+    if (!activeRef.current || previewState !== "ready" || photoAttemptRef.current || facingSwitchBusy || recording || recordPending
       || recorderRef.current || recordIntentRef.current) return;
     if (cameraCount === 1) {
       showMessage(en ? "Only one camera is available on this device." : "此设备只检测到一个相机。");
@@ -575,9 +629,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       <div className="trip-camera-preview">
         <video ref={videoRef} data-facing={previewFacing} autoPlay muted playsInline
           aria-label={en ? "Live camera preview" : "相机实时取景"} />
-        {previewState === "ready" && cameraGrid && <div className="trip-camera-grid" aria-hidden="true">
-          <span /><span /><span /><span />
-        </div>}
+        {active && previewState === "ready" && cameraGrid && <CameraLevel reading={level.reading} en={en} />}
         {previewState !== "ready" && <div className="trip-camera-preview-state">
           <PencilText>{previewState === "requesting" ? en ? "Waiting for camera permission…" : "等待相机权限…"
             : previewState === "unsupported" ? en ? "Camera unavailable" : "相机不可用"
@@ -595,6 +647,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
       <div className="trip-camera-status" aria-live="polite">
         {message && <CameraPencilLabel textureKey="camera-status" role="status"><PencilText>{message}</PencilText></CameraPencilLabel>}
       </div>
+      {previewState === "ready" && <CameraHardwareControls controller={hardware} en={en} />}
       <div className="trip-camera-controls">
         <button type="button" className="trip-camera-control" data-icon-feedback="keyboard-only" onClick={openAlbum}
           aria-label={en ? "Album" : "相册"}>
@@ -605,7 +658,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
           aria-label={cameraFacing === "environment"
             ? en ? "Switch to front camera" : "切换到前置相机"
             : en ? "Switch to rear camera" : "切换到后置相机"}
-          disabled={!active || previewState !== "ready" || facingSwitchBusy || recording || recordPending}>
+          disabled={!active || previewState !== "ready" || photoBusy || facingSwitchBusy || recording || recordPending}>
           <PencilIcon kind="camera-facing" themeBackdrop>
             <path d="M7 12c2.7-4.1 7.3-6.2 12.1-5.2 2.1.4 4 1.4 5.5 2.9M22.3 5.9l2.6 3.9-4.6 1" />
             <path d="M25 20c-2.7 4.1-7.3 6.2-12.1 5.2-2.1-.4-4-1.4-5.5-2.9M9.7 26.1l-2.6-3.9 4.6-1" />
@@ -613,7 +666,8 @@ export function AdventureCamera({ active, onOpenAlbum }) {
           </PencilIcon>
         </button>
           <button type="button" className="trip-camera-shutter" data-icon-feedback="keyboard-only"
-            disabled={previewState !== "ready" || !active}
+            disabled={previewState !== "ready" || !active || photoBusy || facingSwitchBusy || systemCameraBusy
+              || (!recording && !recordPending && (!hardware.ready || hardware.busy))}
             onPointerDown={beginHold} onPointerUp={endHold} onPointerCancel={endHold} onLostPointerCapture={endHold}
             onKeyDown={beginKeyboardHold} onKeyUp={endKeyboardHold}
             onBlur={() => {
@@ -632,11 +686,10 @@ export function AdventureCamera({ active, onOpenAlbum }) {
               if (recorderRef.current || recordIntentRef.current) stopRecording();
               else capturePhoto();
             }}
-            aria-label={en ? "Take photo; hold to record video" : "拍照；长按录制视频"}
+            aria-label={recording || recordPending ? en ? "Stop video recording" : "停止录制视频"
+              : en ? "Take photo; hold to record video" : "拍照；长按录制视频"}
           >
-            {recording || recordPending
-              ? <span className={`trip-camera-record-dot${recordPending ? " is-pending" : ""}`} aria-hidden="true" />
-              : <CameraIcon themeBackdrop />}
+            <CameraShutterIcon recording={recording || recordPending} />
           </button>
         <input ref={systemCameraRef} type="file" accept="image/*,video/*" hidden
           capture={cameraFacing === "user" ? "user" : "environment"} className="trip-camera-upload-input"

@@ -1,4 +1,5 @@
 import { adventureStops } from "./adventureData";
+import { adventureDayTripStops } from "./adventureDayTripStops";
 
 const stopByTag = new Map(adventureStops.map((stop) => [stop.tag, stop]));
 
@@ -221,12 +222,15 @@ const waypointRecords = [
   },
 ];
 
-export const adventureWaypoints = waypointRecords.map((waypoint) => ({
+export const adventureWaypoints = [...waypointRecords, ...adventureDayTripStops].map((waypoint) => ({
   ...waypoint,
   mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${waypoint.position[0]},${waypoint.position[1]}`)}`,
 }));
 
 const unresolvedByRoute = {
+  "zqn-glenorchy": [
+    { eventIndex: 3, label: "格林诺奇午餐", reason: "餐厅未确定；码头点位不代表餐厅。" },
+  ],
   "akl-zqn": [
     { eventIndex: 5, label: "皇后镇活动与入住", reason: "当天安排未指定市区活动地点，住宿位置属于私密资料。" },
   ],

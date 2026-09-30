@@ -1,0 +1,134 @@
+.trip-camera-hardware-controls {
+  position:absolute;
+  z-index:4;
+  left:50%;
+  bottom:calc(var(--trip-camera-bottom-inset,9px) + 88px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--trip-camera-control-gap,2px);
+  max-width:calc(100% - var(--trip-camera-left-inset,9px) - var(--trip-camera-right-inset,9px));
+  min-height:44px;
+  transform:translateX(-50%);
+  color:var(--trip-camera-ink,#fffbea);
+}
+.trip-camera { container-name:camera-preview; container-type:inline-size; }
+.trip-camera-hardware-button {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  place-items:center;
+  flex:0 0 44px;
+  width:44px;
+  min-width:0;
+  height:44px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+}
+.trip-camera-hardware-button>.trip-pencil-icon {
+  width:var(--trip-camera-icon-size,30px);
+  height:var(--trip-camera-icon-size,30px);
+}
+.trip-camera-hardware-zoom-icon>.trip-pencil-icon { width:28px; height:28px; }
+.trip-camera-hardware-controls .trip-pencil-icon[data-theme-backdrop="true"] {
+  --trip-pencil-icon-backdrop:#fff;
+  color:var(--trip-theme-accent,#4b96aa);
+}
+.trip-camera-hardware-controls :is(button,input):focus-visible {
+  outline:2px solid var(--trip-camera-ink,#fffbea);
+  outline-offset:2px;
+}
+.trip-camera-hardware-controls :is(button,input):disabled { opacity:.45; cursor:not-allowed; }
+.trip-camera-hardware-zoom.trip-pencil-surface {
+  display:grid;
+  grid-template-columns:36px minmax(54px,82px) 34px;
+  align-items:center;
+  flex:0 1 152px;
+  width:min(152px,42vw);
+  min-width:118px;
+  height:44px;
+  padding:2px 5px;
+  color:inherit;
+}
+.trip-camera-hardware-zoom-icon { display:grid; grid-template-columns:minmax(0,1fr); place-items:center; min-width:0; }
+.trip-camera-hardware-zoom input { width:100%; min-width:0; accent-color:var(--trip-theme-accent,#4b96aa); }
+.trip-camera-hardware-zoom output { min-width:0; overflow:hidden; font-size:12px; text-align:center; white-space:nowrap; }
+#trip-board-structure[data-responsive-layout=phone-landscape] .trip-camera-hardware-controls {
+  bottom:var(--trip-camera-bottom-inset,9px);
+}
+@container camera-preview (max-width:520px) {
+  .trip-camera-hardware-controls {
+    bottom:var(--trip-camera-bottom-inset,9px);
+    width:calc(100% - 124px);
+    max-width:300px;
+    flex-wrap:wrap;
+    row-gap:2px;
+  }
+  .trip-camera-hardware-zoom.trip-pencil-surface {
+    order:3;
+    flex-basis:100%;
+    width:100%;
+  }
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-hardware-controls {
+  bottom:calc(var(--trip-camera-bottom-inset,9px) + 88px);
+  width:auto;
+  max-width:calc(100% - var(--trip-camera-left-inset,9px) - var(--trip-camera-right-inset,9px));
+  flex-wrap:nowrap;
+}
+#trip-board-structure[data-responsive-layout=phone-portrait] .trip-camera-hardware-zoom.trip-pencil-surface {
+  order:0;
+  flex-basis:auto;
+}
+@media(max-width:430px) {
+  .trip-camera-hardware-zoom.trip-pencil-surface { width:118px; grid-template-columns:30px minmax(42px,1fr) 30px; }
+}
+.trip-camera-hardware-settings {
+  position:relative;
+  display:grid;
+  gap:9px;
+  min-width:0;
+  margin:0 0 18px;
+  padding:0 0 20px;
+}
+.trip-camera-hardware-settings-heading {
+  display:grid;
+  grid-template-columns:var(--trip-leading-slot,44px) minmax(0,1fr);
+  column-gap:var(--trip-content-gap,8px);
+  align-items:center;
+  min-height:44px;
+}
+.trip-camera-hardware-settings-heading h2 { margin:0; font-size:18px; font-weight:400; }
+.trip-camera-hardware-settings-field.trip-pencil-surface {
+  display:grid;
+  align-items:center;
+  width:100%;
+  min-width:0;
+  min-height:46px;
+  padding:3px 8px;
+  color:var(--trip-ink-color);
+}
+.trip-camera-hardware-settings-select.trip-pencil-surface {
+  grid-template-columns:minmax(0,1fr) 34px;
+}
+.trip-camera-hardware-settings-select select {
+  width:100%;
+  height:100%;
+  min-width:0;
+  padding:6px 8px;
+  border:0;
+  outline:0;
+  appearance:none;
+  background:transparent;
+  color:inherit;
+  font:inherit;
+}
+.trip-camera-hardware-settings-select>.trip-pencil-icon { width:25px; height:25px; justify-self:center; }
+.trip-camera-hardware-focus-distance.trip-pencil-surface {
+  grid-template-columns:minmax(0,1fr) 54px;
+  gap:8px;
+}
+.trip-camera-hardware-focus-distance input { width:100%; min-width:0; accent-color:var(--trip-theme-accent,#4b96aa); }
+.trip-camera-hardware-focus-distance output { min-width:0; text-align:center; }
+.trip-camera-hardware-settings-note { margin:0; color:var(--trip-ink-muted); font-size:13px; line-height:1.5; }

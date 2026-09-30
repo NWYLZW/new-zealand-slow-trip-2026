@@ -4,6 +4,9 @@
   --trip-camera-bottom-inset:max(9px,env(safe-area-inset-bottom));
   --trip-camera-left-inset:max(9px,env(safe-area-inset-left));
   --trip-camera-control-slot:44px;
+  --trip-camera-control-gap:2px;
+  --trip-camera-icon-size:45px;
+  --trip-camera-shutter-icon-size:var(--trip-camera-icon-size);
   --trip-camera-icon-rotation:0deg;
   position:relative;
   overflow:hidden;
@@ -45,6 +48,14 @@
   rotate:var(--trip-camera-icon-rotation);
   transition:rotate 100ms linear,transform 120ms ease,filter 120ms ease;
 }
+.trip-day--camera :is(.trip-camera-settings-entry,.trip-camera-header-actions button,.trip-camera-control) > .trip-pencil-icon {
+  width:var(--trip-camera-icon-size);
+  height:var(--trip-camera-icon-size);
+}
+.trip-day--camera .trip-camera-shutter > .trip-pencil-icon {
+  width:var(--trip-camera-shutter-icon-size);
+  height:var(--trip-camera-shutter-icon-size);
+}
 #trip-board-structure .trip-day--camera button > .trip-pencil-icon[data-theme-backdrop="true"] {
   --trip-pencil-icon-backdrop:#fff;
   color:var(--trip-theme-accent,#4b96aa);
@@ -60,14 +71,14 @@
   bottom:var(--trip-camera-bottom-inset);
   left:var(--trip-camera-left-inset);
   display:flex;
-  flex-direction:row;
+  flex-direction:column;
   align-items:center;
   justify-self:auto;
   align-self:auto;
   width:max-content;
-  height:44px;
+  height:max-content;
   margin:0;
-  gap:2px;
+  gap:var(--trip-camera-control-gap);
   border:0;
   background:transparent;
   pointer-events:auto;
@@ -79,10 +90,18 @@
   grid-column:auto;
   grid-row:auto;
   flex:none;
+  display:grid;
+  place-items:center;
+  box-sizing:border-box;
   width:44px;
   height:44px;
+  padding:0;
   margin:0;
+  border:0;
+  background:transparent;
 }
+.trip-camera-header-actions .trip-pane-expand { order:0; }
+.trip-camera-header-actions .trip-close { order:1; }
 .trip-camera-settings-entry { z-index:7; }
 
 .trip-camera {
@@ -116,14 +135,6 @@
 }
 .trip-camera-preview-state .trip-pencil-surface { gap:8px; min-height:44px; padding:8px 14px; }
 .trip-camera-preview-state .trip-pencil-icon { width:28px; height:28px; }
-.trip-camera-grid { position:absolute; inset:0; pointer-events:none; opacity:.58; }
-.trip-camera-grid span { position:absolute; display:block; background:rgba(255,255,245,.72); box-shadow:0 0 1px rgba(0,0,0,.7); }
-.trip-camera-grid span:nth-child(1),.trip-camera-grid span:nth-child(2) { top:0; bottom:0; width:1px; }
-.trip-camera-grid span:nth-child(1) { left:33.333%; }
-.trip-camera-grid span:nth-child(2) { left:66.667%; }
-.trip-camera-grid span:nth-child(3),.trip-camera-grid span:nth-child(4) { left:0; right:0; height:1px; }
-.trip-camera-grid span:nth-child(3) { top:33.333%; }
-.trip-camera-grid span:nth-child(4) { top:66.667%; }
 .trip-camera-recording {
   position:absolute;
   z-index:3;
@@ -153,8 +164,8 @@
   pointer-events:none;
 }
 .trip-camera-status:empty { display:none; }
-.trip-day--camera:has(.trip-camera-header-actions .trip-pane-expand) .trip-camera-status {
-  left:max(114px,calc(env(safe-area-inset-left) + 104px));
+.trip-camera:has(.trip-camera-hardware-controls) .trip-camera-status {
+  bottom:calc(var(--trip-camera-bottom-inset,9px) + 144px);
 }
 .trip-camera-status > .trip-camera-pencil-label { padding:5px 10px; }
 .trip-camera-status .trip-camera-pencil-label-content { overflow-wrap:anywhere; }
@@ -198,10 +209,10 @@
   color:var(--trip-camera-ink);
   cursor:pointer;
 }
-.trip-camera-control .trip-pencil-icon { width:30px; height:30px; }
+.trip-camera-control .trip-pencil-icon { width:var(--trip-camera-icon-size); height:var(--trip-camera-icon-size); }
 .trip-camera-control:disabled { opacity:.55; cursor:wait; }
 .trip-camera-control:first-child { top:var(--trip-camera-top-inset); }
-.trip-camera-facing-toggle { top:calc(var(--trip-camera-top-inset) + 46px); }
+.trip-camera-facing-toggle { top:calc(var(--trip-camera-top-inset) + var(--trip-camera-control-slot) + var(--trip-camera-control-gap)); }
 .trip-camera-system-capture { bottom:var(--trip-camera-bottom-inset); }
 .trip-camera-shutter {
   position:relative;
@@ -224,16 +235,7 @@
   left:50%;
   transform:translate(-50%,-50%);
 }
-.trip-camera-shutter > .trip-pencil-icon { width:36px; height:36px; }
-.trip-camera-record-dot {
-  width:30px;
-  height:30px;
-  border:3px solid rgba(255,255,245,.94);
-  border-radius:50%;
-  background:#df382f;
-  box-shadow:0 1px 3px #000,0 0 0 2px rgba(0,0,0,.18);
-}
-.trip-camera-record-dot.is-pending { background:#f0b44f; }
+.trip-camera-shutter > .trip-pencil-icon { width:var(--trip-camera-shutter-icon-size); height:var(--trip-camera-shutter-icon-size); }
 .trip-camera-shutter:disabled { opacity:.45; cursor:not-allowed; }
 .trip-camera :is(.trip-camera-controls,.trip-camera-recording,.trip-camera-status) .trip-pencil-icon { filter:none !important; }
 .trip-camera-upload-input { display:none; }

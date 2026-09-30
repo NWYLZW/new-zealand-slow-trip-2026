@@ -194,7 +194,7 @@ export function createPencilRoutes(canvas, entries, width, height) {
             const strokeSeed=seed+part.dashIndex*17;
             pencilStroke(context, part.points, '#fdfcf8', 3.5 / Math.pow(image.k, .32), strokeSeed, .1, 1, false,
               { ...settings, gain: 1.1, grain: .45, breaks: .1 });
-            pencilStroke(context, part.points, colors[route.transport] || colors.road,
+            pencilStroke(context, part.points, route.color || colors[route.transport] || colors.road,
               (active ? 2.7 : 2) / Math.pow(image.k, .32), strokeSeed, .55 / Math.sqrt(image.k), 3, false, settings);
             image.counts.strokeCalls+=2;
             yield;

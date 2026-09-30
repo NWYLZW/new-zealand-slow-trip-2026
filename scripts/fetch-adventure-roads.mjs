@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { createServer } from 'vite';
 
@@ -8,7 +8,12 @@ import { createServer } from 'vite';
 const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
 try {
   const { adventureRoutes } = await server.ssrLoadModule('/src/adventure/adventureRoutes.js');
-  const result = {
+  const routeId = process.argv.find(argument => argument.startsWith('--route='))?.slice(8);
+  const routes = adventureRoutes.filter(route => ['road', 'coach'].includes(route.transport)
+    && (!routeId || route.id === routeId));
+  assert(routes.length, `No driving route matches ${routeId ?? 'the route index'}`);
+  const output = new URL('../src/adventure/data/road-routes.json', import.meta.url);
+  const result = routeId ? JSON.parse(await readFile(output, 'utf8')) : {
     type: 'AdventureRoadRoutes', crs: 'EPSG:4326', coordinateOrder: 'longitude,latitude',
     source: {
       engine: 'OSRM', profile: 'driving', service: 'https://routing.openstreetmap.de/routed-car/route/v1/driving/',
@@ -19,7 +24,7 @@ try {
     note: 'Road-network routing snapshot, not a GPS track or live traffic/closure forecast. Coach geometry uses the car profile, not a verified operator route.',
     routes: {},
   };
-  for (const route of adventureRoutes.filter(route => route.transport !== 'flight')) {
+  for (const route of routes) {
     const input = route.routingPoints.map(([lat, lon]) => [lon, lat]);
     const url = new URL(input.map(point => point.join(',')).join(';'), result.source.service);
     url.search = new URLSearchParams({ overview: 'full', geometries: 'geojson', steps: 'true', alternatives: 'false',
@@ -48,6 +53,6 @@ try {
     console.log(`${route.id}: ${path.geometry.coordinates.length} points; ${(path.distance / 1000).toFixed(1)} km; max snap ${Math.max(...data.waypoints.map(point => point.distance)).toFixed(1)} m`);
     await delay(1100);
   }
-  // Only replace the cache after every itinerary route succeeds.
-  await writeFile(new URL('../src/adventure/data/road-routes.json', import.meta.url), `${JSON.stringify(result)}\n`);
+  // A targeted refresh preserves every unrelated route snapshot byte-for-byte in JSON values.
+  await writeFile(output, `${JSON.stringify(result)}\n`);
 } finally { await server.close(); }

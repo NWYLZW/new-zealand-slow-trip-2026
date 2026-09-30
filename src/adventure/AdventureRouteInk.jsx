@@ -3,7 +3,7 @@ import { pencilStroke } from "./pencil/stroke";
 import { drawPencilWash } from "./pencil/wash";
 
 // The diagram follows the native list rows, so names can wrap without moving the ink off a stop.
-export function AdventureRouteInk({ mode, count }) {
+export function AdventureRouteInk({ mode, color, count }) {
   const canvasRef = useRef(null);
   useLayoutEffect(() => {
     const canvas = canvasRef.current, list = canvas.parentElement;
@@ -20,7 +20,7 @@ export function AdventureRouteInk({ mode, count }) {
         return [rect.left - bounds.left + rect.width / 2, rect.top - bounds.top + rect.height / 2];
       });
       if (points.length < 2) return;
-      const ink = mode === "flight" ? "#527e91" : mode === "coach" ? "#8a714b" : "#638368";
+      const ink = color ?? (mode === "flight" ? "#527e91" : mode === "coach" ? "#8a714b" : "#638368");
       for (let index = 1; index < points.length; index++) {
         const [x1, y1] = points[index - 1], [x2, y2] = points[index];
         if (mode === "flight") {
@@ -56,6 +56,6 @@ export function AdventureRouteInk({ mode, count }) {
     resize.observe(list);
     paint();
     return () => resize.disconnect();
-  }, [mode, count]);
+  }, [mode, color, count]);
   return <canvas ref={canvasRef} className="trip-route-diagram-ink" aria-hidden="true" />;
 }

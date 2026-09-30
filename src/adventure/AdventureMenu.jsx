@@ -31,7 +31,7 @@ function isAppleMobileDevice() {
 
 export function AdventureMenu({ open, screen = "menu", unlockOrigin = "menu", onScreenChange, onClose, onOpenLegacy }) {
   const { language, setLanguage, theme, setTheme, appearance, setAppearance,
-    orientation, setOrientation, orientationStatus } = useAdventurePreferences();
+    orientation, setOrientation } = useAdventurePreferences();
   const vault = usePrivateVault();
   const { prompt, installed } = useSyncExternalStore(subscribeInstallState, getInstallState);
   const updateState = useSyncExternalStore(subscribeUpdateState, getUpdateState);
@@ -63,11 +63,6 @@ export function AdventureMenu({ open, screen = "menu", unlockOrigin = "menu", on
         : updateState.status === "updating" ? "updatingApp"
           : updateState.status === "offline" ? "updateOffline"
             : updateState.status === "error" ? "updateFailed" : "updateUnchecked";
-  const orientationMessage = orientationStatus === "applying" ? "orientationApplying"
-    : orientationStatus === "locked" ? (orientation === "landscape" ? "orientationLandscapeLocked" : "orientationPortraitLocked")
-      : orientationStatus === "system" ? "orientationSystem"
-        : orientationStatus === "unsupported" ? "orientationUnsupported"
-          : orientationStatus === "restricted" ? "orientationRestricted" : null;
 
   const clearPrivateEntryTimer = useCallback(() => {
     if (privateEntryTimerRef.current !== null) window.clearTimeout(privateEntryTimerRef.current);
@@ -202,7 +197,7 @@ export function AdventureMenu({ open, screen = "menu", unlockOrigin = "menu", on
   const titleKey = screen === "settings" ? "settings" : screen === "unlock" ? "unlock" : "menuTitle";
 
   return <PencilSurface as="dialog" variant="full" ref={dialogRef}
-    id="trip-adventure-menu" className="trip-adventure-menu" data-phase={phase}
+    id="trip-adventure-menu" className="trip-adventure-menu" data-phase={phase} data-screen={screen}
     aria-labelledby="trip-adventure-menu-title"
     onCancel={event => { event.preventDefault(); event.stopPropagation(); screen === "menu" ? startExit(true) : goBack(); }}
     onKeyDownCapture={event => { if (event.key === "Escape") event.stopPropagation(); }}>
@@ -234,7 +229,7 @@ export function AdventureMenu({ open, screen = "menu", unlockOrigin = "menu", on
         <PanelDivider />
       </header>
 
-      {screen === "settings" && <section className="trip-adventure-menu-settings" aria-label={t("settings")}>
+      {screen === "settings" && <section className="trip-adventure-menu-settings" aria-label={t("settings")} tabIndex={0}>
         <div className="trip-adventure-menu-setting">
           <h2><LanguageIcon /><PencilText>{t("language")}</PencilText></h2>
           <div role="group" aria-label={t("language")} className="trip-adventure-menu-options">
@@ -276,9 +271,6 @@ export function AdventureMenu({ open, screen = "menu", unlockOrigin = "menu", on
               <Icon /><span className="trip-adventure-menu-choice-label"><PencilText>{t(id)}</PencilText></span>
             </PencilSurface>)}
           </div>
-          {orientationMessage && <p className={`trip-adventure-menu-orientation-status is-${orientationStatus}`} role="status">
-            <PencilText>{t(orientationMessage)}</PencilText>
-          </p>}
         </div>
       </section>}
 

@@ -6,7 +6,7 @@ import { drawWaterLabels } from "./pencil/drawWaterLabels";
 import { drawBathymetry } from "./drawBathymetry";
 import { ZoomInIcon, ZoomOutIcon, ResetIcon } from "./SketchIcons";
 import { GameIconButton } from "./GameIconButton";
-import { adventureRoutes, projectedRoutePath, routeGeometryLabel } from "./adventureRoutes";
+import { adventureRoutes, projectedRoutePath, routeGeometryLabel, focusLocationPositions } from "./adventureRoutes";
 import { createPencilMap } from "./pencil/drawPencilMap";
 import { createPencilRoutes, routeBadge } from "./pencil/drawPencilRoutes";
 import { fillStopLabel, mapLabel } from "./pencil/mapLabels";
@@ -779,7 +779,8 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         animateFocus(d3.zoomIdentity.translate(rect.center[0] - marker.position[0] * PLACE_ZOOM,
           rect.center[1] - marker.position[1] * PLACE_ZOOM).scale(PLACE_ZOOM));
       },
-      focusLocations: ({ positions }) => {
+      focusLocations: (focus) => {
+        const positions = focusLocationPositions(focus);
         if (!area._project || !positions.length) return;
         animateFocus(locationsView(positions, area._project, focusRect()));
       },
@@ -995,7 +996,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         if (marker) nextView = placeView(marker.position, rect);
       }
       if (!restored && activeMapMode !== "international" && !layout && state.current.focusLocations) {
-        nextView = locationsView(state.current.focusLocations.positions, project, rect);
+        nextView = locationsView(focusLocationPositions(state.current.focusLocations), project, rect);
       }
       if (!restored && activeMapMode !== "international" && !layout && state.current.focusRoute) {
         const route = adventureRoutes.find(item => item.id === state.current.focusRoute);
@@ -1012,7 +1013,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
           const marker = markerPositions.find((item) => item.tag === state.current.selected);
           if (marker) nextView = placeView(marker.position, rect);
         } else if (activeMapMode !== "international" && !userMoved && !resumeFocus && state.current.focusLocations) {
-          nextView = locationsView(state.current.focusLocations.positions, project, rect);
+          nextView = locationsView(focusLocationPositions(state.current.focusLocations), project, rect);
         } else if (activeMapMode !== "international" && !userMoved && !resumeFocus && state.current.focusRoute) {
           const route = adventureRoutes.find(item => item.id === state.current.focusRoute);
           if (route) nextView = locationsView(route.roadGeometry?.coordinates ??

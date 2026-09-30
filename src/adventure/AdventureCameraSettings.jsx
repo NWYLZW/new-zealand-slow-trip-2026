@@ -5,6 +5,8 @@ import { cameraPermissionPromptGate } from "./cameraPermissionLifecycle";
 import { useCameraGridPreference, useCameraLocationPreference } from "./cameraPreferences";
 import { getMediaSnapshot, initializeMediaLibrary, setLocalNickname, subscribeMediaLibrary } from "./media/library";
 import { PanelDivider } from "./pencil/PanelDivider";
+import { CameraAdvancedSettings } from "./CameraAdvancedSettings";
+import { CameraLevelPermission } from "./CameraLevel.jsx";
 import { PencilIcon } from "./pencil/PencilIcon";
 import { PencilSurface } from "./pencil/PencilSurface";
 import { PencilText } from "./pencil/PencilText";
@@ -208,8 +210,10 @@ export function AdventureCameraSettings({ view = "settings", onOpenDevice }) {
           aria-label={en ? "Composition grid" : "构图九宫格"} onChange={event => setCameraGrid(event.target.checked)} />
           {cameraGrid && <SettingsIcon kind="check" />}</PencilSurface>
       </label>
+      <CameraLevelPermission enabled={cameraGrid} en={en} />
       <PanelDivider />
     </div>
+    <CameraAdvancedSettings en={en} />
     {snapshot.status === "error" && <p role="alert"><PencilText>{en ? "Local storage unavailable." : "本地存储不可用。"}</PencilText></p>}
   </section>;
 }

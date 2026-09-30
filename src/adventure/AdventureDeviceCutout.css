@@ -19,13 +19,13 @@
   padding-right:max(9px,env(safe-area-inset-right),var(--trip-cutout-control-inset));
 }
 #trip-board-structure[data-device-cutout="top-right"] .trip-day--camera {
-  --trip-camera-cutout-top-inset:max(var(--trip-camera-top-inset),calc(var(--trip-cutout-block-inset) + 9px));
+  --trip-camera-cutout-top-inset:max(var(--trip-camera-top-inset),calc(var(--trip-cutout-block-inset) + var(--trip-camera-control-gap)));
 }
 #trip-board-structure[data-device-cutout="top-right"] .trip-camera-control:first-child {
   top:var(--trip-camera-cutout-top-inset);
 }
 #trip-board-structure[data-device-cutout="top-right"] .trip-camera-facing-toggle {
-  top:calc(var(--trip-camera-cutout-top-inset) + 46px);
+  top:calc(var(--trip-camera-cutout-top-inset) + var(--trip-camera-control-slot) + var(--trip-camera-control-gap));
 }
 
 #trip-board-structure[data-device-cutout="top-left"] :is(.trip-home,.trip-international-view-toggle) {

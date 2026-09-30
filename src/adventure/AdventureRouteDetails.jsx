@@ -3,7 +3,7 @@ import { AdventureRouteInk } from "./AdventureRouteInk";
 import { PanelDivider } from "./pencil/PanelDivider";
 import { PencilIcon } from "./pencil/PencilIcon";
 import { PencilText } from "./pencil/PencilText";
-import { getAgendaWaypoint, getRouteWaypointCoverage } from "./adventureWaypoints";
+import { getAdventureWaypoint, getAgendaWaypoint, getRouteWaypointCoverage } from "./adventureWaypoints";
 import { agendaIconType, getAgendaIconDefinition } from "./adventureAgendaIcons";
 import "./AdventureRouteDetails.css";
 
@@ -24,6 +24,12 @@ function routeNodes(route, itinerary) {
       name: cities[index] || stop?.name || tag,
       role: index === 0 ? "起点" : index === tags.length - 1 ? "终点" : "途经" };
   });
+  if (route.roundTrip) {
+    nodes.splice(1, 0, ...(route.waypointIds ?? []).map(getAdventureWaypoint).filter(Boolean)
+      .map(point => ({ key: point.id, waypoint: point.id, name: point.name,
+        role: point.drivingStop ? "途经" : "步行停留" })));
+    nodes.at(-1).role = "返程";
+  }
   // Arrowtown is named in this day's itinerary; it is not an adventure map stop.
   if (route.id === "zqn-wanaka" && !route.via?.length && itinerary?.title.includes("箭镇")) {
     nodes.splice(1, 0, { key: "arrowtown", tag: null, waypoint: "arrowtown", name: "箭镇", role: "途经" });
@@ -51,7 +57,7 @@ export function AdventureRouteDetails({ route, navigate }) {
     {nodes.length > 1 && <section className="trip-route-section" aria-label="途经站点">
       <SectionHeading>行进路线</SectionHeading>
       <ol className="trip-route-diagram">
-        <AdventureRouteInk mode={route.transport} count={nodes.length} />
+        <AdventureRouteInk mode={route.transport} color={route.color} count={nodes.length} />
         {nodes.map(node => <li key={node.key}>
           <span className="trip-route-node-mark" data-route-node aria-hidden="true" />
           <span className="trip-route-node-content">

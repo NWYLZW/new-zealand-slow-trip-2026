@@ -11,10 +11,11 @@ import { adventureLabel, adventureText } from "./adventureLabels";
 import { getTripCalendarDay } from "../components/calendar/tripCalendarData";
 import { mapStops } from "../tripData";
 import { adventureStops } from "./adventureData";
+import { adventureContextRouteIds } from "./adventureRouteContext";
 import { GameIconButton } from "./GameIconButton";
 import { MenuIcon, TasksIcon, BagIcon, CameraIcon } from "./SketchIcons";
 import { useAdventureNavigation } from "./useAdventureNavigation";
-import { responsiveFullscreenPane, useAdventureResponsiveLayout } from "./adventureResponsivePane";
+import { resolveAdventureFullscreen, responsiveFullscreenPane, useAdventureResponsiveLayout } from "./adventureResponsivePane";
 import { useAdventureDeviceCutout } from "./adventureDeviceCutout";
 import { mapHandwriting } from "./pencil/label";
 import { internationalFlightSegments, internationalMapStops } from "./internationalMapData";
@@ -61,8 +62,10 @@ function AdventureBoard() {
   const fullscreen = view.fullscreen;
   const responsiveLayout = useAdventureResponsiveLayout(view);
   const deviceCutout = useAdventureDeviceCutout();
-  const automaticFullscreen = fullscreen ? null : responsiveFullscreenPane(view, responsiveLayout);
-  const effectiveFullscreen = fullscreen ?? automaticFullscreen;
+  const [cameraAutomaticFullscreenSuppressed, setCameraAutomaticFullscreenSuppressed] = useState(false);
+  const { automaticFullscreen, effectiveFullscreen } = resolveAdventureFullscreen(view, responsiveLayout, {
+    cameraAutomaticFullscreenSuppressed,
+  });
   const [calendarMounted, setCalendarMounted] = useState(calendarOpen);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [sideMounted, setSideMounted] = useState(sideOpen);
@@ -74,6 +77,9 @@ function AdventureBoard() {
   const returnFromUnlock = useRef(unlockEntry.returnUrl);
   const lastCalendarView = useRef(view);
   const lastSideView = useRef(view);
+  useEffect(() => {
+    if (view.rightPanel !== "camera") setCameraAutomaticFullscreenSuppressed(false);
+  }, [view.rightPanel]);
   useEffect(() => {
     let secondFrame = 0;
     const firstFrame = requestAnimationFrame(() => {
@@ -127,6 +133,8 @@ function AdventureBoard() {
   }, [sideOpen]);
   const calendarView = calendarOpen ? view : lastCalendarView.current;
   const sideView = sideOpen ? view : lastSideView.current;
+  const contextRouteIds = useMemo(() => adventureContextRouteIds(view),
+    [view.rightPanel, view.eventId, view.focus, view.front]);
   const focusLocations = useMemo(() => {
     const focus = view.focus;
     if (focus?.kind === "international-route") {
@@ -134,16 +142,18 @@ function AdventureBoard() {
       return segment ? { id: `${focus.value}:${focus.token}`,
         positions: [segment.fromPosition, segment.toPosition].map(([lat, lng]) => [lng, lat]) } : null;
     }
-    const day = focus?.kind === 'date' && (calendarOpen || view.rightPanel === 'day')
-      ? getTripCalendarDay(focus.value) : null;
+    const day = focus?.kind === 'date' && (calendarOpen || ['day', 'event'].includes(view.rightPanel))
+      ? getTripCalendarDay(focus.value)
+      : focus?.kind === 'event' ? getTripCalendarDay(focus.value.split('|')[0]) : null;
     if (!day) return null;
     const tags = [...new Set(day.events.flatMap(event => event.stopTags ?? []))];
     const positions = tags.map(tag => internationalMapStops.find(stop => stop.tag === tag)
       ?? adventureStops.find(stop => stop.tag === tag) ?? mapStops.find(stop => stop.tag === tag))
       .filter(Boolean)
       .map(stop => [stop.position[1], stop.position[0]]);
-    return positions.length ? { id: `${focus.value}:${focus.token}`, positions } : null;
-  }, [calendarOpen, view.focus, view.rightPanel]);
+    return positions.length || contextRouteIds.length
+      ? { id: `${focus.value}:${focus.token}`, positions, routeIds: contextRouteIds } : null;
+  }, [calendarOpen, view.focus, view.rightPanel, contextRouteIds]);
   const select = useCallback((tag) => { previousSideFocus.current = document.activeElement; navigate("place", tag); }, [navigate]);
   const selectRoute = useCallback((id) => {
     previousSideFocus.current = document.activeElement;
@@ -165,6 +175,19 @@ function AdventureBoard() {
     navigate('close-right');
     requestAnimationFrame(() => returnFocus?.focus({ preventScroll: true }));
   }, [navigate]);
+  const toggleRightFullscreen = useCallback(() => {
+    if (view.rightPanel !== "camera") {
+      navigate("fullscreen", "right");
+      return;
+    }
+    if (effectiveFullscreen === "right") {
+      setCameraAutomaticFullscreenSuppressed(true);
+      if (fullscreen === "right") navigate("fullscreen", "right");
+      return;
+    }
+    setCameraAutomaticFullscreenSuppressed(false);
+    if (responsiveFullscreenPane(view, responsiveLayout) !== "right") navigate("fullscreen", "right");
+  }, [effectiveFullscreen, fullscreen, navigate, responsiveLayout, view]);
   const requestUnlock = useCallback(() => {
     unlockTrigger.current = document.activeElement;
     returnFromUnlock.current = null;
@@ -237,8 +260,9 @@ function AdventureBoard() {
     data-responsive-layout={responsiveLayout} data-automatic-fullscreen={automaticFullscreen ?? undefined}
     data-fullscreen={effectiveFullscreen ?? undefined}>
     <AdventureDeferredFeature load={loadMap} kind="map" defer componentProps={{
-      selected: view.airport ? `a:${view.airport}` : view.place,
-      selectedRoute: view.focus?.kind === 'date' ? null : view.flightRoute ?? view.route,
+      selected: view.airport ? `a:${view.airport}` : view.focus?.kind === 'event' ? null : view.place,
+      selectedRoute: contextRouteIds.length === 1 ? contextRouteIds[0]
+        : view.focus?.kind === 'date' ? null : view.flightRoute ?? view.route,
       selectedWaypoint: view.waypoint, focusLocations,
       focusRoute: view.focus?.kind === 'route' ? view.focus.value : null,
       focusNode: view.focus?.kind === 'node' ? { key: view.focus.value, token: view.focus.token } : null,
@@ -276,7 +300,7 @@ function AdventureBoard() {
         cameraActive: sideOpen && sideVisible && effectiveFullscreen !== "calendar" && view.rightPanel === "camera" && view.cameraView === "preview" && !menuOpen,
         closeButtonRef: closeButton, onRequestUnlock: requestUnlock,
         fullscreen: effectiveFullscreen === "right", automaticFullscreen: automaticFullscreen === "right",
-        onToggleFullscreen: () => navigate("fullscreen", "right"), onOpenMenu: openMenu,
+        onToggleFullscreen: toggleRightFullscreen, onOpenMenu: openMenu,
         "aria-hidden": !sideOpen || effectiveFullscreen === "calendar",
         inert: sideOpen && effectiveFullscreen !== "calendar" ? undefined : '',
       }} />}

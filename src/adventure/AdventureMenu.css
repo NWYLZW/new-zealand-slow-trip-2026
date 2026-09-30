@@ -150,7 +150,6 @@ html[data-adventure-theme="sunset"] #trip-board-structure {
 .trip-adventure-menu-appearance.trip-pencil-surface { display: flex; flex-direction: column; gap: 7px; min-width: 0; min-height: 44px; padding: 8px; font-size: 15px; }
 .trip-adventure-appearance-preview { display: block; width: 100%; height: auto; aspect-ratio: 200 / 118; border-radius: 4px; }
 .trip-adventure-menu-appearance .trip-pencil-text { max-width: 100%; overflow-wrap: anywhere; text-align: center; }
-.trip-adventure-menu-orientation-status,
 .trip-adventure-menu-update-status { margin: 0; color: var(--trip-ink-muted); font-size: 14px; line-height: 1.45; }
 .trip-adventure-menu-update-status.is-error { color: #934b43; }
 
@@ -205,6 +204,24 @@ html[data-adventure-theme="sunset"] #trip-board-structure {
 #trip-board-structure[data-responsive-layout^="phone-"] .trip-adventure-menu-header { margin-bottom: 10px; }
 #trip-board-structure[data-responsive-layout^="phone-"] .trip-adventure-menu-settings { flex: 1; align-content: start; gap: 14px; padding-bottom: 8px; }
 #trip-board-structure[data-responsive-layout^="phone-"] .trip-adventure-menu-links { flex: 1; align-content: start; }
+#trip-board-structure .trip-adventure-menu[data-screen="settings"] { overflow: hidden; }
+#trip-board-structure .trip-adventure-menu[data-screen="settings"] .trip-adventure-menu-inner {
+  height: 100%;
+  min-height: 0;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+#trip-board-structure .trip-adventure-menu[data-screen="settings"] .trip-adventure-menu-settings {
+  flex: 1 1 0;
+  min-height: 0;
+  align-content: start;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: 4px 4px 8px;
+}
+.trip-adventure-menu-settings:focus-visible { outline: 2px solid var(--trip-focus-color, #355c46); outline-offset: -2px; }
 @keyframes trip-update-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   .trip-adventure-menu,.trip-adventure-menu::backdrop { transition: none; }

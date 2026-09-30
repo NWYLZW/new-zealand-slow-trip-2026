@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { adventureStops } from "./adventureData";
 import { adventureRouteIndex } from "./adventureRouteIndex";
+import { eventAdventureRouteIds } from "./adventureRouteContext";
 import { eventDateId, getAdventureCalendarDays, getTripCalendarDay } from "../components/calendar/tripCalendarData";
 import { southDays, northDays } from "../tripData";
 import { socialGuidesByEvent } from "../socialGuides";
@@ -109,6 +110,7 @@ function readLocation() {
     : calendarOpen ? "tasks" : rightPanel ? "right" : null;
   const focus = rightPanel === "cluster" ? null : clusterNodeKey ? { kind: "node", value: clusterNodeKey, token: 0 }
     : front === "tasks" && date ? { kind: "date", value: date, token: 0 }
+    : rightPanel === "event" && eventAdventureRouteIds(event).length ? { kind: "event", value: eventId, token: 0 }
     : dayFrom && day ? { kind: "date", value: day, token: 0 }
       : place ? { kind: "place", value: place, token: 0 }
       : route ? { kind: "route", value: route, token: 0 }
@@ -327,13 +329,18 @@ export function useAdventureNavigation() {
       next.stayFrom = null;
       next.bagNote = null;
       next.front = next.calendarOpen ? "tasks" : null;
-      if (["place", "route"].includes(next.focus?.kind) || previous.rightPanel === "day") next.focus = null;
+      if (["place", "route", "event"].includes(next.focus?.kind) || previous.rightPanel === "day") next.focus = null;
     } else if (target === "event" && eventById.has(id?.event?.urlId ?? id?.urlId ?? id)) {
       const event = eventById.get(id?.event?.urlId ?? id?.urlId ?? id);
       const agendaItem = id?.agendaItem ?? (typeof requestedScope === "object" ? requestedScope.agendaItem : null);
       const fromCalendar = requestedScope === "calendar" || requestedScope?.from === "calendar";
       const eventDate = eventDateId(event);
       next.eventId = event.urlId;
+      if (eventAdventureRouteIds(event).length) {
+        next.focus = { kind: "event", value: event.urlId, token: (previous.focus?.token ?? 0) + 1 };
+      } else if (previous.focus?.kind === "event") {
+        next.focus = null;
+      }
       next.eventTab = "schedule";
       next.eventAgenda = eventAgendaItems(event).some((item) => item.id === agendaItem?.id) ? agendaItem.id : null;
       next.eventFrom = !fromCalendar && previous.rightPanel === "place" ? "place" : "day";
@@ -370,6 +377,7 @@ export function useAdventureNavigation() {
       next.eventFrom = null;
       next.airport = null;
       next.flightRoute = null;
+      if (previous.focus?.kind === "event") next.focus = null;
       next.front = "right";
     } else if (target === "waypoint") {
       const waypoint = getAdventureWaypoint(id);

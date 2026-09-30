@@ -1,16 +1,115 @@
+#trip-board-structure {
+  --trip-shared-tool-icon-size: 45px;
+  --trip-bag-tab-icon-size: 36px;
+}
+
 #trip-board-structure .trip-tool > .trip-tool-symbol {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
   transform-origin: center;
 }
 
 #trip-board-structure .trip-tool .trip-pencil-icon {
-  width: var(--trip-header-icon-size);
-  height: var(--trip-header-icon-size);
+  width: var(--trip-shared-tool-icon-size);
+  height: var(--trip-shared-tool-icon-size);
+}
+
+#trip-board-structure .trip-international-view-toggle > canvas {
+  display: block;
+  width: var(--trip-shared-tool-icon-size) !important;
+  height: var(--trip-shared-tool-icon-size) !important;
+  max-width: none;
+  max-height: none;
+  pointer-events: none;
+}
+
+#trip-board-structure .trip-international-view-toggle {
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  overflow: visible;
+}
+
+#trip-board-structure .trip-day:not(.trip-day--camera) > .trip-panel-header :is(
+  .trip-panel-leading,
+  .trip-route-header-action,
+  .trip-stay-header-action,
+  .trip-close
+) {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  box-sizing: border-box;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 0;
+  overflow: visible;
+}
+
+#trip-board-structure .trip-day:not(.trip-day--camera) > .trip-panel-header :is(
+  .trip-panel-leading,
+  .trip-route-header-action,
+  .trip-stay-header-action,
+  .trip-close
+) > .trip-pencil-icon,
+#trip-board-structure .trip-calendar-header-actions .trip-pencil-icon {
+  width: var(--trip-shared-tool-icon-size);
+  height: var(--trip-shared-tool-icon-size);
+  max-width: none;
+  max-height: none;
+  align-self: center;
+  justify-self: center;
+}
+
+#trip-board-structure .trip-adventure-calendar > .trip-adventure-calendar-header .trip-calendar-header-actions > :is(
+  .trip-route-header-action,
+  .trip-adventure-calendar-close
+) {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  box-sizing: border-box;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 0;
+  overflow: visible;
+}
+
+#trip-board-structure .trip-bag-tab.trip-pencil-surface {
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  box-sizing: border-box;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 5px;
+  overflow: visible;
+}
+
+#trip-board-structure .trip-bag-tab .trip-pencil-icon {
+  width: var(--trip-bag-tab-icon-size);
+  height: var(--trip-bag-tab-icon-size);
+  min-width: 0;
+  max-width: none;
+  align-self: center;
+  justify-self: center;
 }
 
 #trip-board-structure :is(.trip-prev, .trip-next) {

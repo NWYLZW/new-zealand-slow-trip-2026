@@ -8,6 +8,13 @@ export const adventureRoutes = adventureRouteIndex.map(route => ({
   roadSource: roadRoutes.routes[route.id] ?? null,
 }));
 
+export function focusLocationPositions(focus) {
+  return [...(focus.positions ?? []), ...(focus.routeIds ?? []).flatMap(id => {
+    const route = adventureRoutes.find(item => item.id === id);
+    return route?.roadGeometry?.coordinates ?? route?.points.map(([lat, lng]) => [lng, lat]) ?? [];
+  })];
+}
+
 export function projectedRoutePath(route, project) {
   const points = route.points.map(([lat, lng]) => project([lng, lat]));
   if (points.length < 2) return "";

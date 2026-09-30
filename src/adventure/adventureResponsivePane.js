@@ -29,6 +29,16 @@ export function responsiveFullscreenPane(view, layout) {
   return view.calendarOpen ? "calendar" : null;
 }
 
+export function resolveAdventureFullscreen(view, layout, { cameraAutomaticFullscreenSuppressed = false } = {}) {
+  const suppressCameraAutomaticFullscreen = cameraAutomaticFullscreenSuppressed && view.rightPanel === "camera";
+  const automaticFullscreen = view.fullscreen || suppressCameraAutomaticFullscreen
+    ? null : responsiveFullscreenPane(view, layout);
+  return {
+    automaticFullscreen,
+    effectiveFullscreen: view.fullscreen ?? automaticFullscreen,
+  };
+}
+
 function readLayout() {
   const root = document.documentElement;
   return classifyAdventureViewport({
