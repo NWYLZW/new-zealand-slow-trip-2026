@@ -10,6 +10,10 @@ import { waterFeatures } from './waterFeatures';
 import { createMapTerrainCache, retainMapSurface, restoreMapSurface,
   releaseMapSurface, mapSurfacePixels } from './mapTerrainCache';
 import { terrainOverviewKey } from './mapTerrainVersion';
+import { DETAIL_CACHE_MAX_PIXELS, detailCacheVictims, detailCoverage, detailRenderPlan,
+  intersectDetailBounds, planDetailTiles, uncoveredDetailBounds } from './detailTilePlan';
+
+export { detailRenderPlan, planDetailTiles } from './detailTilePlan';
 
 const TILE_SIZE = 512;
 const OCEAN_TILE_DENSITY = 1;
@@ -17,11 +21,8 @@ const OCEAN_TEXTURE_STROKES = 320;
 const OVERVIEW_MAX_ZOOM = 3.5;
 const REGIONAL_MAX_ZOOM = 9;
 const DETAIL_DELAY_MS = 150;
-const MAX_DETAIL_ENTRIES = 3;
-const MAX_DETAIL_PIXELS = 9000000;
 const MAX_TILE_PIXELS = 4000000;
 const MAX_OVERVIEW_PIXELS = 2000000;
-const DETAIL_TILE_SIZE = 192;
 const geographicRings = geometry => geometry.type === 'MultiPolygon' ? geometry.coordinates.flat() :
   geometry.type === 'Polygon' || geometry.type === 'MultiLineString' ? geometry.coordinates : [geometry.coordinates];
 
@@ -163,38 +164,6 @@ function visibleWorld(view, viewport) {
   return { left, top, right, bottom };
 }
 
-export function detailRenderPlan({ visibleWidth, visibleHeight, renderScale, dpr,
-  maxPixels = MAX_TILE_PIXELS, maxPaddingRatio = .42 }) {
-  const visiblePixels = Math.max(1, visibleWidth * renderScale * visibleHeight * renderScale);
-  const density = Math.min(dpr, Math.sqrt(maxPixels / visiblePixels));
-  const maximumAreaRatio = maxPixels / Math.max(1, visiblePixels * density * density);
-  const dimensionRatio = Math.min(1 + maxPaddingRatio * 2, Math.sqrt(maximumAreaRatio));
-  return { density, paddingRatio: Math.max(0, (dimensionRatio - 1) / 2),
-    visiblePhysicalPixels: visiblePixels * density * density };
-}
-
-export function planDetailTiles({ left, top, width, height, renderScale }, covered = null) {
-  const logicalWidth = width * renderScale, logicalHeight = height * renderScale;
-  const tiles = [];
-  let reusedTiles = 0;
-  for (let y = 0; y < logicalHeight; y += DETAIL_TILE_SIZE) for (let x = 0; x < logicalWidth; x += DETAIL_TILE_SIZE) {
-    const tileWidth = Math.min(DETAIL_TILE_SIZE, logicalWidth - x);
-    const tileHeight = Math.min(DETAIL_TILE_SIZE, logicalHeight - y);
-    const worldTile = { left: left + x / renderScale, top: top + y / renderScale,
-      right: left + (x + tileWidth) / renderScale, bottom: top + (y + tileHeight) / renderScale };
-    if (covered && worldTile.left >= covered.left && worldTile.top >= covered.top &&
-      worldTile.right <= covered.right && worldTile.bottom <= covered.bottom) {
-      reusedTiles++;
-      continue;
-    }
-    tiles.push({ x, y, width: tileWidth, height: tileHeight,
-      distance: Math.hypot(x + tileWidth / 2 - logicalWidth / 2,
-        y + tileHeight / 2 - logicalHeight / 2) });
-  }
-  tiles.sort((a, b) => a.distance - b.distance);
-  return { tiles, reusedTiles, logicalWidth, logicalHeight };
-}
-
 export function createPencilMap(canvas, project, width, height, options = {}) {
   const dpr = Math.min(devicePixelRatio || 1, 2);
   surface(width, height, dpr, canvas);
@@ -231,7 +200,36 @@ export function createPencilMap(canvas, project, width, height, options = {}) {
   const townSignature = () => visibleTownTags.map(tag => `${tag}:${townRevisions.get(tag) ?? 0}`).join('|');
   const publish = () => { canvas._pencilStats = { ...stats, pending: pendingKey !== null,
     cachedDetails: details.length, cachePixels: details.reduce((sum, entry) => sum + entry.pixels, 0),
+    cachePixelLimit: DETAIL_CACHE_MAX_PIXELS, parkedDetails: details.filter(entry => !entry.canvas.width).length,
     persistence: { ...storage.stats } }; };
+
+  const parkDetail = entry => {
+    if (entry?.complete && entry.canvas.width && entry.canvas._mapPixels) {
+      entry.canvas.width = 0; entry.canvas.height = 0;
+      entry.pixels = mapSurfacePixels(entry.canvas);
+    }
+  };
+  const restoreDetail = entry => {
+    if (entry.canvas.width) return true;
+    if (!restoreMapSurface(entry.canvas)) {
+      entry.canvas.width = 0; entry.canvas.height = 0;
+      entry.pixels = mapSurfacePixels(entry.canvas);
+      return false;
+    }
+    entry.ctx.setTransform(entry.density, 0, 0, entry.density, 0, 0);
+    entry.ctx.lineJoin = 'round';
+    entry.pixels = mapSurfacePixels(entry.canvas);
+    stats.detailRestores = (stats.detailRestores ?? 0) + 1;
+    return true;
+  };
+  const prune = () => {
+    for (const entry of details) if (entry !== activeDetail) parkDetail(entry);
+    for (const removed of detailCacheVictims(details, activeDetail)) {
+      details.splice(details.indexOf(removed), 1);
+      releaseMapSurface(removed.canvas);
+      stats.detailEvictions = (stats.detailEvictions ?? 0) + 1;
+    }
+  };
 
   const cancelPending = () => {
     generation++;
@@ -255,10 +253,12 @@ export function createPencilMap(canvas, project, width, height, options = {}) {
     const candidates = details.filter(entry => intersects(entry, visible) &&
       Math.abs(Math.log2(entry.renderScale / spec.renderScale)) <= 1);
     const signature = townSignature();
-    const exact = candidates.find(entry => entry.complete && entry.level === spec.level && entry.renderScale === spec.renderScale &&
-      entry.townSignature === signature && contains(entry, visible));
-    const chosen = exact ?? candidates.filter(entry => entry.townSignature === signature)
-      .sort((a, b) => Number(b.complete) - Number(a.complete) || b.usedAt - a.usedAt)[0] ?? null;
+    const exact = candidates.filter(entry => entry.complete && entry.level === spec.level && entry.renderScale === spec.renderScale &&
+      entry.townSignature === signature && contains(entry, visible))
+      .sort((a, b) => b.density - a.density || b.usedAt - a.usedAt)[0];
+    const chosen = exact ?? candidates.filter(entry => entry.townSignature === signature &&
+      (entry.complete || entry.coverage.length))
+      .sort((a, b) => b.usedAt - a.usedAt)[0] ?? null;
     if (chosen) chosen.usedAt = performance.now();
     return chosen;
   };
@@ -280,7 +280,16 @@ export function createPencilMap(canvas, project, width, height, options = {}) {
     ctx.fillStyle = pattern; ctx.fillRect(0, 0, width, height);
     if (readyToDraw) blit({ ...layer, left, top, w, h }, view);
     activeDetail = chooseDetail(view);
-    if (activeDetail) blit(activeDetail, view);
+    for (const entry of details) if (entry !== activeDetail) parkDetail(entry);
+    if (activeDetail) {
+      if (restoreDetail(activeDetail)) blit(activeDetail, view);
+      else {
+        details.splice(details.indexOf(activeDetail), 1);
+        releaseMapSurface(activeDetail.canvas); activeDetail = null;
+        stats.detailRestoreFailures = (stats.detailRestoreFailures ?? 0) + 1;
+      }
+    }
+    prune();
     for (const { position, text, size, seed } of labels) {
       const sprite = mapLabel(text, size, seed, p.water, p.paper, { persistence: 'public' });
       const [lx, ly] = view.apply(position);
@@ -292,21 +301,12 @@ export function createPencilMap(canvas, project, width, height, options = {}) {
     stats.frameMs = performance.now() - start;
     stats.lod = detailSpec(view.k).level;
     stats.detailScale = activeDetail?.renderScale ?? 1;
+    stats.activeDensity = activeDetail?.density ?? 0;
     stats.cachedDetails = details.length;
     stats.cachePixels = details.reduce((sum, entry) => sum + entry.pixels, 0);
     stats.pending = Boolean(pending);
     publish();
     canvas._mapView = { x: view.x, y: view.y, k: view.k };
-  };
-  const prune = () => {
-    details.sort((a, b) => b.usedAt - a.usedAt);
-    let pixels = details.reduce((sum, entry) => sum + entry.pixels, 0);
-    while (details.length > MAX_DETAIL_ENTRIES || pixels > MAX_DETAIL_PIXELS) {
-      const removed = details.pop();
-      pixels -= removed.pixels;
-      if (removed === activeDetail) activeDetail = null;
-      releaseMapSurface(removed.canvas);
-    }
   };
   const invalidateLocalDetails = () => {
     cancelPending();
@@ -320,86 +320,118 @@ export function createPencilMap(canvas, project, width, height, options = {}) {
     const visible = { left: Math.max(left, fullVisible.left), top: Math.max(top, fullVisible.top),
       right: Math.min(left + w, fullVisible.right), bottom: Math.min(top + h, fullVisible.bottom) };
     if (visible.right <= visible.left || visible.bottom <= visible.top) { cancelPending(); return; }
+    const viewportWidth = visible.right - visible.left, viewportHeight = visible.bottom - visible.top;
+    const renderPlan = detailRenderPlan({ visibleWidth: viewportWidth, visibleHeight: viewportHeight,
+      renderScale: spec.renderScale, dpr, maxPixels: MAX_TILE_PIXELS });
     const signature = townSignature();
     const requestKey = [spec.level, spec.renderScale, signature, visible.left, visible.top, visible.right, visible.bottom].join(':');
     if (pendingKey === requestKey) { stats.detailRequestReuses = (stats.detailRequestReuses ?? 0) + 1; publish(); return; }
     const cached = details.find(entry => entry.complete && entry.level === spec.level &&
-      entry.renderScale === spec.renderScale && entry.townSignature === signature && contains(entry, visible));
+      entry.renderScale === spec.renderScale && entry.density >= renderPlan.density - 1e-9 &&
+      entry.townSignature === signature && contains(entry, visible));
     if (cached) {
       cached.usedAt = performance.now(); stats.detailReuses = (stats.detailReuses ?? 0) + 1;
       if (pendingKey) cancelPending();
       if (activeDetail !== cached) draw(view, { cancelWork: false, force: true });
+      if (!details.includes(cached)) { refine(view); return; }
       publish(); return;
     }
     cancelPending();
-    for (let index = details.length - 1; index >= 0; index--) {
-      const entry = details[index];
-      if (entry.complete || entry.level !== spec.level || entry.renderScale !== spec.renderScale ||
-        entry.townSignature !== signature) continue;
-      releaseMapSurface(entry.canvas); details.splice(index, 1);
-    }
     const token = generation;
     pendingKey = requestKey;
-    const viewportWidth = visible.right - visible.left, viewportHeight = visible.bottom - visible.top;
-    const renderPlan = detailRenderPlan({ visibleWidth: viewportWidth, visibleHeight: viewportHeight,
-      renderScale: spec.renderScale, dpr });
-    const dx = Math.max(left, visible.left - viewportWidth * renderPlan.paddingRatio);
-    const dy = Math.max(top, visible.top - viewportHeight * renderPlan.paddingRatio);
-    const right = Math.min(left + w, visible.right + viewportWidth * renderPlan.paddingRatio);
-    const bottom = Math.min(top + h, visible.bottom + viewportHeight * renderPlan.paddingRatio);
-    const dw = right - dx, dh = bottom - dy;
-    if (dw <= 0 || dh <= 0) return;
-    const source = details.filter(entry => entry.complete && entry.level === spec.level &&
-      entry.renderScale === spec.renderScale && entry.townSignature === signature &&
-      intersects(entry, { left: dx, top: dy, right, bottom }))
-      .sort((a, b) => b.usedAt - a.usedAt)[0] ?? null;
-    const covered = source ? { left: Math.max(dx, source.left), top: Math.max(dy, source.top),
-      right: Math.min(right, source.left + source.w), bottom: Math.min(bottom, source.top + source.h) } : null;
-    const plan = planDetailTiles({ left: dx, top: dy, width: dw, height: dh,
-      renderScale: spec.renderScale }, covered);
-    const { logicalWidth, logicalHeight } = plan;
-    const renderDensity = Math.min(renderPlan.density,
-      Math.sqrt(MAX_TILE_PIXELS / Math.max(1, logicalWidth * logicalHeight)));
-    const next = surface(logicalWidth, logicalHeight, renderDensity);
-    const entry = { ...next, left: dx, top: dy, w: dw, h: dh, level: spec.level,
-      renderScale: spec.renderScale, pixels: next.canvas.width * next.canvas.height,
-      townSignature: signature, usedAt: performance.now(), complete: false, completedTiles: 0, reusedTiles: plan.reusedTiles };
-    stats.renderDensity = renderDensity;
-    stats.visiblePhysicalPixels = renderPlan.visiblePhysicalPixels;
-    stats.detailPaddingRatio = renderPlan.paddingRatio;
-    if (source && covered.right > covered.left && covered.bottom > covered.top) {
-      const sourceScaleX = source.canvas.width / source.w;
-      const sourceScaleY = source.canvas.height / source.h;
-      entry.ctx.drawImage(source.canvas,
-        (covered.left - source.left) * sourceScaleX, (covered.top - source.top) * sourceScaleY,
-        (covered.right - covered.left) * sourceScaleX, (covered.bottom - covered.top) * sourceScaleY,
-        (covered.left - dx) * spec.renderScale, (covered.top - dy) * spec.renderScale,
-        (covered.right - covered.left) * spec.renderScale, (covered.bottom - covered.top) * spec.renderScale);
-      stats.detailCopies = (stats.detailCopies ?? 0) + 1;
+    const compatible = details.filter(entry => entry.level === spec.level &&
+      entry.renderScale === spec.renderScale && entry.density >= renderPlan.density - 1e-9 && entry.townSignature === signature);
+    let entry = compatible.filter(entry => !entry.complete && contains(entry, visible))
+      .sort((a, b) => b.usedAt - a.usedAt)[0];
+    let plan;
+    if (entry) {
+      plan = planDetailTiles({ left: entry.left, top: entry.top, width: entry.w,
+        height: entry.h, renderScale: entry.renderScale }, entry.coverage);
+      stats.detailResumes = (stats.detailResumes ?? 0) + 1;
+    } else {
+      const dx = Math.max(left, visible.left - viewportWidth * renderPlan.paddingRatio);
+      const dy = Math.max(top, visible.top - viewportHeight * renderPlan.paddingRatio);
+      const right = Math.min(left + w, visible.right + viewportWidth * renderPlan.paddingRatio);
+      const bottom = Math.min(top + h, visible.bottom + viewportHeight * renderPlan.paddingRatio);
+      const dw = right - dx, dh = bottom - dy;
+      if (dw <= 0 || dh <= 0) { pendingKey = null; return; }
+      const targetBounds = { left: dx, top: dy, right, bottom };
+      const renderDensity = renderPlan.density;
+      const sources = [], coverage = [];
+      // Copy each pixel once, preferring the latest compatible partial/completed image.
+      for (const source of compatible.filter(entry => entry.density >= renderDensity - 1e-9 && intersects(entry, targetBounds))
+        .sort((a, b) => b.usedAt - a.usedAt)) {
+        for (const bounds of detailCoverage(source)) {
+          const overlap = intersectDetailBounds(bounds, targetBounds);
+          if (!overlap) continue;
+          for (const covered of uncoveredDetailBounds(overlap, coverage)) {
+            sources.push({ source, covered }); coverage.push(covered);
+          }
+        }
+      }
+      plan = planDetailTiles({ left: dx, top: dy, width: dw, height: dh,
+        renderScale: spec.renderScale }, coverage);
+      const { logicalWidth, logicalHeight } = plan;
+      // Park completed surfaces before allocating the replacement. A replacement
+      // or one temporary source restore adds at most 4M pixels to the 12M cache.
+      for (const source of details) parkDetail(source);
+      const next = surface(logicalWidth, logicalHeight, renderDensity);
+      entry = { ...next, left: dx, top: dy, w: dw, h: dh, level: spec.level,
+        renderScale: spec.renderScale, pixels: next.canvas.width * next.canvas.height,
+        townSignature: signature, usedAt: performance.now(), complete: false, completedTiles: 0,
+        coverage, reusedTiles: plan.reusedTiles };
+      stats.renderDensity = renderDensity;
+      stats.visiblePhysicalPixels = renderPlan.visiblePhysicalPixels;
+      stats.detailPaddingRatio = renderPlan.paddingRatio;
+      let restoredSource = null;
+      const unavailableSources = new Set();
+      for (const { source, covered } of sources) {
+        if (restoredSource !== source) {
+          parkDetail(restoredSource);
+          restoredSource = source;
+        }
+        if (unavailableSources.has(source) || !restoreDetail(source)) {
+          unavailableSources.add(source);
+          entry.coverage = entry.coverage.filter(bounds => bounds !== covered);
+          continue;
+        }
+        const sourceScaleX = source.canvas.width / source.w, sourceScaleY = source.canvas.height / source.h;
+        entry.ctx.drawImage(source.canvas, (covered.left - source.left) * sourceScaleX,
+          (covered.top - source.top) * sourceScaleY, (covered.right - covered.left) * sourceScaleX,
+          (covered.bottom - covered.top) * sourceScaleY, (covered.left - dx) * spec.renderScale,
+          (covered.top - dy) * spec.renderScale, (covered.right - covered.left) * spec.renderScale,
+          (covered.bottom - covered.top) * spec.renderScale);
+        stats.detailCopies = (stats.detailCopies ?? 0) + 1;
+      }
+      parkDetail(restoredSource);
+      plan = planDetailTiles({ left: dx, top: dy, width: dw, height: dh,
+        renderScale: spec.renderScale }, entry.coverage);
       stats.reusedDetailTiles = (stats.reusedDetailTiles ?? 0) + plan.reusedTiles;
+      details.push(entry); stats.detailBuilds++;
     }
+    entry.usedAt = performance.now(); activeDetail = entry; prune(); publish();
+    const { left: dx, top: dy, renderScale, density: renderDensity } = entry;
     const tiles = plan.tiles;
-    details.push(entry); activeDetail = entry; stats.detailBuilds++; prune(); publish();
     const paintNextTile = () => {
       pending = null;
       if (disposed || token !== generation || !entry.canvas.width) return;
       if (document.hidden || suspended) { cancelPending(); return; }
       const tile = tiles.shift();
       if (!tile) {
-        entry.complete = true; pendingKey = null;
+        entry.complete = true; entry.coverage = []; pendingKey = null;
         retainMapSurface(entry.canvas); entry.pixels = mapSurfacePixels(entry.canvas); prune();
         draw(lastView ?? view, { cancelWork: false, force: true }); return;
       }
       const tileLayer = surface(tile.width, tile.height, renderDensity);
       const tileProject = point => {
         const [x, y] = project(point);
-        return [(x - dx) * spec.renderScale - tile.x, (y - dy) * spec.renderScale - tile.y];
+        return [(x - dx) * renderScale - tile.x, (y - dy) * renderScale - tile.y];
       };
       const detailedWaterNames = new Set(visibleTownTags.flatMap(tag =>
         (townData.get(tag)?.water ?? []).filter(feature => feature.closed && feature.name).map(feature => feature.name)));
       paintTerrain(tileLayer, tileProject, {
         viewport: [[0, 0], [tile.width, tile.height]],
-        anchor: [dx * spec.renderScale + tile.x, dy * spec.renderScale + tile.y], level: spec.level,
+        anchor: [dx * renderScale + tile.x, dy * renderScale + tile.y], level: spec.level,
         excludeWaterNames: detailedWaterNames,
       });
       if (spec.level === 'local') for (const tag of visibleTownTags) {
@@ -410,8 +442,14 @@ export function createPencilMap(canvas, project, width, height, options = {}) {
       if (token !== generation || !entry.canvas.width) {
         tileLayer.canvas.width = 0; tileLayer.canvas.height = 0; return;
       }
+      entry.ctx.save(); entry.ctx.beginPath();
+      for (const bounds of tile.missing) entry.ctx.rect((bounds.left - dx) * renderScale,
+        (bounds.top - dy) * renderScale, (bounds.right - bounds.left) * renderScale,
+        (bounds.bottom - bounds.top) * renderScale);
+      entry.ctx.clip();
       entry.ctx.drawImage(tileLayer.canvas, 0, 0, tileLayer.canvas.width, tileLayer.canvas.height,
         tile.x, tile.y, tile.width, tile.height);
+      entry.ctx.restore(); entry.coverage.push(...tile.missing);
       tileLayer.canvas.width = 0; tileLayer.canvas.height = 0;
       entry.completedTiles++; entry.usedAt = performance.now();
       stats.detailTiles = (stats.detailTiles ?? 0) + 1;
@@ -452,9 +490,9 @@ export function createPencilMap(canvas, project, width, height, options = {}) {
     restoreMapSurface(oceanTile); pattern = ctx.createPattern(seaTexture(), 'repeat');
     if (readyToDraw && !restoreMapSurface(layer.canvas)) paintOverview();
     for (let i = details.length - 1; i >= 0; i--) {
-      if (!details[i].complete || !restoreMapSurface(details[i].canvas)) {
+      if (!details[i].complete || !details[i].canvas._mapPixels) {
         releaseMapSurface(details[i].canvas); details.splice(i, 1);
-      }
+      } else parkDetail(details[i]);
     }
     stats.recoveries = (stats.recoveries ?? 0) + 1;
     if (lastView) { draw(lastView, { force: true }); refine(lastView); }

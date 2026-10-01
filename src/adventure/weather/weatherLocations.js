@@ -1,6 +1,7 @@
 import { mapStops } from "../../tripData";
 import { placePositions, routeSegments } from "../../data/mapRoutes";
 import { getTripCalendarDay } from "../../components/calendar/tripCalendarData";
+import { splitWeatherTransit } from "./weatherSegments.js";
 
 const names = {
   SZX: ["深圳机场", "Shenzhen Airport"], KUL: ["吉隆坡机场", "Kuala Lumpur Airport"],
@@ -43,4 +44,20 @@ export function weatherLocationForDay(dateId, placeTag = null) {
   if (!selected) return null;
   return { ...selected, dateId, context: placeAllowed ? "place" : "itinerary",
     representative: tags.length > 1 || hasGlenorchy, tripLocationIds: tags };
+}
+
+export function weatherSegmentsForDay(dateId, placeTag = null) {
+  const location = weatherLocationForDay(dateId, placeTag);
+  if (!location) return [];
+  const day = getTripCalendarDay(dateId)?.day;
+  if (location.context === "place" || !day?.weatherSegments) return [{ location, start: "00:00", end: "24:00" }];
+  const segments = day.weatherSegments.map(segment => {
+    const from = segment.fromEvent == null ? null : day.events[segment.fromEvent]?.[2];
+    const until = segment.untilEvent == null ? null : day.events[segment.untilEvent]?.[2];
+    const selected = locations.get(segment.placeTag);
+    if (!selected || (segment.fromEvent != null && !from?.start) || (segment.untilEvent != null && !until?.start)) return null;
+    return { location: { ...selected, dateId, context: "segment", representative: true },
+      start: from?.start ?? "00:00", end: until?.start ?? "24:00" };
+  }).filter(Boolean);
+  return segments.length ? splitWeatherTransit(segments) : [{ location, start: "00:00", end: "24:00" }];
 }

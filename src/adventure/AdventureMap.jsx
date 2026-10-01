@@ -361,25 +361,32 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         bottom: area.clientHeight - rect.height + compactBottomInset,
       });
     };
+    let coverageProjection = null, projectedCoverages = [];
     const visibleTownTags = transform => {
       if (!area._project) return [];
+      if (coverageProjection !== area._project) {
+        coverageProjection = area._project;
+        projectedCoverages = townMapCoverages.map(({ tag, position: [lat, lng], radiusMeters }) => {
+          const offset = TOWN_SCALE_METERS / (EARTH_RADIUS_M * Math.cos(lat * Math.PI / 180)) * 180 / Math.PI;
+          const center = coverageProjection([lng, lat]);
+          return { tag, radiusMeters, center, unit: Math.abs(coverageProjection([lng + offset, lat])[0] - center[0]) };
+        });
+      }
       const rect = focusRect();
-      return townMapCoverages.filter(({ position: [lat, lng], radiusMeters }) => {
-        const longitudeOffset = TOWN_SCALE_METERS /
-          (EARTH_RADIUS_M * Math.cos(lat * Math.PI / 180)) * 180 / Math.PI;
-        const center = transform.apply(area._project([lng, lat]));
-        const reference = transform.apply(area._project([lng + longitudeOffset, lat]));
-        const pixelsPer500m = Math.abs(reference[0] - center[0]);
+      return projectedCoverages.filter(({ center: origin, unit, radiusMeters }) => {
+        const center = transform.apply(origin), pixelsPer500m = unit * transform.k;
         if (pixelsPer500m < LOCAL_DETAIL_500M_PIXELS) return false;
         const margin = pixelsPer500m * radiusMeters / TOWN_SCALE_METERS;
         return center[0] > -margin && center[0] < rect.width + margin &&
           center[1] > -margin && center[1] < rect.height + margin;
       }).map(coverage => coverage.tag);
     };
-    const syncTownDetails = transform => {
+    const syncTownDetails = (transform, moving = false) => {
       const tags = visibleTownTags(transform), signature = tags.join("|");
       pencil?.setVisibleTowns(tags);
       if (!tags.length) { townLoadGeneration++; townTagSignature = ""; return; }
+      // Transform cached geometry during gestures; only load new towns at rest.
+      if (moving) return;
       if (signature === townTagSignature) return;
       townTagSignature = signature;
       const generation = ++townLoadGeneration;
@@ -505,7 +512,8 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         pencil?.setVisibleRect(visibleRect);
         world?.attr("transform", transform.toString());
         depthWorld?.attr("transform", transform.toString());
-        if (settled) syncTownDetails(transform);
+        // Revisit caches belong to the current geographic view, not the last stop.
+        syncTownDetails(transform, moving);
         pencil?.draw(transform, { moving });
         routeInk?.draw(transform, { moving, visibleRect });
         if (shortRouteSpot) {

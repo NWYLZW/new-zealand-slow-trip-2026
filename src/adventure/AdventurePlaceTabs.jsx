@@ -146,7 +146,7 @@ export function AdventurePlaceTabs({ stop, selectedTab, onTabChange, selectedDat
   };
 
   const townMap = <div className="trip-place-town-map"><AdventureTownMap place={stop} language={language}
-    focusTarget={townFocus} stayMarkers={stayMarkers} onSelectStay={onSelectStay} /></div>;
+    active={weatherActive} focusTarget={townFocus} stayMarkers={stayMarkers} onSelectStay={onSelectStay} /></div>;
 
   return <section ref={rootRef} className="trip-place-tabs" data-map-layout={mapInTab ? "tab" : "inline"}
     aria-label={language === "en" ? `${stop?.nameEn ?? stop?.name ?? "Place"} plans` : `${stop?.name ?? "地点"}安排`}>

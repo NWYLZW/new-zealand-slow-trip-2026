@@ -140,6 +140,7 @@
 }
 .trip-camera-preview { position:absolute; inset:0; overflow:hidden; background:#13130f; }
 .trip-camera-preview > video { display:block; width:100%; height:100%; object-fit:cover; filter:none; }
+.trip-camera-preview[data-pinch-zoom=true] { touch-action:none; }
 .trip-camera-preview > video[data-facing="user"] { transform:scaleX(-1); }
 .trip-camera-preview-state {
   position:absolute;

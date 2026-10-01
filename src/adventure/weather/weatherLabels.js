@@ -1,5 +1,10 @@
 const labels = {
   weather: ["天气", "Weather"], forecast: ["天气预报", "Forecast"],
+  hourly: ["逐小时天气与温度曲线", "Hourly weather and temperature chart"],
+  expandEarly: ["展开 00:00–08:00 天气", "Expand weather from 00:00 to 08:00"],
+  collapseEarly: ["收起 00:00–08:00 天气", "Collapse weather from 00:00 to 08:00"],
+  averageTemperature: ["平均气温", "Average temperature"], averageShort: ["均", "avg"],
+  validHours: ["有效小时数", "Hours with temperature data"],
   "archived-forecast": ["历史预报", "Archived forecast"], reanalysis: ["历史再分析 · ERA5", "Historical reanalysis · ERA5"],
   loading: ["正在获取天气", "Loading weather"], error: ["天气获取失败", "Weather request failed"],
   offline: ["离线", "Offline"], stale: ["缓存已过期", "Stale cached data"],
@@ -17,6 +22,7 @@ const labels = {
   missing: ["缺失", "Missing"], time: ["当地时间", "Local time"], condition: ["天气", "Conditions"],
   temperature: ["气温 °C", "Temp °C"], precipitation: ["降水 mm", "Precip mm"], wind: ["风 km/h", "Wind km/h"],
   note: ["模型数据，非气象站实测。日温区间和最强天气代码由完整当地日的逐小时值汇总；降水为此前一小时累计，风为 10 米高度风速。", "Model data, not station observations. Daily temperature range and most severe weather code are derived from a complete local day of hourly values. Precipitation covers the preceding hour; wind speed is at 10 m."],
+  segmentNote: ["模型数据，非气象站实测。分段温区和最强天气代码只汇总此地点分配时段内的小时值；字段缺失时不补造汇总。降水为此前一小时累计，风为 10 米高度风速。", "Model data, not station observations. Each segment's temperature range and most severe weather code use only hours assigned to that location; missing fields are not filled in. Precipitation covers the preceding hour; wind speed is at 10 m."],
   recent: ["近期历史使用归档预报；约 6 天后转用有发布延迟的 ERA5 再分析。", "Recent past dates use archived forecasts; after about 6 days, this view uses delayed ERA5 reanalysis."],
   attribution: ["天气数据：Open-Meteo", "Weather data: Open-Meteo"],
   transformed: ["当地日汇总、舍入与排版", "Local-day aggregation, rounding and formatting"],

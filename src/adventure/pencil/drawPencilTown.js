@@ -6,15 +6,18 @@ import { drawPencilWaterFeature } from "./drawPencilWater";
 import { mapLabel } from "./mapLabels";
 import { pencilPalette as p } from "./palette";
 import { waterFeatures } from "./waterFeatures";
+import { detailRenderPlan } from "./detailTilePlan";
 
 const BATCH_BUDGET_MS = 5;
 const TOWN_TILE_SIZE = 144;
 const TOWN_CACHE_OVERSCAN = .4;
 
-export function townRenderRegion(width, height, overscan = TOWN_CACHE_OVERSCAN) {
-  const paddingX = Math.round(width * overscan), paddingY = Math.round(height * overscan);
+export function townRenderRegion(width, height, overscan = TOWN_CACHE_OVERSCAN, dpr = Math.min(globalThis.devicePixelRatio || 1, 2)) {
+  const plan = detailRenderPlan({ visibleWidth: width, visibleHeight: height,
+    renderScale: 1, dpr, maxPaddingRatio: overscan });
+  const paddingX = Math.floor(width * plan.paddingRatio), paddingY = Math.floor(height * plan.paddingRatio);
   return { left: -paddingX, top: -paddingY,
-    width: width + paddingX * 2, height: height + paddingY * 2 };
+    width: width + paddingX * 2, height: height + paddingY * 2, ratio: plan.density };
 }
 
 function pointBetweenViews(point, fromView, toView) {
@@ -51,11 +54,10 @@ export function townTileCounts(width, height, readyTiles = 0) {
   return { totalTiles, readyTiles: ready, missingTiles: totalTiles - ready };
 }
 
-function surface(width, height) {
-  const ratio = Math.min(devicePixelRatio || 1, 2);
+function surface(width, height, ratio = Math.min(devicePixelRatio || 1, 2)) {
   const canvas = document.createElement("canvas");
-  canvas.width = Math.max(1, Math.ceil(width * ratio));
-  canvas.height = Math.max(1, Math.ceil(height * ratio));
+  canvas.width = Math.max(1, Math.floor(width * ratio));
+  canvas.height = Math.max(1, Math.floor(height * ratio));
   const ctx = canvas.getContext("2d");
   ctx.scale(ratio, ratio); ctx.lineJoin = "round"; ctx.lineCap = "round";
   return { canvas, ctx, ratio };
@@ -71,10 +73,6 @@ function fillFeature(ctx, path, feature, color, alpha = 1) {
 
 function lineSeed(id) {
   return [...String(id)].reduce((seed, letter) => Math.imul(seed ^ letter.charCodeAt(0), 16777619), 2166136261) >>> 0;
-}
-
-function polygonFeature(coordinates) {
-  return { type: "Feature", geometry: { type: "Polygon", coordinates: [coordinates] } };
 }
 
 function roadStyle(kind) {
@@ -118,17 +116,6 @@ export function prepareTownMapData(data) {
   }
   Object.defineProperty(data, "_prepared", { value: true });
   return data;
-}
-
-function drawLand(ctx, path) {
-  fillFeature(ctx, path, geography.land, p.paper);
-  fillFeature(ctx, path, geography.land, p.land, .72);
-}
-
-function drawLandHatch(ctx, path, viewport) {
-  ctx.save(); ctx.beginPath(); path(geography.land); ctx.clip("evenodd");
-  hatch(ctx, path.bounds(geography.land), p.green, 271, 5.2, .5, { viewport, anchor: [0, 0] });
-  ctx.restore();
 }
 
 function drawLandCover(ctx, path, feature, viewport) {
@@ -206,28 +193,38 @@ export function drawTownVectorDetail(ctx, data, project, viewport, { labels = fa
   if (labels) drawLabels(ctx, data, project, viewport[1][0], viewport[1][1], language);
 }
 
-function paintTownTile(ctx, data, project, width, height, language, detailedWaterNames, drawLabelsAtEnd = false) {
+function* paintTownTile(ctx, data, project, width, height, terrain) {
   const viewport = [[0, 0], [width, height]], path = pathFor(project, ctx);
   ctx.fillStyle = p.lake; ctx.globalAlpha = .7; ctx.fillRect(0, 0, width, height); ctx.globalAlpha = 1;
-  drawLand(ctx, path);
-  drawLandHatch(ctx, path, viewport);
-  landCover.features.forEach(feature => drawLandCover(ctx, path, feature, viewport));
-  waterFeatures.filter(feature => !detailedWaterNames.has(feature.properties.name)).forEach(feature => {
+  fillFeature(ctx, path, terrain.land, p.paper);
+  fillFeature(ctx, path, terrain.land, p.land, .72);
+  yield;
+  ctx.save(); ctx.beginPath(); path(terrain.land); ctx.clip("evenodd");
+  hatch(ctx, path.bounds(terrain.land), p.green, 271, 5.2, .5, { viewport, anchor: [0, 0] });
+  ctx.restore();
+  yield;
+  for (const feature of terrain.cover) { drawLandCover(ctx, path, feature, viewport); yield; }
+  for (const feature of terrain.water) {
     const bounds = path.bounds(feature);
     if (intersects(bounds, viewport, 12)) drawPencilWaterFeature(ctx, path, project, feature,
       { viewport, anchor: [0, 0], density: 1.05 });
-  });
-  data.water.forEach(feature => drawWater(ctx, feature, project, viewport));
-  data.buildings.forEach(feature => drawBuilding(ctx, feature, project, viewport));
-  data.roads.forEach(feature => drawRoad(ctx, feature, project, viewport));
-  if (drawLabelsAtEnd) drawLabels(ctx, data, project, width, height, language);
+    yield;
+  }
+  for (const [features, paint] of [[data.water, drawWater], [data.buildings, drawBuilding], [data.roads, drawRoad]]) {
+    for (let index = 0; index < features.length; index++) {
+      paint(ctx, features[index], project, viewport);
+      if (index % 24 === 23) yield;
+    }
+    yield;
+  }
 }
 
 export function createTownRenderJob({ data, project, width, height, language, onUpdate,
-  left = 0, top = 0, renderWidth = width, renderHeight = height }) {
-  const layer = surface(renderWidth, renderHeight);
-  let cancelled = false, timer = 0, index = 0;
-  prepareTownMapData(data);
+  left = 0, top = 0, renderWidth = width, renderHeight = height,
+  pixelRatio = Math.min(devicePixelRatio || 1, 2) }) {
+  const layer = surface(renderWidth, renderHeight, pixelRatio);
+  let cancelled = false, paused = false, finished = false, timer = 0, tileLayer = null;
+  const stats = { batches: 0, maxBatchMs: 0, projectedPoints: 0 };
   const detailedWaterNames = new Set(data.water.filter(feature => feature.closed && feature.name)
     .map(feature => feature.name));
   const tiles = [];
@@ -238,35 +235,77 @@ export function createTownRenderJob({ data, project, width, height, language, on
       distance: Math.hypot(x + tileWidth / 2 - renderWidth / 2, y + tileHeight / 2 - renderHeight / 2) });
   }
   tiles.sort((a, b) => a.distance - b.distance);
-  const tasks = tiles.map(tile => () => {
-    const tileLayer = surface(tile.width, tile.height);
-    const tileProject = point => {
-      const [x, y] = project(point);
-      return [x - left - tile.x, y - top - tile.y];
-    };
-    paintTownTile(tileLayer.ctx, data, tileProject, tile.width, tile.height, language, detailedWaterNames);
-    layer.ctx.drawImage(tileLayer.canvas, 0, 0, tileLayer.canvas.width, tileLayer.canvas.height,
-      tile.x, tile.y, tile.width, tile.height);
-    tileLayer.canvas.width = 0; tileLayer.canvas.height = 0;
-    onUpdate(layer, false, tile);
-  });
-  tasks.push(() => {
-    const layerProject = point => {
-      const [x, y] = project(point);
-      return [x - left, y - top];
-    };
-    drawLabels(layer.ctx, data, layerProject, renderWidth, renderHeight, language);
-  });
+  function* projectCoordinates(coordinates) {
+    if (typeof coordinates[0] === "number") {
+      const point = project(coordinates);
+      if (++stats.projectedPoints % 256 === 0) yield;
+      return point;
+    }
+    const result = [];
+    for (const child of coordinates) result.push(yield* projectCoordinates(child));
+    return result;
+  }
+  function* projectFeature(feature) {
+    return { ...feature, geometry: { ...feature.geometry,
+      coordinates: yield* projectCoordinates(feature.geometry.coordinates) } };
+  }
+  // Project once per view, then yield between small drawing batches instead of
+  // reprojecting the nationwide geometry for every 144px tile.
+  function* tasks() {
+    const terrain = { land: yield* projectFeature(geography.land), cover: [], water: [] };
+    yield;
+    for (const feature of landCover.features) { terrain.cover.push(yield* projectFeature(feature)); yield; }
+    for (const feature of waterFeatures) if (!detailedWaterNames.has(feature.properties.name)) {
+      terrain.water.push(yield* projectFeature(feature)); yield;
+    }
+    const projected = { roads: [], buildings: [], water: [], labels: data.labels };
+    const bounds = [[left, top], [left + renderWidth, top + renderHeight]];
+    for (const kind of ["roads", "buildings", "water"]) {
+      for (let index = 0; index < data[kind].length; index++) {
+        const feature = data[kind][index];
+        if (visibleVector(feature, project, bounds, 12)) {
+          const next = { ...feature, _bounds: null,
+            coordinates: feature.coordinates ? yield* projectCoordinates(feature.coordinates) : undefined,
+            rings: feature.rings ? yield* projectCoordinates(feature.rings) : undefined };
+          coordinateBounds(next); projected[kind].push(next);
+        }
+        if (index % 24 === 23) yield;
+      }
+    }
+    for (const tile of tiles) {
+      tileLayer = surface(tile.width, tile.height, pixelRatio);
+      const tileProject = ([x, y]) => [x - left - tile.x, y - top - tile.y];
+      yield* paintTownTile(tileLayer.ctx, projected, tileProject, tile.width, tile.height, terrain);
+      layer.ctx.drawImage(tileLayer.canvas, 0, 0, tileLayer.canvas.width, tileLayer.canvas.height,
+        tile.x, tile.y, tile.width, tile.height);
+      tileLayer.canvas.width = 0; tileLayer.canvas.height = 0; tileLayer = null;
+      onUpdate(layer, false, tile);
+      yield;
+    }
+    drawLabels(layer.ctx, data, point => {
+      const [x, y] = project(point); return [x - left, y - top];
+    }, renderWidth, renderHeight, language);
+  }
+  const steps = tasks();
   const work = () => {
     timer = 0;
-    if (cancelled) return;
+    if (cancelled || paused || finished) return;
     const started = performance.now();
-    while (index < tasks.length && performance.now() - started < BATCH_BUDGET_MS) tasks[index++]();
-    if (index === tasks.length) onUpdate(layer, true, null);
-    if (index < tasks.length) timer = setTimeout(work);
+    let done = false;
+    while (!done && !paused && !cancelled && performance.now() - started < BATCH_BUDGET_MS) done = steps.next().done;
+    stats.batches++; stats.maxBatchMs = Math.max(stats.maxBatchMs, performance.now() - started);
+    if (cancelled) return;
+    if (done) { finished = true; onUpdate(layer, true, null); }
+    else if (!paused) timer = setTimeout(work);
   };
   timer = setTimeout(work);
-  return { cancel() { cancelled = true; clearTimeout(timer); }, layer, tileCount: tiles.length };
+  return {
+    pause() { paused = true; clearTimeout(timer); timer = 0; },
+    resume() { if (!cancelled && !finished && paused) { paused = false; timer = setTimeout(work); } },
+    cancel() { cancelled = true; clearTimeout(timer); steps.return();
+      if (tileLayer) { tileLayer.canvas.width = 0; tileLayer.canvas.height = 0; tileLayer = null; } },
+    layer, tileCount: tiles.length, stats,
+  };
 }
 
 export function compositeTownCache(ctx, cache, view, width, height) {

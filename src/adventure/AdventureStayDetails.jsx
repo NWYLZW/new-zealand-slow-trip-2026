@@ -209,7 +209,10 @@ export function AdventureStayDetails({ booking, placeName, placeTag, onStayLinkC
   </>;
 
   return <article ref={rootRef} className="trip-stay-detail" data-stay-layout={layout}>
-    <h3 className="trip-stay-title"><PencilText>{title}</PencilText></h3>
+    <header className="trip-stay-heading">
+      <h3 className="trip-stay-title"><PencilText>{title}</PencilText></h3>
+      <div className="trip-stay-title-divider"><PanelDivider /></div>
+    </header>
     {(layout === "tall" || layout === "wide-short") && <Gallery key={booking.bookingId} images={images} title={title} language={language} />}
     {layout === "tall" && <div className="trip-stay-tab-frame">
       <div className="trip-stay-tab-scroll"><AdventurePencilTabs items={tabs} value={currentTab}

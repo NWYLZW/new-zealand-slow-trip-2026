@@ -8,12 +8,15 @@ import { PencilText } from "./pencil/PencilText";
 import { compositeTownCache, createTownRenderJob, drawTownMarker, townEntryContainsEntry,
   townEntryContainsView, townEntryMatchesView, townRenderRegion } from "./pencil/drawPencilTown";
 import { loadTownMapData } from "./townMapData";
+import { retainTownVisit, takeTownVisit } from "./pencil/townVisitCache";
+import { mapSurfacePixels, releaseMapSurface, retainMapSurface, restoreMapSurface } from "./pencil/mapTerrainCache";
+import { observeCanvasRecovery } from "./pencil/canvasRecovery";
 import "./AdventureTownMap.css";
 
 const EARTH_RADIUS_M = 6371008.8;
 const INITIAL_SCALE_METERS = 500;
 const MAX_TOWN_CACHE_ENTRIES = 3;
-const MAX_TOWN_CACHE_PIXELS = 6000000;
+const MAX_TOWN_CACHE_PIXELS = 12000000;
 function focusPosition(target) {
   const position = Array.isArray(target) ? target : target?.position;
   return position?.length === 2 && position.every(Number.isFinite) ? position : null;
@@ -42,9 +45,11 @@ function formatDistance(meters) {
 }
 
 export default function AdventureTownMap({ place, language = "zh", focusTarget = null,
-  stayMarkers = [], onSelectStay }) {
+  stayMarkers = [], onSelectStay, active = true }) {
   const rootRef = useRef(null), canvasRef = useRef(null), scaleRef = useRef(null), controlsRef = useRef(null);
   const markerRefs = useRef(new Map()), markersRef = useRef([]), targetRef = useRef(null), targetIdRef = useRef(null);
+  const activeRef = useRef(active);
+  activeRef.current = active;
   const [dataUnavailable, setDataUnavailable] = useState(false);
   const target = focusPosition(focusTarget);
   const targetKey = target?.join(",") ?? "town", targetId = focusTarget?.bookingId ?? null;
@@ -56,16 +61,16 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
     const root = rootRef.current, canvas = canvasRef.current;
     if (!root || !canvas || !place?.position) return undefined;
     let disposed = false, resizeFrame = 0, viewFrame = 0, renderJob = null, activeCache = null, mapData = null;
+    let detailTimer = 0, moving = false, intersecting = false, visitKey = null, recoveryPending = false;
     let completeCaches = [];
     let renderGeneration = 0;
     let project = null, view = d3.zoomIdentity, width = 0, height = 0, pendingView = null;
     const context = canvas.getContext("2d");
     const stats = { cacheHits: 0, containedViewHits: 0, readyTiles: 0, missingTiles: 0 };
-    const releaseCache = value => {
-      if (!value?.layer) return;
-      value.layer.canvas.width = 0; value.layer.canvas.height = 0;
-    };
-    const cachePixels = entry => entry?.layer ? entry.layer.canvas.width * entry.layer.canvas.height : 0;
+    const visible = () => !disposed && !document.hidden && intersecting && activeRef.current &&
+      !root.closest('[inert],[aria-hidden="true"]');
+    const releaseCache = value => releaseMapSurface(value?.layer?.canvas);
+    const cachePixels = entry => entry?.layer ? mapSurfacePixels(entry.layer.canvas) : 0;
     const entriesForPaint = () => [...completeCaches, ...(activeCache?.adopted ? [activeCache] : [])];
     const updateStats = () => {
       const entries = entriesForPaint();
@@ -74,9 +79,12 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
       canvas._townStats = { ...stats, cacheContainsView: entries.some(entry => townEntryContainsView(entry, view, width, height)),
         readyTiles, missingTiles,
         preservedCompleteEntries: completeCaches.length, cachePixels: entries.reduce((sum, entry) => sum + cachePixels(entry), 0),
+        renderBatches: renderJob?.stats.batches ?? stats.renderBatches,
+        maxBatchMs: renderJob?.stats.maxBatchMs ?? stats.maxBatchMs,
         pending: Boolean(renderJob) };
     };
     const cancelRender = () => {
+      clearTimeout(detailTimer); detailTimer = 0;
       if (!renderJob) return;
       renderGeneration++; renderJob.cancel(); renderJob = null;
       if (activeCache && !activeCache.complete) releaseCache(activeCache);
@@ -87,6 +95,7 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
       cancelRender(); completeCaches.forEach(releaseCache); completeCaches = []; updateStats();
     };
     const retainCompleted = entry => {
+      retainMapSurface(entry.layer.canvas);
       const next = [];
       for (const cached of completeCaches) {
         if (cached !== entry && townEntryContainsEntry(entry, cached)) releaseCache(cached);
@@ -131,9 +140,11 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
       updateStats();
     };
     const startDetail = () => {
-      if (!mapData || !project || !width || !height) return;
+      if (!mapData || !project || !width || !height || moving || !visible()) return;
+      if (recoveryPending) { recover(); return; }
+      restoreVisit();
       if (activeCache && townEntryMatchesView(activeCache, view, width, height)) {
-        stats.cacheHits++; stats.containedViewHits++; updateStats(); return;
+        renderJob?.resume(); stats.cacheHits++; stats.containedViewHits++; updateStats(); return;
       }
       const completeIndex = completeCaches.findIndex(entry => townEntryMatchesView(entry, view, width, height));
       if (completeIndex >= 0) {
@@ -146,9 +157,11 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
       const generation = ++renderGeneration;
       const entry = { layer: null, view: renderView, left: region.left, top: region.top,
         width: region.width, height: region.height, readyTiles: 0, totalTiles: 0,
-        adopted: false, complete: false };
+        adopted: false, complete: false, data: mapData,
+        publicDefault: !targetRef.current && renderView.k === 1 && renderView.x === 0 && renderView.y === 0 };
       const job = createTownRenderJob({ data: mapData, project: renderProject, width, height, language,
         left: region.left, top: region.top, renderWidth: region.width, renderHeight: region.height,
+        pixelRatio: region.ratio,
         onUpdate(layer, complete, ready) {
           if (disposed || generation !== renderGeneration) return;
           entry.layer = layer;
@@ -156,6 +169,7 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
           if (complete) {
             entry.complete = true; entry.adopted = true; entry.readyTiles = entry.totalTiles;
             stats.readyTiles = entry.totalTiles; stats.missingTiles = 0;
+            stats.renderBatches = renderJob?.stats.batches; stats.maxBatchMs = renderJob?.stats.maxBatchMs;
             renderJob = null; activeCache = null; retainCompleted(entry);
           }
           scheduleView(view);
@@ -172,11 +186,21 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
         pendingView = null; paint();
       });
     };
+    const scheduleDetail = (delay = 100) => {
+      clearTimeout(detailTimer);
+      detailTimer = setTimeout(() => { detailTimer = 0; startDetail(); }, delay);
+    };
+    const restoreVisit = () => {
+      if (!visible() || !visitKey || !mapData || completeCaches.length || activeCache) return;
+      const cached = takeTownVisit(visitKey, mapData);
+      if (cached) { completeCaches.push(cached); stats.cacheHits++; scheduleView(view); }
+    };
     const zoom = d3.zoom().scaleExtent([.55, 8]).clickDistance(5)
       .filter(event => (!event.ctrlKey || event.type === "wheel") && !event.button &&
         (event.type === "wheel" || !event.target.closest("button")))
+      .on("start", () => { moving = true; renderJob?.pause(); clearTimeout(detailTimer); })
       .on("zoom", event => scheduleView(event.transform))
-      .on("end", event => { view = event.transform; paint(); updateScale(); startDetail(); });
+      .on("end", event => { moving = false; view = event.transform; paint(); updateScale(); scheduleDetail(); });
     const surface = d3.select(root).call(zoom);
     controlsRef.current = {
       zoomIn: () => surface.call(zoom.scaleBy, 1.35, [width / 2, height / 2]),
@@ -184,6 +208,7 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
       reset: () => { if (project) surface.call(zoom.transform, viewForTarget(project, targetRef.current, width, height)); },
       focusTarget: () => { if (project) surface.call(zoom.transform, viewForTarget(project, targetRef.current, width, height)); },
       refreshMarkers: () => paint(),
+      refreshActive: () => visibility(),
     };
     const resize = () => {
       cancelAnimationFrame(resizeFrame);
@@ -196,6 +221,8 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
         const ratio = Math.min(devicePixelRatio || 1, 2);
         canvas.width = Math.ceil(width * ratio); canvas.height = Math.ceil(height * ratio);
         project = initialProjection(place, width, height);
+        visitKey = JSON.stringify([place.tag, place.position, language, width, height, ratio]);
+        restoreVisit();
         zoom.extent([[0, 0], [width, height]]);
         surface.call(zoom.transform, viewForTarget(project, targetRef.current, width, height));
       });
@@ -204,16 +231,52 @@ export default function AdventureTownMap({ place, language = "zh", focusTarget =
     loadTownMapData(place.tag).then(payload => {
       if (disposed) return;
       mapData = payload?.place ?? { roads: [], buildings: [], water: [], labels: [] };
+      restoreVisit();
       setDataUnavailable(!payload || (!mapData.roads.length && !mapData.buildings.length));
-      if (project) startDetail();
+      if (project) scheduleDetail(450);
     }).catch(() => { if (!disposed) setDataUnavailable(true); });
+    const visibility = () => {
+      if (!visible()) {
+        clearTimeout(detailTimer); renderJob?.pause();
+      } else {
+        restoreVisit();
+        if (recoveryPending) recover();
+        else scheduleDetail(450);
+      }
+    };
+    const intersection = new IntersectionObserver(entries => { intersecting = entries.at(-1).isIntersecting; visibility(); });
+    intersection.observe(root);
+    document.addEventListener("visibilitychange", visibility);
+    const recover = () => {
+      if (disposed || !width || !height) return;
+      if (!visible()) { recoveryPending = true; renderJob?.pause(); return; }
+      recoveryPending = false;
+      cancelRender();
+      completeCaches = completeCaches.filter(entry => {
+        if (restoreMapSurface(entry.layer.canvas)) {
+          entry.layer.ctx.setTransform(entry.layer.ratio, 0, 0, entry.layer.ratio, 0, 0);
+          return true;
+        }
+        releaseCache(entry); return false;
+      });
+      // Completed terrain is authoritative; unfinished tiles restart after a
+      // context loss. Private markers are drawn afresh from current props.
+      canvas.width = canvas.width; paint(); updateScale(); visibility();
+    };
+    const stopRecovery = observeCanvasRecovery(recover);
+    canvas.addEventListener("contextrestored", recover);
     return () => {
       disposed = true; renderGeneration++; cancelAnimationFrame(resizeFrame); cancelAnimationFrame(viewFrame);
+      clearTimeout(detailTimer); intersection.disconnect(); document.removeEventListener("visibilitychange", visibility);
+      stopRecovery(); canvas.removeEventListener("contextrestored", recover);
+      const reusable = completeCaches.find(entry => entry.publicDefault);
+      if (reusable && retainTownVisit(visitKey, reusable)) completeCaches = completeCaches.filter(entry => entry !== reusable);
       observer.disconnect(); clearCaches();
       surface.on(".zoom", null); controlsRef.current = null; canvas.width = 0; canvas.height = 0;
     };
   }, [place, language]);
 
+  useEffect(() => { controlsRef.current?.refreshActive(); }, [active]);
   useEffect(() => { controlsRef.current?.focusTarget(); }, [targetKey]);
   useLayoutEffect(() => { controlsRef.current?.refreshMarkers(); }, [markerKey, targetId]);
 

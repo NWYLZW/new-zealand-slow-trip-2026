@@ -6,6 +6,9 @@ import { downloadMediaBlob } from "./cameraMediaDownload";
 import { createCameraNicknameAutosave } from "./cameraNicknameAutosave";
 import { deleteMediaItem, getMediaBlob, getMediaSnapshot, initializeMediaLibrary, listMediaForPlace,
   saveUploadedMedia, subscribeMediaLibrary, updateMediaMetadata } from "./media/library";
+import { albumThumbnailKey } from "./media/albumLoading";
+import { albumThumbnails } from "./media/albumThumbnails";
+import { useAlbumWindow } from "./media/useAlbumWindow";
 import { PanelDivider } from "./pencil/PanelDivider";
 import { PencilIcon } from "./pencil/PencilIcon";
 import { PencilSurface } from "./pencil/PencilSurface";
@@ -49,27 +52,71 @@ function useMediaSnapshot() {
   return snapshot;
 }
 
-function MediaAsset({ item, controls = false }) {
-  const [url, setUrl] = useState("");
-  const [missing, setMissing] = useState(false);
+function MediaAsset({ item, controls = false, active = true, priority = 0 }) {
+  const { language } = useLanguage();
+  const key = albumThumbnailKey(item);
+  const [asset, setAsset] = useState(null);
+  const videoRef = useRef(null);
+  const itemRef = useRef(item);
+  const priorityRef = useRef(priority);
+  itemRef.current = item;
+  priorityRef.current = priority;
   useEffect(() => {
-    let current = true;
+    const controller = new AbortController();
     let objectUrl = "";
-    setUrl("");
-    setMissing(false);
-    getMediaBlob(item.id).then(blob => {
-      if (!current) return;
-      if (!blob) { setMissing(true); return; }
+    setAsset(null);
+    if (!active) return undefined;
+    const pending = controls ? getMediaBlob(itemRef.current.id)
+      : albumThumbnails.request(itemRef.current, { signal: controller.signal, priority: priorityRef.current });
+    pending.then(blob => {
+      if (controller.signal.aborted) return;
+      if (!blob) { setAsset({ key, missing: true }); return; }
       objectUrl = URL.createObjectURL(blob);
-      setUrl(objectUrl);
-    }).catch(() => { if (current) setMissing(true); });
-    return () => { current = false; if (objectUrl) URL.revokeObjectURL(objectUrl); };
-  }, [item.id]);
-  if (missing) return <span className="trip-media-asset-placeholder" role="status">{item.originalName || "—"}</span>;
+      setAsset({ key, url: objectUrl });
+    }).catch(() => { if (!controller.signal.aborted) setAsset({ key, missing: true }); });
+    return () => { controller.abort(); if (objectUrl) URL.revokeObjectURL(objectUrl); };
+  }, [key, controls, active]);
+  const url = active && asset?.key === key ? asset.url : "";
+  useEffect(() => {
+    const video = videoRef.current;
+    return () => {
+      if (!video) return;
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    };
+  }, [url]);
+  if (active && asset?.key === key && asset.missing) return <span className="trip-media-asset-placeholder" role="status">
+    {controls ? item.originalName || "—" : language === "en" ? "Preview unavailable" : "预览不可用"}
+  </span>;
   if (!url) return <span className="trip-media-asset-placeholder" aria-hidden="true">…</span>;
-  return item.kind === "video"
-    ? <video src={url} controls={controls} muted={!controls} preload="metadata" playsInline aria-label={item.originalName || "Video"} />
-    : <img src={url} alt={item.originalName || "Captured photo"} loading={controls ? "eager" : "lazy"} />;
+  return item.kind === "video" && controls
+    ? <video key={url} ref={videoRef} src={url} controls preload="metadata" playsInline aria-label={item.originalName || "Video"} />
+    : <img src={url} alt={item.originalName || "Captured photo"} decoding="async" loading="eager"
+      onError={() => setAsset({ key, missing: true })} />;
+}
+
+function DeferredMediaCard({ near, visible, hitProps, children }) {
+  const rootRef = useRef(null);
+  const restoreFocus = useRef(false);
+  const [focused, setFocused] = useState(false);
+  const active = visible && (near || focused);
+  useLayoutEffect(() => {
+    if (active && restoreFocus.current) {
+      restoreFocus.current = false;
+      rootRef.current?.querySelector("[data-media-id]")?.focus({ preventScroll: true });
+    }
+    if (!visible) setFocused(false);
+  }, [active, visible]);
+  return <div ref={rootRef} className="trip-media-slot" onFocusCapture={event => {
+    if (event.target.hasAttribute("data-media-placeholder")) restoreFocus.current = true;
+    setFocused(true);
+  }} onBlurCapture={event => {
+    if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
+  }}>
+    {active ? children() : <button {...hitProps} className="trip-media-item-hit trip-media-deferred-hit"
+      data-media-placeholder="true"><span className="trip-media-asset-placeholder" aria-hidden="true">…</span></button>}
+  </div>;
 }
 
 function MediaFormIcon({ kind, active = false }) {
@@ -148,7 +195,27 @@ export const AdventureMediaAlbum = forwardRef(function AdventureMediaAlbum({
   const previousSelectedRef = useRef(selectedId);
   const previousDetailTabRef = useRef(detailTab);
   const photographerAutosavesRef = useRef(new Map());
+  const scrollRef = useRef(null);
+  const gridRef = useRef(null);
+  const gridPositionRef = useRef({ placeTag, top: 0 });
+  useLayoutEffect(() => {
+    if (gridPositionRef.current.placeTag !== placeTag) gridPositionRef.current = { placeTag, top: 0 };
+    if (scrollRef.current) scrollRef.current.scrollTop = selected ? 0 : gridPositionRef.current.top;
+  }, [placeTag, selected?.id]);
+  const windowRange = useAlbumWindow(scrollRef, gridRef, items.length, !selected);
   selectedIdRef.current = selectedId;
+
+  useEffect(() => {
+    if (snapshot.status === "ready") albumThumbnails.retain(snapshot.items);
+  }, [snapshot.items, snapshot.status]);
+  useEffect(() => {
+    if (windowRange.visible) return;
+    clearTimeout(pressRef.current?.timer);
+    pressRef.current = null;
+    suppressClickRef.current = false;
+    setActionId(null);
+    setMenuId(null);
+  }, [windowRange.visible]);
 
   const photographerAutosave = useCallback(id => {
     if (!id) return null;
@@ -249,10 +316,14 @@ export const AdventureMediaAlbum = forwardRef(function AdventureMediaAlbum({
       event.preventDefault();
       event.stopPropagation();
       const focusTarget = actionTriggerRef.current;
+      const focusId = menuId ?? actionId;
       suppressClickRef.current = false;
       setMenuId(null);
       setActionId(null);
-      requestAnimationFrame(() => focusTarget?.focus());
+      requestAnimationFrame(() => {
+        if (focusTarget?.isConnected) focusTarget.focus();
+        else scrollRef.current?.querySelector(`[data-media-id="${CSS.escape(focusId)}"]`)?.focus();
+      });
     };
     document.addEventListener("pointerdown", closeOutside);
     document.addEventListener("keydown", closeOnEscape, true);
@@ -374,7 +445,8 @@ export const AdventureMediaAlbum = forwardRef(function AdventureMediaAlbum({
     archive: en ? "Imported archive" : "导入归档" };
 
   return <section className="trip-media-album" aria-label={placeTag ? en ? `${placeName(placeTag, language)} photos` : `${placeName(placeTag, language)}相册` : en ? "Local album" : "本地相册"}>
-    <div className="trip-media-album-scroll" onScroll={() => {
+    <div ref={scrollRef} className="trip-media-album-scroll" onScroll={event => {
+      if (!selected) gridPositionRef.current.top = event.currentTarget.scrollTop;
       clearTimeout(pressRef.current?.timer);
       pressRef.current = null;
       setActionId(null);
@@ -395,7 +467,7 @@ export const AdventureMediaAlbum = forwardRef(function AdventureMediaAlbum({
           : "此地点暂无匹配的本地照片或视频，可拍摄或上传。"}</PencilText></p>
       </div> : <p role="status"><PencilText>{en ? "No local photos or videos yet." : "本地相册还没有照片或视频。"}</PencilText></p>)}
       {selected ? <div className="trip-media-detail">
-        <div className="trip-media-detail-asset"><MediaAsset item={selected} controls /></div>
+        <div className="trip-media-detail-asset"><MediaAsset item={selected} controls active={windowRange.visible} /></div>
         <h3><PencilText>{selected.originalName || (selected.kind === "video" ? en ? "Video" : "视频" : en ? "Photo" : "照片")}</PencilText></h3>
         <div className="trip-media-detail-tab-frame">
           <AdventurePencilTabs items={[["info", en ? "Capture information" : "拍摄信息"],
@@ -451,24 +523,30 @@ export const AdventureMediaAlbum = forwardRef(function AdventureMediaAlbum({
             </select><MediaFormIcon kind="chevron" /></PencilSurface>
           </div>
         </div>}
-      </div> : <div className="trip-media-grid">
-        {items.map(item => <PencilSurface as="article" variant="paper" clipContent className="trip-media-item" key={item.id}
-          data-media-card-id={item.id} data-actions-open={actionId === item.id || menuId === item.id} data-menu-open={menuId === item.id}>
-          <button type="button" className="trip-media-item-hit"
-            data-media-id={item.id}
-            onPointerDown={event => beginPress(event, item.id)} onPointerMove={movePress}
-            onPointerUp={endPress} onPointerLeave={endPress} onPointerCancel={endPress} onLostPointerCapture={endPress}
-            onContextMenu={event => openActions(event, item.id)}
-            onKeyDown={event => {
+      </div> : <div ref={gridRef} className="trip-media-grid">
+        {items.map((item, index) => {
+          const hitProps = {
+            type: "button", className: "trip-media-item-hit", "data-media-id": item.id,
+            onPointerDown: event => beginPress(event, item.id), onPointerMove: movePress,
+            onPointerUp: endPress, onPointerLeave: endPress, onPointerCancel: endPress, onLostPointerCapture: endPress,
+            onContextMenu: event => openActions(event, item.id),
+            onKeyDown: event => {
               if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) openActions(event, item.id);
-            }}
-            onClick={() => {
+            },
+            onClick: () => {
               if (suppressClickRef.current) { suppressClickRef.current = false; return; }
               selectItem(item.id);
-            }}
-            aria-haspopup="menu" aria-expanded={actionId === item.id}
-            aria-label={`${item.kind === "video" ? en ? "Video" : "视频" : en ? "Photo" : "照片"} · ${capturedTime(item, language)} · ${item.photographer?.nickname || (en ? "unknown photographer" : "摄影者未知")}`}>
-            <span className="trip-media-item-asset"><MediaAsset item={item} /></span>
+            },
+            "aria-haspopup": "menu", "aria-expanded": actionId === item.id,
+            "aria-label": `${item.kind === "video" ? en ? "Video" : "视频" : en ? "Photo" : "照片"} · ${capturedTime(item, language)} · ${item.photographer?.nickname || (en ? "unknown photographer" : "摄影者未知")}`,
+          };
+          return <DeferredMediaCard key={item.id} hitProps={hitProps} visible={windowRange.visible}
+            near={(index >= windowRange.start && index < windowRange.end) || actionId === item.id || menuId === item.id}>
+          {() => <PencilSurface as="article" variant="paper" clipContent className="trip-media-item"
+          data-media-card-id={item.id} data-actions-open={actionId === item.id || menuId === item.id} data-menu-open={menuId === item.id}>
+          <button {...hitProps}>
+            <span className="trip-media-item-asset"><MediaAsset item={item}
+              priority={index >= windowRange.visibleStart && index < windowRange.visibleEnd ? 0 : 1} /></span>
             {item.kind === "video" && <span className="trip-media-item-kind"><PencilText>{en ? "Video" : "视频"}</PencilText></span>}
           </button>
           <div className="trip-media-item-quick-actions" aria-label={en ? "Media actions" : "媒体操作"}>
@@ -501,7 +579,9 @@ export const AdventureMediaAlbum = forwardRef(function AdventureMediaAlbum({
               <PencilText>{en ? "Edit additional information" : "编辑补充信息"}</PencilText>
             </button>
           </div>}
-        </PencilSurface>)}
+        </PencilSurface>}
+        </DeferredMediaCard>;
+        })}
       </div>}
       {message && <p className="trip-media-message" role="alert"><PencilText>{message}</PencilText></p>}
     </div>

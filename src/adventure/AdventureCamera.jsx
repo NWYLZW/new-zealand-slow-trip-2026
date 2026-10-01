@@ -10,6 +10,7 @@ import { CameraLevel, useCameraLevel } from "./CameraLevel.jsx";
 import { captureCameraPhoto, requestCameraPreview } from "./cameraCapture";
 import { CameraShutterIcon } from "./CameraShutterIcon";
 import { cameraHardwareErrorMessage, useCameraHardware } from "./cameraHardware";
+import { useCameraPinchZoom } from "./useCameraPinchZoom.js";
 import { CameraHardwareControls } from "./CameraHardwareControls";
 import { CameraIcon, PhotoAlbumIcon } from "./SketchIcons";
 import { PencilSurface } from "./pencil/PencilSurface";
@@ -114,6 +115,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   const onHardwareError = useCallback(error => showMessage(cameraHardwareErrorMessage(error, en)), [en, showMessage]);
   const hardware = useCameraHardware({ track: videoTrack, active: active && previewState === "ready",
     recording, disabled: photoBusy || facingSwitchBusy || systemCameraBusy || recordPending, onError: onHardwareError });
+  const pinchZoom = useCameraPinchZoom(hardware.zoom, active && previewState === "ready");
 
   const stopRecording = useCallback(() => {
     recordAttemptRef.current += 1;
@@ -625,7 +627,7 @@ export function AdventureCamera({ active, onOpenAlbum }) {
   };
 
   return <section ref={cameraRef} className="trip-camera" aria-label={en ? "Camera" : "相机"} data-recording={recording || recordPending}>
-      <div className="trip-camera-preview">
+      <div className="trip-camera-preview" data-pinch-zoom={pinchZoom.enabled} {...pinchZoom.handlers}>
         <video ref={videoRef} data-facing={previewFacing} autoPlay muted playsInline
           aria-label={en ? "Live camera preview" : "相机实时取景"} />
         {active && previewState === "ready" && cameraGrid && <CameraLevel reading={level.reading} en={en} />}

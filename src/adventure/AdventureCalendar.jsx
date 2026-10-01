@@ -3,7 +3,6 @@ import { useLanguage } from "../LanguageContext";
 import { getAdventureCalendarDays } from "../components/calendar/tripCalendarData";
 import { PencilText } from "./pencil/PencilText";
 import { WeatherBadge } from "./weather/WeatherBadge";
-import { WeatherAttribution } from "./weather/WeatherSources";
 import { pencilStroke } from "./pencil/stroke";
 import { drawPencilWash } from "./pencil/wash";
 import { calendarPaper } from "./pencil/paper";
@@ -302,7 +301,6 @@ export function AdventureCalendar({ selectedDate, onSelectDate, onSelectDay, onS
         })}
         <InkLayer kind="grid" scope={scope} selectedDate={selectedDate} drawKey={drawKey} />
       </div>
-      <WeatherAttribution language={language} compact />
     </div>
   </section>;
 }

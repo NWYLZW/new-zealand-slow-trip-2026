@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process';
 import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import { chromium } from 'playwright';
+import { DETAIL_CACHE_MAX_PIXELS } from '../src/adventure/pencil/detailTilePlan.js';
 
 const baseline = process.argv.includes('--baseline');
 const output = resolve('work/map-cache-performance');
@@ -154,7 +155,7 @@ try {
       assert.equal(result.motion.terrainBuilds, result.cold.terrainBuilds);
       assert.equal(result.motion.detailBuilds, result.settledDetail.detailBuilds);
       assert(result.routeBounded.cachedViews <= 3); assert(result.routeBounded.cachePixels <= 9000000);
-      assert(result.settledDetail.cachePixels <= 9000000);
+      assert(result.settledDetail.cachePixels <= DETAIL_CACHE_MAX_PIXELS);
       assert.equal(result.recovery.before, result.recovery.after);
       assert.equal(result.recovery.stats.detailBuilds, result.settledDetail.detailBuilds);
       assert.equal(result.routeRecovery.before, result.routeRecovery.after);
@@ -270,6 +271,44 @@ try {
     assert.equal(report.suspended.disposedBuilds, 0);
     assert.equal(report.suspended.distinctVersionKeys, 5);
     assert.equal(report.suspended.gestureBefore, report.suspended.gestureAfter);
+    report.detailContinuation = await page.evaluate(async () => {
+      const d3 = await import('/__map-cache-d3.js');
+      const { createPencilMap } = await import('/src/adventure/pencil/drawPencilMap.js');
+      const geography = (await import('/src/adventure/data/pencil-geography.json')).default;
+      const canvas = document.createElement('canvas'); document.body.append(canvas);
+      const project = d3.geoMercator().rotate([-172, 0]).fitExtent([[30, 30], [590, 450]], geography.land);
+      const center = project([168.8, -44.7]);
+      const view = d3.zoomIdentity.translate(310 - center[0] * 12, 240 - center[1] * 12).scale(12);
+      const map = createPencilMap(canvas, project, 620, 480);
+      const stats = () => ({ ...canvas._pencilStats });
+      const waitFor = async condition => {
+        for (let i = 0; i < 500; i++) {
+          if (condition()) return;
+          await new Promise(resolve => setTimeout(resolve, 10));
+        }
+        throw new Error('Detail continuation did not reach its expected state');
+      };
+      try {
+        map.draw(view); await map.ready; map.refine(view);
+        await waitFor(() => (stats().paintedDetailTiles ?? 0) > 1);
+        map.draw(view, { moving: true });
+        const interrupted = stats();
+        map.draw(view, { moving: false }); map.refine(view);
+        const resumed = stats();
+        await waitFor(() => !stats().pending);
+        const complete = stats();
+        const pan = d3.zoomIdentity.translate(view.x + 3, view.y + 2).scale(view.k);
+        map.draw(pan, { moving: true }); map.draw(pan, { moving: false }); map.refine(pan);
+        await waitFor(() => !stats().pending);
+        return { interrupted, resumed, complete, panned: stats() };
+      } finally { map.dispose(); canvas.remove(); }
+    });
+    assert(report.detailContinuation.interrupted.pending === false);
+    assert.equal(report.detailContinuation.resumed.detailBuilds, report.detailContinuation.interrupted.detailBuilds);
+    assert.equal(report.detailContinuation.resumed.detailResumes, 1);
+    assert(report.detailContinuation.complete.cachePixels <= DETAIL_CACHE_MAX_PIXELS);
+    assert.equal(report.detailContinuation.panned.detailBuilds, report.detailContinuation.complete.detailBuilds,
+      'A tiny drag inside the completed buffer does not rebuild its tiles');
     report.international = [];
     for (const historical of [true, false]) {
       const result = await page.evaluate(async historical => {

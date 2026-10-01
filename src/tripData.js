@@ -270,6 +270,7 @@ export const southDays = [
     calendarRegion: "south",
     title: "皇后镇 → 箭镇 → 瓦纳卡",
     subtitle: "Crown Range 与 Cardrona",
+    weatherSegments: [{ placeTag: "ZQN", untilEvent: 0 }, { placeTag: "WKA", fromEvent: 5 }],
     stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "中",
     color: "#df7659",

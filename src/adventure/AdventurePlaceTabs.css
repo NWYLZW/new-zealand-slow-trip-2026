@@ -1,7 +1,7 @@
 .trip-place-tabs {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
   min-width: 0;
@@ -36,7 +36,7 @@
 
 .trip-place-tab-frame {
   display: grid;
-  gap: 6px;
+  gap: 0;
   flex: none;
   min-width: 0;
 }
@@ -51,7 +51,7 @@
 .trip-place-tab-scroll .trip-adventure-calendar-scopes {
   width: max-content;
   max-width: none;
-  padding-bottom: 4px;
+  padding-bottom: 0;
 }
 
 .trip-place-tab-scroll .trip-adventure-calendar-scope { flex: none; }

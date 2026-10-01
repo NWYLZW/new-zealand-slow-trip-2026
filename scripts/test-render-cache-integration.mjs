@@ -112,43 +112,85 @@ try {
   assert(await page.evaluate(() => window.__buttons.every(node => node.isConnected)));
 
   await page.goto(`${base}?panel=tasks&date=2026-10-02&map=nz&weather=2026-10-06&weatherParentFront=tasks`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('.trip-weather-hours tbody tr');
+  await page.waitForSelector('.trip-weather-hour');
+  assert.equal(await page.locator('.trip-weather-hours').count(), 0);
+  assert.equal(await page.locator('.trip-weather-chart-labels').count(), 0);
+  assert(await page.locator('.trip-weather-chart-track').evaluate(node => {
+    const style = getComputedStyle(node);
+    const height = parseFloat(style.getPropertyValue('--weather-chart-top')) + parseFloat(style.getPropertyValue('--weather-chart-height'));
+    return Math.abs(node.getBoundingClientRect().height - height) < 1;
+  }), 'Hourly track ends at the compact curve extent');
+  assert.equal(await page.locator('.trip-weather-hour').count(), 15);
+  assert.equal(await page.locator('.trip-weather-folded-hours').count(), 1);
+  assert.match(await page.locator('.trip-weather-average-temperature').textContent(), /12\.0°/);
+  assert.match(await page.locator('.trip-weather-folded-hours').getAttribute('aria-label'), /9\/9/);
+  await page.locator('.trip-weather-folded-hours').click();
+  assert.equal(await page.locator('.trip-weather-hour').count(), 24);
+  assert.equal(await page.locator('.trip-weather-average-temperature').count(), 0);
+  assert.equal(await page.locator('.trip-weather-chart-track > .trip-weather-early-collapse').count(), 1);
+  assert(await page.locator('.trip-weather-chart-track').evaluate(node => {
+    const curve = node.querySelector('.trip-weather-curve-wrap').getBoundingClientRect();
+    const firstHour = node.querySelector('.trip-weather-hour').getBoundingClientRect();
+    const control = node.querySelector('.trip-weather-early-collapse').getBoundingClientRect();
+    return Math.abs(curve.left - firstHour.left) < 1 && control.right <= firstHour.left + 1
+      && Math.abs(control.top - firstHour.top) < 1;
+  }), 'Inline collapse control takes no extra row and stays outside the temperature curve');
+  assert.equal(await page.locator('.trip-weather-hour[aria-pressed="true"] time').textContent(), '00:00');
+  await page.locator('.trip-weather-early-collapse').click();
+  assert.equal(await page.locator('.trip-weather-hour').count(), 15);
+  assert.equal(await page.locator('.trip-weather-hour[aria-pressed="true"] time').textContent(), '09:00');
+  await page.locator('.trip-weather-folded-hours').click();
+  await page.locator('.trip-weather-hour').first().focus();
+  await page.keyboard.press('End');
+  assert.equal(await page.locator('.trip-weather-hour[aria-pressed="true"] time').textContent(), '23:00');
+  assert.equal(await page.locator('.trip-adventure-calendar .trip-weather-attribution').count(), 0);
   assert.equal(await page.locator('.trip-weather .trip-weather-attribution, .trip-weather-sources').count(), 0);
   const weatherUrl = page.url();
   const weatherView = await page.evaluate(() => document.querySelector('.trip-map-area').__zoom.toString());
   if (output) await page.screenshot({ path: `${output}/weather-summary.png` });
-  await page.locator('.trip-panel-body').evaluate(node => { node.scrollTop = 180; });
+  await page.locator('.trip-weather-chart-scroll').evaluate(node => { node.scrollLeft = 180; });
   await page.waitForTimeout(100);
   await page.getByRole('button', { name: /^(天气数据来源|Weather data sources)$/ }).click();
   await page.waitForSelector('.trip-weather-sources');
-  assert.equal(await page.locator('.trip-weather-hours').count(), 0);
+  assert.equal(await page.locator('.trip-weather-hourly').count(), 0);
   assert.equal(await page.locator('.trip-weather-sources .trip-weather-attribution a').count(), 2);
   assert.equal(new URL(page.url()).searchParams.get('weatherView'), 'sources');
   await page.getByRole('button', { name: /^(返回天气|Back to weather)$/ }).click();
-  await page.waitForSelector('.trip-weather-hours');
+  await page.waitForSelector('.trip-weather-hourly');
   assert.equal(page.url(), weatherUrl);
+  assert.equal(await page.locator('.trip-weather-hour').count(), 24);
+  assert.equal(await page.locator('.trip-weather-early-collapse').getAttribute('aria-expanded'), 'true');
   assert.equal(await page.evaluate(() => document.querySelector('.trip-map-area').__zoom.toString()), weatherView);
-  assert(await page.locator('.trip-panel-body').evaluate(node => node.scrollTop >= 170));
+  assert(await page.locator('.trip-weather-chart-scroll').evaluate(node => Math.abs(node.scrollLeft - 180) < 1));
+  assert.equal(await page.locator('.trip-weather-hour[aria-pressed="true"] time').textContent(), '23:00');
   await page.getByRole('button', { name: /^(天气数据来源|Weather data sources)$/ }).click();
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.trip-weather-sources');
   await page.keyboard.press('Escape');
-  await page.waitForSelector('.trip-weather-hours');
+  await page.waitForSelector('.trip-weather-hourly');
   assert.equal(new URL(page.url()).searchParams.has('weatherView'), false);
   await page.goBack();
   await page.waitForSelector('.trip-weather-sources');
   await page.goForward();
-  await page.waitForSelector('.trip-weather-hours');
-  report.weather = { summaryAndHoursOnly: true, nestedSources: true, scrollAndMapRetained: true, refreshEscapeAndHistory: true };
+  await page.waitForSelector('.trip-weather-hourly');
+  report.weather = { summaryAndHourlyCurve: true, earlyHoursFoldedByDefault: true, expansionRetained: true, nestedSources: true, horizontalScrollAndSelectionRetained: true, scrollAndMapRetained: true, refreshEscapeAndHistory: true };
 
   const density = () => page.evaluate(() => {
     const day = document.querySelector('#trip-calendar-region .trip-adventure-calendar-day');
     const date = day.querySelector('.trip-adventure-calendar-day-number').getBoundingClientRect();
     const weather = day.querySelector('.trip-weather-badge').getBoundingClientRect();
+    const centerY = node => { const box = node.getBoundingClientRect(); return box.top + box.height / 2; };
+    const headingOffsets = [...document.querySelectorAll('#trip-calendar-region .trip-adventure-calendar-day')].map(cell => {
+      const badge = cell.querySelector('.trip-weather-badge');
+      const labels = [...cell.querySelectorAll('.trip-adventure-calendar-date .trip-pencil-text, .trip-weather-badge-temperature .trip-pencil-text')]
+        .filter(node => node.getBoundingClientRect().width > 0);
+      return Math.max(...labels.map(node => Math.abs(centerY(node) - centerY(badge))));
+    });
     return { events: [...day.querySelectorAll('.trip-adventure-calendar-event')].filter(node => node.getBoundingClientRect().height > 0).length,
       temperature: day.querySelector('.trip-weather-badge-temperature').getBoundingClientRect().width > 0,
       dateVisible: date.width > 0 && date.height > 0, weatherVisible: weather.width > 0 && weather.height >= 44,
       separateRows: date.bottom <= weather.top, cardHeight: day.getBoundingClientRect().height,
+      headingCenterOffset: Math.max(...headingOffsets),
       overflow: document.documentElement.scrollWidth > innerWidth };
   });
   const compactSplit = await density();
@@ -159,10 +201,12 @@ try {
   await page.waitForTimeout(600);
   const wide = await density();
   assert(wide.events > 0 && wide.temperature);
+  assert(wide.headingCenterOffset < .5, 'Wide calendar date and weather must share a vertical center');
   await page.setViewportSize({ width: 900, height: 853 });
   await page.waitForTimeout(600);
   const medium = await density();
   assert(medium.events > 0 && medium.events <= 2 && !medium.temperature);
+  assert(medium.headingCenterOffset < .5, 'Medium calendar date and weather must share a vertical center');
   await page.setViewportSize({ width: 436, height: 900 });
   await page.waitForTimeout(1200);
   const narrow = await density();

@@ -35,6 +35,9 @@ export function weatherRequest(date, location, now = Date.now()) {
 }
 export const weatherTtl = product => product === "reanalysis" ? DAY : 30 * 60000;
 
+export const weatherRequestIdentity = request => JSON.stringify([request.key, request.unavailable,
+  request.start, request.end, request.location?.latitude, request.location?.longitude, request.location?.timeZone]);
+
 export function buildWeatherUrl(requests) {
   const first = requests[0], archive = first.product === "reanalysis";
   const url = new URL(archive ? "https://archive-api.open-meteo.com/v1/archive" : "https://api.open-meteo.com/v1/forecast");

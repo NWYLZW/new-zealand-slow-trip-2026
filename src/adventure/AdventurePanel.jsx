@@ -34,7 +34,7 @@ import { eventDateId, getAdventureCalendarDays, getTripCalendarDay } from "../co
 import { PencilIcon } from "./pencil/PencilIcon";
 import { AdventurePaneActions } from "./AdventurePaneActions";
 import { AdventureWeather } from "./weather/AdventureWeather";
-import { weatherLocationForDay } from "./weather/weatherLocations";
+import { weatherSegmentsForDay } from "./weather/weatherLocations";
 
 const calendarDays = getAdventureCalendarDays();
 const eventsById = new Map(calendarDays.flatMap(day => day.events.map(event => [event.urlId, event])));
@@ -170,7 +170,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const index = adventureStops.findIndex((stop) => stop.tag === view.place);
   const isWeather = view.rightPanel === "weather";
   const weatherSources = isWeather && view.weatherView === "sources";
-  const weatherLocation = isWeather ? weatherLocationForDay(view.weatherDate, view.weatherPlace) : null;
+  const weatherLocations = isWeather ? weatherSegmentsForDay(view.weatherDate, view.weatherPlace).map(segment => segment.location) : [];
   const stop = view.rightPanel === "cluster" || isWeather ? null : adventureStops[index];
   const bagBooking = view.rightPanel === "bag-stay" ? confirmedAccommodationBookings[view.bagStay] : null;
   const bagNoteCategory = view.rightPanel === "bag-note"
@@ -223,7 +223,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
     && (view.rightPanel === "place" || view.rightPanel === "event" || Boolean(waypoint));
   const clusterTitle = adventureText(`附近地点 · ${view.cluster?.length ?? 0}`, `Nearby places · ${view.cluster?.length ?? 0}`, language);
   const title = (weatherSources ? adventureText("数据来源", "Data sources", language) : null)
-    ?? (isWeather ? `${adventureText("天气", "Weather", language)} · ${weatherLocation ? adventureField(weatherLocation, "name", language) : view.weatherDate}` : null)
+    ?? (isWeather ? `${adventureText("天气", "Weather", language)} · ${weatherLocations.length ? weatherLocations.map(location => adventureField(location, "name", language)).join(" / ") : view.weatherDate}` : null)
     ?? (view.rightPanel === "cluster" ? clusterTitle : null)
     ?? (mediaDetail ? adventureText("详情", "Details", language) : null)
     ?? (waypoint ? adventureField(waypoint, "name", language) : null)

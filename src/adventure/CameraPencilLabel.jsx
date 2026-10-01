@@ -29,18 +29,21 @@ function paintBackdrop(canvas, width, height, color, textureKey) {
   const dpr = Math.min(devicePixelRatio || 1, 3);
   const pixelWidth = Math.max(1, Math.round(width * dpr));
   const pixelHeight = Math.max(1, Math.round(height * dpr));
-  const key = JSON.stringify([pixelWidth, pixelHeight, color, textureKey]);
+  const key = JSON.stringify([width, height, dpr, color, textureKey]);
   const cached = backdropCache.get(key);
+  const context = canvas.getContext("2d");
+  if (!context || context.isContextLost?.()) return;
   canvas.width = pixelWidth;
   canvas.height = pixelHeight;
-  if (cached) {
-    canvas.getContext("2d").drawImage(cached, 0, 0);
+  const cachedContext = cached?.getContext("2d");
+  if (cachedContext && !cachedContext.isContextLost?.()) {
+    context.drawImage(cached, 0, 0);
     return;
   }
-  const context = canvas.getContext("2d");
+  backdropCache.delete(key);
   context.scale(dpr, dpr);
   context.globalAlpha = .9;
-  const seed = stableHash(`${textureKey}:${pixelWidth}:${pixelHeight}`);
+  const seed = stableHash(`${textureKey}:${width}:${height}`);
   const random = seededRandom(seed);
   const left = 2.5, right = Math.max(left + 1, width - 2.5);
   const lineCount = Math.max(6, Math.ceil(height / 3.2));
@@ -65,7 +68,9 @@ function paintBackdrop(canvas, width, height, color, textureKey) {
   const bitmap = document.createElement("canvas");
   bitmap.width = pixelWidth;
   bitmap.height = pixelHeight;
-  bitmap.getContext("2d").drawImage(canvas, 0, 0);
+  const bitmapContext = bitmap.getContext("2d");
+  if (!bitmapContext || bitmapContext.isContextLost?.()) return;
+  bitmapContext.drawImage(canvas, 0, 0);
   backdropCache.set(key, bitmap);
   if (backdropCache.size > 96) backdropCache.delete(backdropCache.keys().next().value);
 }
@@ -78,11 +83,11 @@ export function CameraPencilLabel({ as: Tag = "span", className = "", textureKey
     const canvas = canvasRef.current;
     if (!root || !canvas) return undefined;
     const paint = () => {
-      const rect = root.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
+      const width = root.clientWidth, height = root.clientHeight;
+      if (!width || !height) return;
       const style = getComputedStyle(root);
       const color = style.getPropertyValue("--trip-theme-accent").trim() || "#4b96aa";
-      paintBackdrop(canvas, rect.width, rect.height, color, textureKey);
+      paintBackdrop(canvas, width, height, color, textureKey);
     };
     const resize = new ResizeObserver(paint);
     const appearance = new MutationObserver(paint);
