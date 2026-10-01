@@ -33,6 +33,8 @@ import { PanelDivider } from "./pencil/PanelDivider";
 import { eventDateId, getAdventureCalendarDays, getTripCalendarDay } from "../components/calendar/tripCalendarData";
 import { PencilIcon } from "./pencil/PencilIcon";
 import { AdventurePaneActions } from "./AdventurePaneActions";
+import { AdventureWeather } from "./weather/AdventureWeather";
+import { weatherLocationForDay } from "./weather/weatherLocations";
 
 const calendarDays = getAdventureCalendarDays();
 const eventsById = new Map(calendarDays.flatMap(day => day.events.map(event => [event.urlId, event])));
@@ -134,7 +136,7 @@ function dayIcon(entry) {
   return dayIcons[chosen] ?? CalendarIcon;
 }
 
-export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock, cameraActive = false,
+export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock, cameraActive = false, weatherActive = true,
   fullscreen = false, automaticFullscreen = false, onToggleFullscreen, onOpenMenu, ...props }) {
   const { language } = useLanguage();
   const vault = usePrivateVault();
@@ -166,7 +168,10 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   }, []);
   useLayoutEffect(() => { setStayLink(null); }, [view.rightPanel, view.placeTab, view.place, view.bagStay]);
   const index = adventureStops.findIndex((stop) => stop.tag === view.place);
-  const stop = view.rightPanel === "cluster" ? null : adventureStops[index];
+  const isWeather = view.rightPanel === "weather";
+  const weatherSources = isWeather && view.weatherView === "sources";
+  const weatherLocation = isWeather ? weatherLocationForDay(view.weatherDate, view.weatherPlace) : null;
+  const stop = view.rightPanel === "cluster" || isWeather ? null : adventureStops[index];
   const bagBooking = view.rightPanel === "bag-stay" ? confirmedAccommodationBookings[view.bagStay] : null;
   const bagNoteCategory = view.rightPanel === "bag-note"
     ? preTripChecklist.find((group) => group.id === view.bagNote) : null;
@@ -181,7 +186,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const activePropertyHref = activeStayAction ? safeStayHref(activeStayAction.href) : null;
   const activeMapHref = activeStayAction ? safeStayHref(activeStayAction.mapHref) : null;
   const hasStayActions = Boolean(activePropertyHref || activeMapHref);
-  const route = view.rightPanel === "cluster" ? null : adventureRoutes.find((item) => item.id === view.route);
+  const route = view.rightPanel === "cluster" || isWeather ? null : adventureRoutes.find((item) => item.id === view.route);
   const waypointRecord = route ? getAdventureWaypoint(view.waypoint) : null;
   const [routeMonth, routeDay] = route?.date.split("/") ?? [];
   const routeItinerary = route && adventureDays.find(item => item.date === `${Number(routeMonth)}月${Number(routeDay)}日`);
@@ -217,7 +222,9 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const clusterChild = view.clusterFrom && !mediaDetail
     && (view.rightPanel === "place" || view.rightPanel === "event" || Boolean(waypoint));
   const clusterTitle = adventureText(`附近地点 · ${view.cluster?.length ?? 0}`, `Nearby places · ${view.cluster?.length ?? 0}`, language);
-  const title = (view.rightPanel === "cluster" ? clusterTitle : null)
+  const title = (weatherSources ? adventureText("数据来源", "Data sources", language) : null)
+    ?? (isWeather ? `${adventureText("天气", "Weather", language)} · ${weatherLocation ? adventureField(weatherLocation, "name", language) : view.weatherDate}` : null)
+    ?? (view.rightPanel === "cluster" ? clusterTitle : null)
     ?? (mediaDetail ? adventureText("详情", "Details", language) : null)
     ?? (waypoint ? adventureField(waypoint, "name", language) : null)
     ?? (cameraDevice ? adventureText("设备信息", "Device information", language) : null)
@@ -228,11 +235,11 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
     ?? { bag: adventureText("背包", "Backpack", language), camera: adventureText("相机", "Camera", language),
       "map-sources": adventureText("地图数据来源", "Map data sources", language) }[view.rightPanel];
   const stayDate = compactStayDateRange(bagBooking);
-  const date = mediaDetail ? null : event ? `${event.day.date} · ${event.day.weekday}`
+  const date = isWeather ? view.weatherDate : mediaDetail ? null : event ? `${event.day.date} · ${event.day.weekday}`
     : route?.date ?? (calendarDay ? `${calendarDay.day.date} · ${calendarDay.day.weekday}` : null)
       ?? stayDate?.label ?? placePeriods ?? stop?.date;
   const DayIcon = dayIcon(calendarDay ?? (event ? { day: event.day, events: [event] } : null));
-  const nested = clusterChild || mediaDetail || waypoint || cameraNested || event || (calendarDay && view.dayFrom === "place")
+  const nested = isWeather || clusterChild || mediaDetail || waypoint || cameraNested || event || (calendarDay && view.dayFrom === "place")
     || ["bag-stay", "map-sources", "bag-note"].includes(view.rightPanel);
   const LeadingIcon = view.rightPanel === "place" ? placeIcons[stop?.tag] ?? CityIcon
     : view.rightPanel === "day" ? DayIcon ?? CalendarIcon
@@ -273,6 +280,22 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const stayBackLabel = view.stayFrom === "event" ? adventureText("返回行程", "Back to itinerary", language)
     : view.stayFrom === "place" ? adventureText("返回地点", "Back to place", language)
       : adventureText("返回背包", "Back to backpack", language);
+  const weatherBackLabel = weatherSources ? adventureText("返回天气", "Back to weather", language)
+    : adventureText("返回天气前的视图", "Back to previous view", language);
+  const weatherScroll = useRef({ sources: false, top: 0, key: null });
+  useLayoutEffect(() => {
+    const body = panelRef.current?.querySelector('.trip-panel-body');
+    const previous = weatherScroll.current;
+    const key = isWeather ? `${view.weatherDate}|${view.weatherPlace ?? ''}` : null;
+    if (body && key && key === previous.key && weatherSources !== previous.sources) {
+      if (weatherSources) body.scrollTop = 0;
+      else {
+        body.scrollTop = previous.top;
+        panelRef.current.querySelector('.trip-weather-sources-action')?.focus({ preventScroll: true });
+      }
+    }
+    weatherScroll.current = { sources: weatherSources, top: key === previous.key ? previous.top : 0, key };
+  }, [isWeather, weatherSources, view.weatherDate, view.weatherPlace]);
   const mediaAlbum = <AdventureMediaAlbum ref={mediaAlbumRef} placeTag={view.rightPanel === "place" ? stop?.tag : null}
     selectedId={view.mediaId} onSelect={id => navigate("media-select", id)} detailTab={view.mediaTab}
     onTabChange={tab => navigate("media-tab", tab)} />;
@@ -283,18 +306,22 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
           data-icon-feedback="keyboard-only" aria-label={adventureText("相机设置", "Camera settings", language)}
           onClick={() => navigate("camera-view", "settings")}><CameraIcon themeBackdrop /></button>
           : nested ? <button type="button" className="trip-panel-leading trip-event-back"
-          aria-label={clusterChild ? adventureText("返回地点列表", "Back to locations", language) : waypoint ? adventureText("返回路线", "Back to route", language) : mediaDetail || cameraNested ? cameraBackLabel : view.rightPanel === "bag-note" ? adventureText("返回备忘", "Back to notes", language)
+          aria-label={isWeather ? weatherBackLabel : clusterChild ? adventureText("返回地点列表", "Back to locations", language) : waypoint ? adventureText("返回路线", "Back to route", language) : mediaDetail || cameraNested ? cameraBackLabel : view.rightPanel === "bag-note" ? adventureText("返回备忘", "Back to notes", language)
             : view.rightPanel === "bag-stay" ? stayBackLabel : view.rightPanel === "map-sources" ? adventureText("返回背包", "Back to backpack", language)
             : event ? adventureText("返回上一层行程", "Back to itinerary", language) : adventureText("返回地点日历", "Back to place calendar", language)}
-          title={clusterChild ? adventureText("返回地点列表", "Back to locations", language) : waypoint ? adventureText("返回路线", "Back to route", language) : mediaDetail || cameraNested ? cameraBackLabel : view.rightPanel === "bag-note" ? adventureText("返回备忘", "Back to notes", language)
+          title={isWeather ? weatherBackLabel : clusterChild ? adventureText("返回地点列表", "Back to locations", language) : waypoint ? adventureText("返回路线", "Back to route", language) : mediaDetail || cameraNested ? cameraBackLabel : view.rightPanel === "bag-note" ? adventureText("返回备忘", "Back to notes", language)
             : view.rightPanel === "bag-stay" ? stayBackLabel : view.rightPanel === "map-sources" ? adventureText("返回背包", "Back to backpack", language)
             : event ? adventureText("返回上一层行程", "Back to itinerary", language) : adventureText("返回地点日历", "Back to place calendar", language)}
-          onClick={() => clusterChild ? navigate("back-cluster") : waypoint ? navigate("back-waypoint") : mediaDetail ? navigate("media-select", null) : cameraNested ? navigate("camera-view", cameraDevice ? "settings" : "preview") : navigate(view.rightPanel === "bag-note" ? "back-bag-note"
+          onClick={() => isWeather ? navigate("back-weather") : clusterChild ? navigate("back-cluster") : waypoint ? navigate("back-waypoint") : mediaDetail ? navigate("media-select", null) : cameraNested ? navigate("camera-view", cameraDevice ? "settings" : "preview") : navigate(view.rightPanel === "bag-note" ? "back-bag-note"
             : view.rightPanel === "bag-stay" ? "back-stay" : view.rightPanel === "map-sources" ? "back-bag"
             : event ? "back-event" : "back-day")}><PreviousIcon /></button>
           : <span className="trip-panel-leading" aria-hidden="true"><LeadingIcon /></span>}
         <div className="trip-panel-heading">
-          {clusterChild ? <nav className="trip-panel-breadcrumb" aria-label={adventureText("地点路径", "Location path", language)}>
+          {weatherSources ? <nav className="trip-panel-breadcrumb" aria-label={adventureText("天气路径", "Weather path", language)}>
+            <button type="button" onClick={() => navigate("back-weather")}><PencilText>{adventureText("天气", "Weather", language)}</PencilText></button>
+            <span aria-hidden="true">/</span>
+            <h1 className="trip-panel-breadcrumb-current" aria-current="page"><PencilText ellipsis>{title}</PencilText></h1>
+          </nav> : clusterChild ? <nav className="trip-panel-breadcrumb" aria-label={adventureText("地点路径", "Location path", language)}>
             <button type="button" onClick={() => navigate("back-cluster")}><PencilText>{adventureText("附近地点", "Nearby places", language)}</PencilText></button>
             <span aria-hidden="true">/</span>
             <h1 className="trip-panel-breadcrumb-current" aria-current="page"><PencilText ellipsis>{title}</PencilText></h1>
@@ -339,7 +366,13 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
           </div> : date && <span className={`trip-panel-heading-date${stayDate ? " trip-panel-heading-date--stay" : ""}`}
             title={stayDate?.full} aria-label={stayDate?.full}><PencilText ellipsis={Boolean(stayDate)}>{date}</PencilText></span>}
         </div>
-        {mediaDetail ? <div className="trip-panel-header-actions">
+        {isWeather ? <div className="trip-panel-header-actions">
+          {!weatherSources && <button type="button" className="trip-route-header-action trip-weather-sources-action"
+            aria-label={adventureText("天气数据来源", "Weather data sources", language)}
+            title={adventureText("天气数据来源", "Weather data sources", language)}
+            onClick={() => navigate("weather-sources")}><MapSourcesIcon /></button>}
+          {paneActions}
+        </div> : mediaDetail ? <div className="trip-panel-header-actions">
           <button type="button" className="trip-route-header-action" onClick={() => mediaAlbumRef.current?.requestDelete()}
             aria-label={adventureText("删除媒体", "Delete media", language)}>
             <PencilIcon kind="delete"><path d="M7 9h18M12 9V5h8v4M9 10l1 17h12l1-17M13 13v10M19 13v10" /></PencilIcon>
@@ -389,7 +422,10 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
         </div> : <div className="trip-panel-header-actions">{paneActions}</div>}
         {!cameraPreview && <PanelDivider />}
       </header>
-      <div className={`trip-panel-body${calendarDay ? " trip-panel-body--day" : ""}${event ? " trip-panel-body--event" : ""}${["place", "bag", "bag-stay", "bag-note", "camera"].includes(view.rightPanel) ? " trip-panel-body--place" : ""}`}>
+      <div className={`trip-panel-body${calendarDay ? " trip-panel-body--day" : ""}${event ? " trip-panel-body--event" : ""}${["place", "bag", "bag-stay", "bag-note", "camera"].includes(view.rightPanel) ? " trip-panel-body--place" : ""}`}
+        onScroll={isWeather && !weatherSources ? event => { weatherScroll.current.top = event.currentTarget.scrollTop; } : undefined}>
+        {isWeather && <AdventureWeather key={`${view.weatherDate}|${view.weatherPlace ?? ""}`} dateId={view.weatherDate}
+          placeTag={view.weatherPlace} active={weatherActive} sources={weatherSources} />}
         {view.rightPanel === "cluster" && <AdventureClusterDetails keys={view.cluster ?? []} language={language}
           onSelect={key => navigate("cluster-member", key)} />}
         {route && (waypoint ? <AdventureWaypointDetails waypoint={waypoint} route={route} language={language} />
@@ -407,6 +443,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
             onRequestUnlock={onRequestUnlock}
             onSelectStay={selection => navigate("bag-stay", selection)}
             onSelectDay={dateId => navigate("place-day", dateId)}
+            weatherActive={weatherActive} onSelectWeather={dateId => navigate("weather", dateId, "place")}
             onSelectEvent={(selectedEvent, agendaItem) => navigate("event", { event: selectedEvent, agendaItem })} />
         </>}
         {view.rightPanel === "bag" && <AdventureBag selectedTab={view.bagTab}

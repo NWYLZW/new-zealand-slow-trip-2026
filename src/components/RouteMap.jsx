@@ -37,6 +37,7 @@ import { eventTitleEn, mapStopEn, routeSegmentEn, routeText } from "../routeI18n
 import { socialGuidesByEvent } from "../socialGuides";
 import { EventRouteMap } from "./EventRouteMap";
 import { SocialGuideCard } from "./SocialGuideCard";
+import { ItineraryExecutionNotes } from "./ItineraryExecutionNotes";
 import { PrivateDetailSection } from "./PrivateVaultAccess";
 import { CalendarDayCell, CalendarGrid, CalendarWeekdays } from "./calendar/CalendarPrimitives";
 import { calendarRegionColors, coordinatePair, eventDateId, eventUrlId, getCalendarEvents, getTripCalendarCells, keyForDate, parseTripDate } from "./calendar/tripCalendarData";
@@ -743,6 +744,7 @@ function RouteDayCalendar({ calendarOptions, days = itineraryDays, dialogTab = "
                         </Box>
                       ))}
                     </Stack>
+                    <ItineraryExecutionNotes event={selectedEvent} language={language} />
                     {!selectedEvent.stayContexts?.length && !selectedEvent.stayLink && <Typography className="route-dialog-stay">{selectedEvent.day.stay}</Typography>}
                     {selectedEvent.day.highlight && <Typography className="route-dialog-highlight">{selectedEvent.day.highlight}</Typography>}
                     {selectedEvent.day.alternative && (

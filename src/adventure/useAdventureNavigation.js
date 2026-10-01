@@ -13,6 +13,9 @@ import { getMapNode, normalizeMapCluster } from "./adventureMapNodes";
 import { getInternationalMapNode, internationalFlightSegments, internationalMapStops } from "./internationalMapData";
 import { eventAgendaItems } from "./adventureEventAgenda";
 import { isDailyAdventureShortcut, resolveAdventureShortcut } from "./adventureShortcuts";
+import { initialAdventureParams, initialTripDate } from "./adventureInitialView.js";
+import { backFromWeather, openWeatherView, readWeatherView, weatherParentView, writeWeatherParams } from "./weather/weatherNavigation.js";
+import { weatherLocationForDay } from "./weather/weatherLocations";
 
 const rightPanels = new Set(["bag", "camera", "photos"]);
 const scopes = new Set(["all", "south", "north"]);
@@ -50,9 +53,11 @@ export function normalizeAdventureMapView(value) {
     center: [Math.min(85, Math.max(-85, lat)), Math.min(180, Math.max(-180, lng))],
   };
 }
-function readLocation() {
-  const params = resolveAdventureShortcut(new URLSearchParams(window.location.search), {
-    dayIds: shortcutDayIds, bookings: shortcutBookings,
+export function readLocation({ initial = false, now = new Date() } = {}) {
+  const search = window.location.search;
+  const params = resolveAdventureShortcut(initial
+    ? initialAdventureParams(search, shortcutDayIds, now) : new URLSearchParams(search), {
+    dayIds: shortcutDayIds, bookings: shortcutBookings, now,
   });
   const requestedMapMode = params.get("map");
   const mapView = normalizeAdventureMapView({
@@ -120,18 +125,21 @@ function readLocation() {
   const cameraView = rightPanel === "camera" && cameraViews.has(params.get("cameraView")) ? params.get("cameraView") : "preview";
   const inAlbum = (rightPanel === "camera" && cameraView === "album") || (rightPanel === "place" && placeTab === "photos");
   const mediaId = inAlbum && /^[a-zA-Z0-9-]{1,100}$/.test(params.get("mediaId") ?? "") ? params.get("mediaId") : null;
-  return { calendarOpen, rightPanel, place, route, waypoint, airport: airportNode?.id ?? null,
+  return readWeatherView({ calendarOpen, rightPanel, place, route, waypoint, airport: airportNode?.id ?? null,
     flightRoute: flightNode?.id ?? null, mapMode, mapView, day, date, scope, front, focus, fullscreen, cluster, clusterFrom,
     eventId, eventTab, eventAgenda, eventFrom, dayFrom, placeTab, placeDate,
     bagTab: bagNoteRequested ? "notes" : bagTab, bagDate, bagStay, stayFrom, bagNote,
-    cameraView, mediaId, mediaTab: mediaId && params.get("mediaTab") === "edit" ? "edit" : "info" };
+    cameraView, mediaId, mediaTab: mediaId && params.get("mediaTab") === "edit" ? "edit" : "info" }, params,
+  date => validDate(date, "all"), (date, tag) => weatherLocationForDay(date, tag)?.context === "place");
 }
 
-function writeLocation(view, { replace = false } = {}) {
+export function writeLocation(currentView, { replace = false } = {}) {
+  const view = weatherParentView(currentView);
   const url = new URL(window.location.href);
   for (const key of ["panel", "right", "place", "route", "waypoint", "airport", "flightRoute", "map", "zoom", "lat", "lng", "cluster", "nodeFrom", "day", "date", "scope", "front",
     "event", "eventTab", "agenda", "eventFrom", "dayFrom", "placeTab", "placeDate",
-    "bagTab", "bagDate", "bagStay", "stayFrom", "bagSources", "bagNote", "cameraView", "mediaId", "mediaTab", "fullscreen", "shortcut"]) {
+    "bagTab", "bagDate", "bagStay", "stayFrom", "bagSources", "bagNote", "cameraView", "mediaId", "mediaTab", "fullscreen", "shortcut",
+    "weather", "weatherPlace", "weatherView", "weatherParentFront", "weatherParentFullscreen", "weatherFront"]) {
     url.searchParams.delete(key);
   }
   if (view.calendarOpen) {
@@ -204,11 +212,12 @@ function writeLocation(view, { replace = false } = {}) {
   }
   if (view.calendarOpen && view.rightPanel && view.front === "tasks") url.searchParams.set("front", "tasks");
   if (view.fullscreen) url.searchParams.set("fullscreen", view.fullscreen);
+  writeWeatherParams(url.searchParams, currentView);
   if (url.href !== window.location.href) history[replace ? "replaceState" : "pushState"](null, "", url);
 }
 
 export function useAdventureNavigation() {
-  const [view, setView] = useState(readLocation);
+  const [view, setView] = useState(() => readLocation({ initial: true }));
   const current = useRef(view);
   current.current = view;
   useEffect(() => {
@@ -217,6 +226,10 @@ export function useAdventureNavigation() {
         writeLocation(next, { replace: true });
       }
     };
+    // Normalize only the launch entry; history and deliberate closes stay explicit.
+    if (initialTripDate(window.location.search, shortcutDayIds) && current.current.day) {
+      writeLocation(current.current, { replace: true });
+    }
     consumeShortcut(current.current);
     const sync = () => {
       const next = readLocation();
@@ -243,11 +256,18 @@ export function useAdventureNavigation() {
     const next = { ...previous };
     if (!["cluster", "cluster-member", "back-cluster", "fullscreen", "tasks", "close-calendar",
       "place-tab", "place-date", "place-day", "back-day", "event", "event-tab", "event-agenda", "back-event",
-      "bag-stay", "back-stay", "media-select", "media-tab"].includes(target)) {
+      "bag-stay", "back-stay", "media-select", "media-tab", "weather", "weather-sources", "back-weather"].includes(target)) {
       next.cluster = [];
       next.clusterFrom = false;
     }
-    if (target === "cluster" || target === "back-cluster") {
+    if (target === "weather" && validDate(id, "all")) {
+      Object.assign(next, openWeatherView(previous, id, requestedScope === "place" ? previous.place : null));
+    } else if (target === "weather-sources" && previous.rightPanel === "weather") {
+      next.weatherView = "sources";
+      next.front = "right";
+    } else if (target === "back-weather" && previous.rightPanel === "weather") {
+      Object.assign(next, backFromWeather(previous));
+    } else if (target === "cluster" || target === "back-cluster") {
       const cluster = normalizeMapCluster(target === "cluster" ? id : previous.cluster);
       if (cluster.length < 2) return;
       Object.assign(next, { cluster, clusterFrom: false, rightPanel: "cluster", place: null, route: null,
@@ -529,17 +549,26 @@ export function useAdventureNavigation() {
       next.front = null;
       next.focus = null;
     }
-    if (!((next.rightPanel === "camera" && next.cameraView === "album")
-      || (next.rightPanel === "place" && next.placeTab === "photos"))) {
+    const contentPanel = weatherParentView(next).rightPanel;
+    if (!((contentPanel === "camera" && next.cameraView === "album")
+      || (contentPanel === "place" && next.placeTab === "photos"))) {
       next.mediaId = null;
       next.mediaTab = "info";
     }
     const nextWaypoint = getAdventureWaypoint(next.waypoint);
-    if (next.rightPanel !== "bag-stay") next.stayFrom = null;
-    if (next.rightPanel !== "event" && !(next.rightPanel === "bag-stay" && next.stayFrom === "event")) {
+    if (contentPanel !== "bag-stay") next.stayFrom = null;
+    if (contentPanel !== "event" && !(contentPanel === "bag-stay" && next.stayFrom === "event")) {
       next.eventAgenda = null;
     }
-    if (next.rightPanel !== "route" || !nextWaypoint || nextWaypoint.routeId !== next.route) next.waypoint = null;
+    if (contentPanel !== "route" || !nextWaypoint || nextWaypoint.routeId !== next.route) next.waypoint = null;
+    if (next.rightPanel !== "weather") {
+      next.weatherView = null;
+      next.weatherDate = null;
+      next.weatherPlace = null;
+      next.weatherParent = null;
+      next.weatherParentFront = null;
+      next.weatherParentFullscreen = null;
+    }
     if ((next.fullscreen === "right" && !next.rightPanel) || (next.fullscreen === "calendar" && !next.calendarOpen)) next.fullscreen = null;
     if (previous.fullscreen === "calendar" && ["day", "event"].includes(target)) next.fullscreen = "right";
     current.current = next;

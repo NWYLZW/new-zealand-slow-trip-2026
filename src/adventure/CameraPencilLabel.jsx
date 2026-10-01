@@ -1,7 +1,9 @@
 import { useLayoutEffect, useRef } from "react";
 import { pencilStroke } from "./pencil/stroke";
+import { observeCanvasRecovery, registerCanvasCache } from "./pencil/canvasRecovery";
 
 const backdropCache = new Map();
+registerCanvasCache(backdropCache);
 
 function stableHash(value) {
   let hash = 2166136261;
@@ -87,8 +89,10 @@ export function CameraPencilLabel({ as: Tag = "span", className = "", textureKey
     resize.observe(root);
     appearance.observe(document.documentElement, { attributes: true,
       attributeFilter: ["data-adventure-appearance", "data-adventure-theme"] });
+    const stopRecovery = observeCanvasRecovery(paint);
     paint();
     return () => {
+      stopRecovery();
       resize.disconnect();
       appearance.disconnect();
     };

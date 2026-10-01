@@ -1,0 +1,463 @@
+{
+  "route": "lakes",
+  "sources": [
+    {
+      "id": "lakes-realnz-bbq",
+      "url": "https://www.realnz.com/en/experiences/tss-earnslaw-walter-peak-experiences/walter-peak-gourmet-bbq-dining/",
+      "title": "Walter Peak 产品与时长",
+      "titleEn": "Walter Peak experience and duration",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-realnz-visitor-centre",
+      "url": "https://www.newzealand.com/nz/plan/business/walter-peak-high-country-farm-and-bbq-lunch-real-journeys/",
+      "title": "RealNZ 游客中心资料",
+      "titleEn": "RealNZ visitor centre details",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-realnz-slot",
+      "url": "https://fareharbor.com/embeds/book/wayfaregroup/items/257722/availability/1923877075/book/?flow=1064984",
+      "title": "Walter Peak 已选场次入口",
+      "titleEn": "Existing public Walter Peak selected-slot booking entry",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "lakes-realnz-guide",
+      "url": "https://www.realnz.com/en/blog/walter-peak-high-country-farm-the-ultimate-guide/",
+      "title": "RealNZ 农场与船只说明",
+      "titleEn": "RealNZ: Walter Peak High Country Farm guide",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-man-street",
+      "url": "https://queenstownparking.co.nz/",
+      "title": "Man Street 停车场",
+      "titleEn": "Man Street Car Park",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-qldc-parking",
+      "url": "https://www.qldc.govt.nz/services/transport-and-parking/parking",
+      "title": "QLDC 停车地图",
+      "titleEn": "QLDC parking maps",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-qldc-winter",
+      "url": "https://www.qldc.govt.nz/services/transport-and-parking/winter-road-reports",
+      "title": "QLDC 山路与装链复核",
+      "titleEn": "QLDC alpine roads and chain checks",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-qldc-chain-rule",
+      "url": "https://www.qldc.govt.nz/2026/may/motorists-reminded-to-carry-and-fit-chains-as-new-winter-enforcement-begins",
+      "title": "QLDC 山路装链说明",
+      "titleEn": "QLDC: 2026 alpine-road chain and gate notice",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-crown-range",
+      "url": "https://www.newzealand.com/int/feature/the-crown-range/",
+      "title": "Crown Range 与 Cromwell 选择",
+      "titleEn": "Choosing Crown Range or Cromwell",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-nzta",
+      "url": "https://www.journeys.nzta.govt.nz/journey-planner",
+      "title": "NZTA 国道状况复核",
+      "titleEn": "NZTA state highway checks",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-cardrona",
+      "url": "https://cardronahotel.co.nz/restaurant/",
+      "title": "Cardrona 短休参考",
+      "titleEn": "Cardrona break reference",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-wanaka-waterfront",
+      "url": "https://www.wanaka.co.nz/explore/waterfall-creek-track/",
+      "title": "湖岸与湖中树路线参考",
+      "titleEn": "Lakefront and tree route reference",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-puzzling-rooms",
+      "url": "https://www.puzzlingworld.co.nz/",
+      "title": "Puzzling World 室内体验",
+      "titleEn": "Puzzling World: Official attractions overview",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-puzzling-hours",
+      "url": "https://www.puzzlingworld.co.nz/about-us/contact-us/",
+      "title": "Puzzling World 营业时间",
+      "titleEn": "Puzzling World opening hours",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-doc-mount-iron",
+      "url": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/wanaka-area/things-to-do/mount-iron-track/",
+      "title": "Mount Iron 距离与步道风险",
+      "titleEn": "Mount Iron distance and track cautions",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-qldc-mount-iron",
+      "url": "https://www.qldc.govt.nz/2026/january/council-to-manage-all-reserve-land-at-mount-iron-wanaka",
+      "title": "QLDC Mount Iron 管理资料",
+      "titleEn": "QLDC Mount Iron management information",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-realnz-milford",
+      "url": "https://www.realnz.com/en/experiences/day-cruises/milford-sound-day-trip-from-queenstown/",
+      "title": "米尔福德高强度备选",
+      "titleEn": "Milford high-intensity alternative",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-02",
+      "reviewedAt": "2026-10-01",
+      "highlight": "主线仍为13:00已选、待付款的 Walter Peak；先核有效确认，返港后留白。停航或未确认时留镇休息，不临时追赶远程活动。",
+      "highlightEn": "Walter Peak remains the selected 13:00 plan, with payment pending. Verify a valid confirmation and keep the return flexible. If cancelled or unconfirmed, rest in town instead of rushing to a distant activity.",
+      "alternative": {
+        "title": "高强度备选 · 米尔福德巴士与游船",
+        "desc": "仅在主动改选并提前核妥场次、接送及原活动处理后考虑；官方参考单程大巴约5小时、游船1.5至2小时，须整天替换，不能与 Walter Peak 同日叠加。"
+      },
+      "alternativeEn": {
+        "title": "High-intensity alternative: Milford coach and cruise",
+        "desc": "Consider only after deliberately changing plans and checking the sailing, pickup and handling of the original activity. The operator quotes about 5 hours each way by coach and a 1.5 to 2 hour cruise. It replaces the whole day and cannot be combined with Walter Peak."
+      },
+      "links": [
+        [
+          "Walter Peak 产品与时长",
+          "https://www.realnz.com/en/experiences/tss-earnslaw-walter-peak-experiences/walter-peak-gourmet-bbq-dining/"
+        ],
+        [
+          "RealNZ 游客中心资料",
+          "https://www.newzealand.com/nz/plan/business/walter-peak-high-country-farm-and-bbq-lunch-real-journeys/"
+        ],
+        [
+          "Man Street 停车场",
+          "https://queenstownparking.co.nz/"
+        ],
+        [
+          "米尔福德高强度备选",
+          "https://www.realnz.com/en/experiences/day-cruises/milford-sound-day-trip-from-queenstown/"
+        ]
+      ],
+      "linksEn": [
+        [
+          "Walter Peak experience and duration",
+          "https://www.realnz.com/en/experiences/tss-earnslaw-walter-peak-experiences/walter-peak-gourmet-bbq-dining/"
+        ],
+        [
+          "RealNZ visitor centre details",
+          "https://www.newzealand.com/nz/plan/business/walter-peak-high-country-farm-and-bbq-lunch-real-journeys/"
+        ],
+        [
+          "Man Street Car Park",
+          "https://queenstownparking.co.nz/"
+        ],
+        [
+          "Milford high-intensity alternative",
+          "https://www.realnz.com/en/experiences/day-cruises/milford-sound-day-trip-from-queenstown/"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "早餐与进城准备",
+          "summaryEn": "Breakfast and travel into town",
+          "text": "从已确认皇后镇住宿出发前先用早餐、查出航通知并带防风层；按私下路线选择步行或驾车，驾车可选 Man Street 停车场，先核费用并带支付卡。",
+          "textEn": "Have breakfast, check sailing messages and take a windproof layer before leaving the confirmed Queenstown stay. Choose walking or driving using your private directions. If driving, consider Man Street Car Park; check charges and bring a payment card.",
+          "sourceIds": [
+            "lakes-man-street"
+          ]
+        },
+        {
+          "summary": "短走与登船前休息",
+          "summaryEn": "Short walk and pre-cruise rest",
+          "text": "停车后只选皇后镇花园一小段或镇中心闲逛，留出坐下休息和洗手间时间；建议11:45左右收尾，饿了少量加餐，把胃口留给已选烧烤午餐。",
+          "textEn": "After parking, choose a short section of Queenstown Gardens or a town-centre stroll, with time to sit and use the toilets. Aim to wind down around 11:45; have a small snack if needed and leave room for the selected barbecue lunch.",
+          "sourceIds": [
+            "lakes-realnz-bbq"
+          ]
+        },
+        {
+          "summary": "到码头核对并报到",
+          "summaryEn": "Reach the wharf and check in",
+          "text": "从镇中心步行到 Steamer Wharf 的 RealNZ Visitor Centre，建议12:30前到；出示有效确认并核对船只，最晚报到时限仍须按票券核实。",
+          "textEn": "Walk from the town centre to the RealNZ Visitor Centre at Steamer Wharf, aiming to arrive by 12:30. Present a valid confirmation and check the vessel. The actual check-in deadline still needs to be verified against your ticket.",
+          "sourceIds": [
+            "lakes-realnz-visitor-centre",
+            "lakes-realnz-slot",
+            "lakes-realnz-guide"
+          ]
+        },
+        {
+          "summary": "巡游与烧烤（待付款）",
+          "summaryEn": "Cruise and barbecue (payment pending)",
+          "text": "保留13:00已选、待付款状态；取得有效确认后再乘 TSS Earnslaw，巡游、烧烤与农场体验的官网参考为3.5至4小时，16:30不是保证返港时间。",
+          "textEn": "Keep the 13:00 slot as selected, payment pending. Take TSS Earnslaw only once you hold a valid confirmation. RealNZ gives a general duration of 3.5 to 4 hours for the cruise, barbecue and farm experience; 16:30 is not a guaranteed return.",
+          "sourceIds": [
+            "lakes-realnz-bbq",
+            "lakes-realnz-slot"
+          ]
+        },
+        {
+          "summary": "返港缓冲与回住处",
+          "summaryEn": "Return buffer and back to the stay",
+          "text": "以实际返港时间开始自由休息，先上洗手间、喝水，再选咖啡或短走；若冷、累或返程延后，就取车或按私下路线回原住宿，不再加景点。",
+          "textEn": "Start free time after the actual return to the wharf. Use the toilets and drink some water, then choose coffee or a short walk. If cold, tired or delayed, collect the car or follow your private directions back to the same stay without another stop.",
+          "sourceIds": [
+            "lakes-realnz-bbq"
+          ]
+        },
+        {
+          "summary": "简餐与换城准备",
+          "summaryEn": "Light dinner and transfer preparation",
+          "text": "按午餐饱腹程度就近吃简餐，不专程排队；回原住宿整理次日行李、备水和早餐，私下核对钥匙归还方式，确保次日10:00前完成退房。",
+          "textEn": "Choose a simple nearby dinner according to your appetite after lunch, without a special trip or long queue. Back at the same stay, pack for tomorrow, prepare water and breakfast, and privately check key-return instructions so checkout is complete by 10:00.",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "date": "2026-10-03",
+      "reviewedAt": "2026-10-01",
+      "highlight": "今天只做换城：10:00前退房，箭镇午餐后按路况走 Crown Range；不熟悉山路就经 Cromwell，取消观景与咖啡以保留抵达余量。",
+      "highlightEn": "Make the transfer the day's main focus: check out by 10:00, lunch in Arrowtown, then use Crown Range only if conditions suit. Choose Cromwell if uncomfortable with alpine driving, dropping sightseeing and coffee to protect arrival time.",
+      "alternative": {
+        "title": "道路备选 · 经 Cromwell",
+        "desc": "遇封路、冰雪、装链准备不足或驾驶信心不足时，先核查经 Cromwell 的道路，再替换山路和 Cardrona 停留；若两条路线均不安全，先停在安全地点联系住宿，不赶16:00。"
+      },
+      "alternativeEn": {
+        "title": "Road alternative: via Cromwell",
+        "desc": "For closures, ice, inadequate chain preparation or low driving confidence, check the Cromwell route before replacing the pass and Cardrona stop. If neither route is safe, stop somewhere safe and contact the accommodation rather than chase a 16:00 arrival."
+      },
+      "links": [
+        [
+          "QLDC 山路与装链复核",
+          "https://www.qldc.govt.nz/services/transport-and-parking/winter-road-reports"
+        ],
+        [
+          "NZTA 国道状况复核",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ],
+        [
+          "Crown Range 与 Cromwell 选择",
+          "https://www.newzealand.com/int/feature/the-crown-range/"
+        ],
+        [
+          "Cardrona 短休参考",
+          "https://cardronahotel.co.nz/restaurant/"
+        ],
+        [
+          "QLDC 停车地图",
+          "https://www.qldc.govt.nz/services/transport-and-parking/parking"
+        ]
+      ],
+      "linksEn": [
+        [
+          "QLDC alpine roads and chain checks",
+          "https://www.qldc.govt.nz/services/transport-and-parking/winter-road-reports"
+        ],
+        [
+          "NZTA state highway checks",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ],
+        [
+          "Choosing Crown Range or Cromwell",
+          "https://www.newzealand.com/int/feature/the-crown-range/"
+        ],
+        [
+          "Cardrona break reference",
+          "https://cardronahotel.co.nz/restaurant/"
+        ],
+        [
+          "QLDC parking maps",
+          "https://www.qldc.govt.nz/services/transport-and-parking/parking"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "退房与道路复核",
+          "summaryEn": "Checkout and road checks",
+          "text": "10:00前完成原住宿退房和钥匙交接，行李装妥再出发；早餐时查 QLDC 与 NZTA 路况，备水、离线地图及燃油余量，按私下路线驶向箭镇。",
+          "textEn": "Complete checkout and key return at the Queenstown stay by 10:00, then leave with luggage secured. Over breakfast, check QLDC and NZTA updates, water, offline maps and fuel, then follow your private directions towards Arrowtown.",
+          "sourceIds": [
+            "lakes-qldc-winter",
+            "lakes-nzta"
+          ]
+        },
+        {
+          "summary": "箭镇短走与午餐",
+          "summaryEn": "Arrowtown walk and lunch",
+          "text": "抵达箭镇后按现场标牌停车，把行李收进后备箱、贵重物随身；旧街区慢走约45分钟后午餐和休息，13:00前回车旁，晚到就缩短闲逛。",
+          "textEn": "Park in Arrowtown according to posted restrictions; put luggage out of sight and keep valuables with you. Plan roughly 45 minutes in the old streets, then lunch and a seated rest. Return to the car before 13:00, shortening the walk if arrival is late.",
+          "sourceIds": [
+            "lakes-qldc-parking"
+          ]
+        },
+        {
+          "summary": "按路况选择换城路线",
+          "summaryEn": "Choose the transfer route for conditions",
+          "text": "出发前再查 Crown Range 通行及装链要求；路况合适且有把握才上山，封路、结冰或未备好链就改经 Cromwell，并先确认备选道路可通行。",
+          "textEn": "Recheck Crown Range access and chain requirements before leaving. Use the pass only in suitable conditions and with a confident driver. If closed, icy or you are not equipped for required chains, choose Cromwell after checking that route is also passable.",
+          "sourceIds": [
+            "lakes-qldc-winter",
+            "lakes-qldc-chain-rule",
+            "lakes-crown-range",
+            "lakes-nzta"
+          ]
+        },
+        {
+          "summary": "条件允许才停观景点",
+          "summaryEn": "Viewpoint stop only if conditions allow",
+          "text": "仅在路面干燥、视线良好且能安全进入正规停车位时短停；建议拍照约10分钟就继续下山，余量留给慢速驾驶；若改走 Cromwell，本段用于行车与休息。",
+          "textEn": "Stop only if the surface is dry, visibility is good and you can safely enter a proper parking area. Allow about 10 minutes for photos, then continue downhill, keeping the remaining time for unhurried driving. On the Cromwell alternative, use this block for driving and rest.",
+          "sourceIds": [
+            "lakes-crown-range",
+            "lakes-qldc-winter"
+          ]
+        },
+        {
+          "summary": "Cardrona 短休后进城",
+          "summaryEn": "Cardrona break, then continue to town",
+          "text": "下山后可在 Cardrona Hotel 按现场指示停车，喝咖啡、上洗手间，建议控制在30分钟再驶向瓦纳卡；若排队、疲劳或已绕行 Cromwell，就跳过此站。",
+          "textEn": "After descending, optionally park as signed at Cardrona Hotel for coffee and the toilets. Aim to leave within 30 minutes and continue to Wānaka. Skip this stop if queues, tiredness or the Cromwell alternative make it inconvenient.",
+          "sourceIds": [
+            "lakes-crown-range",
+            "lakes-cardrona"
+          ]
+        },
+        {
+          "summary": "到住宿停车与安顿",
+          "summaryEn": "Park and settle at the stay",
+          "text": "16:00是计划到达，不是确认可入住时刻；到已确认瓦纳卡住宿先按指示停车、核对入住并卸行李，休息后就近简餐，入住窗口与停车安排仍待确认。",
+          "textEn": "16:00 is the planned arrival, not a verified check-in time. At the confirmed Wānaka stay, follow parking instructions, check in and unload, then rest before a nearby simple meal. The arrival window and parking arrangements still need confirmation.",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "date": "2026-10-04",
+      "reviewedAt": "2026-10-01",
+      "highlight": "连住不换房，以湖岸短走为主；下午至多选一项，Mount Iron 并非平地散步，不把爬坡与 Puzzling World 叠加。",
+      "highlightEn": "Stay in the same accommodation and make a short lakefront walk the focus. Choose at most one afternoon activity: Mount Iron is not a flat stroll, and should not be combined with Puzzling World.",
+      "alternative": {
+        "title": "雨天或低体力 · 室内与休息",
+        "desc": "雨天可只选 Puzzling World 室内区，不必走户外迷宫；官网现列09:00开门、16:30最后入场，出发前复核。疲劳或不喜欢视觉错觉则回住宿休息。"
+      },
+      "alternativeEn": {
+        "title": "Rain or low energy: indoors and rest",
+        "desc": "In rain, visit only Puzzling World's indoor rooms, without the outdoor maze. The website currently lists opening at 09:00 and last admission at 16:30; recheck before leaving. If tired or uncomfortable with visual illusions, rest at the stay instead."
+      },
+      "links": [
+        [
+          "湖岸与湖中树路线参考",
+          "https://www.wanaka.co.nz/explore/waterfall-creek-track/"
+        ],
+        [
+          "Puzzling World 营业时间",
+          "https://www.puzzlingworld.co.nz/about-us/contact-us/"
+        ],
+        [
+          "Mount Iron 距离与步道风险",
+          "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/wanaka-area/things-to-do/mount-iron-track/"
+        ],
+        [
+          "QLDC Mount Iron 管理资料",
+          "https://www.qldc.govt.nz/2026/january/council-to-manage-all-reserve-land-at-mount-iron-wanaka"
+        ]
+      ],
+      "linksEn": [
+        [
+          "Lakefront and tree route reference",
+          "https://www.wanaka.co.nz/explore/waterfall-creek-track/"
+        ],
+        [
+          "Puzzling World opening hours",
+          "https://www.puzzlingworld.co.nz/about-us/contact-us/"
+        ],
+        [
+          "Mount Iron distance and track cautions",
+          "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/wanaka-area/things-to-do/mount-iron-track/"
+        ],
+        [
+          "QLDC Mount Iron management information",
+          "https://www.qldc.govt.nz/2026/january/council-to-manage-all-reserve-land-at-mount-iron-wanaka"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "湖岸短走与湖中树",
+          "summaryEn": "Short lakefront walk and the tree",
+          "text": "早餐后从同一家瓦纳卡住宿前往 Roys Bay 西端，沿湖岸走到 That Wanaka Tree 后原路返回；按现场标牌停车，风大或湿滑就缩短，只在岸上拍照。",
+          "textEn": "After breakfast, leave the same Wānaka stay for western Roys Bay. Follow the lakefront to That Wānaka Tree and return the same way. Park according to signs, shorten the walk if windy or slippery, and take photos from shore.",
+          "sourceIds": [
+            "lakes-wanaka-waterfront",
+            "lakes-qldc-parking"
+          ]
+        },
+        {
+          "summary": "午餐与体力评估",
+          "summaryEn": "Lunch and an energy check",
+          "text": "回镇中心就近午餐，建议留30分钟坐下休息；餐后再按天气和双人体力决定下午去处，补水、上洗手间，若已疲劳就回原住宿，不勉强补景点。",
+          "textEn": "Have lunch nearby in town and allow about 30 minutes for a seated rest. Decide on the afternoon only after checking the weather and how both of you feel. Refill water and use the toilets; return to the same stay if already tired.",
+          "sourceIds": []
+        },
+        {
+          "summary": "室内游览或条件式短徒步",
+          "summaryEn": "Indoor visit or a conditional hill walk",
+          "text": "下午只选一项：雨天选 Puzzling World 室内区；晴稳且有体力才走 Mount Iron，官方参考4.5公里环线、1.5小时，有碎石上坡，先查开放并留交通余量。",
+          "textEn": "Choose just one: Puzzling World's indoor rooms in rain, or Mount Iron only in settled weather with enough energy. DOC describes a 4.5 km loop taking about 1.5 hours, with loose rock and climbing. Check access and leave time for travel and parking.",
+          "sourceIds": [
+            "lakes-puzzling-hours",
+            "lakes-puzzling-rooms",
+            "lakes-doc-mount-iron",
+            "lakes-qldc-mount-iron"
+          ]
+        },
+        {
+          "summary": "咖啡与短程收尾",
+          "summaryEn": "Coffee and an easy finish",
+          "text": "活动后先坐下喝咖啡、回暖；体力尚可再走镇中心湖边一小段，不为等日落延后晚餐，风雨增大就直接回原住宿休息，18:30前收尾。",
+          "textEn": "Sit down for coffee and warm up after the activity. If energy allows, take one short town-centre lakefront walk. Do not delay dinner to wait for sunset; return to the same stay if wind or rain increases and wrap up by 18:30.",
+          "sourceIds": []
+        },
+        {
+          "summary": "晚餐与次日上路准备",
+          "summaryEn": "Dinner and preparation for tomorrow",
+          "text": "在镇上或原住宿安排简单晚餐，顺手备好次日早餐、饮水和路上点心；回房整理行李与保暖层，私下核对明早退房方式，为08:45计划出发留余量。",
+          "textEn": "Have a simple dinner in town or at the stay, and prepare breakfast, water and road snacks for tomorrow. Pack luggage and warm layers, privately check morning checkout instructions, and leave a buffer for the planned 08:45 departure.",
+          "sourceIds": []
+        }
+      ]
+    }
+  ]
+}

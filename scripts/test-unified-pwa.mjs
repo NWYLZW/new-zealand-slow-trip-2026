@@ -148,10 +148,22 @@ async function installEvent(page, outcome) {
     if (!event.defaultPrevented) throw new Error("Install event was missed");
   }, outcome);
 }
+async function overviewDate(context) {
+  // Freeze calendar dates only; leave real animation and idle budgets intact.
+  await context.addInitScript(() => {
+    const NativeDate = Date;
+    const now = new NativeDate("2026-09-01T12:00:00+12:00").getTime();
+    window.Date = class extends NativeDate {
+      constructor(...args) { super(...(args.length ? args : [now])); }
+      static now() { return now; }
+    };
+  });
+}
 
 try {
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1324, height: 964 }, deviceScaleFactor: 1 });
+  await overviewDate(context);
   const page = await context.newPage();
   page.on("pageerror", error => errors.push(error.message));
   page.on("requestfailed", request => {
@@ -240,6 +252,7 @@ try {
 
   // Reverse the first-visit order: map code and fonts must work before any map visit.
   const mainFirst = await browser.newContext();
+  await overviewDate(mainFirst);
   const other = await mainFirst.newPage();
   other.on("pageerror", error => errors.push(error.message));
   await other.goto(base + "v1#car", { waitUntil: "domcontentloaded" });

@@ -2,6 +2,7 @@ import { forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react'
 import { calendarPaper } from './paper';
 import { pencilStroke } from './stroke';
 import { drawPencilWash } from './wash';
+import { observeCanvasRecovery } from './canvasRecovery';
 import './PencilSurface.css';
 
 const styles = {
@@ -129,8 +130,9 @@ export const PencilSurface = forwardRef(function PencilSurface({
     const appearance = new MutationObserver(schedule);
     appearance.observe(document.documentElement, { attributes: true,
       attributeFilter: ['data-adventure-appearance', 'data-adventure-theme'] });
+    const stopRecovery = observeCanvasRecovery(() => { lastPaint = ''; schedule(); });
     paint();
-    return () => { observer.disconnect(); appearance.disconnect(); cancelAnimationFrame(frame); };
+    return () => { stopRecovery(); observer.disconnect(); appearance.disconnect(); cancelAnimationFrame(frame); };
   }, [variant, seed, clipContent]);
 
   const nativeProps = Element === 'button' ? { type: 'button', ...props } : props;

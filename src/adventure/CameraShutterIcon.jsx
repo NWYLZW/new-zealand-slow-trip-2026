@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { pencilStroke } from "./pencil/stroke";
 import { drawPencilWash } from "./pencil/wash";
+import { observeCanvasRecovery } from "./pencil/canvasRecovery";
 
 function ring(radius) {
   return Array.from({ length: 97 }, (_, index) => {
@@ -44,8 +45,9 @@ export function CameraShutterIcon({ recording }) {
     const appearance = new MutationObserver(paint);
     appearance.observe(document.documentElement, { attributes: true,
       attributeFilter: ["data-adventure-theme", "data-adventure-appearance"] });
+    const stopRecovery = observeCanvasRecovery(paint);
     paint();
-    return () => appearance.disconnect();
+    return () => { stopRecovery(); appearance.disconnect(); };
   }, [recording]);
   return <canvas ref={ref} width="90" height="90" className="trip-pencil-icon trip-camera-shutter-icon"
     data-icon="shutter" data-recording={recording} aria-hidden="true" />;

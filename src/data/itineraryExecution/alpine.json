@@ -1,0 +1,562 @@
+{
+  "route": "alpine",
+  "sources": [
+    {
+      "id": "alpine-flight",
+      "url": "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/",
+      "title": "Glacier Highlights 直升机",
+      "titleEn": "Glacier Highlights helicopter",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "alpine-flight-faq",
+      "url": "https://www.mtcookskiplanes.com/faq/",
+      "title": "天气取消政策",
+      "titleEn": "Weather cancellation policy",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-motel",
+      "url": "https://www.hermitage.co.nz/stay/mt-cook-motels",
+      "title": "Motel 入住与早餐安排",
+      "titleEn": "Motel check-in and breakfast",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-bigsky",
+      "url": "https://www.hermitage.co.nz/experience/big-sky-stargazing",
+      "title": "Big Sky Stargazing",
+      "titleEn": "Big Sky Stargazing",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-bigsky-mandarin",
+      "url": "https://www.hermitage.co.nz/experience/big-sky-stargazing-mandarin",
+      "title": "Big Sky 普通话资料",
+      "titleEn": "Big Sky Stargazing Mandarin | Hermitage",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-bigsky-dated",
+      "url": "https://book.hermitage.co.nz/onecart/activities/activitiesList/20104/hermitage?activityId=129&selectedDate=2026-10-05&partySize=2",
+      "title": "10月5日 Big Sky 双人场次",
+      "titleEn": "Big Sky official dated activity entry, 5 October / two adults",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-penguins",
+      "url": "https://www.penguins.co.nz/visit/evening-viewing",
+      "title": "企鹅晚场须知与季节时刻",
+      "titleEn": "Penguin evening guidance and seasonal times",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "alpine-penguins-visit",
+      "url": "https://www.penguins.co.nz/visit/plan-your-visit",
+      "title": "企鹅保护区停车与到场",
+      "titleEn": "Colony parking and arrival",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-penguins-dated",
+      "url": "https://book.penguins.co.nz/activity/selection?filter=ProdGroup-General&date=2026-10-06",
+      "title": "10/6官网入口：场次余位待核",
+      "titleEn": "6 Oct official entry: session and availability unverified",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-doc-seals",
+      "url": "https://www.doc.govt.nz/nature/native-animals/marine-mammals/sharing-our-coasts-with-marine-mammals/",
+      "title": "DOC 海岸野生动物距离",
+      "titleEn": "DOC coastal wildlife distances",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-road",
+      "url": "https://www.journeys.nzta.govt.nz/journey-planner",
+      "title": "NZTA 北上路况复核",
+      "titleEn": "NZTA northbound road check",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-weather",
+      "url": "https://www.metservice.com/mountains-and-parks/national-parks/aoraki-mt-cook",
+      "title": "MetService 山区天气复核",
+      "titleEn": "MetService mountain weather check",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-church",
+      "url": "https://www.churchofthegoodshepherd.org.nz/",
+      "title": "好牧羊人教堂开放说明",
+      "titleEn": "Church of the Good Shepherd access",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-riverside",
+      "url": "https://riverside.nz/market-home",
+      "title": "Riverside Market 营业信息",
+      "titleEn": "Riverside Market trading information",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-city-parking",
+      "url": "https://ccc.govt.nz/transport/getting-around/parking",
+      "title": "基督城市议会停车地图入口",
+      "titleEn": "Christchurch Council parking map entry",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "alpine-church-visit",
+      "url": "https://www.churchofthegoodshepherd.org.nz/visit",
+      "title": "教堂参观资料",
+      "titleEn": "Visit | Church of the Good Shepherd",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-05",
+      "reviewedAt": "2026-10-01",
+      "highlight": "先机场、后村内入住；15:30 飞行与21:30观星均为未确认参考，保住晚餐和休息。",
+      "highlightEn": "Airport first, then village check-in. The 15:30 flight and 21:30 stargazing times are unconfirmed references; protect dinner and rest.",
+      "alternative": {
+        "title": "天气或体力不足",
+        "desc": "停飞后只询问不影响次日10:00离开的候补，不自动改期。观星取消方案须核对；无确认或疲惫就回房休息，不另加徒步或夜间长途。"
+      },
+      "alternativeEn": {
+        "title": "Weather or low energy",
+        "desc": "If grounded, ask only about a backup that still permits departure by 10:00 next day; do not automatically reschedule. Verify stargazing cancellation arrangements. Rest if unconfirmed or tired, without adding a hike or a long night drive."
+      },
+      "links": [
+        [
+          "Glacier Highlights 直升机",
+          "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/"
+        ],
+        [
+          "Big Sky Stargazing",
+          "https://www.hermitage.co.nz/experience/big-sky-stargazing/"
+        ],
+        [
+          "天气取消政策",
+          "https://www.mtcookskiplanes.com/faq/"
+        ],
+        [
+          "Motel 入住与早餐安排",
+          "https://www.hermitage.co.nz/stay/mt-cook-motels"
+        ],
+        [
+          "NZTA 出发前路况复核",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ],
+        [
+          "MetService 山区天气复核",
+          "https://www.metservice.com/mountains-and-parks/national-parks/aoraki-mt-cook"
+        ]
+      ],
+      "linksEn": [
+        [
+          "Glacier Highlights helicopter",
+          "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/"
+        ],
+        [
+          "Big Sky Stargazing",
+          "https://www.hermitage.co.nz/experience/big-sky-stargazing/"
+        ],
+        [
+          "Weather cancellation policy",
+          "https://www.mtcookskiplanes.com/faq/"
+        ],
+        [
+          "Motel check-in and breakfast",
+          "https://www.hermitage.co.nz/stay/mt-cook-motels"
+        ],
+        [
+          "NZTA pre-departure road check",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ],
+        [
+          "MetService mountain weather check",
+          "https://www.metservice.com/mountains-and-parks/national-parks/aoraki-mt-cook"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "退房出发，先查山路",
+          "summaryEn": "Check out and check roads",
+          "text": "在已订瓦纳卡住宿吃早餐、收齐行李后退房；先复核 SH8、SH80 路况与飞行通知，水、午餐补给及保暖层放手边，08:45 出发，不为沿途拍照赶路。",
+          "textEn": "Have breakfast at the booked Wānaka stay, pack and check out. Recheck SH8/SH80 conditions and any flight notice; keep water, food and warm layers handy. Aim to leave at 08:45 without rushing for photo stops.",
+          "sourceIds": [
+            "alpine-road",
+            "alpine-flight-faq",
+            "alpine-weather"
+          ]
+        },
+        {
+          "summary": "山口短停后继续行车",
+          "summaryEn": "Brief pass stop, then drive",
+          "text": "只在 Lindis Pass 有标示且可安全进入的停车处短停约10分钟，伸展后继续向 Omarama；停车区关闭、风大或视线差就跳过，整段时间包含后续行车。",
+          "textEn": "Stop for about ten minutes only at a signed, safely accessible Lindis Pass parking area, then continue towards Omarama. Skip the stop if access is closed, wind is strong or visibility is poor; this block also includes onward driving.",
+          "sourceIds": [
+            "alpine-road",
+            "alpine-weather"
+          ]
+        },
+        {
+          "summary": "午餐补给，驾驶员休息",
+          "summaryEn": "Lunch, supplies and driver rest",
+          "text": "在 Omarama 停车吃午餐、上洗手间并按油量补油，驾驶员至少坐下歇一会儿；同时备好晚餐补给再开往 Pukaki。此段包含行车，不在镇上停满两小时。",
+          "textEn": "Park in Omarama for lunch, a toilet break and fuel as needed. Give the driver a seated rest and pick up dinner supplies before continuing to Pukaki. This block includes driving, not a two-hour town stop.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "湖边短停，优先机场报到",
+          "summaryEn": "Short lake stop; airport first",
+          "text": "Pukaki 只作约10分钟湖景短停，随后直接前往库克山机场，不先绕进村里；若前段耽误或停车不便就跳过，把余量留给机场停车、洗手间和报到。",
+          "textEn": "Keep Pukaki to a roughly ten-minute lake-view stop, then head straight to Mount Cook Airport without visiting the village first. Skip the stop if delayed or parking is difficult, keeping the buffer for parking, toilets and check-in.",
+          "sourceIds": [
+            "alpine-flight-faq",
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "核对确认、机型与天气",
+          "summaryEn": "Check confirmation, aircraft and weather",
+          "text": "在库克山机场停车，先核对是否已有有效确认；15:30 仍是参考。实际报到须早于起飞并以确认邮件为准，核对直升机而非滑雪飞机；停飞时先问翌日候补条件。",
+          "textEn": "Park at Mount Cook Airport and first establish whether you hold a valid confirmation; 15:30 remains a reference. Check-in is earlier than departure and follows the confirmation email. Verify helicopter, not ski plane, and ask about next-day options if grounded.",
+          "sourceIds": [
+            "alpine-flight-faq",
+            "alpine-flight"
+          ]
+        },
+        {
+          "summary": "Glacier Highlights 直升机",
+          "summaryEn": "Glacier Highlights helicopter flight",
+          "text": "Glacier Highlights 直升机，45分钟含约10—15分钟冰川降落",
+          "textEn": "Glacier Highlights helicopter flight: 45 minutes including a 10–15 minute glacier landing",
+          "sourceIds": [
+            "alpine-flight",
+            "alpine-flight-faq"
+          ]
+        },
+        {
+          "summary": "先办 Motel 入住，再晚餐",
+          "summaryEn": "Motel check-in before dinner",
+          "text": "飞行结束后先驶入村内，按现有住宿记录到 Mt Cook Lodge 为已订 Motel 办理入住、放行李，再吃晚餐；取出保暖层，并核对翌日含早套餐的用餐地点、时刻和退房安排。",
+          "textEn": "After the flight, drive into the village. Following the existing stay record, check in for the booked Motel at Mt Cook Lodge before unloading and having dinner. Set out warm layers and verify where and when to use the included breakfast, plus checkout arrangements.",
+          "sourceIds": [
+            "alpine-motel"
+          ]
+        },
+        {
+          "summary": "休息并复核观星场次",
+          "summaryEn": "Rest and verify stargazing",
+          "text": "回房休息，确认 Big Sky 是否订妥、实际场次、语言和报到位置；21:30 未确认，建议按最终通知另留停车步行余量。若仍无确认或太疲惫，就留在住宿休息。",
+          "textEn": "Rest in the room and verify whether Big Sky is booked, its actual session, language and meeting point. The 21:30 time is unconfirmed; allow extra parking and walking time around the final instructions. Stay in if unconfirmed or too tired.",
+          "sourceIds": [
+            "alpine-bigsky",
+            "alpine-bigsky-dated",
+            "alpine-motel"
+          ]
+        },
+        {
+          "summary": "观星后回村内住宿",
+          "summaryEn": "Stargaze, then return to the Motel",
+          "text": "仅在场次确认后参加约75—90分钟 Big Sky，穿暖按最终集合指示到场，结束后返回已订 Motel；遇云雨按运营方当日方案处理，不默认全额退款，也不再开回 Twizel。",
+          "textEn": "Attend the 75–90 minute Big Sky tour only with a confirmed session. Dress warmly and follow the final meeting instructions, returning to the booked Motel afterwards. Follow the operator's weather decision without assuming a full refund or driving back to Twizel.",
+          "sourceIds": [
+            "alpine-bigsky",
+            "alpine-bigsky-mandarin"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-06",
+      "reviewedAt": "2026-10-01",
+      "highlight": "10:00离开、13:00离开特卡波；企鹅是晚间重点但仍待订，先入住，港边散步可删。",
+      "highlightEn": "Leave Mount Cook by 10:00 and Tekapo at 13:00. Penguins remain the evening focus but are unbooked; check in first and drop the harbour walk if needed.",
+      "alternative": {
+        "title": "候补不挤占企鹅晚场",
+        "desc": "飞行不能兼顾10:00离开就不继续候补；延误时缩短特卡波、取消港边散步。企鹅未订妥则先问官方当日选项，不把路边等候当替代晚场，也不追加南下支线。"
+      },
+      "alternativeEn": {
+        "title": "Protect the penguin evening",
+        "desc": "Stop pursuing the flight backup if it prevents leaving by 10:00. Shorten Tekapo and skip the harbour walk if delayed. If penguins remain unbooked, ask about official same-day options; roadside waiting is not a substitute and no southbound detour is added."
+      },
+      "links": [
+        [
+          "企鹅晚场须知与季节时刻",
+          "https://www.penguins.co.nz/visit/evening-viewing"
+        ],
+        [
+          "10/6官网入口：场次余位待核",
+          "https://book.penguins.co.nz/activity/selection?filter=ProdGroup-General&date=2026-10-06"
+        ],
+        [
+          "企鹅保护区停车与到场",
+          "https://www.penguins.co.nz/visit/plan-your-visit"
+        ],
+        [
+          "好牧羊人教堂开放说明",
+          "https://www.churchofthegoodshepherd.org.nz/"
+        ],
+        [
+          "DOC 海岸野生动物距离",
+          "https://www.doc.govt.nz/nature/native-animals/marine-mammals/sharing-our-coasts-with-marine-mammals/"
+        ],
+        [
+          "NZTA 出发前路况复核",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ]
+      ],
+      "linksEn": [
+        [
+          "Penguin evening guidance and seasonal times",
+          "https://www.penguins.co.nz/visit/evening-viewing"
+        ],
+        [
+          "6 Oct official entry: session and availability unverified",
+          "https://book.penguins.co.nz/activity/selection?filter=ProdGroup-General&date=2026-10-06"
+        ],
+        [
+          "Colony parking and arrival",
+          "https://www.penguins.co.nz/visit/plan-your-visit"
+        ],
+        [
+          "Church of the Good Shepherd access",
+          "https://www.churchofthegoodshepherd.org.nz/"
+        ],
+        [
+          "DOC coastal wildlife distances",
+          "https://www.doc.govt.nz/nature/native-animals/marine-mammals/sharing-our-coasts-with-marine-mammals/"
+        ],
+        [
+          "NZTA pre-departure road check",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "候补须守住10:00离开",
+          "summaryEn": "Backup only if leaving by 10:00",
+          "text": "08:30 只是候补占位，并非已确认首班。仅当前日停飞、运营方确认可飞且早餐、提前报到、退房和10:00离开均可兼顾时执行；否则在住宿吃早餐，不继续等飞。",
+          "textEn": "08:30 is a backup placeholder, not a confirmed first departure. Use it only after a previous-day cancellation if the operator confirms a flight compatible with breakfast, earlier check-in, checkout and leaving by 10:00. Otherwise have breakfast at the stay and do not keep waiting.",
+          "sourceIds": [
+            "alpine-flight-faq",
+            "alpine-motel"
+          ]
+        },
+        {
+          "summary": "退房装车，10:00前离开",
+          "summaryEn": "Check out and depart by 10:00",
+          "text": "10:00 前完成退房、装车并离开库克山区域，守住特卡波短停和奥马鲁晚场；候补延误就放弃继续等候。出发前再查 SH80、SH8 路况，封路或疲劳时安全优先。",
+          "textEn": "Finish checkout and loading and leave the Mount Cook area by 10:00 to protect the Tekapo stop and Ōamaru evening. Stop waiting if the backup overruns. Recheck SH80/SH8 before leaving; closures or fatigue take priority over the schedule.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "特卡波午餐与湖边短停",
+          "summaryEn": "Tekapo lunch and short lake stop",
+          "text": "开到特卡波后在正规车位停车，先吃午餐，再短看好牧羊人教堂外观和湖边；内部开放未核实，不把入内作为必去项。此段包含驾驶，13:00离开，晚到就缩短游览。",
+          "textEn": "In Tekapo, park in a designated space and have lunch before a brief look at the Church of the Good Shepherd exterior and lakefront. Interior access is unverified and is not essential. This block includes driving; leave at 13:00 and shorten sightseeing if late.",
+          "sourceIds": [
+            "alpine-church",
+            "alpine-road",
+            "alpine-church-visit"
+          ]
+        },
+        {
+          "summary": "直接前往奥马鲁，留短休",
+          "summaryEn": "Drive to Ōamaru with a short break",
+          "text": "13:00 从特卡波出发前往已订奥马鲁住宿，途中按需要安排一次洗手间和驾驶员短休；不加支线景点。15:30只是预计到达，若延误先取消港边散步，不赶路追时间。",
+          "textEn": "Leave Tekapo at 13:00 for the booked Ōamaru stay, allowing a toilet and driver break as needed without side trips. The 15:30 arrival is an estimate; if delayed, drop the harbour walk first instead of rushing on the road.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "入住休息，核对企鹅票",
+          "summaryEn": "Check in, rest and verify tickets",
+          "text": "先到已订奥马鲁房源，按私下保存的指示停车、办理入住并卸行李，至少留一段坐下休息的时间；核对晚场是否订妥及实际开始时间，再决定是否去港边。",
+          "textEn": "Go first to the booked Ōamaru stay, park and enter using the privately held instructions, unload and take a seated rest. Check whether the evening viewing is booked and its actual start time before deciding on the harbour walk.",
+          "sourceIds": [
+            "alpine-penguins",
+            "alpine-penguins-dated"
+          ]
+        },
+        {
+          "summary": "港边短走，可整段休息",
+          "summaryEn": "Optional harbour walk or rest",
+          "text": "有体力才从已入住的住宿去港边短走，遇海狗保持至少20米，不喂、不摸、不挡通海路线；看不到就不追找。风大、疲倦或到得晚，整段改回房休息。",
+          "textEn": "Only go for a short harbour walk after check-in if you have energy. Keep at least 20 metres from seals, do not feed or touch them, and keep their route to the sea clear. Do not chase sightings; rest instead if windy, tired or late.",
+          "sourceIds": [
+            "alpine-doc-seals"
+          ]
+        },
+        {
+          "summary": "早晚餐后前往保护区",
+          "summaryEn": "Early dinner, then the colony",
+          "text": "18:00先吃晚餐、上洗手间，取保暖外套后前往企鹅保护区；为找停车位留余量。19:30是围绕20:00参考场次安排的报到缓冲，实际按最终票面提前到场。",
+          "textEn": "Have dinner and a toilet break at 18:00, collect warm outer layers and head to the colony with time to find parking. The 19:30 arrival is a planning buffer around the 20:00 reference session; arrive early according to the eventual ticket.",
+          "sourceIds": [
+            "alpine-penguins-visit",
+            "alpine-penguins"
+          ]
+        },
+        {
+          "summary": "停车报到，收好电子设备",
+          "summaryEn": "Park, check in and put devices away",
+          "text": "有有效晚场确认后才按票面报到，建议预留30分钟停车与候场，停车和入场均按现场指示；沿用现有活动记录，晚场收好相机和手机，不拍照、不录像、不亮屏，规则仍须复核。",
+          "textEn": "With a valid evening confirmation, follow its check-in instructions and allow a suggested 30 minutes for parking and waiting. Follow on-site directions. Under the existing activity record, put cameras and phones away: no photography, filming or bright screens; recheck current rules.",
+          "sourceIds": [
+            "alpine-penguins-visit",
+            "alpine-penguins"
+          ]
+        },
+        {
+          "summary": "企鹅晚场，场次余位待核",
+          "summaryEn": "Penguin evening; session still to verify",
+          "text": "企鹅晚场仍待预订，20:00仅作计划参考，须核对10/6实际场次和两人余位；原价格为7/29旧核验，不作当前报价。订妥后安静就座，实际结束时间待核，不追21:30时点。",
+          "textEn": "The penguin evening is still unbooked; verify the 6 October session and availability for two rather than treating 20:00 as confirmed. The original prices were checked on 29 July and are not current quotes. Sit quietly once booked; the finish time is unverified, not fixed at 21:30.",
+          "sourceIds": [
+            "alpine-penguins",
+            "alpine-penguins-dated"
+          ]
+        },
+        {
+          "summary": "散场后回房，不追结束点",
+          "summaryEn": "Return after the viewing, without rushing",
+          "text": "等工作人员安排离场后再回已入住的奥马鲁住宿，停车区和港边慢行留意野生动物；不为21:30时间点提前赶离，也不追加夜游，回房整理翌日行李后休息。",
+          "textEn": "Return to the already checked-in Ōamaru stay after staff release the group, moving slowly through the car park and harbour area and watching for wildlife. Do not rush to meet the 21:30 marker or add a night outing; prepare tomorrow's luggage and rest.",
+          "sourceIds": [
+            "alpine-penguins"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "reviewedAt": "2026-10-01",
+      "highlight": "北上分两次休息，15:00后入住；傍晚只走一小圈，为次日11:00机场还车留精神。",
+      "highlightEn": "Take two breaks northbound and check in after 15:00. Keep the evening walk short before tomorrow's 11:00 airport car return.",
+      "alternative": {
+        "title": "雨天或长途后疲倦",
+        "desc": "抵达后先入住，雨大或疲倦就取消河边和街区散步，保留就近晚餐即可；不新增远途景点。道路延误时通知住宿并缩短游览，不牺牲驾驶员休息。"
+      },
+      "alternativeEn": {
+        "title": "Rain or tired after the drive",
+        "desc": "Check in first. In heavy rain or if tired, skip the river and street walks and keep only a nearby dinner without adding distant sights. If road delays occur, notify the stay and shorten sightseeing rather than driver breaks."
+      },
+      "links": [
+        [
+          "NZTA 北上路况复核",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ],
+        [
+          "基督城市议会停车地图入口",
+          "https://ccc.govt.nz/transport/getting-around/parking"
+        ],
+        [
+          "Riverside Market 营业信息",
+          "https://riverside.nz/market-home"
+        ]
+      ],
+      "linksEn": [
+        [
+          "NZTA northbound road check",
+          "https://www.journeys.nzta.govt.nz/journey-planner"
+        ],
+        [
+          "Christchurch Council parking map entry",
+          "https://ccc.govt.nz/transport/getting-around/parking"
+        ],
+        [
+          "Riverside Market trading information",
+          "https://riverside.nz/market-home"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "退房北上，先查 SH1",
+          "summaryEn": "Check out northbound; check SH1",
+          "text": "在已订奥马鲁住宿吃早餐、收齐行李，09:30退房并沿北上主路往 Timaru；先复核 SH1 路况。若前晚睡得晚，删减到城后散步，不用压缩途中休息来追赶。",
+          "textEn": "Have breakfast and pack at the booked Ōamaru stay, check out at 09:30 and head north towards Timaru after checking SH1. If the previous night ran late, reduce the city walk rather than cutting driver breaks.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "Timaru 短休后继续北上",
+          "summaryEn": "Timaru break, then continue north",
+          "text": "在 Timaru 合法停车，约15—20分钟喝咖啡、上洗手间和伸展；风雨时只作室内短休，不另找海边点位。休息后继续北上，此时间块包含到 Ashburton 的行车。",
+          "textEn": "Park legally in Timaru for a 15–20 minute coffee, toilet and stretch break. In wind or rain, keep it indoors without seeking another waterfront stop. Continue north afterwards; this block includes the drive to Ashburton.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "午餐休息后开往基督城",
+          "summaryEn": "Lunch and rest, then Christchurch",
+          "text": "在 Ashburton 停车吃午餐，让驾驶员离开驾驶座休息；按油量补油后继续往基督城。不要把此段全算成午餐，也不压缩休息去赶14:30预计到达时间。",
+          "textEn": "Park in Ashburton for lunch and give the driver a break away from the wheel. Refuel as needed before continuing to Christchurch. This is not all lunch time, and breaks should not be cut to meet the estimated 14:30 arrival.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "先停车，15:00后入住",
+          "summaryEn": "Park first; check in from 15:00",
+          "text": "14:30只作预计到达；已订基督城房源15:00后才能按确认办理入住。先核对私下停车和入户指示，早到则在合法车位休息等候，不假定可提前入住或寄存行李。",
+          "textEn": "14:30 is only an estimated arrival; the booked Christchurch stay allows check-in from 15:00. Follow privately held parking and access instructions. If early, wait in a legal parking place without assuming early entry or luggage storage.",
+          "sourceIds": [
+            "alpine-city-parking"
+          ]
+        },
+        {
+          "summary": "Riverside 与河畔慢逛",
+          "summaryEn": "Easy Riverside and river stroll",
+          "text": "入住卸行李后，以 Riverside Market 为一个短停点，按现场营业情况喝咖啡或简单逛，再沿雅芳河走一小段；雨大就取消河边段。尽量一次停车，离车前核对收费和允许停放时长。",
+          "textEn": "After checking in and unloading, make a short Riverside Market stop for coffee or browsing if trading, then take a brief Avon River walk. Skip the riverside in heavy rain. Prefer one parking stop and check charges and time limits before leaving the car.",
+          "sourceIds": [
+            "alpine-riverside",
+            "alpine-city-parking"
+          ]
+        },
+        {
+          "summary": "广场与街区，量力短走",
+          "summaryEn": "A short square and street walk",
+          "text": "有余力再把 Cathedral Square 外观与 New Regent Street 串成短走，不默认教堂或商店仍可进入；遇施工围挡按现场指示绕行。累了就跳过其中一处，提前去晚餐。",
+          "textEn": "If you still have energy, link an exterior look at Cathedral Square with a short New Regent Street stroll. Do not assume church or shop entry; follow any signed construction diversions. Skip one stop and eat early if tired.",
+          "sourceIds": []
+        },
+        {
+          "summary": "晚餐回房，准备翌日还车",
+          "summaryEn": "Dinner and prepare for car return",
+          "text": "在当前街区就近吃晚餐，不为餐厅再开车绕城；饭后回已订住宿整理行李，私下核对次日11:00机场还车及航班资料、加油要求和出发路线，今晚留足睡眠。",
+          "textEn": "Have dinner in the area rather than driving across town for a restaurant. Return to the booked stay to pack and privately check tomorrow's 11:00 airport car return, flight details, fuel requirements and departure route. Leave enough time for sleep.",
+          "sourceIds": []
+        }
+      ]
+    }
+  ]
+}

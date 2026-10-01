@@ -66,7 +66,7 @@ const eventTranslations = {
   "Big Sky 前休息；活动后返回已预订的 Mt Cook Motel": "Rest before Big Sky, then return to the booked Mt Cook Motel",
   "酒店晚餐、补充保暖衣物": "Dinner at the hotel; add warm layers",
   "Big Sky Stargazing 观星，约75—90分钟": "Big Sky Stargazing, approximately 75–90 minutes",
-  "仅在前一日停飞时，候补直升机首班": "First backup helicopter flight only if the previous day was cancelled",
+  "前日停飞后再询问早间候补，须兼顾10:00离开": "Ask about a morning backup after a cancellation, only if leaving by 10:00 is still possible",
   "最晚离开库克山": "Leave Aoraki / Mount Cook no later than this time",
   "抵达蒂卡波，教堂、湖边、午餐": "Arrive at Lake Tekapo: church, lakefront and lunch",
   "从蒂卡波出发前往奥马鲁": "Leave Lake Tekapo for Ōamaru",
@@ -102,7 +102,7 @@ const eventTranslations = {
   "SkyCity Coach Terminal 报到": "Check in at SkyCity Coach Terminal, 102 Hobson Street",
   "大巴前往霍比屯": "Take the GreatSights coach to Hobbiton",
   "抵达 SkyCity Coach Terminal": "Arrive back at SkyCity Coach Terminal",
-  "送回指定奥克兰市中心酒店": "Hotel drop-off begins for designated central Auckland hotels",
+  "返回原酒店；接送需确认，未确认则自行返回": "Return to the same hotel; use a confirmed transfer or travel independently",
   "大巴返回奥克兰": "Take the GreatSights coach back to Auckland",
   "退房后寄存行李": "Check out and leave luggage",
   "奥克兰轻松半日": "Relaxed half-day in central Auckland",
@@ -177,10 +177,9 @@ function translateDay(day) {
   const [title, subtitle, stay] = dayTranslations[day.date] ?? [day.title, day.subtitle, day.stay];
   return {
     ...day,
-    alternative: day.alternative && day.date === "10月6日" ? {
-      title: "Optional add-on · Kātiki Point",
-      desc: "Consider it only if weather, energy and time all allow. It is not part of the main route and must not jeopardise arrival at the little-penguin colony by 19:30.",
-    } : day.alternative,
+    highlight: day.highlightEn ?? day.highlight,
+    links: day.linksEn ?? day.links,
+    alternative: day.alternativeEn ?? day.alternative,
     dateKey: day.date,
     displayDate: dateInEnglish(day.date),
     events: day.events.map(([time, text, metadata]) => metadata

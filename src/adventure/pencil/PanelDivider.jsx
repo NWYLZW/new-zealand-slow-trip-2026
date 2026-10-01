@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { pencilStroke } from "./stroke";
+import { observeCanvasRecovery } from "./canvasRecovery";
 
 export function PanelDivider() {
   const canvasRef = useRef(null);
@@ -22,8 +23,9 @@ export function PanelDivider() {
     const appearance = new MutationObserver(paint);
     appearance.observe(document.documentElement, { attributes: true,
       attributeFilter: ["data-adventure-appearance", "data-adventure-theme"] });
+    const stopRecovery = observeCanvasRecovery(paint);
     paint();
-    return () => { resize.disconnect(); appearance.disconnect(); };
+    return () => { stopRecovery(); resize.disconnect(); appearance.disconnect(); };
   }, []);
   return <canvas ref={canvasRef} className="trip-panel-divider-ink" aria-hidden="true" />;
 }

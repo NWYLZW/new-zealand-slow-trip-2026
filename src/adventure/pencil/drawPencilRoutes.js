@@ -1,6 +1,7 @@
 import { pencilStroke } from './stroke';
 import { random } from './brush';
 import { mapLabel } from './mapLabels';
+import { retainMapSurface, restoreMapSurface, releaseMapSurface, mapSurfacePixels } from './mapTerrainCache';
 
 const colors = { road:'#914b3f', flight:'#366e91', coach:'#657c3c' };
 const seedFor = id => [...id].reduce((n,letter)=>Math.imul(n^letter.charCodeAt(0),16777619),2166136261)>>>0;
@@ -100,12 +101,18 @@ export function createPencilRoutes(canvas, entries, width, height) {
     count: points.length, first: points[0], last: points.at(-1) }));
   let selection = { selected: null, selectedRoute: null }, hovered = null, view = null;
   let visibleRect = normalizedVisibleRect(null,width,height);
-  let cache = null, building = null, timer = 0, revision = 0, moving = false, disposed = false;
-  const stats = { builds: 0, frames: 0, frameMs: 0, workMs: 0 };
-  const release = image => { if (image) { image.canvas.width = 0; image.canvas.height = 0; } };
+  let cache = null, building = null, timer = 0, revision = '::', moving = false, disposed = false;
+  let lastDrawKey = '', lastHitKey = '';
+  let paused = false, recoveryPending = false;
+  const caches = [], maxCachePixels = 9000000;
+  const stats = { builds: 0, buildStarts: 0, cancels: 0, cacheHits: 0, skippedFrames: 0,
+    frames: 0, frameMs: 0, workMs: 0, totalWorkMs: 0 };
+  const release = image => { if (image) releaseMapSurface(image.canvas); };
   const cancelBuild = () => {
     clearTimeout(timer); timer = 0;
+    if (building) stats.cancels++;
     release(building); building = null;
+    lastDrawKey = '';
   };
   const imagePosition = (image,transform) => {
     const ratio=transform.k/image.k;
@@ -115,11 +122,14 @@ export function createPencilRoutes(canvas, entries, width, height) {
   const covered = (image, transform, rect) => {
     if (!image) return false;
     const {ratio,x,y}=imagePosition(image,transform);
-    return x<=rect.left&&y<=rect.top&&x+image.canvas.width/dpr*ratio>=rect.right
-      &&y+image.canvas.height/dpr*ratio>=rect.bottom;
+    return x<=rect.left&&y<=rect.top&&x+image.canvas.width/image.density*ratio>=rect.right
+      &&y+image.canvas.height/image.density*ratio>=rect.bottom;
   };
   const syncRouteHits = () => {
     if(!view)return;
+    const hitKey = [view.x,view.y,view.k,visibleRect.left,visibleRect.top,visibleRect.right,visibleRect.bottom].join(':');
+    if (hitKey === lastHitKey) return;
+    lastHitKey = hitKey;
     const worldViewport=[view.invert([visibleRect.left,visibleRect.top]),view.invert([visibleRect.right,visibleRect.bottom])];
     const padding=36/view.k;
     let hitVisibleRoutes=0;
@@ -140,23 +150,24 @@ export function createPencilRoutes(canvas, entries, width, height) {
       const {ratio:scale,x,y}=imagePosition(image,view);
       if (rect) {
         ctx.clearRect(x + rect.x * scale, y + rect.y * scale, rect.w * scale, rect.h * scale);
-        ctx.drawImage(image.canvas, rect.x * dpr, rect.y * dpr, rect.w * dpr, rect.h * dpr,
+        ctx.drawImage(image.canvas, rect.x * image.density, rect.y * image.density, rect.w * image.density, rect.h * image.density,
           x + rect.x * scale, y + rect.y * scale, rect.w * scale, rect.h * scale);
-      } else ctx.drawImage(image.canvas, x, y, image.canvas.width / dpr * scale, image.canvas.height / dpr * scale);
+      } else ctx.drawImage(image.canvas, x, y, image.canvas.width / image.density * scale, image.canvas.height / image.density * scale);
     };
     if (cache) blit(cache);
     if (building) building.completed.forEach(rect => blit(building, rect));
     stats.frames++; stats.frameMs = performance.now() - start;
     canvas._routeStats = { ...stats, ...(building?.counts??cache?.counts), pending: Boolean(building),
-      completedTiles: building?.completed.length ?? 0 };
+      completedTiles: building?.completed.length ?? 0, cachedViews: caches.length,
+      cachePixels: caches.reduce((sum, image) => sum + mapSurfacePixels(image.canvas), 0) };
     canvas.dataset.renderer = 'pressure-pencil'; canvas.dataset.routeCount = routes.length;
     canvas.dataset.selectedRoute = selection.selectedRoute || ''; canvas.dataset.hoveredRoute = hovered || '';
     canvas._mapView = { x: view.x, y: view.y, k: view.k };
   };
   function* paintTiles(image) {
     const context = image.canvas.getContext('2d', { willReadFrequently: true });
-    context.scale(dpr, dpr);
-    const w = image.canvas.width / dpr, h = image.canvas.height / dpr, tiles = [];
+    context.scale(image.density, image.density);
+    const w = image.canvas.width / image.density, h = image.canvas.height / image.density, tiles = [];
     const worldViewport=[[(image.left-margin-image.x)/image.k,(image.top-margin-image.y)/image.k],
       [(image.left+w-margin-image.x)/image.k,(image.top+h-margin-image.y)/image.k]];
     const projected = routes.map(entry => {
@@ -208,24 +219,34 @@ export function createPencilRoutes(canvas, entries, width, height) {
     }
   }
   const startBuild = () => {
-    if (!view || disposed || building) return;
+    if (!view || disposed || building || document.hidden) return;
     const image = document.createElement('canvas');
-    image.width = Math.ceil((visibleRect.width + margin * 2) * dpr);
-    image.height = Math.ceil((visibleRect.height + margin * 2) * dpr);
+    const density = Math.min(dpr, Math.sqrt(4000000 / ((visibleRect.width + margin * 2) * (visibleRect.height + margin * 2))));
+    image.width = Math.floor((visibleRect.width + margin * 2) * density);
+    image.height = Math.floor((visibleRect.height + margin * 2) * density);
     const job = { canvas: image, k: view.k, x: view.x, y: view.y, left:visibleRect.left,top:visibleRect.top,
-      revision, completed: [],counts:{sourcePoints:0,projectedPoints:0,visibleRouteParts:0,
+      density, revision, usedAt: performance.now(), completed: [],counts:{sourcePoints:0,projectedPoints:0,visibleRouteParts:0,
         offscreenRoutes:0,dashParts:0,strokeCalls:0} };
     building = job;
+    stats.buildStarts++;
+    canvas._routeStats = { ...canvas._routeStats, pending: true, buildStarts: stats.buildStarts };
     const iterator = paintTiles(job);
     const step = () => {
       timer = 0;
-      if (disposed || building !== job) return;
+      if (disposed || document.hidden || building !== job) return;
       const start = performance.now();
       let result;
       do { result = iterator.next(); } while (!result.done && performance.now() - start < 5);
       stats.workMs = performance.now() - start;
+      stats.totalWorkMs += stats.workMs;
       if (result.done) {
-        release(cache); cache = job; building = null; stats.builds++;
+        retainMapSurface(job.canvas);
+        job.usedAt = performance.now();
+        cache = job; building = null; stats.builds++;
+        caches.push(job); caches.sort((a, b) => b.usedAt - a.usedAt);
+        while (caches.length > 3 || caches.reduce((sum, entry) => sum + mapSurfacePixels(entry.canvas), 0) > maxCachePixels) {
+          release(caches.pop());
+        }
       }
       composite();
       if (!result.done) timer = setTimeout(step, 0);
@@ -233,23 +254,55 @@ export function createPencilRoutes(canvas, entries, width, height) {
     timer = setTimeout(step, 0);
   };
   const draw = (transform, options = {}) => {
+    if (disposed) return;
     view = transform; moving = Boolean(options.moving);
     if(options.visibleRect)visibleRect=normalizedVisibleRect(options.visibleRect,width,height);
+    if (document.hidden) { cancelBuild(); return; }
+    paused = false;
+    if (recoveryPending) { recover(); return; }
+    const drawKey = [view.x,view.y,view.k,revision,visibleRect.left,visibleRect.top,
+      visibleRect.right,visibleRect.bottom,moving].join(':');
+    if (!options.force && drawKey === lastDrawKey) {
+      stats.skippedFrames++; canvas._routeStats = { ...canvas._routeStats, skippedFrames: stats.skippedFrames }; return;
+    }
     syncRouteHits();
-    if (building && (building.k !== view.k || building.revision!==revision || !covered(building, view,visibleRect))) cancelBuild();
+    if (building && (moving || building.k !== view.k || building.revision!==revision || !covered(building, view,visibleRect))) cancelBuild();
+    const reusable = caches.find(image => image.k === view.k && image.revision === revision && covered(image, view, visibleRect));
+    if (reusable) {
+      if (cache !== reusable) stats.cacheHits++;
+      cache = reusable; cache.usedAt = performance.now();
+    }
+    lastDrawKey = drawKey;
     composite();
     // Gestures only composite existing pixels. Fine strokes arrive tile by tile after settling.
     if (!moving && (!cache || cache.k !== view.k || cache.revision !== revision || !covered(cache, view,visibleRect))) startBuild();
   };
-  const invalidate = () => { revision++; cancelBuild(); if (view) draw(view, { moving, visibleRect }); };
+  const invalidate = () => {
+    revision = [selection.selected ?? '', selection.selectedRoute ?? '', hovered ?? ''].join(':');
+    cancelBuild(); if (view && !paused && !document.hidden) draw(view, { moving, visibleRect });
+  };
+  const recover = () => {
+    if (disposed) return;
+    if (paused || document.hidden) { recoveryPending = true; return; }
+    recoveryPending = false;
+    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+    cancelBuild();
+    for (let i = caches.length - 1; i >= 0; i--) if (!restoreMapSurface(caches[i].canvas)) {
+      if (cache === caches[i]) cache = null;
+      release(caches[i]); caches.splice(i, 1);
+    }
+    if (view) draw(view, { moving, visibleRect, force: true });
+  };
+  canvas.addEventListener('contextrestored', recover);
   return {
-    draw,
+    draw, recover, pause() { paused = true; cancelBuild(); },
     select(next) {
       if (selection.selected === next.selected && selection.selectedRoute === next.selectedRoute) return;
       selection = { selected: next.selected, selectedRoute: next.selectedRoute }; invalidate();
     },
     hover(id) { if (hovered !== id) { hovered = id; invalidate(); } },
-    dispose() { disposed = true; cancelBuild(); release(cache); cache = null; },
+    dispose() { disposed = true; cancelBuild(); caches.forEach(release); caches.length = 0; cache = null;
+      canvas.removeEventListener('contextrestored', recover); },
   };
 }
 
@@ -265,7 +318,7 @@ export function routeBadge(date,normal) {
     {variation:.86,breaks:.2,grain:.6,gain:2});
   pencilStroke(ctx,ring,colors.road,1,seed+1,.3,2,true,
     {variation:.86,breaks:.24,grain:.6,gain:2});
-  const label=mapLabel(date,12,seed,colors.road);
+  const label=mapLabel(date,12,seed,colors.road,undefined,{persistence:'public'});
   ctx.drawImage(label.canvas,center[0]-label.width/2,center[1]-label.height/2,label.width,label.height);
   return canvas.toDataURL();
 }

@@ -1,12 +1,16 @@
 import { pencilStroke } from './stroke';
 import { pencilPalette } from './palette';
 import { getAgendaIconDefinition } from '../adventureAgendaIcons';
+import { setCanvasRepaint } from './canvasRecovery';
+import { createPencilRasterCache } from './rasterCache';
+import rendererSource from './stopMarker.js?raw';
 
 const size = 28;
 const displayScale = 1.5;
 const paper = pencilPalette.paper;
 const geometryCache = new Map();
-const spriteCache = new Map();
+const spriteCache = createPencilRasterCache('markers', rendererSource, 128);
+export const stopMarkerCacheReady = spriteCache.ready;
 const markerStyles = {
   primary: { color: pencilPalette.accent, radius: 7.3 },
   town: { color: pencilPalette.cropInk, radius: 6 },
@@ -62,12 +66,15 @@ function paintIcon(ctx, iconType, seed) {
 
 function markerSprite(seed, selected, type, iconType) {
   const style = markerStyles[type] ?? markerStyles.town;
-  const dpr = Math.min(devicePixelRatio || 1, 3) * displayScale;
-  const cacheKey = JSON.stringify([type, style.color, style.radius, seed, selected, iconType ?? '', dpr]);
-  if (spriteCache.has(cacheKey)) return { sprite: spriteCache.get(cacheKey), cacheKey, style };
+  const dpr = Math.min(window.devicePixelRatio || 1, 3) * displayScale;
+  const cacheKey = JSON.stringify([type, style.color, style.radius, paper, pencilPalette.ink,
+    seed, selected, iconType ? getAgendaIconDefinition(iconType) : null, size, dpr]);
+  const cached = spriteCache.get(cacheKey);
+  if (cached) return { sprite: cached, cacheKey, style };
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = Math.round(size * dpr);
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx || ctx.isContextLost?.()) return { sprite: canvas, cacheKey, style };
   ctx.scale(dpr, dpr);
   const outline = ring(style.radius, seed);
   ctx.beginPath();
@@ -93,7 +100,6 @@ function markerSprite(seed, selected, type, iconType) {
       { ...settings, breaks: .3 });
   }
   spriteCache.set(cacheKey, canvas);
-  if (spriteCache.size > 256) spriteCache.delete(spriteCache.keys().next().value);
   return { sprite: canvas, cacheKey, style };
 }
 
@@ -107,7 +113,12 @@ function markerCanvas(seed, selected, type, iconType) {
   canvas.dataset.cacheKey = cacheKey;
   canvas.dataset.markerColor = style.color;
   canvas.dataset.markerRadius = String(style.radius);
-  canvas.getContext('2d').drawImage(sprite, 0, 0);
+  canvas.getContext('2d')?.drawImage(sprite, 0, 0);
+  setCanvasRepaint(canvas, () => {
+    const fresh = markerSprite(seed, selected, type, iconType).sprite;
+    canvas.width = fresh.width; canvas.height = fresh.height;
+    canvas.getContext('2d')?.drawImage(fresh, 0, 0);
+  });
   return canvas;
 }
 

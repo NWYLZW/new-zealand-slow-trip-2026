@@ -5,6 +5,7 @@ import { fillStopLabel } from "./pencil/mapLabels";
 import { pencilPalette } from "./pencil/palette";
 import { pencilStroke } from "./pencil/stroke";
 import { createStopMarker } from "./pencil/stopMarker";
+import { retainMapSurface, restoreMapSurface, releaseMapSurface, mapSurfacePixels } from "./pencil/mapTerrainCache";
 import "./international-map.css";
 
 export const INTERNATIONAL_MIN_ZOOM = .035;
@@ -316,6 +317,8 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
   let routeCandidate = document.createElement("canvas");
   let baseRasterView = null, routeRasterView = null, routeRasterParts = new Map();
   let baseRefinement = null, routeRefinement = null, renderRevision = 0;
+  let lastDrawKey = '', disposed = false;
+  let paused = false, recoveryPending = false;
   const routeSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   routeSvg.classList.add("trip-international-route-hits");
   routeSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -412,7 +415,7 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
       const label = state.language === "en" ? `${record.stop.cityEn} · ${record.stop.id} Airport`
         : `${record.stop.city} · ${record.stop.id}机场`;
       fillStopLabel(record.button.querySelector(".trip-stop-label"), label,
-        12101 + markerRecords.indexOf(record) * 103);
+        12101 + markerRecords.indexOf(record) * 103, { persistence: 'public' });
     });
     hitRecords.forEach(({ segment, path }) => {
       const label = state.language === "en" ? segment.labelEn : segment.label;
@@ -539,6 +542,8 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
       const previousRaster = baseRaster;
       baseRaster = candidate;
       baseCandidate = previousRaster;
+      baseCandidate._mapPixels = null;
+      retainMapSurface(baseRaster);
       baseRasterView = render;
       state.baseContentKey = contentKey;
       state.basePaintKey = `${viewKey(view, visibleRect)}:${state.mapMode}:${state.theme}`;
@@ -731,6 +736,8 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
         const previousRaster = routeRaster;
         routeRaster = candidate;
         routeCandidate = previousRaster;
+        routeCandidate._mapPixels = null;
+        retainMapSurface(routeRaster);
         routeRasterView = render;
         routeRasterParts = partsByRoute;
         state.routeContentKey = contentKey;
@@ -799,7 +806,8 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
   }
 
   function redrawRoutes() {
-    if (!state.lastDraw) return;
+    lastDrawKey = '';
+    if (!state.lastDraw || paused || document.hidden) return;
     if (state.lastDraw.moving) syncRouteHits(state.lastDraw.view);
     else {
       routeRefinement?.cancel();
@@ -809,7 +817,8 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
   }
 
   function redrawAll(visibleRect) {
-    if (!state.lastDraw) return;
+    lastDrawKey = '';
+    if (!state.lastDraw || paused || document.hidden) return;
     const payload = { ...state.lastDraw, visibleRect: visibleRect ?? state.lastDraw.visibleRect };
     state.lastDraw = payload;
     cancelRefinements();
@@ -841,6 +850,7 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
   updateVisibility();
 
   function select(selection = {}) {
+    if (state.selected === (selection.selected ?? null) && state.selectedRoute === (selection.selectedRoute ?? null)) return;
     state.selected = selection.selected ?? null;
     state.selectedRoute = selection.selectedRoute ?? null;
     markerRecords.forEach(({ button, stop }) => {
@@ -849,15 +859,39 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
     redrawRoutes();
   }
 
+  function recover() {
+    if (disposed) return;
+    if (paused || document.hidden) { recoveryPending = true; return; }
+    recoveryPending = false;
+    cancelRefinements(); lastDrawKey = '';
+    if (!restoreMapSurface(baseRaster)) baseRasterView = null;
+    if (!restoreMapSurface(routeRaster)) { routeRasterView = null; routeRasterParts.clear(); }
+    if (state.lastDraw?.moving) composeDuringMotion(state.lastDraw.view);
+    else if (state.lastDraw && !document.hidden) redrawAll(state.lastDraw.visibleRect);
+  }
+  baseCanvas.addEventListener('contextrestored', recover);
+  routeCanvas.addEventListener('contextrestored', recover);
+
   return {
+    recover,
+    pause() { paused = true; cancelRefinements(); lastDrawKey = ''; },
+    refreshLabels: syncText,
     markers: markerRecords,
     handledRouteIds: INTERNATIONAL_ROUTE_IDS,
     getFitPositions: () => internationalOverviewPositions,
     getClusterNodes: () => markerRecords,
     draw(viewOrOptions, options = {}) {
       const payload = viewOrOptions?.view ? viewOrOptions : { view: viewOrOptions, ...options };
-      if (!payload.view) return;
+      if (!payload.view || disposed) return;
       state.lastDraw = payload;
+      if (document.hidden) { cancelRefinements(); lastDrawKey = ''; return; }
+      paused = false;
+      if (recoveryPending) { recover(); return; }
+      const key = `${viewKey(payload.view, payload.visibleRect)}:${baseContentKey()}:${routeContentKey()}:${Boolean(payload.moving)}`;
+      if (!payload.force && key === lastDrawKey) {
+        baseCanvas.dataset.skippedDraws = String((Number(baseCanvas.dataset.skippedDraws) || 0) + 1); return;
+      }
+      lastDrawKey = key;
       if (payload.moving) composeDuringMotion(payload.view);
       else {
         cancelRefinements();
@@ -865,10 +899,15 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
         settleBase(payload.view, payload.visibleRect, revision);
         settleRoutes(payload.view, payload.visibleRect, revision);
       }
+      baseCanvas._internationalStats = { retainedPixels: [baseRaster, routeRaster, baseCandidate, routeCandidate]
+        .reduce((sum, canvas) => sum + mapSurfacePixels(canvas), 0) };
     },
     select,
     update(next = {}) {
       const previousMode = state.mapMode;
+      const previousLanguage = state.language, previousTheme = state.theme;
+      const previousWidth = state.width, previousHeight = state.height;
+      const previousSelected = state.selected, previousRoute = state.selectedRoute;
       const has = key => Object.prototype.hasOwnProperty.call(next, key);
       Object.assign(state, {
         language: next.language ?? state.language,
@@ -880,11 +919,15 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
         height: next.height ?? state.height,
       });
       routeSvg.setAttribute("viewBox", `0 0 ${state.width} ${state.height}`);
-      syncText();
-      updateVisibility();
-      if (previousMode !== state.mapMode || next.width || next.height || next.theme) {
+      if (previousLanguage !== state.language || previousMode !== state.mapMode || previousTheme !== state.theme) syncText();
+      if (previousMode !== state.mapMode) updateVisibility();
+      if (previousMode !== state.mapMode || previousWidth !== state.width || previousHeight !== state.height || previousTheme !== state.theme) {
         redrawAll(next.visibleRect);
-      } else select(state);
+      } else if (previousSelected !== state.selected || previousRoute !== state.selectedRoute) {
+        markerRecords.forEach(({ button, stop }) => button.setAttribute('aria-pressed',
+          String(state.selected === stop.key || state.selected === stop.id)));
+        redrawRoutes();
+      }
     },
     setClusterAnchors(anchors) {
       const nextAnchors = anchors instanceof Map ? new Map(anchors) : new Map();
@@ -894,7 +937,10 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
       if (!state.lastDraw?.moving) redrawRoutes();
     },
     dispose() {
+      disposed = true;
       cancelRefinements();
+      baseCanvas.removeEventListener('contextrestored', recover);
+      routeCanvas.removeEventListener('contextrestored', recover);
       baseCanvas.width = 0;
       routeCanvas.width = 0;
       markerRecords.forEach(({ button }) => button.remove());
@@ -904,10 +950,7 @@ export function createInternationalMapLayer({ baseCanvas, routeCanvas, markerHos
       state.lastDraw = null;
       state.basePaintKey = state.routePaintKey = "";
       state.baseContentKey = state.routeContentKey = "";
-      baseRaster.width = baseRaster.height = 0;
-      routeRaster.width = routeRaster.height = 0;
-      baseCandidate.width = baseCandidate.height = 0;
-      routeCandidate.width = routeCandidate.height = 0;
+      [baseRaster, routeRaster, baseCandidate, routeCandidate].forEach(releaseMapSurface);
       baseRasterView = routeRasterView = null;
       routeRasterParts.clear();
     },

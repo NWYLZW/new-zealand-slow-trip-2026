@@ -1,0 +1,22 @@
+.itinerary-execution { display:grid; flex:none; gap:5px; min-width:0; color:inherit; }
+.itinerary-execution h3 { margin:0; font-size:15px; font-weight:500; line-height:1.5; }
+.itinerary-execution p { margin:0; overflow-wrap:anywhere; }
+.itinerary-execution-reviewed { font-size:12px; line-height:1.5; opacity:.8; }
+.itinerary-execution-entry { min-width:0; }
+.itinerary-execution-entry summary { display:flex; align-items:center; gap:8px; min-height:44px; padding:6px 0; cursor:pointer; list-style:none; font-size:14px; line-height:1.5; }
+.itinerary-execution-entry summary::-webkit-details-marker { display:none; }
+.itinerary-execution-indicator { display:grid; place-items:center; flex:0 0 24px; width:24px; height:24px; margin-left:auto; }
+.itinerary-execution-indicator>.trip-pencil-icon { width:20px; height:20px; transform:rotate(90deg); }
+.itinerary-execution-entry details[open] .itinerary-execution-indicator { transform:rotate(180deg); }
+.itinerary-execution-entry summary:focus-visible { outline:2px solid currentColor; outline-offset:2px; }
+.itinerary-execution-entry summary time { flex:0 0 68px; font-size:12px; overflow-wrap:anywhere; }
+.itinerary-execution-entry summary>span { min-width:0; overflow-wrap:anywhere; }
+.itinerary-execution-body { display:grid; gap:8px; padding:0 0 12px; font-size:14px; line-height:1.65; }
+.itinerary-execution-body ul { display:grid; gap:4px; margin:0; padding-left:18px; font-size:12px; }
+.itinerary-execution-body li { min-width:0; overflow-wrap:anywhere; }
+.itinerary-execution-body a { color:inherit; text-underline-offset:3px; }
+.itinerary-execution-sources { font-size:12px; line-height:1.6; }
+.itinerary-execution-sources summary { min-height:44px; align-content:center; cursor:pointer; }
+.itinerary-execution-sources ul { margin:0; padding:0 0 12px 18px; }
+.itinerary-execution-sources a { color:inherit; overflow-wrap:anywhere; text-underline-offset:3px; }
+.itinerary-execution-entry>.trip-panel-divider-ink { position:static; display:block; width:100%; height:8px; }

@@ -78,7 +78,7 @@ function PlaceActivities({ activities, language }) {
   </ul>;
 }
 
-export function AdventurePlaceTabs({ stop, selectedTab, onTabChange, selectedDate, onDateChange, onSelectDay, onSelectEvent, onSelectMedia, onRequestCapture, onStayLinkChange, onRequestUnlock, onSelectStay }) {
+export function AdventurePlaceTabs({ stop, selectedTab, onTabChange, selectedDate, onDateChange, onSelectDay, onSelectEvent, onSelectWeather, weatherActive = true, onSelectMedia, onRequestCapture, onStayLinkChange, onRequestUnlock, onSelectStay }) {
   const { language } = useLanguage();
   const vault = usePrivateVault();
   const rootRef = useRef(null);
@@ -163,7 +163,8 @@ export function AdventurePlaceTabs({ stop, selectedTab, onTabChange, selectedDat
       {activeTab === "map" && townMap}
       {activeTab === "calendar" && (days.length
         ? <AdventureCalendar embedded days={days} selectedDate={visibleDate}
-          onSelectDate={changeDate} onSelectDay={onSelectDay} onSelectEvent={onSelectEvent} />
+          onSelectDate={changeDate} onSelectDay={onSelectDay} onSelectEvent={onSelectEvent}
+          weatherPlace={tag} weatherActive={weatherActive} onSelectWeather={onSelectWeather} />
         : <p className="trip-place-empty"><PencilText>{language === "en" ? "No itinerary here" : "暂无此地点的行程"}</PencilText></p>)}
       {activeTab === "hotels" && <PlaceHotels stays={stays} selectedId={selectedStayId}
         onSelectedIdChange={setSelectedStayId} placeName={stop?.name ?? "新西兰"}

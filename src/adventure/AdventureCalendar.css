@@ -193,7 +193,7 @@ html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-cal
 .trip-adventure-calendar-day-number { display: inline-block; flex: none; }
 
 .trip-adventure-calendar-day[data-selected="true"] .trip-adventure-calendar-date { color: #123322; }
-.trip-adventure-calendar-events { position: relative; z-index: 2; display: grid; gap: 2px; margin-top: 36px; pointer-events: none; }
+.trip-adventure-calendar-events { position: relative; z-index: 2; margin-top: 42px; display: grid; gap: 2px; pointer-events: none; }
 
 .trip-adventure-calendar-event {
   pointer-events: auto;
@@ -260,4 +260,31 @@ html[data-adventure-appearance="dark"] #trip-board-structure .trip-adventure-cal
     scrollbar-width: thin;
   }
   .trip-adventure-calendar-header .trip-adventure-calendar-scope { flex: none; min-width: 44px; padding: 5px 6px; }
+}
+
+/* Density follows the calendar's available width, including split panels. */
+@container (max-width: 1100px) {
+  .trip-adventure-calendar-month { display: none; }
+}
+
+@container (max-width: 1000px) {
+  .trip-adventure-calendar-event:nth-child(n + 3) { display: none; }
+  .trip-adventure-calendar .trip-weather-badge { width: 44px; grid-template-columns: 1fr; }
+  .trip-adventure-calendar .trip-weather-badge-temperature { display: none; }
+  .trip-adventure-calendar-date { padding: 12px 7px; }
+  .trip-adventure-calendar-day { padding-left: 5px; padding-right: 5px; }
+}
+
+@container (max-width: 700px) {
+  .trip-adventure-calendar-events { display: none; }
+  .trip-adventure-calendar-day { min-height: 100px; padding: 0; }
+  .trip-adventure-calendar-grid,
+  .trip-adventure-calendar--embedded .trip-adventure-calendar-grid { flex: none; grid-auto-rows: 100px; }
+  .trip-adventure-calendar .trip-adventure-calendar-date {
+    flex-direction: row; justify-content: center; align-items: flex-start;
+    gap: 0; padding: 12px 0 0; font-size: 17px; line-height: 1.2;
+  }
+  .trip-adventure-calendar .trip-weather-badge {
+    top: 46px; left: 0; right: 0; width: min(44px, 100%); margin-inline: auto;
+  }
 }

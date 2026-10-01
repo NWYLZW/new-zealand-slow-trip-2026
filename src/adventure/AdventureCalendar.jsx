@@ -2,9 +2,12 @@ import { useEffect, useMemo, useRef } from "react";
 import { useLanguage } from "../LanguageContext";
 import { getAdventureCalendarDays } from "../components/calendar/tripCalendarData";
 import { PencilText } from "./pencil/PencilText";
+import { WeatherBadge } from "./weather/WeatherBadge";
+import { WeatherAttribution } from "./weather/WeatherSources";
 import { pencilStroke } from "./pencil/stroke";
 import { drawPencilWash } from "./pencil/wash";
 import { calendarPaper } from "./pencil/paper";
+import { observeCanvasRecovery } from "./pencil/canvasRecovery";
 import { AdventurePaneActions } from "./AdventurePaneActions";
 import { adventureEventDescription, adventureEventLabel } from "./adventureEventLabel";
 import { adventureEventTime, adventureFlightSegments } from "./adventureEventTime";
@@ -138,6 +141,7 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
       }
       for (const event of events) {
         const rect = event.getBoundingClientRect();
+        if (!rect.width || !rect.height) continue;
         drawPencilWash(context, {
           x: rect.left - box.left, y: rect.top - box.top,
           width: rect.width, height: rect.height,
@@ -157,8 +161,8 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
           { variation: .82, breaks: selected ? .17 : .23, grain: .7, gain: selected ? 2.5 : 1.8, step: .8 });
       }
       for (const event of events) {
-        if (getComputedStyle(event).display === "none") continue;
         const rect = event.getBoundingClientRect();
+        if (!rect.width || !rect.height) continue;
         const x = rect.left - box.left + 2, y = rect.top - box.top;
         const color = eventPigment(event.style.getPropertyValue("--event-ink") || "#496855", dark, paperColor);
         pencilStroke(context, [[x, y + 4], [x, y + rect.height - 4]], color, dark ? 1.7 : 1.3,
@@ -173,8 +177,13 @@ function InkLayer({ kind, scope, selectedDate, drawKey, fullscreen = false }) {
     appearance.observe(document.documentElement, { attributes: true,
       attributeFilter: ["data-adventure-appearance", "data-adventure-theme"] });
     document.fonts.ready.then(schedule);
+    const stopRecovery = observeCanvasRecovery(() => {
+      cancelAnimationFrame(pending);
+      pending = 0;
+      schedule();
+    });
     schedule();
-    return () => { disposed = true; cancelAnimationFrame(pending); resize.disconnect(); appearance.disconnect(); };
+    return () => { disposed = true; stopRecovery(); cancelAnimationFrame(pending); resize.disconnect(); appearance.disconnect(); };
   }, [kind, scope, selectedDate, drawKey, fullscreen]);
   return <canvas className="trip-adventure-calendar-ink" ref={canvasRef} aria-hidden="true" />;
 }
@@ -222,7 +231,7 @@ export function AdventurePencilTabs({ items, value, onChange, ariaLabel, idPrefi
   </nav>;
 }
 
-export function AdventureCalendar({ selectedDate, onSelectDate, onSelectDay, onSelectEvent, onClose, scope = "all", onScopeChange, days: suppliedDays, embedded = false,
+export function AdventureCalendar({ selectedDate, onSelectDate, onSelectDay, onSelectEvent, onSelectWeather, weatherPlace, weatherActive = true, onClose, scope = "all", onScopeChange, days: suppliedDays, embedded = false,
   fullscreen = false, automaticFullscreen = false, onToggleFullscreen, onOpenMenu }) {
   const { language } = useLanguage();
   const defaultDays = useMemo(() => getAdventureCalendarDays({ scope, language }), [scope, language]);
@@ -276,6 +285,7 @@ export function AdventureCalendar({ selectedDate, onSelectDate, onSelectDay, onS
                 : onSelectDate?.(entry.dateId, entry.day, entry.events)}
             ><span className="trip-adventure-calendar-month"><PencilText>{`${month}/`}</PencilText></span>
               <span className="trip-adventure-calendar-day-number"><PencilText>{date}</PencilText></span></button>
+            <WeatherBadge dateId={entry.dateId} placeTag={weatherPlace} language={language} active={weatherActive} onSelect={onSelectWeather} />
             <div className="trip-adventure-calendar-events">
               {entry.events.map((event) => <button
                   className="trip-adventure-calendar-event"
@@ -292,6 +302,7 @@ export function AdventureCalendar({ selectedDate, onSelectDate, onSelectDay, onS
         })}
         <InkLayer kind="grid" scope={scope} selectedDate={selectedDate} drawKey={drawKey} />
       </div>
+      <WeatherAttribution language={language} compact />
     </div>
   </section>;
 }

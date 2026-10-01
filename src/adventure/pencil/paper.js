@@ -1,7 +1,9 @@
 import { grain, random } from './brush';
+import { registerCanvasCache } from './canvasRecovery';
 
 const size = 384;
 const cache = new Map();
+registerCanvasCache(cache);
 
 export function calendarPaper(color = '#faf9f3', { dark = false } = {}) {
   const key = `${color}:${dark}`;

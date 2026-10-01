@@ -5,6 +5,7 @@ import { localNameTranslations } from "../eventMedia";
 import { usePrivateVault } from "../PrivateVaultContext";
 import { socialGuidesByEvent } from "../socialGuides";
 import { getAdventureCalendarDays } from "../components/calendar/tripCalendarData";
+import { ItineraryExecutionNotes } from "../components/ItineraryExecutionNotes";
 import { AdventurePencilTabs } from "./AdventureCalendar";
 import { adventureFlightSegments } from "./adventureEventTime";
 import { AdventureEventTimeline } from "./AdventureEventTimeline";
@@ -99,6 +100,9 @@ function ScheduleTab({ event, dateId, language, activeAgendaId, onSelectAgenda }
     <AdventureEventTimeline event={event} dateId={dateId} language={language}
       activeAgendaId={activeAgendaId} onSelectAgenda={onSelectAgenda}
       renderContent={(text) => <InlineDetail text={text} />} />
+    <ItineraryExecutionNotes event={event} language={language} activeAgendaId={activeAgendaId}
+      renderText={text => <PencilText>{text}</PencilText>} renderDivider={() => <PanelDivider />}
+      renderIndicator={() => <NextIcon />} />
     {event.day?.highlight && <p><PencilText>{event.day.highlight}</PencilText></p>}
     {event.day?.alternative && <div className="trip-event-alternative">
       <strong><PencilText>{event.day.alternative.title}</PencilText></strong>

@@ -1,6 +1,10 @@
-const labels = new Map();
+import { textCache, textFontState } from './textCache';
+import { TEXT_LIMITS, textPixelFingerprint } from './textStore';
+
+export { textCacheReady } from './textCache';
 const resolution = 4;
-export function clearPencilLabels() { labels.clear(); }
+// Font/layout callers clear volatile entries only, never valid persisted warm rows.
+export function clearPencilLabels() { textCache.clear(); }
 
 function random(seed) {
   let value = seed >>> 0;
@@ -59,23 +63,33 @@ function distanceTo(mask, width, height, inside) {
   return distance;
 }
 
-export function pencilLabel(text, {size = 19, family = mapHandwriting, color, paper, seed = 1, settings}) {
+export function pencilLabel(text, {size = 19, family = mapHandwriting, color, paper, seed = 1, settings, persistence = 'memory'}) {
+  text = String(text);
+  if (text.length > 256 || !Number.isFinite(size) || size <= 0 || size > 128) {
+    throw new RangeError('Pencil label exceeds the bounded renderer input');
+  }
   const params = letteringSettings(settings);
-  const key = JSON.stringify([text, size, family, color, paper, seed, params]);
-  if (labels.has(key)) return labels.get(key);
+  const font = `400 ${size}px ${family}`;
+  const fontState = textFontState(font, text);
+  const inputs = [text, size, family, color, paper, seed, params];
+  const key = JSON.stringify([persistence === 'public', fontState.key, ...inputs]);
+  const cached = textCache.get(key);
+  if (cached) return cached;
   const mask = document.createElement('canvas');
   // Context options must be set on the first acquisition, before pixel reads.
   const measure = mask.getContext('2d', {willReadFrequently:true});
   measure.fillStyle = color;
   measure.fillRect(0, 0, 1, 1);
   const rgb = measure.getImageData(0, 0, 1, 1).data;
-  const font = `400 ${size}px ${family}`;
   measure.font = font;
   const characters = Array.from(text);
   const widths = characters.map(char => measure.measureText(char).width);
   const advance = Math.ceil(widths.reduce((sum, width) => sum + width, 0));
   const padding = 5, ascent = Math.ceil(size * 1.1), descent = Math.ceil(size * .35);
   const width = advance + padding * 2, height = ascent + descent + padding * 2;
+  if (width * height * resolution ** 2 > TEXT_LIMITS.pixels) {
+    throw new RangeError('Pencil label exceeds the bounded pixel budget');
+  }
   mask.width = width * resolution;mask.height = height * resolution;
   const ctx = mask.getContext('2d', {willReadFrequently:true});
   ctx.scale(resolution, resolution);ctx.font = font;ctx.fillStyle = color;ctx.strokeStyle = color;ctx.lineWidth = size >= 16 ? .48 : .24;
@@ -91,6 +105,13 @@ export function pencilLabel(text, {size = 19, family = mapHandwriting, color, pa
     ctx.restore();x += widths[i];
   });
   const image = ctx.getImageData(0, 0, mask.width, mask.height);
+  // The cheap native glyph mask verifies actual font/fallback output before a
+  // cross-launch hit; warm startup skips distance fields and pigment synthesis.
+  const persistentKey = persistence === 'public' && fontState.ready
+    ? JSON.stringify([...inputs, mask.width, mask.height, textPixelFingerprint(image.data)]) : null;
+  const restored = persistentKey && textCache.restore(key, persistentKey);
+  if (restored) return restored;
+  textCache.rendered();
   const shape = new Uint8ClampedArray(image.data);
   const outside = distanceTo(shape, mask.width, mask.height, true);
   const inside = distanceTo(shape, mask.width, mask.height, false);
@@ -152,7 +173,5 @@ export function pencilLabel(text, {size = 19, family = mapHandwriting, color, pa
   output.drawImage(mask, 0, 0);
   const label = {canvas, ink:mask, width, height, advance, ascent, descent, padding,
     draw(target, x, baseline) {target.drawImage(canvas, x - padding, baseline - ascent - padding, width, height);}};
-  labels.set(key, label);
-  if (labels.size > 160) labels.delete(labels.keys().next().value);
-  return label;
+  return textCache.put(key, label, persistentKey);
 }

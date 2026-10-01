@@ -1,0 +1,530 @@
+{
+  "route": "return",
+  "sources": [
+    {
+      "id": "return-budget-chc",
+      "url": "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc",
+      "title": "Budget基督城机场门店说明",
+      "titleEn": "Budget Christchurch Airport location",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-jetstar-checkin",
+      "url": "https://www.jetstar.com/us/en/help/when-to-get-to-the-airport-for-domestic-flights",
+      "title": "Jetstar国内出发准备",
+      "titleEn": "Jetstar domestic departure preparation",
+      "checkedAt": "2026-10-01",
+      "status": "needs-recheck"
+    },
+    {
+      "id": "return-jetstar-terminals",
+      "url": "https://www.jetstar.com/us/en/help/airports-and-terminals",
+      "title": "Jetstar 航站楼说明",
+      "titleEn": "Jetstar airport and terminal guidance",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-akl-taxis",
+      "url": "https://www.aucklandairport.co.nz/transport/taxis-and-shuttles",
+      "title": "奥克兰机场出租车接驳",
+      "titleEn": "Auckland Airport taxi transfers",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-greatsights-address",
+      "url": "https://www.newzealand.com/nz/plan/business/greatsights-new-zealand/",
+      "title": "GreatSights官方登记地点",
+      "titleEn": "GreatSights official location listing",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-greatsights-transfers",
+      "url": "https://www.greatsights.co.nz/travel-info/hotel-transfers/",
+      "title": "GreatSights酒店接送说明",
+      "titleEn": "GreatSights hotel transfer information",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-greatsights-product",
+      "url": "https://www.greatsights.co.nz/new-zealand-tour-destinations/hobbiton-tours/hobbiton-movie-set-day-tour/",
+      "title": "GS10H原产品入口（待复核）",
+      "titleEn": "Original GS10H product link (recheck needed)",
+      "checkedAt": "2026-10-01",
+      "status": "official-unreachable"
+    },
+    {
+      "id": "return-hobbiton-walking",
+      "url": "https://www.hobbitontours.com/experiences/hobbiton-movie-set-tour/",
+      "title": "霍比屯步行导览",
+      "titleEn": "Hobbiton Movie Set Signature Tour",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-akl-departures",
+      "url": "https://www.aucklandairport.co.nz/information/departure-information",
+      "title": "奥克兰国际出发与值机区",
+      "titleEn": "Auckland international departure and check-in zones",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-mh-checkin",
+      "url": "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html",
+      "title": "马航登机与托运要求",
+      "titleEn": "Malaysia Airlines boarding and bag drop",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-mh-arrival-guidance",
+      "url": "https://www.askmh.malaysiaairlines.com/faq/s/article/When-do-check-in-counters-close-and-how-early-should-I-arrive-at-the-airport",
+      "title": "马航建议提前到机场时间",
+      "titleEn": "Malaysia Airlines airport arrival guidance",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-klia-airside",
+      "url": "https://www.samasamaexpress.com/klia/",
+      "title": "T1禁区Sama-Sama Express说明",
+      "titleEn": "T1 airside Sama-Sama Express information",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    },
+    {
+      "id": "return-klia-lounge",
+      "url": "https://www.samasamaexpress.com/klia/lounge/",
+      "title": "Sky Suite休息室设施（未预订）",
+      "titleEn": "Sky Suite lounge facilities (not booked)",
+      "checkedAt": "2026-10-01",
+      "status": "verified"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-08",
+      "reviewedAt": "2026-10-01",
+      "highlight": "今天只完成还车和换城。11:00至13:50有2小时50分总余量，须包含交车、步行和机场手续；入住后先确认翌日GS10H是否已落实及接送安排，晚餐后早休息。",
+      "highlightEn": "Focus only on returning the car and changing cities. The 2 hr 50 min from 11:00 to 13:50 includes handover, walking and airport formalities. After check-in, confirm whether tomorrow's GS10H booking and transfers are in place, then eat and rest early.",
+      "alternative": {
+        "title": "延误就取消额外停留",
+        "desc": "出发前复核道路与航班；如加油、还车或航班延误，压缩购物和用餐停留，必要时询问柜台。晚到奥克兰就直回已订酒店，不补市区游。"
+      },
+      "alternativeEn": {
+        "title": "Drop optional stops if delayed",
+        "desc": "Recheck roads and the flight before leaving. If refuelling, car return or the flight is delayed, shorten shopping and meal stops and ask the desk for help where needed. A late Auckland arrival means going straight to the booked hotel, without city sightseeing."
+      },
+      "links": [
+        [
+          "Budget基督城机场门店说明",
+          "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"
+        ],
+        [
+          "Jetstar国内出发准备",
+          "https://www.jetstar.com/us/en/help/when-to-get-to-the-airport-for-domestic-flights"
+        ],
+        [
+          "奥克兰机场出租车接驳",
+          "https://www.aucklandairport.co.nz/transport/taxis-and-shuttles"
+        ]
+      ],
+      "linksEn": [
+        [
+          "Budget Christchurch Airport location",
+          "https://www.budget.co.nz/en/locations/nz/christchurch-si/chc"
+        ],
+        [
+          "Jetstar domestic departure preparation",
+          "https://www.jetstar.com/us/en/help/when-to-get-to-the-airport-for-domestic-flights"
+        ],
+        [
+          "Auckland Airport taxi transfers",
+          "https://www.aucklandairport.co.nz/transport/taxis-and-shuttles"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "早餐、退房与行李清点",
+          "summaryEn": "Breakfast, checkout and luggage check",
+          "text": "在已订基督城住宿吃早餐、清点行李并按原说明交还钥匙；证件和两人的机票随身放，检查房间及车内，09:30出发，不再补景点。",
+          "textEn": "Have breakfast at the confirmed Christchurch stay, check the room and luggage, and return the keys as instructed. Keep both travellers' tickets and ID handy, check the car and leave at 09:30 without another sightseeing stop.",
+          "sourceIds": []
+        },
+        {
+          "summary": "加油并提前到还车区",
+          "summaryEn": "Refuel and reach the return area early",
+          "text": "从当前住宿直去机场，途中按租约加满油并留收据；提前核对Budget还车指示，到机场跟租车还车标识进场，以10:40到还车区为建议目标，余量留给排队和清车。",
+          "textEn": "Drive from the current stay to the airport, refuel as required by the rental agreement and keep the receipt. Check Budget's return instructions beforehand and follow the airport's rental-return signs. Aim for the return area by 10:40 as a planning target, leaving time to queue and empty the car.",
+          "sourceIds": [
+            "return-budget-chc"
+          ]
+        },
+        {
+          "summary": "11:00还车与交接确认",
+          "summaryEn": "11:00 car return and handover",
+          "text": "按11:00已订时间在Budget指定车位交车；卸净行李，拍下车况、油表及里程，按现场指示交钥匙，确认还车完成，再步行进入航站楼。",
+          "textEn": "Return the car in the designated Budget bays for the booked 11:00 return. Remove all belongings, photograph the condition, fuel gauge and mileage, and hand over the keys as directed. Confirm completion before walking into the terminal.",
+          "sourceIds": [
+            "return-budget-chc"
+          ]
+        },
+        {
+          "summary": "托运、安检与简单午餐",
+          "summaryEn": "Bag drop, security and a simple lunch",
+          "text": "还车后跟国内出发标识找Jetstar；柜台开放后尽早托运，建议12:30前办妥并安检，再简单午餐、补水。实际截止与登机口按航司通知，不把还车时间当值机开放时间。",
+          "textEn": "After returning the car, follow domestic-departure signs to Jetstar. Drop bags promptly once available, aiming to finish by 12:30, then clear security and have a simple lunch and water. Follow the airline's actual deadlines and gate details; car-return time is not check-in opening time.",
+          "sourceIds": [
+            "return-jetstar-checkin",
+            "return-jetstar-terminals"
+          ]
+        },
+        {
+          "summary": "JQ236；另一位票面待核对",
+          "summaryEn": "JQ236; second passenger's ticket to verify",
+          "text": "JQ236 基督城 → 奥克兰（电子客票状态 OK）",
+          "textEn": "JQ236 Christchurch → Auckland (e-ticket status OK)",
+          "sourceIds": []
+        },
+        {
+          "summary": "取行李、进城与酒店入住",
+          "summaryEn": "Baggage, city transfer and hotel check-in",
+          "text": "15:10落地后取齐行李，到国内航站楼4号门外出租车队列，直达已订市中心酒店办理入住；16:30仅为计划到店时间。安顿后休息、就近晚餐，并确认次晨集合。",
+          "textEn": "After the 15:10 arrival, collect all bags and use the taxi rank outside domestic terminal door 4 for a direct trip to the booked central hotel and check-in. The 16:30 arrival is only a target. Once settled, rest, eat nearby and confirm the next morning's meeting arrangements.",
+          "sourceIds": [
+            "return-akl-taxis",
+            "return-greatsights-transfers"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-09",
+      "reviewedAt": "2026-10-01",
+      "highlight": "霍比屯是今天唯一主项目，但GS10H仍待预订。沿用07:00报到和现有时间块，具体班次、午餐与酒店接送须凭确认单落实；返城后不再跨区赶景点。",
+      "highlightEn": "Hobbiton is the day's only main activity, but GS10H remains unbooked. Keep the planned 07:00 check-in and existing blocks; the actual service, lunch and hotel transfers require a booking confirmation. Avoid further cross-city sightseeing after returning.",
+      "alternative": {
+        "title": "未落实或停运就留市区",
+        "desc": "若订单未落实或运营方取消，改为酒店周边咖啡、短走和休息，不临时租车追团；下雨先看运营通知并备雨具。已购行程的变更先按订单处理，不保证退款。"
+      },
+      "alternativeEn": {
+        "title": "Stay in the city if unbooked or cancelled",
+        "desc": "If the booking is not secured or the operator cancels, choose coffee, a short walk and rest around the hotel; do not rent a car to chase the tour. For rain, check operator notices and bring rain protection. Handle any booked-tour changes under the actual booking terms, without assuming a refund."
+      },
+      "links": [
+        [
+          "GreatSights官方登记地点",
+          "https://www.newzealand.com/nz/plan/business/greatsights-new-zealand/"
+        ],
+        [
+          "GreatSights酒店接送说明",
+          "https://www.greatsights.co.nz/travel-info/hotel-transfers/"
+        ],
+        [
+          "GS10H原产品入口（待复核）",
+          "https://www.greatsights.co.nz/new-zealand-tour-destinations/hobbiton-tours/hobbiton-movie-set-day-tour/"
+        ]
+      ],
+      "linksEn": [
+        [
+          "GreatSights official location listing",
+          "https://www.newzealand.com/nz/plan/business/greatsights-new-zealand/"
+        ],
+        [
+          "GreatSights hotel transfer information",
+          "https://www.greatsights.co.nz/travel-info/hotel-transfers/"
+        ],
+        [
+          "Original GS10H product link (recheck needed)",
+          "https://www.greatsights.co.nz/new-zealand-tour-destinations/hobbiton-tours/hobbiton-movie-set-day-tour/"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "确认订单后到SkyCity报到",
+          "summaryEn": "Confirm booking and check in at SkyCity",
+          "text": "前晚确认GS10H订单与接送；未确认酒店接车就自行从当前酒店出发，约06:30动身、按距离留余量，07:00到SkyCity Coach Terminal（102 Hobson Street）报到。",
+          "textEn": "Confirm the GS10H booking and transfers the evening before. Without confirmed hotel pickup, leave the current hotel independently around 06:30, allowing for the actual distance, and check in at SkyCity Coach Terminal, 102 Hobson Street, at the planned 07:00.",
+          "sourceIds": [
+            "return-greatsights-address",
+            "return-greatsights-transfers",
+            "return-greatsights-product"
+          ]
+        },
+        {
+          "summary": "带好日用包，上车休息",
+          "summaryEn": "Pack a day bag and rest on the coach",
+          "text": "上车前吃好早餐、上洗手间，随身带水、薄外套、雨具和步行鞋；向司机确认午餐与返程集合方式，路上以休息为主，实际发车与抵达听从运营方。",
+          "textEn": "Eat breakfast and use the toilet before boarding. Bring water, a light layer, rain protection and walking shoes. Ask the driver about lunch and the return meeting arrangements, then rest on the coach. Actual departure and arrival follow the operator's instructions.",
+          "sourceIds": [
+            "return-hobbiton-walking",
+            "return-greatsights-product"
+          ]
+        },
+        {
+          "summary": "确认集合点后跟团入场",
+          "summaryEn": "Confirm the meeting point and join the group",
+          "text": "到The Shire’s Rest后先听司机交代集合点，再上洗手间、整理雨具；按团队安排进入游览，不把09:30抵达当作另购散客票的报到时间。",
+          "textEn": "At The Shire's Rest, listen to the driver's meeting instructions before using the toilet and organising rain gear. Join the visit through the coach group's arrangements; the planned 09:30 arrival is not a check-in time for a separate individual ticket.",
+          "sourceIds": [
+            "return-hobbiton-walking",
+            "return-greatsights-product"
+          ]
+        },
+        {
+          "summary": "跟团步行与按单安排午餐",
+          "summaryEn": "Guided walk and lunch as confirmed",
+          "text": "跟随导览步行，按团队节奏拍照和短休；午餐是否包含及用餐时段仍按GS10H确认单核对，不另排餐厅。脚累及时告知工作人员，保留回集合点的余量。",
+          "textEn": "Follow the guided walk, taking photos and brief rests at the group's pace. Check the GS10H confirmation for lunch inclusion and timing rather than arranging a separate restaurant. Tell staff if walking becomes tiring and leave time to reach the return meeting point.",
+          "sourceIds": [
+            "return-hobbiton-walking",
+            "return-greatsights-product"
+          ]
+        },
+        {
+          "summary": "提前集合，返程休息",
+          "summaryEn": "Meet early and rest on the return",
+          "text": "按司机公布的集合时间提前到上车点，先上洗手间并清点随身物品；返程车上休息，不把13:15或15:30视为保证时刻，晚餐无需安排固定预约。",
+          "textEn": "Reach the boarding point ahead of the meeting time announced by the driver, use the toilet and check your belongings. Rest on the return coach. Neither 13:15 nor 15:30 is guaranteed, so leave dinner flexible without a fixed reservation.",
+          "sourceIds": [
+            "return-greatsights-product"
+          ]
+        },
+        {
+          "summary": "到站核对送回安排",
+          "summaryEn": "Check drop-off arrangements on arrival",
+          "text": "回到SkyCity后先确认是否还需换接送车，并取齐随身物品；未获酒店送回确认就从车站自行步行或乘出租车回原酒店，不在车站等待未经确认的接送。",
+          "textEn": "On returning to SkyCity, confirm whether a transfer vehicle is still required and collect your belongings. Without confirmed hotel drop-off, walk or take a taxi from the terminal to the same hotel rather than waiting for an unconfirmed transfer.",
+          "sourceIds": [
+            "return-greatsights-transfers"
+          ]
+        },
+        {
+          "summary": "接送待确认，回酒店休息",
+          "summaryEn": "Transfer unconfirmed; return and rest",
+          "text": "仅在运营方确认覆盖当前酒店后乘接送车，否则自行返回同一住宿；先坐下休息、补水，再就近晚餐。顺便向前台确认明日退房寄存是否可用及最晚取回时间。",
+          "textEn": "Use hotel drop-off only if the operator confirms service to the current hotel; otherwise return independently to the same stay. Rest and hydrate before a nearby dinner. Ask reception whether luggage storage is available after tomorrow's checkout and when bags must be collected.",
+          "sourceIds": [
+            "return-greatsights-transfers"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-10",
+      "reviewedAt": "2026-10-01",
+      "highlight": "沿用15:30离城、16:30到机场的原计划，但这距次日01:25起飞有8小时55分，可能长时间带行李在公共区等候。值机柜台开放时间仍待马航确认，不把早到等同于早托运。",
+      "highlightEn": "Keep the original 15:30 city departure and 16:30 airport arrival, but this is 8 hr 55 min before the next day's 01:25 flight and may mean a long public-area wait with bags. Malaysia Airlines' counter opening remains unconfirmed; arriving early does not guarantee early bag drop.",
+      "alternative": {
+        "title": "寄存不可用或体力不足",
+        "desc": "未确认寄存就不带大箱走完整市区路线，先向酒店询问可用替代；雨天缩短步行、多坐休。若考虑晚些去机场，先确认行李安排、交通缓冲与柜台开放，再决定是否调整。"
+      },
+      "alternativeEn": {
+        "title": "Storage unavailable or energy low",
+        "desc": "Do not attempt the full city walk with large bags when storage is unconfirmed; ask the hotel about workable alternatives first. Shorten walking and rest more in rain. Before deciding on a later airport transfer, confirm luggage arrangements, a traffic buffer and counter opening."
+      },
+      "links": [
+        [
+          "奥克兰国际出发与值机区",
+          "https://www.aucklandairport.co.nz/information/departure-information"
+        ],
+        [
+          "马航值机及登机要求",
+          "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html"
+        ],
+        [
+          "马航建议提前到机场时间",
+          "https://www.askmh.malaysiaairlines.com/faq/s/article/When-do-check-in-counters-close-and-how-early-should-I-arrive-at-the-airport"
+        ]
+      ],
+      "linksEn": [
+        [
+          "Auckland international departure and check-in zones",
+          "https://www.aucklandairport.co.nz/information/departure-information"
+        ],
+        [
+          "Malaysia Airlines check-in and boarding",
+          "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html"
+        ],
+        [
+          "Malaysia Airlines airport arrival guidance",
+          "https://www.askmh.malaysiaairlines.com/faq/s/article/When-do-check-in-counters-close-and-how-early-should-I-arrive-at-the-airport"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "退房并确认行李寄存",
+          "summaryEn": "Check out and confirm luggage storage",
+          "text": "在已订酒店退房，先问清寄存是否可用、费用和取回时限，拿好行李凭据；证件、药品和贵重物品随身留。若不能寄存，先落实替代办法再开始慢游。",
+          "textEn": "Check out of the booked hotel and confirm storage availability, any fee and the collection deadline before leaving bags. Keep the luggage receipt, ID, medicines and valuables with you. If storage is unavailable, settle an alternative before starting the city walk.",
+          "sourceIds": []
+        },
+        {
+          "summary": "市中心短走与咖啡休息",
+          "summaryEn": "A short city walk and coffee break",
+          "text": "从酒店出发，沿Queen Street到Britomart，体力好再到海港短走；中途坐下喝咖啡，不跨区购物。风雨大或脚累就省略海港，保留室内坐休和午餐。",
+          "textEn": "Leave the hotel for Queen Street and Britomart, adding a short harbour walk only if energy allows. Sit down for coffee en route and avoid cross-city shopping. Skip the waterfront in wind, rain or fatigue, keeping indoor rest and lunch instead.",
+          "sourceIds": []
+        },
+        {
+          "summary": "午餐、取行李与出发准备",
+          "summaryEn": "Lunch, luggage collection and preparation",
+          "text": "在市中心吃午餐后回原酒店取齐行李，按已确认寄存时限提前返回；整理购物品、检查两段登机资料，并预留等车时间，15:30按原计划去机场。",
+          "textEn": "Have lunch in the city, then return to the same hotel for every bag before the confirmed storage deadline. Repack purchases, check documents for both flight legs and allow time for the car to arrive before the planned 15:30 airport transfer.",
+          "sourceIds": []
+        },
+        {
+          "summary": "酒店直达国际航站楼",
+          "summaryEn": "Hotel to the international terminal",
+          "text": "带齐行李从酒店乘出租车直达奥克兰国际航站楼，告知司机乘马航国际航班；出发前复核道路及值机区，16:30到达只是计划估计，不作为已核验车程。",
+          "textEn": "Take all bags in a taxi from the hotel to Auckland's international terminal, telling the driver this is a Malaysia Airlines international departure. Recheck the roads and check-in zone before leaving; 16:30 is a planning estimate, not a verified journey time.",
+          "sourceIds": [
+            "return-akl-taxis",
+            "return-akl-departures"
+          ]
+        },
+        {
+          "summary": "公共区休息与晚餐",
+          "summaryEn": "Public-area rest and dinner",
+          "text": "先看屏幕找MH0132值机区并询问何时收行李；未开放就带行李在公共区坐休，约18:00吃晚餐、轮流短走。不要预设可提前托运或进入安检后区域。",
+          "textEn": "Find the MH0132 check-in zone on the screens and ask when bags will be accepted. If it is not open, stay with your bags in the public area, have dinner around 18:00 and take turns stretching your legs. Do not assume early bag drop or access beyond security.",
+          "sourceIds": [
+            "return-akl-departures",
+            "return-mh-checkin"
+          ]
+        },
+        {
+          "summary": "核对柜台、联程与行李",
+          "summaryEn": "Check counter, connections and baggage",
+          "text": "21:45先复核柜台是否开放；可办理后核对两段登机牌及行李是否直挂深圳，完成托运、离境和安检。按登机牌提前到口，21:45并非已确认开放时间。",
+          "textEn": "At 21:45, first confirm that the counter is open. When processing is available, verify boarding passes for both legs and whether bags are checked through to Shenzhen, then complete bag drop, departure formalities and security. Reach the gate early as instructed; 21:45 is not a confirmed opening time.",
+          "sourceIds": [
+            "return-mh-checkin",
+            "return-mh-arrival-guidance",
+            "return-akl-departures"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-11",
+      "reviewedAt": "2026-10-01",
+      "highlight": "KUL当地转机13小时10分：07:55到达先核对续程与行李；建议09:00早餐、10:00—12:00补眠、12:30午餐，下午坐休与短走交替；18:00晚餐，19:30复核并转往登机区。留在禁区，不安排出机场。",
+      "highlightEn": "The KUL connection is 13 hr 10 min in local time. After the 07:55 arrival, verify the onward flight and baggage. Suggested rhythm: breakfast 09:00, nap 10:00–12:00, lunch 12:30, alternating seated rest and short walks in the afternoon, dinner 18:00, and recheck the gate and head to the departure area at 19:30. Stay airside; no airport exit is planned.",
+      "alternative": {
+        "title": "睡不好就询问禁区休息室",
+        "desc": "若座椅无法休息，可询问T1 Sama-Sama Express Sky Suite休息室的入内条件、可用性与费用后自决，未预订且不保证可进；航班变化先找转机服务台，不自行走入境通道。"
+      },
+      "alternativeEn": {
+        "title": "Ask about an airside lounge if needed",
+        "desc": "If terminal seating is unsuitable for rest, ask T1 Sama-Sama Express Sky Suite about access conditions, availability and cost before deciding. It is not booked and access is not guaranteed. For flight changes, ask the transfer desk first rather than entering immigration on your own."
+      },
+      "links": [
+        [
+          "马航登机与托运要求",
+          "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html"
+        ],
+        [
+          "T1禁区Sama-Sama Express说明",
+          "https://www.samasamaexpress.com/klia/"
+        ],
+        [
+          "Sky Suite休息室设施（未预订）",
+          "https://www.samasamaexpress.com/klia/lounge/"
+        ]
+      ],
+      "linksEn": [
+        [
+          "Malaysia Airlines boarding and bag drop",
+          "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html"
+        ],
+        [
+          "T1 airside Sama-Sama Express information",
+          "https://www.samasamaexpress.com/klia/"
+        ],
+        [
+          "Sky Suite lounge facilities (not booked)",
+          "https://www.samasamaexpress.com/klia/lounge/"
+        ]
+      ],
+      "events": [
+        {
+          "summary": "按登机牌提前到口",
+          "summaryEn": "Reach the gate early as instructed",
+          "text": "00:30前后按登机牌要求到口，复核MH0132、证件与随身物品；马航公布登机口起飞前30分钟关闭，按现有航班推算00:55，不要等到窗口末尾才找登机口。",
+          "textEn": "Be at the gate around 00:30 or earlier if the boarding pass requires it, checking MH0132, ID and hand luggage. Malaysia Airlines states that gates close 30 minutes before departure, which is 00:55 for the recorded flight. Do not wait until the end of this block to find the gate.",
+          "sourceIds": [
+            "return-mh-checkin"
+          ]
+        },
+        {
+          "summary": "抵达后先核对续程资料",
+          "summaryEn": "Check onward documents after arrival",
+          "text": "MH0132 奥克兰 → 吉隆坡，07:55 抵达 T1",
+          "textEn": "MH0132 Auckland → Kuala Lumpur; arrive at T1 at 07:55",
+          "sourceIds": []
+        },
+        {
+          "summary": "19:30复核续程登机口（建议）",
+          "summaryEn": "Recheck the onward gate at 19:30 (suggested)",
+          "text": "MH0522 吉隆坡 T1 → 深圳，次日 01:15 抵达",
+          "textEn": "MH0522 Kuala Lumpur T1 → Shenzhen; arrive at 01:15 the next day",
+          "sourceIds": [
+            "return-mh-checkin"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-12",
+      "reviewedAt": "2026-10-01",
+      "highlight": "本日全部使用深圳当地时间。01:15抵达后只做入境、取行李和安全返家；02:30出机场、03:15到家均是原计划估计，不是通关或车程保证。",
+      "highlightEn": "All times today are local to Shenzhen. After the 01:15 arrival, focus only on entry formalities, baggage and getting home safely. Leaving the airport at 02:30 and reaching home at 03:15 remain planning estimates, not guarantees of processing or travel time.",
+      "alternative": {
+        "title": "落地或取行李延误",
+        "desc": "通知接机方按实际进度调整；行李异常先处理再离开，不以原计划时刻催赶。返家后直接休息，不追加上午活动。"
+      },
+      "alternativeEn": {
+        "title": "Arrival or baggage delays",
+        "desc": "Keep whoever is meeting you updated on actual progress. Handle baggage issues before leaving and do not rush to preserve the original target times. Go straight to rest at home without adding morning activities."
+      },
+      "links": [],
+      "linksEn": [],
+      "events": [
+        {
+          "summary": "深圳当地01:15计划抵达",
+          "summaryEn": "Scheduled arrival 01:15 Shenzhen time",
+          "text": "MH0522 抵达深圳（承接10月11日航段）",
+          "textEn": "MH0522 arrives in Shenzhen (continuing the 11 Oct flight)",
+          "sourceIds": []
+        },
+        {
+          "summary": "入境、取行李与异常处理",
+          "summaryEn": "Entry, baggage collection and any issues",
+          "text": "下机后跟国际到达指示办理入境，取齐托运行李并核对外观；有缺失或损坏先到行李服务台处理。02:30仅是原计划完成点，排队或行李延迟就顺延返家。",
+          "textEn": "Follow international-arrival signs for entry formalities, collect every checked bag and inspect its condition. Report missing or damaged bags at the baggage service desk first. The original 02:30 completion target is only an estimate; queues or baggage delays push the trip home later.",
+          "sourceIds": []
+        },
+        {
+          "summary": "确认接车后返家",
+          "summaryEn": "Confirm pickup and travel home",
+          "text": "取齐行李后再确认接机或出租车上车点，按机场现场标识走；两人疲劳时不自行驾车。返家约45分钟仅沿用原计划估计，等车和路况变化不以赶03:15到家为目标。",
+          "textEn": "After collecting all bags, confirm the pickup or taxi meeting point and follow airport signs. Avoid driving yourselves if both are tired. The roughly 45-minute trip home is only the existing planning estimate; do not rush to meet 03:15 if waiting or traffic adds time.",
+          "sourceIds": []
+        },
+        {
+          "summary": "到家报平安并补眠",
+          "summaryEn": "Check in with family and catch up on sleep",
+          "text": "到家先报平安、喝水洗漱，把证件与贵重物品收好就休息；非必要行李醒后再整理，上午不安排必须准时出门的事项，实际到家晚就顺延休息。",
+          "textEn": "Once home, let family know, have water, wash and secure your documents and valuables before resting. Leave non-essential unpacking until after sleep and avoid fixed morning commitments. A later arrival simply means resting later.",
+          "sourceIds": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { assetPath } from "./assets";
+import { withItineraryExecution } from "./data/itineraryExecution";
 
 export const tabs = [
   { value: "overview", label: "行程总览", short: "总览", icon: "route" },
@@ -45,7 +46,7 @@ export const experienceHighlights = [
   {
     date: "10月2日",
     title: "Walter Peak 湖上巡游＋高地农场烧烤",
-    desc: "主行程改为全天不用开车的湖上巡游、烧烤和农场表演，整体约3.5—4小时。",
+    desc: "湖上巡游、烧烤和农场表演，官网通用参考约3.5—4小时；住宿到码头的交通另行安排。",
     tag: "主方案",
     color: "#f2b86b",
     link: "https://www.realnz.com/en/experiences/tss-earnslaw-walter-peak-experiences/walter-peak-gourmet-bbq-dining/",
@@ -61,7 +62,7 @@ export const experienceHighlights = [
   {
     date: "10月5日",
     title: "库克山直升机冰川降落＋Big Sky 观星",
-    desc: "15:30 前后 Glacier Highlights 直升机，夜里 Big Sky Stargazing；天气取消时优先改期或退款。",
+    desc: "Glacier Highlights 直升机与 Big Sky 观星仍需确认场次；天气取消或改期按实际订单条款处理。",
     tag: "重点",
     color: "#7895b2",
     link: "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/",
@@ -236,11 +237,6 @@ export const southDays = [
     stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "低",
     color: "#f2b86b",
-    highlight: "米尔福德峡湾改为高强度备选；这天主打轻松、不早起。",
-    links: [
-      ["Walter Peak 主方案", "https://www.realnz.com/en/experiences/tss-earnslaw-walter-peak-experiences/walter-peak-gourmet-bbq-dining/"],
-      ["米尔福德备选", "https://www.realnz.com/en/experiences/day-cruises/milford-sound-day-trip-from-queenstown/"],
-    ],
     events: [
       ["09:30", "慢早餐、湖边散步",
         { date: "2026-10-02", start: "09:30", end: "11:00", endDate: "2026-10-02",
@@ -256,7 +252,7 @@ export const southDays = [
           summary: "步行到码头并报到", summaryEn: "Walk to the wharf and check in" }],
       ["13:00", "乘 TSS Earnslaw 往返，参加 Walter Peak 烧烤与农场体验（已选场次，待付款）",
         { date: "2026-10-02", start: "13:00", end: "16:30", endDate: "2026-10-02",
-          timeZone: "Pacific/Auckland",
+          timeZone: "Pacific/Auckland", isEstimated: true,
           summary: "Walter Peak 巡游与烧烤", summaryEn: "Walter Peak cruise and barbecue" }],
       ["16:30", "返回皇后镇后喝咖啡、散步或回住宿休息",
         { date: "2026-10-02", start: "16:30", end: "18:30", endDate: "2026-10-02",
@@ -267,10 +263,6 @@ export const southDays = [
           timeZone: "Pacific/Auckland", isEstimated: true,
           summary: "简单晚餐", summaryEn: "Light dinner" }],
     ],
-    alternative: {
-      title: "高强度备选 · 米尔福德峡湾巴士＋游船",
-      desc: "若临时仍想去，可恢复 06:45 左右出发、20:00 左右返回的 12—13 小时方案；往返坐车约9—10小时。",
-    },
   },
   {
     date: "10月3日",
@@ -349,12 +341,6 @@ export const southDays = [
     stay: "住宿已确认；解锁私密资料后显示房源与入住详情。",
     intensity: "高",
     color: "#7895b2",
-    highlight: "直升机参考 NZ$649/成人，2人约 NZ$1,298；Big Sky 成人 NZ$159 起，2人约 NZ$318。",
-    links: [
-      ["Glacier Highlights 直升机", "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/"],
-      ["Big Sky Stargazing", "https://www.hermitage.co.nz/experience/big-sky-stargazing/"],
-      ["天气取消政策", "https://www.mtcookskiplanes.com/faq/"],
-    ],
     events: [
       ["08:45", "退房出发",
         { date: "2026-10-05", start: "08:45", end: "10:15", endDate: "2026-10-05",
@@ -396,10 +382,6 @@ export const southDays = [
           timeZone: "Pacific/Auckland", isEstimated: true,
           summary: "Big Sky Stargazing 观星", summaryEn: "Big Sky Stargazing" }],
     ],
-    alternative: {
-      title: "天气与体力备选",
-      desc: "直升机可移到10月6日早班；观星可改为酒店外自助看星。10月5日处在下弦月后、新月前，前半夜月光干扰较小。",
-    },
   },
   {
     date: "10月6日",
@@ -411,10 +393,10 @@ export const southDays = [
     intensity: "高",
     color: "#123f36",
     events: [
-      ["08:30", "仅在前一日停飞时，候补直升机首班",
+      ["08:30", "前日停飞后再询问早间候补，须兼顾10:00离开",
         { date: "2026-10-06", start: "08:30", end: "09:15", endDate: "2026-10-06",
           timeZone: "Pacific/Auckland", isEstimated: true,
-          summary: "候补直升机首班", summaryEn: "Backup first helicopter flight" }],
+          summary: "早间候补待确认", summaryEn: "Morning backup to confirm" }],
       ["10:00", "最晚离开库克山",
         { date: "2026-10-06", start: "10:00", timeZone: "Pacific/Auckland",
           summary: "最晚离开库克山", summaryEn: "Leave Mount Cook no later than 10:00" }],
@@ -454,10 +436,6 @@ export const southDays = [
           timeZone: "Pacific/Auckland", isEstimated: true,
           summary: "活动后返回奥马鲁住宿", summaryEn: "Return to the Oamaru stay after the viewing" }],
     ],
-    alternative: {
-      title: "可选加码 · Kātiki Point",
-      desc: "仅在天气、体力和时间都充足时考虑；它不属于正式主线，不能影响19:30抵达小蓝企鹅保护区。",
-    },
   },
   {
     date: "10月7日",
@@ -537,7 +515,7 @@ export const southDays = [
           summaryEn: "Arrive, collect baggage and travel to the central stay" }],
     ],
   },
-];
+].map(withItineraryExecution);
 
 export const northDays = [
   {
@@ -572,10 +550,10 @@ export const northDays = [
       ["15:30", "抵达 SkyCity Coach Terminal",
         { date: "2026-10-09", start: "15:30", timeZone: "Pacific/Auckland",
           summary: "抵达 SkyCity Coach Terminal", summaryEn: "Arrive at SkyCity Coach Terminal" }],
-      ["15:45起", "送回指定奥克兰市中心酒店",
+      ["15:45起", "返回原酒店；接送需确认，未确认则自行返回",
         { date: "2026-10-09", start: "15:45", end: "16:30", endDate: "2026-10-09",
           timeZone: "Pacific/Auckland", isEstimated: true,
-          summary: "市中心酒店送回时段", summaryEn: "Central Auckland hotel drop-off window" }],
+          summary: "返回原酒店（接送待确认）", summaryEn: "Return to hotel (transfer unconfirmed)" }],
     ],
   },
   {
@@ -669,7 +647,7 @@ export const northDays = [
           summary: "到家后休息", summaryEn: "Rest after arriving home" }],
     ],
   },
-];
+].map(withItineraryExecution);
 
 export const shoppingStops = [
   ["09:00", "市中心酒店出发", "步行前往 Queen Street 与 Britomart"],
@@ -790,15 +768,15 @@ export const activityBookingPlans = [
     status: "参考档位 · 待付款前复核",
     statusEn: "Reference fare · recheck before payment",
     statusTone: "attention",
-    unitPrice: "参考 NZ$649 / 人",
-    unitPriceEn: "Reference NZ$649 / adult",
-    total: "参考 NZ$1,298",
-    totalEn: "Reference NZ$1,298",
+    unitPrice: "当前成人价格待复核",
+    unitPriceEn: "Current adult price to recheck",
+    total: "双人精确总价待核",
+    totalEn: "Exact total for two unverified",
     bookingUrl: "https://www.mtcookskiplanes.com/glacier-highlights/",
     bookingLabel: "打开运营方官网",
     bookingLabelEn: "Open operator website",
-    detail: "2位成人；约45分钟。当前仅保留参考价，付款前须重新确认精确总价及手续费。",
-    detailEn: "Two adults; about 45 minutes. This is a reference fare; confirm the exact total and any fees before payment.",
+    detail: "2位成人；约45分钟。2026-10-01官网通用展示价与原参考价不一致，未取得10月5日双人结算；付款前确认机型、场次、精确总价及手续费。",
+    detailEn: "Two adults; about 45 minutes. The generic website price on 1 October 2026 differs from the earlier reference. No checkout total for two on 5 October was obtained; verify aircraft, session, total and fees before payment.",
     policy: "项目受天气影响；付款前确认运营方的改期、天气取消和退款条款。",
     policyEn: "Weather-dependent; confirm rescheduling, weather cancellation and refund terms before payment.",
   },
@@ -892,8 +870,8 @@ export const bookingItems = [
   ["hotel-queenstown", "皇后镇住宿 · 已预订", "已确认9月29日入住4晚、2位客人；9月24日14:00前可免费取消。具体地址、房东和入户信息私下保存。"],
   ["hotel-wanaka", "瓦纳卡住宿 · 已预订", "Wanaka Luxury Apartments 已确认10月3日入住2晚、2位成人、一卧室公寓；NZD 660，确认时待扣款。"],
   ["mount-cook", "库克山住宿", "已确认：The Hermitage · Mt Cook Motel Studio Queen，10月5日1晚，含早餐包；官方确认页列示含税总价 NZD 504。确认号仅私下保存。"],
-  ["mount-cook-helicopter", "库克山直升机", "10月5日15:30前后；Glacier Highlights 约45分钟，2人参考 NZ$1,298，确认天气取消可退款。"],
-  ["mount-cook-stargazing", "Big Sky Stargazing 观星", "10月5日晚较晚场；约75—90分钟，2人 NZ$318 起，可询问中文讲解。"],
+  ["mount-cook-helicopter", "库克山直升机", "10月5日15:30前后仅为参考；Glacier Highlights 约45分钟，机型、场次、双人总价及天气退款条款均需付款前复核。"],
+  ["mount-cook-stargazing", "Big Sky Stargazing 观星", "10月5日晚较晚场为计划；约75—90分钟，场次、语言、双人现价与天气方案待确认。"],
   ["hotel-christchurch", "基督城住宿 · 已预订", "已确认10月7日入住、10月8日退房、2位客人；15:00 后入住、10:00 前退房，10月2日15:00前可免费取消。具体地址、房东和入户信息私下保存。"],
   ["hotel-oamaru", "奥马鲁住宿 · 已预订", "已确认10月6日入住、10月7日退房、2位客人；15:00 后入住、10:00 前退房，10月5日15:00前可免费取消。具体地址、房东与行车/入户说明私下保存。"],
   ["oamaru-penguins", "奥马鲁小蓝企鹅晚场 · 待预订", "10月6日20:00官方小蓝企鹅归巢晚场；General 2人NZD 100、Premium 2人NZD 140为2026-07-29核验价格，付款前重新确认余位与退改规则。"],

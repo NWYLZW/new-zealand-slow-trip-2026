@@ -1,9 +1,12 @@
 import { Children, useEffect, useRef } from 'react';
 import { pencilStroke } from './stroke';
+import { observeCanvasRecovery } from './canvasRecovery';
+import { createPencilRasterCache } from './rasterCache';
+import rendererSource from './PencilIcon.jsx?raw';
 import './iconAlignment.css';
 
 const geometryCache = new Map();
-const imageCache = new Map();
+const imageCache = createPencilRasterCache('icons', rendererSource, 128);
 
 function stableHash(value) {
   let hash = 2166136261;
@@ -235,17 +238,20 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
   const geometryKey = JSON.stringify(paths);
   useEffect(() => {
     const canvas = ref.current;
+    let disposed = false;
     const paint = () => {
-      const size = 40, dpr = Math.min(devicePixelRatio || 1, 3);
+      if (disposed) return;
+      const size = 40, dpr = Math.min(window.devicePixelRatio || 1, 3);
       const style = getComputedStyle(canvas);
       const ink = style.color;
       const backdropInk = themeBackdrop
         ? style.getPropertyValue('--trip-pencil-icon-backdrop').trim() || '#fff'
         : null;
-      const imageKey = JSON.stringify([geometryKey, kind, active, sourceSize, dpr, ink, backdropInk]);
+      const imageKey = JSON.stringify([geometryKey, kind, active, sourceSize, size, dpr, ink, backdropInk]);
       const cached = imageCache.get(imageKey);
       canvas.width = canvas.height = Math.round(size * dpr);
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx || ctx.isContextLost?.()) return;
       if (cached) {
         ctx.drawImage(cached, 0, 0);
         return;
@@ -275,18 +281,14 @@ export function PencilIcon({ children, className = '', kind = 'ink', active = fa
       }
       if (active) pencilStroke(ctx, [[7, 30], [16, 30.5], [25, 29.8]], ink, 1.1, 977, .25, 3, false,
         { variation: .8, breaks: .25, grain: .7, gain: 2.8, step: .35 });
-      const bitmap = document.createElement('canvas');
-      bitmap.width = canvas.width;
-      bitmap.height = canvas.height;
-      bitmap.getContext('2d').drawImage(canvas, 0, 0);
-      imageCache.set(imageKey, bitmap);
-      if (imageCache.size > 256) imageCache.delete(imageCache.keys().next().value);
+      imageCache.set(imageKey, canvas);
     };
     const appearance = new MutationObserver(paint);
     appearance.observe(document.documentElement, { attributes: true,
       attributeFilter: ['data-adventure-appearance', 'data-adventure-theme'] });
-    paint();
-    return () => appearance.disconnect();
+    const stopRecovery = observeCanvasRecovery(paint);
+    imageCache.ready.then(() => { if (!disposed) paint(); });
+    return () => { disposed = true; stopRecovery(); appearance.disconnect(); };
   }, [geometryKey, kind, active, sourceSize, themeBackdrop]);
   return <canvas ref={ref} className={`trip-pencil-icon ${className}`.trim()}
     width="80" height="80" data-renderer="pressure-pencil" data-icon={kind} data-active={active}

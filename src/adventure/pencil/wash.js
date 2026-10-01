@@ -1,6 +1,8 @@
 import { pencilStroke } from './stroke';
+import { registerCanvasCache } from './canvasRecovery';
 
 const cache = new Map();
+registerCanvasCache(cache);
 const cacheLimit = 64;
 
 function randomAt(index, seed) {

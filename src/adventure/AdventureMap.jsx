@@ -11,8 +11,8 @@ import { useAdventureRoutes } from "./AdventureResolvedRoutes.jsx";
 import { routeFocusPositions } from "./adventureHotelRoutes";
 import { createPencilMap } from "./pencil/drawPencilMap";
 import { createPencilRoutes, routeBadge } from "./pencil/drawPencilRoutes";
-import { fillStopLabel, mapLabel } from "./pencil/mapLabels";
-import { clearPencilLabels } from "./pencil/label";
+import { fillStopLabel, mapLabel, textCacheReady } from "./pencil/mapLabels";
+import { observeCanvasRecovery, repaintCanvasTree, setCanvasRepaint } from "./pencil/canvasRecovery";
 import { createStopMarker } from "./pencil/stopMarker";
 import { drawPencilWash } from "./pencil/wash";
 import { stroke as pencilStroke } from "./pencil/brush";
@@ -207,7 +207,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
   const state = useRef({ selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView,
     calendarOpen, sideOpen, language, onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
     onInternationalNodeSelect, mapMode, onMapModeChange, onMapViewChange });
-  state.current = { routes, selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView,
+  state.current = { routes, selected, selectedRoute, selectedWaypoint, focusLocations, focusRoute, focusKey, focusNode, mapView, obscured,
     calendarOpen, sideOpen, language, onSelect, onRouteSelect, onWaypointSelect, onClusterSelect,
     onInternationalNodeSelect, mapMode, onMapModeChange, onMapViewChange };
   useEffect(() => {
@@ -253,6 +253,11 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
     let lastClusterZoom = Number.NaN, lastClusterSignature = "", lastWaterLabelZoom = Number.NaN;
     let townLoadGeneration = 0, townTagSignature = "";
     let pencilProject = null, pencilWidth = 0, pencilHeight = 0;
+    let focusTarget = null;
+    let recoveryPending = false;
+    const stats = area._mapStats = { layoutBuilds: 0, sameSizeSkips: 0, viewFrames: 0, settles: 0, zoomNoops: 0 };
+    const sameTransform = (a, b) => a && b && Math.abs(a.k - b.k) < 1e-9 &&
+      Math.abs(a.x - b.x) < 1e-6 && Math.abs(a.y - b.y) < 1e-6;
     const focusRect = () => visibleMapRect(area, state.current);
     const initialView = (width, height, rect) => {
       const scale = mapScale(width, height);
@@ -382,7 +387,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         .then(entries => {
           if (generation !== townLoadGeneration) return;
           for (const [tag, payload] of entries) if (payload?.place) pencil?.setTownData(tag, payload.place);
-          pencil?.refine(view);
+          if (!focusing && !state.current.obscured) pencil?.refine(view);
         }).catch(() => { if (generation === townLoadGeneration) townTagSignature = ""; });
     };
     const clusterSeed = keys => keys.reduce((seed, key) => [...key]
@@ -415,6 +420,10 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
       countCtx.drawImage(sprite.canvas, (size - sprite.width) / 2, (size - sprite.height) / 2,
         sprite.width, sprite.height);
       countCanvas.setAttribute("aria-hidden", "true");
+      setCanvasRepaint(countCanvas, () => {
+        delete badge.dataset.count;
+        setClusterBadge(button, count, seed);
+      });
       badge.replaceChildren(countCanvas); badge.dataset.count = String(count); badge.dataset.seed = String(seed);
     };
     const measureMarkerRadius = marker => {
@@ -470,6 +479,8 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
     };
     const syncLayerVisibility = () => {
       const internationalMode = activeMapMode === "international";
+      if (internationalMode) { pencil?.pause(); routeInk?.pause(); }
+      else if (!state.current.obscured && !document.hidden) pencil?.resume();
       canvas.hidden = internationalMode;
       routeCanvas.hidden = internationalMode;
       world?.attr("display", internationalMode ? "none" : null);
@@ -477,12 +488,14 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
     };
     const ensurePencilMap = () => {
       if (pencil || !pencilProject || !pencilWidth || !pencilHeight) return pencil;
-      pencil = createPencilMap(canvas, pencilProject, pencilWidth, pencilHeight);
+      pencil = createPencilMap(canvas, pencilProject, pencilWidth, pencilHeight, { suspended: state.current.obscured });
       pencil.setVisibleRect(focusRect());
       return pencil;
     };
     const applyView = (transform, { moving = false, settled = false } = {}) => {
       view = transform;
+      if (document.hidden || state.current.obscured) return;
+      stats.viewFrames++; if (settled) stats.settles++;
       const viewportWidth = layout?.width ?? area.clientWidth;
       const visibleRect = focusRect();
       const internationalMode = activeMapMode === "international";
@@ -493,7 +506,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         world?.attr("transform", transform.toString());
         depthWorld?.attr("transform", transform.toString());
         if (settled) syncTownDetails(transform);
-        pencil?.draw(transform);
+        pencil?.draw(transform, { moving });
         routeInk?.draw(transform, { moving, visibleRect });
         if (shortRouteSpot) {
           const { group, middle } = shortRouteSpot;
@@ -550,6 +563,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         (event.type === "wheel" || !event.target.closest("button")))
       .on("start", (event) => {
         if (!event.sourceEvent) return;
+        surface.interrupt();
         nodeTapTracker.reset();
         area.classList.add("is-dragging");
       })
@@ -566,12 +580,15 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
     zoom.scaleExtent([Math.min(MIN_ZOOM, INTERNATIONAL_MIN_ZOOM), MAX_DETAIL_ZOOM]);
     surface.call(zoom);
     const finishFocus = () => {
-      focusing = false;
+      focusing = false; focusTarget = null;
       area.dataset.focusing = "false";
       settleView(view);
       if (activeMapMode === "new-zealand") pencil?.refine(view);
     };
     const animateFocus = target => {
+      if (sameTransform(focusTarget, target) || (!focusing && sameTransform(view, target))) {
+        stats.zoomNoops++; return;
+      }
       surface.interrupt();
       userMoved = false;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
@@ -580,10 +597,21 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         return;
       }
       focusing = true;
+      focusTarget = target;
       area.dataset.focusing = "true";
       surface.transition().duration(FOCUS_DURATION).ease(d3.easeCubicInOut)
         .call(zoom.transform, target)
-        .on("end.focus interrupt.focus cancel.focus", finishFocus);
+        .on("end.focus", finishFocus)
+        .on("interrupt.focus cancel.focus", () => {
+          focusing = false; focusTarget = null; area.dataset.focusing = "false";
+        });
+    };
+    const zoomBy = factor => {
+      nodeTapTracker.reset(); userMoved = true; surface.interrupt();
+      const [minimum, maximum] = zoom.scaleExtent();
+      const next = Math.max(minimum, Math.min(maximum, view.k * factor));
+      if (Math.abs(next - view.k) < 1e-9) { stats.zoomNoops++; return; }
+      surface.call(zoom.scaleTo, next, focusRect().center);
     };
     const setMapMode = mode => {
       const nextMode = mode === "international" ? "international" : "new-zealand";
@@ -752,7 +780,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         syncHotelMarkers(area._project);
         settleView(view);
       },
-      cancelFocus: () => surface.interrupt(),
+      cancelFocus: () => { surface.interrupt(); finishFocus(); },
       selectRoutes: (selection) => {
         if (activeMapMode === "new-zealand") routeInk?.select(selection);
         international?.select(selection);
@@ -764,6 +792,14 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
       },
       updateScale,
       updateViewport: () => {
+        if (document.hidden || state.current.obscured) {
+          pencil?.pause(); routeInk?.pause(); international?.pause(); return;
+        }
+        pencil?.resume();
+        if (recoveryPending) {
+          recoveryPending = false;
+          repaintCanvasTree(area); pencil?.recover(); routeInk?.recover(); international?.recover();
+        }
         const visibleRect = focusRect();
         if (activeMapMode === "international") international?.draw({ view, moving: false, visibleRect });
         else {
@@ -786,14 +822,16 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         restoringMapView = restored.normalized;
         surface.interrupt().call(zoom.transform, restored.transform);
       },
-      zoomIn: () => { nodeTapTracker.reset(); userMoved = true; surface.call(zoom.scaleBy, 1.35, focusRect().center); },
-      zoomOut: () => { nodeTapTracker.reset(); userMoved = true; surface.call(zoom.scaleBy, 1 / 1.35, focusRect().center); },
+      zoomIn: () => zoomBy(1.35),
+      zoomOut: () => zoomBy(1 / 1.35),
       reset: () => {
         nodeTapTracker.reset();
         userMoved = true;
+        surface.interrupt();
         const target = activeMapMode === "international"
           ? locationsView(internationalOverviewPositions, area._project, focusRect(), INTERNATIONAL_MIN_ZOOM)
           : initialView(area.clientWidth, area.clientHeight, focusRect());
+        if (sameTransform(view, target)) { stats.zoomNoops++; return; }
         surface.call(zoom.transform, target);
       },
       focusPlace: (tag) => {
@@ -916,10 +954,12 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
     function draw() {
       const width = area.clientWidth, height = area.clientHeight;
       if (!width || !height) return;
-      if (layout?.width === width && layout?.height === height) {
-        settleView(view);
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      if (layout?.width === width && layout?.height === height && layout.dpr === dpr) {
+        stats.sameSizeSkips++;
         return;
       }
+      stats.layoutBuilds++;
       const resumeFocus = focusing;
       surface.interrupt();
       // Reproject only on a real viewport resize; the calendar overlays this viewport.
@@ -941,10 +981,12 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
       drawBathymetry(depthWorld, project);
       pencil?.dispose();
       pencil = null;
+      townLoadGeneration++; townTagSignature = '';
       pencilProject = project;
       pencilWidth = width;
       pencilHeight = height;
       if (activeMapMode === "new-zealand") ensurePencilMap();
+      if (state.current.obscured) pencil?.pause();
       international?.dispose();
       international = createInternationalMapLayer({
         baseCanvas: internationalCanvas,
@@ -982,7 +1024,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
           type: reusedWaypoint.markerType, iconType: reusedWaypoint.iconType,
         }) : null;
         const label = document.createElement("span"); label.className = "trip-stop-label";
-        fillStopLabel(label, stop.name.split(" · ")[0], 6100 + markerPositions.length);
+        fillStopLabel(label, stop.name.split(" · ")[0], 6100 + markerPositions.length, { persistence: 'public' });
         label.setAttribute("aria-hidden", "true");
         const leader = document.createElement("span"); leader.className = "trip-stop-leader"; leader.setAttribute("aria-hidden", "true");
         button.append(leader, dot, label);
@@ -1015,7 +1057,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
         });
         const label = document.createElement("span");
         label.className = "trip-stop-label";
-        fillStopLabel(label, waypoint.name, 8100 + index);
+        fillStopLabel(label, waypoint.name, 8100 + index, { persistence: 'public' });
         label.setAttribute("aria-hidden", "true");
         const leader = document.createElement("span");
         leader.className = "trip-stop-leader";
@@ -1083,7 +1125,7 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
           if (route) nextView = locationsView(routeFocusPositions(route), project, rect);
         }
       }
-      layout = { width, height, scale, rect };
+      layout = { width, height, scale, rect, dpr };
       if (!privateView && state.current.routes.some(route => route.hotelEndpoints)) {
         publicView = normalizeMapView(state.current.mapView);
         privateView = true;
@@ -1095,15 +1137,40 @@ export function AdventureMap({ selected, selectedRoute, selectedWaypoint, focusL
       else if (resumeFocus && state.current.focusRoute) controls.current?.focusRoute(state.current.focusRoute);
     }
     let frame = 0, disposed = false;
-    const redraw = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(draw); };
+    const redraw = () => {
+      if (disposed || frame) return;
+      frame = requestAnimationFrame(() => { frame = 0; if (!disposed && !document.hidden) draw(); });
+    };
     const observer = new ResizeObserver(redraw); observer.observe(area); redraw();
+    window.addEventListener('resize', redraw);
     const appearance = new MutationObserver(() => international?.update({
       theme: document.documentElement.dataset.adventureAppearance ?? "", visibleRect: focusRect(),
     }));
     appearance.observe(document.documentElement, { attributes: true,
       attributeFilter: ["data-adventure-appearance", "data-adventure-theme"] });
-    document.fonts.ready.then(() => { if (!disposed) { clearPencilLabels(); redraw(); } });
-    return () => { disposed = true; townLoadGeneration++; cancelAnimationFrame(frame); cancelAnimationFrame(viewFrame); observer.disconnect(); appearance.disconnect(); surface.interrupt(); pencil?.dispose(); routeInk?.dispose(); international?.dispose(); surface.on(".zoom", null); area.removeEventListener("click", handleTouchNodeClick, true); area.removeEventListener("dblclick", suppressTouchDoubleClick, true); area.removeEventListener("pointercancel", resetTouchNodeTap, true); area.removeEventListener("touchcancel", resetTouchNodeTap, true); area.removeEventListener("touchstart", resetMultiTouchNodeTap, true); nodeTapTracker.reset(); controls.current = null; delete area._project; delete area._unproject; buttons.replaceChildren(); internationalButtons.replaceChildren(); svg.selectAll("*").remove(); sea.selectAll("*").remove(); };
+    const stopRecovery = observeCanvasRecovery(() => {
+      if (disposed || document.hidden) return;
+      if (state.current.obscured) { recoveryPending = true; return; }
+      repaintCanvasTree(area); pencil?.recover(); routeInk?.recover(); international?.recover();
+    });
+    const visibilityChanged = () => {
+      if (document.hidden) {
+        surface.interrupt(); cancelAnimationFrame(viewFrame); viewFrame = 0; pendingView = null;
+        pencil?.pause(); routeInk?.pause(); international?.pause();
+      } else {
+        if (!state.current.obscured) pencil?.resume();
+        redraw(); settleView(view); if (!state.current.obscured) pencil?.refine(view);
+      }
+    };
+    document.addEventListener('visibilitychange', visibilityChanged);
+    const refreshLabels = () => {
+      if (disposed) return;
+      repaintCanvasTree(buttons); pencil?.refreshLabels(); international?.refreshLabels();
+      settleView(view);
+    };
+    document.fonts.ready.then(() => textCacheReady).then(refreshLabels);
+    document.fonts.addEventListener('loadingdone', refreshLabels);
+    return () => { disposed = true; stopRecovery(); window.removeEventListener('resize', redraw); document.removeEventListener('visibilitychange', visibilityChanged); document.fonts.removeEventListener('loadingdone', refreshLabels); townLoadGeneration++; cancelAnimationFrame(frame); cancelAnimationFrame(viewFrame); observer.disconnect(); appearance.disconnect(); surface.interrupt(); pencil?.dispose(); routeInk?.dispose(); international?.dispose(); surface.on(".zoom", null); area.removeEventListener("click", handleTouchNodeClick, true); area.removeEventListener("dblclick", suppressTouchDoubleClick, true); area.removeEventListener("pointercancel", resetTouchNodeTap, true); area.removeEventListener("touchcancel", resetTouchNodeTap, true); area.removeEventListener("touchstart", resetMultiTouchNodeTap, true); nodeTapTracker.reset(); controls.current = null; delete area._project; delete area._unproject; buttons.replaceChildren(); internationalButtons.replaceChildren(); svg.selectAll("*").remove(); sea.selectAll("*").remove(); };
   }, []);
   return <div ref={container} className="trip-map-area" inert={obscured ? "" : undefined} aria-hidden={obscured || undefined}>
     <svg className="trip-depth-map" aria-hidden="true" />

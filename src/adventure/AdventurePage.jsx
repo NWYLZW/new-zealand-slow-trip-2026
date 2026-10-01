@@ -16,13 +16,20 @@ import { adventureContextRouteIds } from "./adventureRouteContext";
 import { GameIconButton } from "./GameIconButton";
 import { MenuIcon, TasksIcon, BagIcon, CameraIcon } from "./SketchIcons";
 import { useAdventureNavigation } from "./useAdventureNavigation";
+import { weatherParentView } from "./weather/weatherNavigation.js";
 import { resolveAdventureFullscreen, responsiveFullscreenPane, useAdventureResponsiveLayout } from "./adventureResponsivePane";
 import { useAdventureDeviceCutout } from "./adventureDeviceCutout";
 import { mapHandwriting } from "./pencil/label";
+import { textCacheReady } from "./pencil/mapLabels";
+import { PencilTextPersistenceProvider } from "./pencil/PencilText";
+import { stopMarkerCacheReady } from "./pencil/stopMarker";
 import { internationalFlightSegments, internationalMapStops } from "./internationalMapData";
 
 const internationalRouteIds = new Set(internationalFlightSegments.map(segment => segment.id));
-const loadMap = () => import("./AdventureMap").then(module => ({ default: module.AdventureMap }));
+const loadMap = () => import("./AdventureMap").then(async module => {
+  await Promise.all([stopMarkerCacheReady, textCacheReady]);
+  return { default: module.AdventureMap };
+});
 const loadPanel = () => import("./AdventurePanel").then(module => ({ default: module.AdventurePanel }));
 const loadCalendar = () => import("./AdventureCalendar").then(module => ({ default: module.AdventureCalendar }));
 
@@ -136,8 +143,9 @@ function AdventureBoard() {
   }, [sideOpen]);
   const calendarView = calendarOpen ? view : lastCalendarView.current;
   const sideView = sideOpen ? view : lastSideView.current;
-  const contextRouteIds = useMemo(() => adventureContextRouteIds(view),
-    [view.rightPanel, view.eventId, view.focus, view.front]);
+  const mapContext = weatherParentView(view);
+  const contextRouteIds = useMemo(() => adventureContextRouteIds(mapContext),
+    [mapContext.rightPanel, view.eventId, view.focus, mapContext.front]);
   const focusLocations = useMemo(() => {
     const focus = view.focus;
     if (focus?.kind === "international-route") {
@@ -145,7 +153,7 @@ function AdventureBoard() {
       return segment ? { id: `${focus.value}:${focus.token}`,
         positions: [segment.fromPosition, segment.toPosition].map(([lat, lng]) => [lng, lat]) } : null;
     }
-    const day = focus?.kind === 'date' && (calendarOpen || ['day', 'event'].includes(view.rightPanel))
+    const day = focus?.kind === 'date' && (calendarOpen || ['day', 'event'].includes(mapContext.rightPanel))
       ? getTripCalendarDay(focus.value)
       : focus?.kind === 'event' ? getTripCalendarDay(focus.value.split('|')[0]) : null;
     if (!day) return null;
@@ -156,7 +164,7 @@ function AdventureBoard() {
       .map(stop => [stop.position[1], stop.position[0]]);
     return positions.length || contextRouteIds.length
       ? { id: `${focus.value}:${focus.token}`, positions, routeIds: contextRouteIds } : null;
-  }, [calendarOpen, view.focus, view.rightPanel, contextRouteIds]);
+  }, [calendarOpen, view.focus, mapContext.rightPanel, contextRouteIds]);
   const select = useCallback((tag) => { previousSideFocus.current = document.activeElement; navigate("place", tag); }, [navigate]);
   const selectRoute = useCallback((id) => {
     previousSideFocus.current = document.activeElement;
@@ -225,6 +233,7 @@ function AdventureBoard() {
     const onKey = (event) => {
       if (event.key !== 'Escape' || event.defaultPrevented || menuOpen || document.querySelector('dialog[open]')) return;
       if (fullscreen) navigate('fullscreen', fullscreen);
+      else if (view.front === 'right' && view.rightPanel === 'weather') navigate('back-weather');
       else if (view.front === 'right' && view.clusterFrom && !view.mediaId
         && (view.rightPanel === 'place' || view.rightPanel === 'event' || (view.rightPanel === 'route' && view.waypoint))) navigate('back-cluster');
       else if (view.front === 'right' && view.rightPanel === 'route' && view.waypoint) navigate('back-waypoint');
@@ -250,10 +259,30 @@ function AdventureBoard() {
         closeButton.current?.querySelector("button")?.focus({ preventScroll: true });
       }
     }
-  }, [view.front, view.cameraView, view.mediaId, calendarOpen, calendarVisible, sideOpen, sideVisible]);
-  const panelNavigation = useCallback((panel, place) => {
+  }, [view.front, view.cameraView, view.mediaId, view.weatherDate, calendarOpen, calendarVisible, sideOpen, sideVisible]);
+  const weatherFocus = useRef(null);
+  useEffect(() => {
+    if (view.rightPanel === "weather") {
+      weatherFocus.current = { date: view.weatherDate, place: view.weatherPlace ?? "", parent: view.weatherParent,
+        parentPlace: view.place, parentDay: view.day, parentEvent: view.eventId, parentRoute: view.route };
+      return;
+    }
+    const previous = weatherFocus.current;
+    weatherFocus.current = null;
+    if (!previous || menuOpen) return;
+    if (view.rightPanel && (view.rightPanel !== previous.parent || view.place !== previous.parentPlace
+      || view.day !== previous.parentDay || view.eventId !== previous.parentEvent || view.route !== previous.parentRoute)) return;
+    const timer = window.setTimeout(() => {
+      const badge = [...document.querySelectorAll(".trip-weather-badge")].find(node =>
+        node.dataset.weatherDate === previous.date && node.dataset.weatherPlace === previous.place
+        && !node.closest('[inert],[aria-hidden="true"]'));
+      badge?.focus({ preventScroll: true });
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [view.rightPanel, view.weatherDate, view.weatherPlace, view.place, view.day, view.eventId, view.route, menuOpen]);
+  const panelNavigation = useCallback((panel, place, context) => {
     if (!panel) closeSide();
-    else navigate(panel, place);
+    else navigate(panel, place, context);
   }, [closeSide, navigate]);
   return <main id="trip-board-structure" style={{ '--trip-handwriting': mapHandwriting,
     '--trip-cutout-inset': `${deviceCutout?.inset ?? 0}px`,
@@ -300,6 +329,7 @@ function AdventureBoard() {
     {(sideOpen || sideMounted) && <AdventureDeferredFeature load={loadPanel} kind="panel"
       onClose={closeSide} onOpenMenu={openMenu} componentProps={{
         view: sideView, navigate: panelNavigation,
+        weatherActive: sideOpen && sideVisible && effectiveFullscreen !== "calendar" && !menuOpen,
         cameraActive: sideOpen && sideVisible && effectiveFullscreen !== "calendar" && view.rightPanel === "camera" && view.cameraView === "preview" && !menuOpen,
         closeButtonRef: closeButton, onRequestUnlock: requestUnlock,
         fullscreen: effectiveFullscreen === "right", automaticFullscreen: automaticFullscreen === "right",
@@ -310,13 +340,17 @@ function AdventureBoard() {
     {(calendarOpen || calendarMounted) && <section ref={calendarRegion} id="trip-calendar-region"
       className="trip-calendar-region" aria-label={adventureText("行程日历", "Itinerary calendar", language)} aria-hidden={!calendarOpen || effectiveFullscreen === "right"}
       inert={calendarOpen && effectiveFullscreen !== "right" ? undefined : ""}>
+      <PencilTextPersistenceProvider persistence="public">
       <AdventureDeferredFeature load={loadCalendar} kind="calendar" onClose={closeCalendar} onOpenMenu={openMenu}
         componentProps={{ selectedDate: calendarView.date, scope: calendarView.scope ?? "all",
+          weatherActive: calendarOpen && calendarVisible && effectiveFullscreen !== "right" && !menuOpen,
+          onSelectWeather: date => navigate("weather", date, "calendar"),
           onScopeChange: scope => navigate("tasks", null, scope), onSelectDate: date => navigate("day", date),
           onSelectEvent: (event, agendaItem) => navigate("event", { event, agendaItem }, { from: "calendar", agendaItem }),
           onClose: closeCalendar, fullscreen: effectiveFullscreen === "calendar", automaticFullscreen: automaticFullscreen === "calendar",
           onToggleFullscreen: () => navigate("fullscreen", "calendar"), onOpenMenu: openMenu,
         }} />
+      </PencilTextPersistenceProvider>
     </section>}
     <AdventureMenu open={menuOpen} screen={menuScreen} unlockOrigin={unlockOrigin}
       onScreenChange={(screen, origin = "menu") => {
