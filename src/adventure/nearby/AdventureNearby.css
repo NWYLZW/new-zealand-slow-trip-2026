@@ -1,0 +1,23 @@
+.trip-nearby {
+  position: absolute; z-index: 4; right: var(--trip-edge-right); top: 50%;
+  width: 280px; max-width: calc(100% - var(--trip-edge-right) - 64px);
+  max-height: calc(100% - 156px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  transform: translateY(-50%); overflow: auto; overscroll-behavior: contain;
+  color: var(--trip-ink-color); font-size: 15px; line-height: 1.4;
+  animation: trip-nearby-enter 180ms ease-out;
+}
+.trip-nearby-content { padding: 8px; }
+.trip-nearby-location { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 4px; align-items: center; }
+.trip-nearby-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px; width: 100%; min-height: 44px; padding: 6px 4px; border: 0; background: transparent; text-align: left; }
+.trip-nearby-copy { display: grid; gap: 3px; min-width: 0; }
+.trip-nearby-label, .trip-nearby-detail { font-size: 12px; color: var(--trip-ink-muted); overflow-wrap: anywhere; }
+.trip-nearby-title { font-size: 15px; overflow-wrap: anywhere; }
+.trip-nearby-arrow { display: grid; place-items: center; width: 20px; height: 28px; }
+.trip-nearby-arrow .trip-pencil-icon { width: 20px; height: 20px; }
+.trip-nearby-divider { position: relative; height: 8px; }
+.trip-nearby button:focus-visible { outline-offset: -2px; }
+.trip-nearby button:hover { filter: contrast(1.15); }
+@media (max-width: 480px) { .trip-nearby { width: 232px; } }
+@media (max-height: 500px) { .trip-nearby { max-height: calc(100% - 132px); font-size: 14px; } .trip-nearby-content { padding: 4px 8px; } }
+@keyframes trip-nearby-enter { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .trip-nearby { animation: none; } }

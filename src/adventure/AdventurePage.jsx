@@ -32,6 +32,7 @@ const loadMap = () => import("./AdventureMap").then(async module => {
 });
 const loadPanel = () => import("./AdventurePanel").then(module => ({ default: module.AdventurePanel }));
 const loadCalendar = () => import("./AdventureCalendar").then(module => ({ default: module.AdventureCalendar }));
+const loadNearby = () => import("./nearby/AdventureNearby.jsx").then(module => ({ default: module.AdventureNearby }));
 
 const tools = [
   { id: "tasks", Icon: TasksIcon },
@@ -81,6 +82,9 @@ function AdventureBoard() {
   const [sideMounted, setSideMounted] = useState(sideOpen);
   const [sideVisible, setSideVisible] = useState(false);
   const [menuOpen, setMenuOpen] = useState(unlockEntry.requested);
+  const nearbyActive = !calendarOpen && !sideOpen && !calendarVisible && !sideVisible && !menuOpen && !effectiveFullscreen;
+  const [nearbyMounted, setNearbyMounted] = useState(nearbyActive);
+  useEffect(() => { if (nearbyActive) setNearbyMounted(true); }, [nearbyActive]);
   const [menuScreen, setMenuScreen] = useState(unlockEntry.requested ? "unlock" : "menu");
   const [unlockOrigin, setUnlockOrigin] = useState(unlockEntry.requested ? "external" : "menu");
   const unlockTrigger = useRef(null);
@@ -284,6 +288,13 @@ function AdventureBoard() {
     if (!panel) closeSide();
     else navigate(panel, place, context);
   }, [closeSide, navigate]);
+  const nearbyNavigation = useCallback((target, id, scope) => {
+    previousSideFocus.current = document.activeElement;
+    if (target === "nearby-stay") {
+      navigate("event", id.event);
+      navigate("bag-stay", { bookingId: id.targetId, dateId: id.dateId });
+    } else navigate(target, id, scope);
+  }, [navigate]);
   return <main id="trip-board-structure" style={{ '--trip-handwriting': mapHandwriting,
     '--trip-cutout-inset': `${deviceCutout?.inset ?? 0}px`,
     '--trip-cutout-block-inset': `${deviceCutout?.blockInset ?? 0}px` }} aria-label={adventureText("新西兰冒险地图", "New Zealand adventure map", language)}
@@ -326,6 +337,11 @@ function AdventureBoard() {
         <Icon />
       </GameIconButton>)}
     </nav>
+    {nearbyMounted && <AdventureDeferredFeature load={loadNearby} kind="nearby" defer componentProps={{
+      active: nearbyActive,
+      language, onNavigate: nearbyNavigation,
+      "aria-hidden": !nearbyActive,
+    }} />}
     {(sideOpen || sideMounted) && <AdventureDeferredFeature load={loadPanel} kind="panel"
       onClose={closeSide} onOpenMenu={openMenu} componentProps={{
         view: sideView, navigate: panelNavigation,

@@ -31,7 +31,8 @@ function FeatureStatus({ kind, failed, onRetry, onClose, onOpenMenu, hidden }) {
   const { language } = useAdventurePreferences();
   const text = (zh, en) => language === "en" ? en : zh;
   const label = kind === "map" ? text("地图", "Map")
-    : kind === "calendar" ? text("日历", "Calendar") : text("面板", "Panel");
+    : kind === "calendar" ? text("日历", "Calendar") : kind === "nearby" ? text("附近信息", "Nearby") : text("面板", "Panel");
+  if (kind === "nearby" && (!failed || hidden)) return null;
   return <section className={`trip-feature-status trip-feature-status--${kind}${kind === "panel" ? " trip-panel" : ""}`}
     aria-label={label} aria-hidden={hidden || undefined} inert={hidden ? "" : undefined}>
     {onClose && <div className="trip-feature-status-actions">

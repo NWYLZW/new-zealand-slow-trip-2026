@@ -2,7 +2,6 @@ import { useState } from "react";
 import { eventAgendaItems } from "./adventureEventAgenda";
 import { adventureEventInterval, flightEndpointInstant, zonedLocalInstant } from "./adventureEventTime";
 import { AdventureScheduleTimeline, formatScheduleTimeZoneOffset } from "./AdventureScheduleTimeline";
-import { PanelDivider } from "./pencil/PanelDivider";
 import { PencilText } from "./pencil/PencilText";
 
 const airportZones = { SZX: "Asia/Shanghai", KUL: "Asia/Kuala_Lumpur", AKL: "Pacific/Auckland",
@@ -82,7 +81,7 @@ function OptionalAgendaChoice({ item, language, renderContent, timeLabel = null 
 }
 
 function flightRows(event, dateId, language, activeAgendaId, onSelectAgenda, renderContent) {
-  const intervals = [], points = [], represented = new Set(), flightRecords = [];
+  const intervals = [], points = [], flightRecords = [];
   for (const flight of event.flights ?? []) {
     const start = flightEndpointInstant(flight, "departure"), end = flightEndpointInstant(flight, "arrival");
     if (start === null || end === null || end <= start) continue;
@@ -92,8 +91,6 @@ function flightRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
       && /抵达|到达|落地/.test(entry?.[1] ?? ""));
     const departureSource = departureIndex >= 0 ? event.items?.[departureIndex] ?? departureIndex : null;
     const arrivalSource = arrivalIndex >= 0 ? event.items?.[arrivalIndex] ?? arrivalIndex : null;
-    if (Number.isInteger(departureSource)) represented.add(departureSource);
-    if (Number.isInteger(arrivalSource)) represented.add(arrivalSource);
     const departureText = departureIndex >= 0 ? event.events[departureIndex][1] : `${flight.flightNumber} ${flight.from} → ${flight.to}`;
     const arrivalText = arrivalIndex >= 0 ? event.events[arrivalIndex][1] : `抵达 ${flight.to} · ${flight.arrival}`;
     const row = { id: `${event.urlId}#flight-${flight.flightNumber}`, start, end,
@@ -131,7 +128,6 @@ function flightRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
     const startDate = item.date ?? dateId, zone = item.timeZone ?? endpointZone(event.flights?.[0]?.from);
     const start = zonedLocalInstant(startDate, item.startTime, zone);
     if (start === null) continue;
-    represented.add(item.sourceIndex);
     const displayTime = item.timeLabel ?? item.time;
     const base = { id: item.id, sourceIndex: item.sourceIndex, label: item.title,
       iconType: item.iconType, color: event.color, groupId: event.urlId,
@@ -153,7 +149,7 @@ function flightRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
   const range = Number.isFinite(rangeStart) && Number.isFinite(rangeEnd) && rangeEnd > rangeStart
     ? { start: rangeStart, end: rangeEnd } : null;
   return { points: range ? points.filter((item) => item.time >= range.start && item.time <= range.end) : [],
-    intervals, represented, range,
+    intervals, range,
     tickZone: event.scheduleStart?.timeZone ?? endpointZone(event.flights?.[0]?.from),
     endZone: endpointZone(event.flights?.at(-1)?.to) };
 }
@@ -165,14 +161,13 @@ function intervalTimeLabel(item, startDate, endDate, language) {
 }
 
 function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, renderContent) {
-  const points = [], intervals = [], represented = new Set();
+  const points = [], intervals = [];
   const itemZones = [];
   for (const item of eventAgendaItems(event, { language })) {
     const startDate = item.date ?? dateId, zone = item.timeZone ?? "Pacific/Auckland";
     itemZones.push(zone);
     const start = zonedLocalInstant(startDate, item.startTime, zone);
     if (start === null) continue;
-    represented.add(item.sourceIndex);
     const confirmedMilestone = !item.isEstimated && !item.endTime;
     const displayTime = item.timeLabel ?? item.time;
     const base = { id: item.id, label: item.title, iconType: item.iconType, groupId: event.urlId,
@@ -228,7 +223,7 @@ function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
   const range = parentInterval ?? (starts.length && ends.length && Math.max(...ends) > Math.min(...starts)
     ? { start: Math.min(...starts), end: Math.max(...ends) } : null);
   const agendaZone = event.scheduleStart?.timeZone ?? itemZones[0] ?? "Pacific/Auckland";
-  return { points: topLevelPoints, intervals: intervalsWithMilestones, represented, range,
+  return { points: topLevelPoints, intervals: intervalsWithMilestones, range,
     tickZone: agendaZone, endZone: agendaZone };
 }
 
@@ -237,10 +232,6 @@ export function AdventureEventTimeline({ event, dateId, language = "zh", activeA
   const model = event.isFlightTransfer && !event.flightsAsDetailsOnly
     ? flightRows(event, dateId, language, activeAgendaId, onSelectAgenda, renderContent)
     : agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, renderContent);
-  const untimed = event.events.map((entry, localIndex) => ({ entry,
-    sourceIndex: event.items?.[localIndex] ?? localIndex }))
-    .filter(({ entry, sourceIndex }) => !model.represented.has(sourceIndex)
-      && !(event.scheduleStart && entry?.[2]?.timeStatus === "unknown"));
   const flightZones = new Set((event.flights ?? []).flatMap((flight) => [endpointZone(flight.from), endpointZone(flight.to)]));
   const primaryTimeZone = event.primaryTimeZone ?? event.day?.primaryTimeZone;
   const comparisonTimeZone = event.comparisonTimeZone ?? event.day?.comparisonTimeZone;
@@ -269,11 +260,5 @@ export function AdventureEventTimeline({ event, dateId, language = "zh", activeA
       endTick={tickColumns ? undefined : { label: formatInstant(model.range.end, model.endZone, false),
         title: fullTickLabel(model.range.end, model.endZone, language),
         ariaLabel: fullTickLabel(model.range.end, model.endZone, language) }} />}
-    {untimed.length > 0 && <div className="trip-event-untimed" aria-label={language === "en" ? "Other schedule notes" : "其他行程说明"}>
-      {untimed.map(({ entry, sourceIndex }, index) => <div key={`${event.urlId}-untimed-${sourceIndex}`}>
-        <time><PencilText>{entry[0]}</PencilText></time><div>{renderContent(entry[1])}</div>
-        {index < untimed.length - 1 && <PanelDivider />}
-      </div>)}
-    </div>}
   </section>;
 }

@@ -80,30 +80,11 @@ function EventMedia({ media }) {
   </div>;
 }
 
-function directLocationMapUrl(event) {
-  const direct = event.media?.links?.find((link) => link.kind === "map"
-    && !/\/dir\/|路线|route/i.test(`${link.url} ${link.label}`));
-  if (direct?.url) return direct.url;
-  const query = event.media?.localNames?.[0] ?? event.media?.location ?? event.title;
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-}
-
 function ScheduleTab({ event, dateId, language, activeAgendaId, onSelectAgenda }) {
-  const mapUrl = directLocationMapUrl(event);
   return <div className="trip-event-schedule">
-    {event.drive && <p><PencilText>{`约 ${event.drive.distanceKm} 公里 · 纯驾驶 ${event.drive.durationZh}`}</PencilText></p>}
-    {event.media?.location && <p className="trip-event-location"><PencilText>地点 · </PencilText>
-      <AdventureGoogleMapLink href={mapUrl} iconAfter ariaLabel={`${event.media.location}，在 Google 地图打开`}>
-        <PencilText>{event.media.location}</PencilText>
-      </AdventureGoogleMapLink></p>}
     <AdventureEventTimeline event={event} dateId={dateId} language={language}
       activeAgendaId={activeAgendaId} onSelectAgenda={onSelectAgenda}
       renderContent={(text) => <InlineDetail text={text} />} />
-    {event.day?.highlight && <p><PencilText>{event.day.highlight}</PencilText></p>}
-    {event.day?.alternative && <div className="trip-event-alternative">
-      <strong><PencilText>{event.day.alternative.title}</PencilText></strong>
-      <p><PencilText>{event.day.alternative.desc}</PencilText></p>
-    </div>}
   </div>;
 }
 
