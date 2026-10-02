@@ -5,3 +5,5 @@
 .trip-feature-status-message .site-spinner{flex:none;width:22px;height:22px}
 .trip-feature-status-actions{position:absolute;top:var(--trip-edge-top);right:var(--trip-edge-right);display:flex;gap:var(--trip-tool-gap)}
 .trip-feature-status--nearby{position:absolute;right:var(--trip-edge-right);top:50%;transform:translateY(-50%);z-index:4;width:min(280px,calc(100% - 80px));height:auto;min-height:64px;background:transparent}
+.trip-feature-status--nearby > .trip-feature-status-message{width:100%}
+.trip-nearby-surface > .trip-pencil-surface-ink{display:block}

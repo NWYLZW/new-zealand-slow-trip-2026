@@ -3,6 +3,7 @@ import { GameIconButton } from "../GameIconButton";
 import { LocationMapIcon, NextIcon } from "../SketchIcons";
 import { PencilText, PencilTextPersistenceProvider } from "../pencil/PencilText";
 import { PanelDivider } from "../pencil/PanelDivider";
+import { PencilSurface } from "../pencil/PencilSurface";
 import { nearbyDistanceLabel } from "./nearbyModel.js";
 import { useNearbyContext } from "./useNearbyContext.js";
 import "./AdventureNearby.css";
@@ -75,7 +76,7 @@ export const AdventureNearby = memo(function AdventureNearby({ active, language,
     : day ? open("current", "day", day.dateId) : undefined;
   return <aside ref={root} className="trip-nearby" hidden={!active} aria-label={text("附近与当前行程", "Nearby and current itinerary")}>
     <PencilTextPersistenceProvider persistence="memory">
-      <div className="trip-nearby-content">
+      <PencilSurface variant="wash" className="trip-nearby-content trip-nearby-surface">
         <div className="trip-nearby-location">
           <ContextRow label={text("附近", "Nearby")} title={nearbyTitle} live
             detail={nearby ? nearbyDistanceLabel(nearby.distance, language) : null}
@@ -97,7 +98,7 @@ export const AdventureNearby = memo(function AdventureNearby({ active, language,
               onClick={open("next", "event", { event: next.event, agendaItem: next.agendaItem })} />
           </>}
         </>}
-      </div>
+      </PencilSurface>
     </PencilTextPersistenceProvider>
   </aside>;
 });

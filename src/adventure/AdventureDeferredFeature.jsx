@@ -2,6 +2,7 @@ import { Component, lazy, startTransition, Suspense, useEffect, useMemo, useStat
 import { useAdventurePreferences } from "./AdventurePreferences";
 import { GameIconButton } from "./GameIconButton";
 import { CloseIcon, MenuIcon, ResetIcon } from "./SketchIcons";
+import { PencilSurface } from "./pencil/PencilSurface";
 import "./AdventureDeferredFeature.css";
 
 const featureLoadTimeout = 15000;
@@ -33,18 +34,20 @@ function FeatureStatus({ kind, failed, onRetry, onClose, onOpenMenu, hidden }) {
   const label = kind === "map" ? text("地图", "Map")
     : kind === "calendar" ? text("日历", "Calendar") : kind === "nearby" ? text("附近信息", "Nearby") : text("面板", "Panel");
   if (kind === "nearby" && (!failed || hidden)) return null;
+  const Message = kind === "nearby" ? PencilSurface : "div";
   return <section className={`trip-feature-status trip-feature-status--${kind}${kind === "panel" ? " trip-panel" : ""}`}
     aria-label={label} aria-hidden={hidden || undefined} inert={hidden ? "" : undefined}>
     {onClose && <div className="trip-feature-status-actions">
       <GameIconButton label={text("菜单", "Menu")} onClick={onOpenMenu}><MenuIcon /></GameIconButton>
       <GameIconButton label={text("关闭", "Close")} onClick={onClose}><CloseIcon /></GameIconButton>
     </div>}
-    <div className="trip-feature-status-message" role={failed ? "alert" : "status"}>
+    <Message {...(kind === "nearby" ? { variant: "wash" } : {})}
+      className={`trip-feature-status-message${kind === "nearby" ? " trip-nearby-surface" : ""}`} role={failed ? "alert" : "status"}>
       {failed ? <>
         <span>{text(`${label}加载失败`, `${label} could not load`)}</span>
         <GameIconButton label={text("重新加载", "Retry loading")} onClick={onRetry}><ResetIcon /></GameIconButton>
       </> : <><span className="site-spinner" aria-hidden="true" /><span>{text(`正在加载${label}`, `Loading ${label.toLowerCase()}`)}</span></>}
-    </div>
+    </Message>
   </section>;
 }
 

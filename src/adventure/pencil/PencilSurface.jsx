@@ -9,6 +9,7 @@ const styles = {
   paper: { radius: 8, ink: '#627769', width: 1.2, passes: 3 },
   sheet: { ink: '#536d59', width: 1.35, passes: 3 },
   full: {},
+  wash: {},
   action: { radius: 7, ink: '#355c46', width: 1.35, passes: 3,
     wash: '#739873', strength: .48 },
   quiet: { radius: 7, ink: '#99aa9b', width: .75, passes: 2,
@@ -43,11 +44,19 @@ function sheetEdge(height, seed) {
 }
 
 function drawSurface(canvas, width, height, variant, seed, ratio, theme, borderCanvas) {
-  canvas.width = Math.ceil(width * ratio);
-  canvas.height = Math.ceil(height * ratio);
+  const bleed = variant === 'wash' ? 12 : 0;
+  canvas.width = Math.ceil((width + bleed * 2) * ratio);
+  canvas.height = Math.ceil((height + bleed * 2) * ratio);
   const ctx = canvas.getContext('2d');
-  ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
+  ctx.setTransform(canvas.width / (width + bleed * 2), 0, 0, canvas.height / (height + bleed * 2), 0, 0);
   const style = styles[variant];
+  if (variant === 'wash') {
+    if (borderCanvas) { borderCanvas.width = canvas.width; borderCanvas.height = canvas.height; }
+    ctx.translate(bleed, bleed);
+    drawPencilWash(ctx, { x: 0, y: 0, width, height }, theme.paper, seed,
+      { strength: 1, spacing: 1.8, roughness: 3.5, inset: 2, radius: 8, edgeReach: 8 });
+    return;
+  }
   if (variant === 'full') {
     if (borderCanvas) { borderCanvas.width = canvas.width; borderCanvas.height = canvas.height; }
     ctx.fillStyle = ctx.createPattern(calendarPaper(theme.paper, { dark: theme.dark }).canvas, 'repeat');

@@ -23,6 +23,12 @@
   clip-path: var(--trip-surface-clip, inset(3px));
 }
 
+.trip-pencil-surface--wash > .trip-pencil-surface-ink {
+  inset: -12px;
+  width: calc(100% + 24px);
+  height: calc(100% + 24px);
+}
+
 .trip-pencil-surface--clipped > .trip-pencil-surface-border-ink {
   position: absolute;
   z-index: 2;

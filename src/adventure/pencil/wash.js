@@ -12,12 +12,14 @@ function randomAt(index, seed) {
 }
 
 function makeWash(width, height, color, seed, ratio, settings) {
+  const { strength, spacing, roughness, inset, radius, edgeReach } = settings;
+  const bleed = edgeReach ? Math.ceil(edgeReach + 4) : 0;
   const canvas = document.createElement('canvas');
-  canvas.width = Math.ceil(width * ratio);
-  canvas.height = Math.ceil(height * ratio);
+  canvas.width = Math.ceil((width + bleed * 2) * ratio);
+  canvas.height = Math.ceil((height + bleed * 2) * ratio);
   const ctx = canvas.getContext('2d');
   ctx.scale(ratio, ratio);
-  const { strength, spacing, roughness, inset, radius } = settings;
+  ctx.translate(bleed, bleed);
   const margin = inset + spacing + roughness * .4;
   const rows = Math.max(1, Math.floor((height - margin * 2) / spacing));
 
@@ -28,16 +30,21 @@ function makeWash(width, height, color, seed, ratio, settings) {
     const edgeDistance = Math.max(0, Math.min(y - inset, height - inset - y));
     const corner = edgeDistance < radius
       ? radius - Math.sqrt(radius * radius - (radius - edgeDistance) ** 2) : 0;
-    const left = inset + corner + noise(31) * roughness * 1.8;
-    const right = width - inset - corner - noise(67) * roughness * 1.8;
+    const leftReach = edgeReach * (.15 + noise(359) * .85);
+    const rightReach = edgeReach * (.15 + noise(383) * .85);
+    const left = inset + corner + noise(31) * roughness * 1.8 - leftReach;
+    const right = width - inset - corner - noise(67) * roughness * 1.8 + rightReach;
     if (right <= left) continue;
     const tilt = Math.min(4, width * .02) * (.35 + noise(101) * .65);
     const wave = Math.sin(row * .63 + seed % 19) * roughness * .24;
+    // Extend the original sweeps; do not shrink the body or add detached edge marks.
+    const edgeLift = edgeReach ? (margin + edgeReach) * Math.max(0, 1 - edgeDistance / (radius + spacing * 3))
+      * (y < height / 2 ? -1 : 1) : 0;
     const points = [
-      [left, y + wave],
-      [left + (right - left) * .32, y - tilt * .3 + noise(149) - .5],
-      [left + (right - left) * .7, y - tilt * .7 + noise(181) - .5],
-      [right, y - tilt + wave],
+      [left, y + wave + edgeLift * noise(397)],
+      [left + (right - left) * .32, y - tilt * .3 + noise(149) - .5 + edgeLift * noise(401)],
+      [left + (right - left) * .7, y - tilt * .7 + noise(181) - .5 + edgeLift * noise(409)],
+      [right, y - tilt + wave + edgeLift * noise(419)],
     ];
     const feather = Math.min(1, (row + 1) / 3, (rows - row + 1) / 3);
     ctx.globalAlpha = Math.min(1, strength * feather * (.48 + noise(211) * .35));
@@ -54,10 +61,10 @@ function makeWash(width, height, color, seed, ratio, settings) {
 
   // Paper tooth breaks the pigment, not the text painted in a separate DOM layer.
   ctx.globalCompositeOperation = 'destination-out';
-  const grains = Math.ceil(width * height / 12);
+  const grains = Math.ceil((width + bleed * 2) * (height + bleed * 2) / 12);
   for (let index = 0; index < grains; index++) {
-    const x = randomAt(index, seed + 811) * width;
-    const y = randomAt(index, seed + 977) * height;
+    const x = randomAt(index, seed + 811) * (width + bleed * 2) - bleed;
+    const y = randomAt(index, seed + 977) * (height + bleed * 2) - bleed;
     const size = .35 + randomAt(index, seed + 1193) * .65;
     ctx.globalAlpha = .2 + randomAt(index, seed + 1301) * .5;
     ctx.fillRect(x, y, size, size * .6);
@@ -75,6 +82,7 @@ export function drawPencilWash(ctx, box, color, seed, options = {}) {
     roughness: Math.max(0, options.roughness ?? 3),
     inset: Math.max(2, options.inset ?? 3),
     radius: Math.max(0, Math.min(options.radius ?? 0, width / 2, height / 2)),
+    edgeReach: Math.max(0, Math.min(options.edgeReach ?? 0, width / 4, height / 4)),
   };
   const key = JSON.stringify([width, height, color, seed, ratio, settings]);
   let texture = cache.get(key);
@@ -83,5 +91,8 @@ export function drawPencilWash(ctx, box, color, seed, options = {}) {
     cache.set(key, texture);
     if (cache.size > cacheLimit) cache.delete(cache.keys().next().value);
   }
-  ctx.drawImage(texture, box.x, box.y, box.width, box.height);
+  const bleed = settings.edgeReach ? Math.ceil(settings.edgeReach + 4) : 0;
+  const scaleX = box.width / width, scaleY = box.height / height;
+  ctx.drawImage(texture, box.x - bleed * scaleX, box.y - bleed * scaleY,
+    box.width + bleed * 2 * scaleX, box.height + bleed * 2 * scaleY);
 }
