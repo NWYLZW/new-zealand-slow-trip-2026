@@ -38,6 +38,8 @@ export const attractionPinsByRegion = {
     { label: "Skyline Queenstown", labelEn: "Skyline Queenstown", position: [-45.0279742, 168.646883] },
   ],
   wanaka: [
+    { label: "Puzzling World", labelEn: "Puzzling World", position: [-44.696992, 169.161698],
+      sourceUrl: "https://www.puzzlingworld.co.nz/about-us/contact-us/", reviewedAt: "2026-10-04" },
     { label: "That Wānaka Tree", labelEn: "That Wānaka Tree", position: [-44.6985, 169.1175] },
     { label: "瓦纳卡湖滨", labelEn: "Wānaka lakefront", position: [-44.695, 169.1368] },
   ],

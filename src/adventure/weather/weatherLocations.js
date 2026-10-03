@@ -24,15 +24,30 @@ if (glenorchy) locations.set("GLN", { id: "GLN", name: "格林诺奇", nameEn: "
   coordinateSource: "routeSegments.zqn-glenorchy.waypoints[0]" });
 
 // Always resolve against the public calendar, never its unlocked stay enrichment.
+function locationsForDay(day) {
+  const result = new Map(locations);
+  for (const event of day.events) for (const tag of event.stopTags ?? []) {
+    const stop = event.stopOverrides?.[tag];
+    if (result.has(tag) || !stop?.timeZone || !stop.coordinateSourceUrl
+      || !Array.isArray(stop.position) || stop.position.length !== 2 || !stop.position.every(Number.isFinite)
+      || Math.abs(stop.position[0]) > 90 || Math.abs(stop.position[1]) > 180) continue;
+    result.set(tag, { id: tag, name: stop.name, nameEn: stop.nameEn ?? stop.name,
+      latitude: stop.position[0], longitude: stop.position[1], timeZone: stop.timeZone,
+      coordinateSource: stop.coordinateSourceUrl });
+  }
+  return result;
+}
+
 export function weatherLocationForDay(dateId, placeTag = null) {
   const day = getTripCalendarDay(dateId);
   if (!day) return null;
-  const tags = [...new Set(day.events.flatMap(event => event.stopTags ?? []))].filter(tag => locations.has(tag));
+  const dayLocations = locationsForDay(day);
+  const tags = [...new Set(day.events.flatMap(event => event.stopTags ?? []))].filter(tag => dayLocations.has(tag));
   const hasGlenorchy = day.events.some(event => event.segmentIds?.includes("zqn-glenorchy"));
   const placeAllowed = tags.includes(placeTag) || (placeTag === "AKC" && tags.includes("AKL"));
   const activities = day.events.filter(event => !event.isFlightTransfer && !event.flightsAsDetailsOnly
     && !["flight", "domesticFlight", "car", "bus"].includes(event.icon));
-  const activityTag = activities.flatMap(event => event.stopTags ?? []).filter(tag => locations.has(tag)).at(-1);
+  const activityTag = activities.flatMap(event => event.stopTags ?? []).filter(tag => dayLocations.has(tag)).at(-1);
   let tag = activityTag ?? tags.at(-1);
   const flights = day.events.flatMap(event => event.flightsAsDetailsOnly ? [] : event.flights ?? []);
   if (!activityTag && flights.length && tag === flights.at(-1).to?.split(" ").at(-1)
@@ -40,7 +55,7 @@ export function weatherLocationForDay(dateId, placeTag = null) {
     tag = flights.filter(flight => flight.date === dateId && !flight.arrival?.startsWith("次日"))
       .at(-1)?.to?.split(" ").at(-1) ?? tags[0];
   }
-  const selected = locations.get(placeAllowed ? placeTag : hasGlenorchy ? "GLN" : tag);
+  const selected = dayLocations.get(placeAllowed ? placeTag : hasGlenorchy ? "GLN" : tag);
   if (!selected) return null;
   return { ...selected, dateId, context: placeAllowed ? "place" : "itinerary",
     representative: tags.length > 1 || hasGlenorchy, tripLocationIds: tags };
@@ -49,12 +64,14 @@ export function weatherLocationForDay(dateId, placeTag = null) {
 export function weatherSegmentsForDay(dateId, placeTag = null) {
   const location = weatherLocationForDay(dateId, placeTag);
   if (!location) return [];
-  const day = getTripCalendarDay(dateId)?.day;
+  const calendarDay = getTripCalendarDay(dateId);
+  const day = calendarDay?.day;
   if (location.context === "place" || !day?.weatherSegments) return [{ location, start: "00:00", end: "24:00" }];
+  const dayLocations = locationsForDay(calendarDay);
   const segments = day.weatherSegments.map(segment => {
     const from = segment.fromEvent == null ? null : day.events[segment.fromEvent]?.[2];
     const until = segment.untilEvent == null ? null : day.events[segment.untilEvent]?.[2];
-    const selected = locations.get(segment.placeTag);
+    const selected = dayLocations.get(segment.placeTag);
     if (!selected || (segment.fromEvent != null && !from?.start) || (segment.untilEvent != null && !until?.start)) return null;
     return { location: { ...selected, dateId, context: "segment", representative: true },
       start: from?.start ?? "00:00", end: until?.start ?? "24:00" };

@@ -274,10 +274,10 @@ export const eventMediaByTitle = {
     links: [official("Lake Wānaka 官方旅游信息", "https://www.lakewanaka.co.nz/"), official("Wanaka Luxury Apartments 官网", "https://www.wanakaluxuryapartments.co.nz/"), googleMaps("Wanaka Luxury Apartments", "酒店地图"), redbook("瓦纳卡 住宿 公寓")],
   },
   "瓦纳卡湖边慢游": {
-    location: "瓦纳卡湖畔",
-    localNames: ["Lake Wānaka", "That Wānaka Tree", "Puzzling World", "Mount Iron Track"],
+    location: "瓦纳卡与 Lake Hāwea 南岸",
+    localNames: ["Puzzling World", "Wānaka", "Lake Hāwea", "Albert Town", "That Wānaka Tree"],
     ...wanakaImage,
-    links: [official("Lake Wānaka 官方旅游信息", "https://www.lakewanaka.co.nz/"), official("Puzzling World 官方详情", "https://www.puzzlingworld.co.nz/"), googleMaps("That Wanaka Tree", "孤独的树地图"), googleMaps("Mount Iron Track Wanaka", "Mount Iron 地图"), redbook("瓦纳卡 湖边 攻略")],
+    links: [official("Puzzling World 营业时间", "https://www.puzzlingworld.co.nz/about-us/contact-us/"), official("Wānaka 与 Lake Hāwea 官方路线参考", "https://www.wanaka.co.nz/about-wanaka/recommended-trips/wanaka-day-trips/lake-hawea-wanaka-loop/"), googleMaps("Lake Hawea lakefront Capell Avenue New Zealand", "Lake Hāwea 南岸地图"), googleMaps("That Wanaka Tree", "孤独的树地图"), redbook("瓦纳卡 Lake Hawea 湖边 攻略")],
   },
   "自驾前往库克山": {
     route: "瓦纳卡 → Lindis Pass → 普卡基湖 → 库克山",

@@ -2,6 +2,7 @@ import { adventureRouteIndex } from "./adventureRouteIndex";
 import { line } from "d3";
 import roadRoutes from "./data/road-routes.json";
 import { routeFocusPositions } from "./adventureHotelRoutes";
+export { routeDurationEstimate } from "./adventureRouteDuration";
 
 export const adventureRoutes = adventureRouteIndex.map(route => ({
   ...route,

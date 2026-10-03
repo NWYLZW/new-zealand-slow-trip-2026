@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "../LanguageContext";
+import { flightDurationEstimate } from "./adventureRouteDuration";
 import { getInlineEventLink, getInlineEventParts } from "../eventLinks";
 import { localNameTranslations } from "../eventMedia";
 import { usePrivateVault } from "../PrivateVaultContext";
@@ -88,24 +89,30 @@ function ScheduleTab({ event, dateId, language, activeAgendaId, onSelectAgenda }
   </div>;
 }
 
-function FlightTab({ event, vault }) {
+function FlightTab({ event, vault, language }) {
   return <div className="trip-event-flights">
     {event.flightSummary && <div className="trip-event-flight-summary">
       <strong><PencilText>{event.flightSummary.airline}</PencilText></strong>
       <p><PencilText>{`${event.flightSummary.cabin} · 出票日期 ${event.flightSummary.issuedOn}`}</PencilText></p>
       <p><PencilText>{`每人总计 ${event.flightSummary.totalPerPerson}（票价 ${event.flightSummary.farePerPerson} + 税费 ${event.flightSummary.taxPerPerson}）`}</PencilText></p>
     </div>}
-    {event.flights?.map((flight, index) => <section key={`${flight.date}-${flight.flightNumber}`}>
-      <h2>{getInlineEventLink(flight.flightNumber)?.url
-        ? <a href={getInlineEventLink(flight.flightNumber).url} target="_blank" rel="noreferrer"><PencilText>{flight.flightNumber}</PencilText> ↗</a>
-        : <PencilText>{flight.flightNumber}</PencilText>}</h2>
-      <p><PencilText>{`${flight.date} · ${flight.cabin} · ${flight.status}`}</PencilText></p>
-      <p><PencilText>{adventureFlightSegments(event)[index]}</PencilText></p>
-      <p><PencilText>{`出发航站楼：${flight.departureTerminal} · 抵达航站楼：${flight.arrivalTerminal}`}</PencilText></p>
-      {flight.priceNoteZh && <p><PencilText>{flight.priceNoteZh}</PencilText></p>}
-      {flight.reliabilityNoteZh && <p><PencilText>{flight.reliabilityNoteZh}</PencilText></p>}
-      <PrivateFlight number={flight.flightNumber} vault={vault} />
-    </section>)}
+    {event.flights?.map((flight, index) => {
+      const duration = flightDurationEstimate(flight, language);
+      return <section key={`${flight.date}-${flight.flightNumber}`}>
+        <h2>{getInlineEventLink(flight.flightNumber)?.url
+          ? <a href={getInlineEventLink(flight.flightNumber).url} target="_blank" rel="noreferrer"><PencilText>{flight.flightNumber}</PencilText> ↗</a>
+          : <PencilText>{flight.flightNumber}</PencilText>}</h2>
+        <p><PencilText>{`${flight.date} · ${flight.cabin} · ${flight.status}`}</PencilText></p>
+        <p><PencilText>{adventureFlightSegments(event)[index]}</PencilText></p>
+        {duration && <p title={duration.title}>
+          <PencilText>{duration.label}</PencilText>
+        </p>}
+        <p><PencilText>{`出发航站楼：${flight.departureTerminal} · 抵达航站楼：${flight.arrivalTerminal}`}</PencilText></p>
+        {flight.priceNoteZh && <p><PencilText>{flight.priceNoteZh}</PencilText></p>}
+        {flight.reliabilityNoteZh && <p><PencilText>{flight.reliabilityNoteZh}</PencilText></p>}
+        <PrivateFlight number={flight.flightNumber} vault={vault} />
+      </section>;
+    })}
     {event.flightSummary?.note && <p><PencilText>{event.flightSummary.note}</PencilText></p>}
   </div>;
 }
@@ -160,7 +167,7 @@ export function AdventureEventDetails({ eventId, tab, agendaId = null, onTabChan
       aria-labelledby={`trip-event-tab-${activeTab}`}>
       {activeTab === "schedule" && <ScheduleTab event={event} dateId={entry.dateId}
         language={language} activeAgendaId={agendaId} onSelectAgenda={onSelectAgenda} />}
-      {activeTab === "flight" && <FlightTab event={event} vault={vault} />}
+      {activeTab === "flight" && <FlightTab event={event} vault={vault} language={language} />}
       {activeTab === "names" && <div className="trip-event-names">{event.media?.localNames?.map(name => <div key={name}>
         <span><PencilText>{localNameTranslations[name] ?? name}</PencilText><PencilText>{name}</PencilText></span>
         <button type="button" onClick={async () => {

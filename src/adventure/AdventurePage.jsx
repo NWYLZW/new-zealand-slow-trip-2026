@@ -162,7 +162,8 @@ function AdventureBoard() {
       : focus?.kind === 'event' ? getTripCalendarDay(focus.value.split('|')[0]) : null;
     if (!day) return null;
     const tags = [...new Set(day.events.flatMap(event => event.stopTags ?? []))];
-    const positions = tags.map(tag => internationalMapStops.find(stop => stop.tag === tag)
+    const positions = tags.map(tag => day.events.find(event => event.stopOverrides?.[tag])?.stopOverrides[tag]
+      ?? internationalMapStops.find(stop => stop.tag === tag)
       ?? adventureStops.find(stop => stop.tag === tag) ?? mapStops.find(stop => stop.tag === tag))
       .filter(Boolean)
       .map(stop => [stop.position[1], stop.position[0]]);

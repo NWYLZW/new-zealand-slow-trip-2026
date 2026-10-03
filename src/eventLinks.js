@@ -42,6 +42,8 @@ const placeAliases = [
   ["Cardrona", "Cardrona Hotel"],
   ["That Wanaka Tree", "That Wanaka Tree"],
   ["Puzzling World", "Puzzling World Wanaka"],
+  ["Lake Hāwea", "Lake Hawea lakefront Capell Avenue New Zealand"],
+  ["Albert Town", "Albert Town New Zealand"],
   ["Mount Iron", "Mount Iron Track"],
   ["Lindis Pass", "Lindis Pass Viewpoint"],
   ["Omarama", "Omarama New Zealand"],

@@ -91,9 +91,10 @@ export function AdventureRouteDetails({ route, navigate }) {
     </section>}
 
     {itinerary?.events?.length > 0 && <section className="trip-route-section" aria-label={`${itinerary.date}当天安排`}>
-      <SectionHeading>当天安排</SectionHeading>
+      <SectionHeading>{route.agendaIndexes ? "本段安排" : "当天安排"}</SectionHeading>
       <ol className="trip-route-agenda">
         {itinerary.events.map(([time, text], index) => {
+          if (route.agendaIndexes && !route.agendaIndexes.includes(index)) return null;
           const waypoint = getAgendaWaypoint(route.id, index);
           const iconType = agendaIconType(text, route.transport);
           const contents = <>

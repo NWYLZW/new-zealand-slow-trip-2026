@@ -131,7 +131,8 @@ export function nearbyRefreshDelay(dataset, now) {
 }
 
 export function nearbyContext(dataset, now, rawLocation, routes = [], locationStatus = null) {
-  const { rows = [], days = [], places = [], language = "zh" } = dataset;
+  const { days = [], places = [], language = "zh" } = dataset;
+  const rows = (dataset.rows ?? []).filter(row => row.executionStatus !== "completed");
   const validNow = Number.isFinite(now);
   const location = usableLocation(rawLocation, now);
   const tripStart = dataset.tripStart ?? Math.min(...days.map(day => day.start), ...rows.map(row => row.start));
@@ -154,7 +155,8 @@ export function nearbyContext(dataset, now, rawLocation, routes = [], locationSt
   const day = phase === "during-trip" ? days.filter(item => item.start <= now && now < item.end)
     .sort((a, b) => b.start - a.start)[0] ?? days.find(item => item.dateId === current?.dateId) ?? null : null;
   const referenceDay = day ?? (phase === "before-trip" ? days[0] : phase === "after-trip" ? days.at(-1) : null);
-  const untimed = (dataset.untimed ?? []).filter(row => row.dateId === referenceDay?.dateId);
+  const untimed = (dataset.untimed ?? []).filter(row =>
+    row.executionStatus !== "completed" && row.dateId === referenceDay?.dateId);
   const nearby = location ? places.filter(place => !place.dates || place.dates.includes(day?.dateId))
     .map(place => ({ ...nearbyPlaceTarget(place, now, day?.dateId), distance: locationDistance(location.position, place.position) }))
     .filter(place => place.distance + location.accuracy <= 8000)

@@ -168,20 +168,21 @@ function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
     itemZones.push(zone);
     const start = zonedLocalInstant(startDate, item.startTime, zone);
     if (start === null) continue;
-    const confirmedMilestone = !item.isEstimated && !item.endTime;
+    const completed = item.executionStatus === "completed";
+    const confirmedMilestone = !completed && !item.isEstimated && !item.endTime;
     const displayTime = item.timeLabel ?? item.time;
     const base = { id: item.id, label: item.title, iconType: item.iconType, groupId: event.urlId,
       active: item.id === activeAgendaId, color: event.color,
       title: `${displayTime} · ${item.title}${confirmedMilestone ? " · 已预约时间点" : ""}`,
-      ariaLabel: `${displayTime}，${item.title}${confirmedMilestone ? "，已预约时间点" : item.isEstimated ? "，计划时间" : ""}`,
+      ariaLabel: `${displayTime}，${item.title}${confirmedMilestone ? "，已预约时间点" : !completed && item.isEstimated ? "，计划时间" : ""}`,
       onSelect: () => onSelectAgenda?.(item) };
     if (item.endTime) {
       const endDate = item.endDate ?? (item.endMinutes < item.startMinutes ? nextDate(startDate) : startDate);
       const end = zonedLocalInstant(endDate, item.endTime, zone);
-      const timeRange = intervalTimeLabel(item, startDate, endDate, language);
+      const timeRange = `${completed && item.isEstimated ? (language === "en" ? "Around " : "约") : ""}${intervalTimeLabel(item, startDate, endDate, language)}`;
       if (end !== null && end > start) intervals.push({ ...base, start, end, onSelect: undefined,
         title: `${timeRange} · ${item.title}`,
-        ariaLabel: `${timeRange}，${item.title}${item.isEstimated ? "，计划时段" : ""}`,
+        ariaLabel: `${timeRange}，${item.title}${!completed && item.isEstimated ? "，计划时段" : ""}`,
         renderContent: item.choice
           ? <OptionalAgendaChoice item={item} language={language} renderContent={renderContent} timeLabel={timeRange} />
           : <div className="trip-event-agenda-interval-content">
@@ -190,9 +191,9 @@ function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
             <PencilText>{timeRange}</PencilText>
           </button>
           <span>{renderContent(item.title)}</span>
-          {item.isEstimated && <small><PencilText>{language === "en" ? "Planned" : "计划"}</PencilText></small>}
+          {!completed && item.isEstimated && <small><PencilText>{language === "en" ? "Planned" : "计划"}</PencilText></small>}
         </div>,
-        meta: item.derivedFromNext
+        meta: completed ? null : item.derivedFromNext
           ? (language === "en" ? "Planned occupancy · bounded by the next start" : "计划占用 · 由下一项开始时间划分")
           : item.isEstimated ? (language === "en" ? "Planned window" : "计划时段") : null });
     } else if (item.choice) points.push({ ...base, mapsUrl: null, onSelect: undefined,

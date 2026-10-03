@@ -104,7 +104,8 @@ export function buildNearbyData({ language = "zh", isUnlocked = false, data = nu
           label: localized?.label ?? row.label, type: flight ? "flight" : transfer ? "wait" : agendaIconType(canonicalTitle, sourceEvent.icon),
           routeIds: sourceEvent.segmentIds ?? [],
           places: rowPlaces.map(place => nearbyPlaceEvidence(place, dateId, sourceIndex, movement.moving)), ...movement,
-          executionStatus: "planned", timeStatus: row.interval ? row.interval.source : Number.isFinite(start) ? "known-start" : "unknown",
+          executionStatus: sourceEntry?.[2]?.executionStatus ?? "planned",
+          timeStatus: row.interval ? row.interval.source : Number.isFinite(start) ? "known-start" : "unknown",
           sourceRefs: [{ eventId: event.urlId, dateId, rowId: row.key }],
           flight: flight ? { flightNumber: flight.flightNumber, from: flight.from, to: flight.to } : null,
         };

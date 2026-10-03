@@ -108,9 +108,20 @@ const calendarEventGroupsByDate = {
   "10月3日": [
     { title: "箭镇与 Crown Range", time: "10:00—16:00", color: eventColors.wanakaRoad, icon: "car", drive: { distanceKm: 95, durationZh: "约 1 小时 45 分钟", durationEn: "about 1 hr 45 min" }, items: [0, 1, 2, 3, 4], segmentIds: ["zqn-wanaka"], stopTags: ["ZQN", "WKA"] },
     { title: "抵达瓦纳卡", time: "16:00—17:30", color: eventColors.wanaka, icon: "nature", items: [5], segmentIds: [], stopTags: ["WKA"] },
+    { title: "瓦纳卡星空摄影", calendarLabel: "星空摄影 · 已完成", calendarLabelEn: "Night-sky photography · Completed",
+      time: "约22:30—23:10", timeEn: "Around 22:30–23:10", color: eventColors.stargazing, icon: "stargazing",
+      items: [6], segmentIds: [], stopTags: ["WKA"] },
   ],
   "10月4日": [
-    { title: "瓦纳卡湖边慢游", time: "10:30—20:00", color: eventColors.wanaka, icon: "nature", items: [0, 1, 2, 3, 4], segmentIds: [], stopTags: ["WKA"] },
+    { title: "瓦纳卡湖边慢游", calendarLabel: "Puzzling World 与 Lake Hāwea", calendarLabelEn: "Puzzling World and Lake Hāwea",
+      time: "10:00—20:15", timeEn: "10:00–20:15", color: eventColors.wanaka, icon: "nature",
+      items: [0, 1, 2, 3, 4, 5, 6, 7], segmentIds: ["wka-puzzling-world", "wka-hawea", "wka-wanaka-tree"], stopTags: ["WKA", "HWA"],
+      stopOverrides: { HWA: { name: "Lake Hāwea 南岸", nameEn: "Lake Hāwea southern shore", date: "10/4",
+        desc: "Capell Avenue 片区参考点，不是停车入口", descEn: "Capell Avenue area reference, not a parking entrance",
+        position: [-44.6108669, 169.2564053], timeZone: "Pacific/Auckland",
+        coordinateSourceUrl: "https://www.wanaka.co.nz/about-wanaka/recommended-trips/wanaka-day-trips/lake-hawea-wanaka-loop/",
+        coordinateSourceNote: "Official itinerary map: Hawea Store & Kitchen, 33 Capell Avenue; area reference only",
+        reviewedAt: "2026-10-04" } } },
   ],
   "10月5日": [
     { title: "自驾前往库克山", time: "08:45—15:30", color: eventColors.mountCookRoad, icon: "car", drive: { distanceKm: 205, durationZh: "约 2 小时 45 分钟", durationEn: "about 2 hr 45 min" }, items: [0, 1, 2, 3, 4], segmentIds: ["wanaka-aoraki"], stopTags: ["WKA", "AOR"] },
@@ -188,7 +199,7 @@ const stayIntegrationByEvent = {
   "Walter Peak 湖上巡游": { mapPhases: ["overnight"] },
   "箭镇与 Crown Range": { mapPhases: ["check-out", "check-in"], routeOrigin: "check-out", routeDestination: "check-in", linkPhase: "check-in", linkEventIndex: 4, omitStopTags: ["ZQN", "WKA"] },
   "抵达瓦纳卡": { mapPhases: ["check-in"], linkPhase: "check-in", linkEventIndex: 0, omitStopTags: ["WKA"] },
-  "瓦纳卡湖边慢游": { mapPhases: ["overnight"] },
+  "瓦纳卡湖边慢游": { mapPhases: ["overnight"], routeOrigin: "overnight" },
   "自驾前往库克山": { mapPhases: ["check-out", "check-in"], routeOrigin: "check-out", routeDestination: "check-in", omitStopTags: ["WKA", "AOR"] },
   "冰川直升机": {
     mapPhases: ["check-in"],

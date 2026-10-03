@@ -110,7 +110,15 @@
       "url": "https://www.puzzlingworld.co.nz/about-us/contact-us/",
       "title": "Puzzling World 营业时间",
       "titleEn": "Puzzling World opening hours",
-      "checkedAt": "2026-10-01",
+      "checkedAt": "2026-10-04",
+      "status": "verified"
+    },
+    {
+      "id": "lakes-hawea-loop",
+      "url": "https://www.wanaka.co.nz/about-wanaka/recommended-trips/wanaka-day-trips/lake-hawea-wanaka-loop/",
+      "title": "Wānaka、Albert Town 与 Lake Hāwea 官方路线参考",
+      "titleEn": "Official Wānaka, Albert Town and Lake Hāwea route reference",
+      "checkedAt": "2026-10-04",
       "status": "verified"
     },
     {
@@ -248,9 +256,9 @@
     },
     {
       "date": "2026-10-03",
-      "reviewedAt": "2026-10-01",
-      "highlight": "今天只做换城：10:00前退房，箭镇午餐后按路况走 Crown Range；不熟悉山路就经 Cromwell，取消观景与咖啡以保留抵达余量。",
-      "highlightEn": "Make the transfer the day's main focus: check out by 10:00, lunch in Arrowtown, then use Crown Range only if conditions suit. Choose Cromwell if uncomfortable with alpine driving, dropping sightseeing and coffee to protect arrival time.",
+      "reviewedAt": "2026-10-04",
+      "highlight": "白天从皇后镇经箭镇与 Crown Range 前往瓦纳卡；夜间已外出观星、拍摄星空，用户确认体验很好。10月4日晚起，10:00再去 Puzzling World。",
+      "highlightEn": "Daytime transfer from Queenstown via Arrowtown and Crown Range to Wānaka. The night-sky photography outing is completed, with a positive experience reported by the travellers. Sleep in on 4 October before Puzzling World at 10:00.",
       "alternative": {
         "title": "道路备选 · 经 Cromwell",
         "desc": "遇封路、冰雪、装链准备不足或驾驶信心不足时，先核查经 Cromwell 的道路，再替换山路和 Cardrona 停留；若两条路线均不安全，先停在安全地点联系住宿，不赶16:00。"
@@ -361,21 +369,28 @@
           "text": "16:00是计划到达，不是确认可入住时刻；到已确认瓦纳卡住宿先按指示停车、核对入住并卸行李，休息后就近简餐，入住窗口与停车安排仍待确认。",
           "textEn": "16:00 is the planned arrival, not a verified check-in time. At the confirmed Wānaka stay, follow parking instructions, check in and unload, then rest before a nearby simple meal. The arrival window and parking arrangements still need confirmation.",
           "sourceIds": []
+        },
+        {
+          "summary": "星空摄影已完成",
+          "summaryEn": "Night-sky photography completed",
+          "text": "用户确认在当时聊天后外出，拍了半个多小时后返回，体验很好。依据当时所说的22:30及本次补充，暂记10月3日约22:30—23:10；这是回忆估计时段，不是精确拍摄或返程时间，具体机位未记录。活动已完成。",
+          "textEn": "The travellers went out after the conversation, photographed the night sky for a little over half an hour, then returned and reported a good experience. Based on the stated 22:30 time and this clarification, record approximately 22:30–23:10 on 3 October. This is a recalled time window, not exact photography or return timestamps; the shooting spot was not recorded. The activity is completed.",
+          "sourceIds": []
         }
       ]
     },
     {
       "date": "2026-10-04",
-      "reviewedAt": "2026-10-01",
-      "highlight": "连住不换房，以湖岸短走为主；下午至多选一项，Mount Iron 并非平地散步，不把爬坡与 Puzzling World 叠加。",
-      "highlightEn": "Stay in the same accommodation and make a short lakefront walk the focus. Choose at most one afternoon activity: Mount Iron is not a flat stroll, and should not be combined with Puzzling World.",
+      "reviewedAt": "2026-10-04",
+      "highlight": "观星后晚起，10:00玩 Puzzling World，中午回瓦纳卡吃饭，下午慢游 Lake Hāwea 南岸；回住宿休息、晚餐后再去湖中树，不叠加 Mount Iron。",
+      "highlightEn": "Sleep in after stargazing, visit Puzzling World at 10:00, return to Wānaka for lunch and spend the afternoon by Lake Hāwea's southern shore. Rest at the stay and have dinner before the evening tree stop; do not add Mount Iron.",
       "alternative": {
         "title": "雨天或低体力 · 室内与休息",
-        "desc": "雨天可只选 Puzzling World 室内区，不必走户外迷宫；官网现列09:00开门、16:30最后入场，出发前复核。疲劳或不喜欢视觉错觉则回住宿休息。"
+        "desc": "雨天上午只玩 Puzzling World 室内区；下午若风雨大或仍困倦，取消 Hāwea 和 Albert Town，留在瓦纳卡休息。傍晚湖中树也可缩短，不补爬山。"
       },
       "alternativeEn": {
         "title": "Rain or low energy: indoors and rest",
-        "desc": "In rain, visit only Puzzling World's indoor rooms, without the outdoor maze. The website currently lists opening at 09:00 and last admission at 16:30; recheck before leaving. If tired or uncomfortable with visual illusions, rest at the stay instead."
+        "desc": "In rain, choose only Puzzling World's indoor rooms in the morning. If wind, rain or fatigue persists, skip Hāwea and Albert Town and rest in Wānaka. Shorten the evening tree stop too; do not replace it with a climb."
       },
       "links": [
         [
@@ -387,12 +402,8 @@
           "https://www.puzzlingworld.co.nz/about-us/contact-us/"
         ],
         [
-          "Mount Iron 距离与步道风险",
-          "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/wanaka-area/things-to-do/mount-iron-track/"
-        ],
-        [
-          "QLDC Mount Iron 管理资料",
-          "https://www.qldc.govt.nz/2026/january/council-to-manage-all-reserve-land-at-mount-iron-wanaka"
+          "Wānaka 与 Lake Hāwea 官方路线参考",
+          "https://www.wanaka.co.nz/about-wanaka/recommended-trips/wanaka-day-trips/lake-hawea-wanaka-loop/"
         ]
       ],
       "linksEn": [
@@ -405,57 +416,71 @@
           "https://www.puzzlingworld.co.nz/about-us/contact-us/"
         ],
         [
-          "Mount Iron distance and track cautions",
-          "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/wanaka-area/things-to-do/mount-iron-track/"
-        ],
-        [
-          "QLDC Mount Iron management information",
-          "https://www.qldc.govt.nz/2026/january/council-to-manage-all-reserve-land-at-mount-iron-wanaka"
+          "Official Wānaka and Lake Hāwea route reference",
+          "https://www.wanaka.co.nz/about-wanaka/recommended-trips/wanaka-day-trips/lake-hawea-wanaka-loop/"
         ]
       ],
       "events": [
         {
-          "summary": "湖岸短走与湖中树",
-          "summaryEn": "Short lakefront walk and the tree",
-          "text": "早餐后从同一家瓦纳卡住宿前往 Roys Bay 西端，沿湖岸走到 That Wanaka Tree 后原路返回；按现场标牌停车，风大或湿滑就缩短，只在岸上拍照。",
-          "textEn": "After breakfast, leave the same Wānaka stay for western Roys Bay. Follow the lakefront to That Wānaka Tree and return the same way. Park according to signs, shorten the walk if windy or slippery, and take photos from shore.",
-          "sourceIds": [
-            "lakes-wanaka-waterfront",
-            "lakes-qldc-parking"
-          ]
-        },
-        {
-          "summary": "午餐与体力评估",
-          "summaryEn": "Lunch and an energy check",
-          "text": "回镇中心就近午餐，建议留30分钟坐下休息；餐后再按天气和双人体力决定下午去处，补水、上洗手间，若已疲劳就回原住宿，不勉强补景点。",
-          "textEn": "Have lunch nearby in town and allow about 30 minutes for a seated rest. Decide on the afternoon only after checking the weather and how both of you feel. Refill water and use the toilets; return to the same stay if already tired.",
-          "sourceIds": []
-        },
-        {
-          "summary": "室内游览或条件式短徒步",
-          "summaryEn": "Indoor visit or a conditional hill walk",
-          "text": "下午只选一项：雨天选 Puzzling World 室内区；晴稳且有体力才走 Mount Iron，官方参考4.5公里环线、1.5小时，有碎石上坡，先查开放并留交通余量。",
-          "textEn": "Choose just one: Puzzling World's indoor rooms in rain, or Mount Iron only in settled weather with enough energy. DOC describes a 4.5 km loop taking about 1.5 hours, with loose rock and climbing. Check access and leave time for travel and parking.",
+          "summary": "10点开始 Puzzling World",
+          "summaryEn": "Start Puzzling World at 10",
+          "text": "睡醒吃过早餐，从原住宿出发，目标10:00到 Puzzling World；先看错觉馆，再按体力玩迷宫，约12:00收尾。官网4月至11月09:00开门、16:30最后入场；这是建议游览时段，不是已预订门票。玩到12:30也可，午餐和下午顺延。",
+          "textEn": "After sleeping in and having breakfast, leave the same stay and aim to reach Puzzling World at 10:00. Start with the illusion rooms, then try the maze if you feel up to it, aiming to finish around noon. The official April-November hours list opening at 09:00 and last admission at 16:30. This is a suggested visit, not a ticket booking. Finishing at 12:30 is fine; shift lunch and the afternoon back.",
           "sourceIds": [
             "lakes-puzzling-hours",
-            "lakes-puzzling-rooms",
-            "lakes-doc-mount-iron",
-            "lakes-qldc-mount-iron"
+            "lakes-puzzling-rooms"
           ]
         },
         {
-          "summary": "咖啡与短程收尾",
-          "summaryEn": "Coffee and an easy finish",
-          "text": "活动后先坐下喝咖啡、回暖；体力尚可再走镇中心湖边一小段，不为等日落延后晚餐，风雨增大就直接回原住宿休息，18:30前收尾。",
-          "textEn": "Sit down for coffee and warm up after the activity. If energy allows, take one short town-centre lakefront walk. Do not delay dinner to wait for sunset; return to the same stay if wind or rain increases and wrap up by 18:30.",
+          "summary": "回镇上午餐",
+          "summaryEn": "Lunch back in town",
+          "text": "目标12:15左右回瓦纳卡镇上坐下吃午餐，留到13:30，不急着赶路；实际离园、停车和上菜较慢就顺延。补水后检查精神状态，仍困倦就取消下午开车，回原住宿休息。",
+          "textEn": "Aim to sit down for lunch back in Wānaka around 12:15 and take until 13:30. Shift this later if leaving the attraction, parking or food takes longer. Refill water and check alertness; if still sleepy, skip the afternoon drive and rest at the same stay.",
           "sourceIds": []
         },
         {
-          "summary": "晚餐与次日上路准备",
-          "summaryEn": "Dinner and preparation for tomorrow",
-          "text": "在镇上或原住宿安排简单晚餐，顺手备好次日早餐、饮水和路上点心；回房整理行李与保暖层，私下核对明早退房方式，为08:45计划出发留余量。",
-          "textEn": "Have a simple dinner in town or at the stay, and prepare breakfast, water and road snacks for tomorrow. Pack luggage and warm layers, privately check morning checkout instructions, and leave a buffer for the planned 08:45 departure.",
+          "summary": "开往 Hāwea 南岸",
+          "summaryEn": "Drive to Hāwea's southern shore",
+          "text": "午餐后经 Albert Town 前往 Lake Hāwea 镇与南岸，预留30分钟作驾驶、找路和停车缓冲，不是实时车程承诺。以 Capell Avenue 一带为目的地区域，按现场标牌选择合法停车，不在公路边临停拍照。",
+          "textEn": "After lunch, drive via Albert Town to Lake Hāwea township and its southern shore. The 30-minute block is a planning allowance for driving, navigation and parking, not a live ETA. Aim for the Capell Avenue area, use signed legal parking and avoid roadside photo stops.",
+          "sourceIds": [
+            "lakes-hawea-loop"
+          ]
+        },
+        {
+          "summary": "Hāwea 湖岸慢游",
+          "summaryEn": "A relaxed Hāwea lakefront visit",
+          "text": "把下午重点留给 Lake Hāwea 南岸：从镇旁可进入的湖岸短走、坐一会儿、拍湖与山，不要求走完整条步道，也不继续绕到 The Neck。风大就缩短；需要咖啡可现场查看 Hawea Store & Kitchen 是否营业，未核验当日营业或座位。",
+          "textEn": "Make Lake Hāwea's southern shore the afternoon focus: take a short walk from an accessible town-side lakefront spot, sit and photograph the lake and mountains. There is no need to complete a full trail or continue to The Neck. Shorten the stop if windy. Check Hawea Store & Kitchen locally if you want coffee; that day's opening and seats have not been verified.",
+          "sourceIds": ["lakes-hawea-loop"]
+        },
+        {
+          "summary": "返程与可选短停",
+          "summaryEn": "Return drive with an optional stop",
+          "text": "约16:00离开湖岸，沿原方向返回瓦纳卡；经过 Albert Town 时有精神可停20至30分钟看看 Clutha River，找不到合适停车或天冷就直接略过。17:00回住宿是计划目标，不是实时到达保证。",
+          "textEn": "Leave the lakefront around 16:00 and return towards Wānaka. If alert and comfortable, take an optional 20-30 minute stop in Albert Town to see the Clutha River; skip it if parking is unsuitable or it is cold. Reaching the stay at 17:00 is a planning target, not a live arrival guarantee.",
+          "sourceIds": ["lakes-hawea-loop"]
+        },
+        {
+          "summary": "回房休息与整理",
+          "summaryEn": "Rest and pack at the stay",
+          "text": "回同一家住宿休息一小时，换保暖衣服、整理明早行李；今天不加 Mount Iron，保留观星后补觉和恢复体力的余地。",
+          "textEn": "Rest for an hour at the same accommodation, change into warmer clothes and prepare tomorrow's luggage. Do not add Mount Iron today; leave room to recover after the late stargazing night.",
           "sourceIds": []
+        },
+        {
+          "summary": "先晚餐，再看湖",
+          "summaryEn": "Dinner before the lakefront",
+          "text": "18:00左右在镇上或原住宿吃晚餐，不为等湖边光线拖晚吃饭；备好明早早餐与饮水，19:00后留出前往湖中树和停车的时间。",
+          "textEn": "Have dinner in town or at the same stay around 18:00 rather than delaying food for the evening light. Prepare breakfast and water for tomorrow, then allow time after 19:00 to reach the tree and park.",
+          "sourceIds": []
+        },
+        {
+          "summary": "晚间湖中树与短走",
+          "summaryEn": "Evening tree stop and a short walk",
+          "text": "约19:15再到 That Wanaka Tree 与 Roys Bay 西端湖岸，按现场天光和体力短走拍照，目标20:15收尾；这个时段不是核验后的日落时刻。只在岸上拍照，不涉水；回房后准备休息，保留10月5日08:45出发去库克山的安排。",
+          "textEn": "Return to That Wānaka Tree and western Roys Bay around 19:15 for a short walk and photos, adjusting to the light and energy levels and aiming to finish by 20:15. This is not a verified sunset time. Stay on shore without wading, then return to rest. Keep the planned 08:45 departure for Mount Cook on 5 October.",
+          "sourceIds": ["lakes-wanaka-waterfront", "lakes-qldc-parking"]
         }
       ]
     }

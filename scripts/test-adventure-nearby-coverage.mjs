@@ -116,8 +116,10 @@ try {
       assert.equal(model.current.executionStatus, "planned");
       assert.equal(model.fallback, null);
     }
-    const nextStart = Math.min(...dataset.rows.filter(row => row.start > now).map(row => row.start));
+    const nextStart = Math.min(...dataset.rows.filter(row => row.executionStatus !== "completed"
+      && row.start > now).map(row => row.start));
     assert.equal(model.next?.start ?? Infinity, nextStart);
+    assert.notEqual(model.next?.executionStatus, "completed");
     if (model.fallback?.target) {
       assert.equal(model.fallback.target, "day");
       assert(dataset.days.some(day => day.dateId === model.fallback.targetId));

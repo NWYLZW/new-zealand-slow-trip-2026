@@ -159,7 +159,9 @@ function agendaInterval(agendaItem, dateId, defaultTimeZone = "Pacific/Auckland"
   const end = Number.isFinite(endValue) ? endValue
     : typeof endValue === "string" ? zonedLocalInstant(endDate, endValue, zone) : null;
   return start !== null && end !== null && end > start
-    ? { start, end, source: agendaItem.isEstimated ? "预计时段" : "计划时段" } : null;
+    ? { start, end, source: agendaItem.executionStatus === "completed"
+      ? (agendaItem.isEstimated ? "已完成 · 约" : "已完成")
+      : agendaItem.isEstimated ? "预计时段" : "计划时段" } : null;
 }
 
 function agendaPointInstant(agendaItem, dateId, defaultTimeZone = "Pacific/Auckland") {

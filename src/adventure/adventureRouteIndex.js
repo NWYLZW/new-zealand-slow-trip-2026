@@ -38,7 +38,12 @@ export const adventureRouteIndex = routeSegments.flatMap(segment => {
   );
   return [{
     id: segment.id, from, to, via, transport, date: segment.date,
-    ...(roundTrip ? { roundTrip: true, color: "#287d78", waypointIds: dayTripStops.map(point => point.id) } : {}),
+    ...(transport === "coach" ? { returnRouteId: routeSegments.find(item => item.id !== segment.id
+      && item.from === segment.to && item.to === segment.from && item.date === segment.date
+      && item.id.includes("coach"))?.id } : {}),
+    ...(roundTrip ? { roundTrip: true, color: segment.dayTripColor ?? "#287d78",
+      waypointIds: dayTripStops.map(point => point.id) } : {}),
+    ...(segment.agendaIndexes ? { agendaIndexes: segment.agendaIndexes } : {}),
     label: transport === "coach" ? "奥克兰 ⇄ 霍比屯 · 大巴" : segment.label,
     points: [fromPosition, ...waypoints.map(({ lat, lng }) => [lat, lng]), toPosition],
     routingPoints: [fromPosition, ...routingWaypoints.map(({ lat, lng }) => [lat, lng]), toPosition],

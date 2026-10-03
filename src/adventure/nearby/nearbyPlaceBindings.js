@@ -6,6 +6,7 @@ export const nearbyPublicPins = [
   ["queenstown-gardens", "Queenstown Gardens", "Queenstown Gardens", [-45.0363315, 168.6617071]],
   ["skyline", "Skyline Queenstown", "Skyline Queenstown", [-45.0279742, 168.646883]],
   ["wanaka-tree", "That Wānaka Tree", "That Wānaka Tree", [-44.6985, 169.1175]],
+  ["puzzling-world", "Puzzling World", "Puzzling World", [-44.696992, 169.161698]],
   ["wanaka-lakefront", "瓦纳卡湖滨", "Wānaka lakefront", [-44.695, 169.1368]],
   ["britomart", "Britomart 交通中心", "Britomart Transport Centre", [-36.8445568, 174.7691726]],
   ["queen-street", "Queen Street", "Queen Street", [-36.8504453, 174.7639477]],
@@ -27,7 +28,9 @@ export const nearbyPlaceBindings = {
     4: ["place:ZQN"], 5: ["place:ZQN"] },
   "2026-10-03": { 0: ["place:ZQN", "waypoint:arrowtown"],
     2: ["waypoint:arrowtown", "waypoint:crown-range-area"], 5: ["place:WKA"] },
-  "2026-10-04": { 0: ["pin:wanaka-tree", "pin:wanaka-lakefront"], 3: ["pin:wanaka-lakefront"] },
+  "2026-10-04": { 0: ["pin:puzzling-world"], 1: ["place:WKA"],
+    2: ["place:WKA", "place:HWA"], 3: ["place:HWA"], 4: ["place:HWA", "place:WKA"],
+    5: ["place:WKA"], 6: ["place:WKA"], 7: ["pin:wanaka-tree", "pin:wanaka-lakefront"] },
   "2026-10-05": { 0: ["place:WKA", "waypoint:lindis-pass-area"] },
   "2026-10-06": { 0: ["place:AOR"], 1: ["place:AOR"],
     4: ["place:OAM"], 5: ["place:OAM"], 6: ["place:OAM", "waypoint:oamaru-blue-penguin-colony"], 9: ["place:OAM"] },
@@ -46,6 +49,7 @@ export const nearbyPlaceBindings = {
 // does not establish the activity's position. Only explicit stationary sites
 // can support the deliberately tentative near-place signal.
 const activitySites = {
+  "2026-10-04": { 0: ["pin:puzzling-world"] },
   "2026-09-29": { 1: ["waypoint:akl-domestic-terminal"], 3: ["waypoint:queenstown-airport"],
     11: ["waypoint:akl-domestic-terminal"] },
   "2026-10-05": { 4: ["waypoint:mount-cook-airport"], 8: ["waypoint:hermitage-big-sky"] },

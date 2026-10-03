@@ -19,6 +19,8 @@ try {
   const route = id => unlocked.find(item => item.id === id);
   const pairs = [
     ["zqn-glenorchy", ids[0], ids[0]], ["zqn-wanaka", ids[0], ids[1]],
+    ["wka-puzzling-world", ids[1], ids[1]], ["wka-hawea", ids[1], ids[1]],
+    ["wka-wanaka-tree", ids[1], ids[1]],
     ["wanaka-aoraki", ids[1], ids[2]], ["aoraki-oamaru", ids[2], ids[3]],
     ["oamaru-christchurch", ids[3], ids[4]],
   ];
@@ -70,10 +72,25 @@ try {
   assert.equal(connectHotelRoute(original, new Map()).hotelRoadStatus, "partial");
   assert.equal(connectHotelRoute({ ...original, roadGeometry: null }, new Map()).hotelRoadStatus, "partial");
   assert.equal(original.roadGeometry.coordinates, points);
+  const detourStop = [170.0005, -40.002];
+  const detour = [points[0], bend, detourStop, bend, ...points.slice(1)];
+  assert(connectHotelRoad(detour, [...hotel].reverse(), town, { preservePosition: detourStop })
+    .coordinates.some(point => point === detourStop), "hotel access must preserve an early out-and-back waypoint");
+  assert.equal(connectHotelRoad(detour, [...hotel].reverse(), town, { preservePosition: [172, -42] }),
+    null, "missing protected waypoint must not allow an unbounded shortcut");
 
   const townWka = JSON.parse(await readFile("src/adventure/data/town-maps/WKA.json", "utf8"));
   const publicWka = missing.find(item => item.id === "zqn-wanaka");
   assert(connectHotelRoad(publicWka.roadGeometry.coordinates, publicWka.hotelEndpoints.destination.position,
     townWka, { reverse: true }), "public Wanaka stay connects using existing road snapshots");
-  console.log("Hotel routes: locked/unlocked/relocked endpoints, all five driving days, waypoints, links, focus, graph connections and privacy fixtures passed.");
+  for (const base of missing.filter(item => item.id.startsWith("wka-"))) {
+    const result = connectHotelRoute(base, new Map([["WKA", townWka]]));
+    assert.equal(result.hotelRoadStatus, "connected", base.id);
+    const key = point => point.map(value => value.toFixed(6)).join(",");
+    for (const stop of base.roadSource.snapped.slice(1, -1)) {
+      assert(result.roadGeometry.coordinates.some(point => key(point) === key(stop.location)),
+        base.id + ": hotel connections must preserve every driving stop");
+    }
+  }
+  console.log("Hotel routes: locked/unlocked/relocked endpoints, five existing routes and three Wanaka drives, preserved waypoints, links, focus, graph connections and privacy fixtures passed.");
 } finally { await server.close(); }

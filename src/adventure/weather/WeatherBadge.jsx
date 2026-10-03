@@ -15,7 +15,7 @@ export function WeatherBadge({ dateId, placeTag, language, active = true, onSele
     data-weather-date={dateId} data-weather-place={placeTag ?? ""}
     aria-labelledby={segments.map((_, index) => `${id}-${index}`).join(" ")}
     onClick={event => { event.stopPropagation(); onSelect?.(dateId); }}>
-    {segments.map((segment, index) => <SegmentWeatherBadge key={segment.location.id} id={`${id}-${index}`}
+    {segments.map((segment, index) => <SegmentWeatherBadge key={`${segment.location.id}-${segment.start}`} id={`${id}-${index}`}
       dateId={dateId} segment={segment} language={language} active={active} />)}
   </button>;
 }

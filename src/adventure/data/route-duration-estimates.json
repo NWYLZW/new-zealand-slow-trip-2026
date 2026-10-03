@@ -1,0 +1,41 @@
+{
+  "note": "Public route references only. No private hotel coordinates, live traffic, stops or check-in time. Existing full road snapshots remain authoritative for their routes.",
+  "routes": {
+    "christchurch-car-return": {
+      "durationSeconds": 1274.1,
+      "scope": "city-airport-road",
+      "source": "OSRM / FOSSGIS",
+      "reviewedAt": "2026-10-04",
+      "sourceUrl": "https://routing.openstreetmap.de/routed-car/route/v1/driving/172.6362,-43.5321;172.5322,-43.4894?overview=false&steps=false&alternatives=false&generate_hints=false"
+    },
+    "akl-akc-transfer": {
+      "durationSeconds": 1637.3,
+      "scope": "city-airport-road",
+      "source": "OSRM / FOSSGIS",
+      "reviewedAt": "2026-10-04",
+      "sourceUrl": "https://routing.openstreetmap.de/routed-car/route/v1/driving/174.785,-37.0082;174.7645,-36.8509?overview=false&steps=false&alternatives=false&generate_hints=false"
+    },
+    "akc-akl-transfer": {
+      "durationSeconds": 1545.9,
+      "scope": "city-airport-road",
+      "source": "OSRM / FOSSGIS",
+      "reviewedAt": "2026-10-04",
+      "sourceUrl": "https://routing.openstreetmap.de/routed-car/route/v1/driving/174.7645,-36.8509;174.785,-37.0082?overview=false&steps=false&alternatives=false&generate_hints=false"
+    },
+    "hobbiton-akc-coach": {
+      "durationSeconds": 8898.9,
+      "scope": "coach-road-reference",
+      "source": "OSRM / FOSSGIS",
+      "reviewedAt": "2026-10-04",
+      "sourceUrl": "https://routing.openstreetmap.de/routed-car/route/v1/driving/175.6792,-37.8576;174.7645,-36.8509?overview=false&steps=false&alternatives=false&generate_hints=false"
+    },
+    "zqn-walter-peak": {
+      "durationSeconds": 5400,
+      "scope": "return-sailing",
+      "source": "RealNZ",
+      "reviewedAt": "2026-10-04",
+      "sourceUrl": "https://www.realnz.com/en/blog/walter-peak-high-country-farm-the-ultimate-guide/",
+      "note": "TSS Earnslaw: approximately 45 minutes each way. Return sailing is 90 minutes, excluding the barbecue, farm visit and waiting."
+    }
+  }
+}

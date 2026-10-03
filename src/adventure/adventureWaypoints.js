@@ -228,6 +228,16 @@ export const adventureWaypoints = [...waypointRecords, ...adventureDayTripStops]
 }));
 
 const unresolvedByRoute = {
+  "wka-puzzling-world": [
+    { eventIndex: 1, label: "瓦纳卡午餐", reason: "餐厅未确定；城镇端点不是餐厅位置。" },
+  ],
+  "wka-hawea": [
+    { eventIndex: 4, label: "Albert Town 可选短停", reason: "城镇点位不代表具体河边停车或步道入口。" },
+    { eventIndex: 5, label: "原住宿休息", reason: "住宿端点仅在解锁后按现有酒店资料连接。" },
+  ],
+  "wka-wanaka-tree": [
+    { eventIndex: 6, label: "瓦纳卡晚餐", reason: "餐厅未确定；不把湖中树点位作为餐厅。" },
+  ],
   "zqn-glenorchy": [
     { eventIndex: 3, label: "格林诺奇午餐", reason: "餐厅未确定；码头点位不代表餐厅。" },
   ],

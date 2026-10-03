@@ -26,11 +26,11 @@ function SegmentedWeather({ dateId, segments, active, sources }) {
   const position = useRef({ left: 0, instant: null });
   const hours = useMemo(() => joinWeatherSegments(dateId, segments, states.map(state => state.data)), [dateId, segments, states]);
   return <section ref={ref} className="trip-weather" aria-label={weatherText("weather", language)}>
-    {sources ? segments.map((segment, index) => <WeatherSources key={segment.location.id} dateId={dateId}
+    {sources ? segments.map((segment, index) => <WeatherSources key={`${segment.location.id}-${segment.start}`} dateId={dateId}
       location={segment.location} data={states[index].data} product={states[index].data?.product ?? requests[index].product}
       language={language} segment={segment} attribution={index === 0} />) : <>
       <div className="trip-weather-segment-summaries">
-        {segments.map((segment, index) => <WeatherSummary key={segment.location.id} language={language}
+        {segments.map((segment, index) => <WeatherSummary key={`${segment.location.id}-${segment.start}`} language={language}
           state={{ ...states[index], location: segment.location, request: requests[index], retry: () => retry(index) }}
           data={weatherSegmentData(states[index].data, segment)} segment={segment} />)}
       </div>

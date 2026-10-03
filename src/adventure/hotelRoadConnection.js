@@ -21,7 +21,7 @@ function projectOnSegment(point, from, to) {
 }
 
 // Connect only the local end of the existing route, never bypass its intermediate stops.
-export function connectHotelRoad(coordinates, position, town, { reverse = false } = {}) {
+export function connectHotelRoad(coordinates, position, town, { reverse = false, preservePosition = null } = {}) {
   if (!town?.place?.roads?.length || coordinates.length < 2) return null;
   const source = reverse ? [...coordinates].reverse() : coordinates;
   const hotel = [position[1], position[0]];
@@ -49,7 +49,13 @@ export function connectHotelRoad(coordinates, position, town, { reverse = false 
   addEdge(nearest.from, nearest.point); addEdge(nearest.point, nearest.to);
 
   let length = 0, joinIndex = 0;
-  const limit = Math.floor((source.length - 1) / 2);
+  let limit = Math.floor((source.length - 1) / 2);
+  if (preservePosition) {
+    const stopIndex = source.findIndex(point => key(point) === key(preservePosition));
+    if (stopIndex < 1) return null;
+    // A short return drive can reach its first stop before half the vertices.
+    limit = Math.min(limit, stopIndex);
+  }
   for (let i = 1; i <= limit; i++) {
     length += distance(source[i - 1], source[i]);
     if (length > 5000) break;
@@ -75,8 +81,10 @@ export function connectHotelRoute(route, towns) {
   for (const side of ["origin", "destination"]) {
     const endpoint = route.hotelEndpoints[side];
     if (!endpoint) continue;
+    const stops = route.roadSource?.snapped?.slice(1, -1) ?? [];
+    const preservePosition = (side === "origin" ? stops[0] : stops.at(-1))?.location;
     const connection = connectHotelRoad(coordinates, endpoint.position, towns.get(endpoint.cityTag),
-      { reverse: side === "destination" });
+      { reverse: side === "destination", preservePosition });
     connections[side] = connection ? { status: "connected", snapDistanceM: connection.snapDistanceM,
       source: connection.source } : { status: "unavailable" };
     if (connection) coordinates = connection.coordinates;

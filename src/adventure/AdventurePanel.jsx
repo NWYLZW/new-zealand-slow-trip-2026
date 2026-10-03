@@ -9,7 +9,8 @@ import { confirmedAccommodationBookings } from "../data/confirmedAccommodationBo
 import { confirmedStayTransitionsOn } from "../data/confirmedStayTimeline";
 import { preTripChecklist } from "../data/preTripChecklist";
 import { adventureDays, adventureStops } from "./adventureData";
-import { routeDirectionsUrl } from "./adventureRoutes";
+import { routeDirectionsUrl, routeDurationEstimate } from "./adventureRoutes";
+import { eventTravelDurations } from "./adventureRouteDuration";
 import { useAdventureRoutes } from "./AdventureResolvedRoutes.jsx";
 import { AdventureRouteDetails } from "./AdventureRouteDetails";
 import { AdventureWaypointDetails } from "./AdventureWaypointDetails";
@@ -198,6 +199,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const hasRouteDay = Boolean(routeDateId && getTripCalendarDay(routeDateId));
   const isRoadRoute = route?.transport === "road" || route?.transport === "coach";
   const routeDistance = isRoadRoute && !route.hotelEndpoints && route.roadSource?.distanceM > 0 ? Math.round(route.roadSource.distanceM / 1000) : null;
+  const routeDuration = routeDurationEstimate(route, language);
   const RouteModeIcon = route?.transport === "flight" ? FlightIcon : route?.transport === "coach" ? BusIcon : CarIcon;
   const routeModeLabel = route?.transport === "flight" ? adventureText("航班", "Flight", language)
     : route?.transport === "coach" ? adventureText("大巴往返", "Coach return", language)
@@ -207,6 +209,7 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
   const event = view.rightPanel === "event"
     ? (language === "en" ? getAdventureCalendarDays({ language }).flatMap(day => day.events)
       .find(item => item.urlId === view.eventId) : null) ?? eventsById.get(view.eventId) : null;
+  const eventDurations = eventTravelDurations(event, adventureRoutes, language, view.flightRoute);
   const eventStayChoices = useMemo(() => {
     if (!event?.stayIntegration?.mapPhases?.length) return [];
     const allowed = new Set(event.stayIntegration.mapPhases);
@@ -363,8 +366,20 @@ export function AdventurePanel({ view, navigate, closeButtonRef, onRequestUnlock
                 <RouteMetaSeparator />
                 <span className="trip-panel-heading-icon"><RouteDistanceIcon /></span><PencilText>约{routeDistance}km</PencilText>
               </span>}
+            {routeDuration && <span className="trip-route-header-meta-item trip-route-header-duration"
+              title={routeDuration.title} aria-label={`${routeDuration.label}，${routeDuration.title}`}>
+              <RouteMetaSeparator /><PencilText>{routeDuration.label}</PencilText>
+            </span>}
           </div> : date && <span className={`trip-panel-heading-date${stayDate ? " trip-panel-heading-date--stay" : ""}`}
             title={stayDate?.full} aria-label={stayDate?.full}><PencilText ellipsis={Boolean(stayDate)}>{date}</PencilText></span>}
+          {eventDurations.length > 0 && <div className="trip-event-travel-meta"
+            aria-label={adventureText("路程预估耗时", "Estimated travel durations", language)}>
+            {eventDurations.map(item => <div key={item.id} className="trip-event-travel-duration"
+              title={item.duration?.title} aria-label={`${item.label} · ${item.duration?.label ?? adventureText("耗时待确认", "Duration unconfirmed", language)}`}>
+              {(eventDurations.length > 1 || view.flightRoute) && <span className="trip-event-travel-route-label"><PencilText>{item.label}</PencilText></span>}
+              <span><PencilText>{item.duration?.label ?? adventureText("耗时待确认", "Duration unconfirmed", language)}</PencilText></span>
+            </div>)}
+          </div>}
         </div>
         {isWeather ? <div className="trip-panel-header-actions">
           {!weatherSources && <button type="button" className="trip-route-header-action trip-weather-sources-action"

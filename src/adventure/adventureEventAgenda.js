@@ -40,10 +40,12 @@ export function eventAgendaItems(event, { language = "zh" } = {}) {
     const title = language === "en" && typeof entry?.titleEn === "string" ? entry.titleEn : rawTitle;
     const summary = meta.summary ?? null, summaryEn = meta.summaryEn ?? null;
     const localizedSummary = language === "en" ? (summaryEn ?? summary) : summary;
-    const item = { parentEventId: event.urlId, sourceIndex, time: clock.time, timeLabel: rawTime,
+    const item = { parentEventId: event.urlId, sourceIndex, time: clock.time,
+      timeLabel: language === "en" ? meta.timeLabelEn ?? rawTime : rawTime,
       timeMinutes: clock.timeMinutes, startTime: clock.time, startMinutes: clock.timeMinutes,
       endTime: endClock?.time ?? null, endMinutes: endClock?.timeMinutes ?? null,
       isEstimated: Boolean(meta.isEstimated ?? meta.estimated), derivedFromNext: false,
+      executionStatus: meta.executionStatus ?? "planned",
       date: meta.date ?? null, endDate: meta.endDate ?? null,
       timeZone: meta.timeZone ?? null, choice: meta.choice ?? null,
       title, summary, summaryEn, localizedSummary, iconType: agendaIconType(title, event.icon),
@@ -55,7 +57,8 @@ export function eventAgendaItems(event, { language = "zh" } = {}) {
     && !["car", "bus", "flight", "domesticFlight"].includes(event.icon);
   return items.map((item, index) => {
     const next = items[index + 1];
-    if (!mayDerivePlannedWindow || item.endTime || !next || next.startMinutes <= item.startMinutes) return item;
+    if (!mayDerivePlannedWindow || item.executionStatus === "completed" || item.endTime
+      || !next || next.startMinutes <= item.startMinutes) return item;
     return { ...item, endTime: next.startTime, endMinutes: next.startMinutes,
       isEstimated: true, derivedFromNext: true };
   });
