@@ -84,7 +84,7 @@ try {
   await page.waitForSelector('.trip-waypoint[data-waypoint-route="oamaru-christchurch"]:not([hidden])');
   assert.equal(await page.locator('.trip-waypoint[data-waypoint-route="oamaru-christchurch"]:not([hidden])').count(), 4);
   assert(await page.getByRole("button", { name: "查看途经点详情：Timaru" }).isVisible());
-  assert.doesNotMatch(await page.locator(".trip-route-waypoint-coverage").textContent(), /Timaru/);
+  assert.equal(await page.locator(".trip-route-detail details, .trip-route-diagram").count(), 0);
   await page.getByRole("button", { name: "查看途经点详情：Riverside Market 与雅芳河畔" }).click();
   await page.waitForURL("**/*waypoint=riverside-avon");
   await page.keyboard.press("Escape");
@@ -118,7 +118,7 @@ try {
   await page.waitForSelector('.trip-waypoint[data-waypoint-route="zqn-wanaka"]:not([hidden])');
   assert.equal(await page.locator('.trip-waypoint[data-waypoint-route="zqn-wanaka"]:not([hidden])').count(), 3);
   assert(await page.getByRole("button", { name: "查看途经点详情：Cardrona" }).isVisible());
-  assert.doesNotMatch(await page.locator(".trip-route-waypoint-coverage").textContent(), /Crown Range/);
+  assert.equal(await page.locator(".trip-route-detail details, .trip-route-diagram").count(), 0);
   const semanticMarkers = await page.evaluate(() => {
     const read = (selector) => {
       const button = document.querySelector(selector);

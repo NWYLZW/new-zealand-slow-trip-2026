@@ -70,9 +70,7 @@ html[data-adventure-appearance="dark"] #trip-board-structure :is(
   .trip-adventure-calendar-scope, .trip-adventure-calendar-scope[aria-selected="true"],
   .trip-adventure-calendar-weekdays, .trip-adventure-calendar-date,
   .trip-adventure-calendar-event, .trip-day-timeline-event.trip-pencil-surface,
-  .trip-day-timeline-point, .trip-route-detail, .trip-route-node-link,
-  .trip-route-node-link:hover,
-  .trip-route-node-name, .trip-route-provenance summary,
+  .trip-day-timeline-point, .trip-route-detail,
   .trip-event-window, .trip-event-social-more summary,
   .trip-place-tabs, .trip-place-item-title, .trip-place-item-meta,
   .trip-place-detail-link.trip-pencil-surface, .trip-stay-detail,
@@ -90,7 +88,7 @@ html[data-adventure-appearance="dark"] #trip-board-structure :is(
 ) { color: var(--trip-ink-color); }
 
 html[data-adventure-appearance="dark"] #trip-board-structure :is(
-  .trip-route-node-role, .trip-route-agenda time, .trip-route-provenance,
+  .trip-route-agenda time,
   .trip-event-schedule time, .trip-event-social-meta,
   .trip-day-timeline-hour, .trip-place-item-status, .trip-place-empty,
   .trip-stay-section dt,
@@ -102,7 +100,7 @@ html[data-adventure-appearance="dark"] #trip-board-structure :is(
 ) { color: var(--trip-ink-muted); }
 
 html[data-adventure-appearance="dark"] #trip-board-structure :is(
-  .trip-map-sources-page a, .trip-route-provenance a,
+  .trip-map-sources-page a,
   .trip-stay-location a,
   .trip-stay-section dd a, .trip-stay-more,
   .trip-event-tabpanel a, .trip-bag-entry a,
