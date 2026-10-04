@@ -4,6 +4,7 @@ import { AdventureTimelineInk } from "./AdventureTimelineInk";
 import { PencilIcon } from "./pencil/PencilIcon";
 import { PencilSurface } from "./pencil/PencilSurface";
 import { PencilText } from "./pencil/PencilText";
+import { PanelDivider } from "./pencil/PanelDivider";
 import { pencilStroke } from "./pencil/stroke";
 import { GoogleMapIcon } from "./SketchIcons";
 import { useAdventurePreferences } from "./AdventurePreferences";
@@ -11,6 +12,8 @@ import { scheduleNeedsSummary, summarizeScheduleIntervals } from "./scheduleTime
 import "./AdventureScheduleTimeline.css";
 
 const HOUR = 60 * 60 * 1000;
+const GAP_CONTROL_HEIGHT = 44;
+const GAP_CONTROL_PADDING = 8;
 const LIGHT_PAPER_BY_THEME = {
   lake: "#f4f0e3",
   fern: "#edf0df",
@@ -50,35 +53,74 @@ function normalizedCollapsedRanges(start, end, collapsedRanges) {
   return result;
 }
 
-export function createScheduleTimelineScale(start, end, collapsedRanges = []) {
+export function createScheduleTimelineScale(start, end, collapsedRanges = [],
+  { pixelHeight = 0, points = [], expandedRanges = [] } = {}) {
   const ranges = normalizedCollapsedRanges(start, end, collapsedRanges);
+  const controls = normalizedCollapsedRanges(start, end, [...ranges, ...expandedRanges]);
   const segments = [];
   let cursor = start;
-  for (const range of ranges) {
+  for (const range of controls) {
     if (range.start > cursor) segments.push({ start: cursor, end: range.start,
       displayDuration: range.start - cursor, collapsed: false });
-    segments.push({ ...range, displayDuration: Math.min(HOUR, range.end - range.start), collapsed: true });
+    const collapsed = ranges.some(item => item.start === range.start && item.end === range.end);
+    segments.push({ ...range, control: true, displayDuration: collapsed
+      ? Math.min(HOUR, range.end - range.start) : range.end - range.start, collapsed });
     cursor = range.end;
   }
   if (cursor < end) segments.push({ start: cursor, end,
     displayDuration: end - cursor, collapsed: false });
   const displayDuration = segments.reduce((total, segment) => total + segment.displayDuration, 0);
+  const gapInsets = range => ({
+    before: points.some(point => point.time === range.start) ? GAP_CONTROL_HEIGHT : 0,
+    after: points.some(point => point.time === range.end) ? GAP_CONTROL_HEIGHT : 0,
+  });
+  // Reserve visual room inside empty time only; real event durations stay proportional.
+  const minimums = segments.filter(segment => segment.control).map(segment => {
+    const insets = gapInsets(segment);
+    return { segment, pixels: GAP_CONTROL_HEIGHT + GAP_CONTROL_PADDING + insets.before + insets.after };
+  });
+  const reserved = minimums.filter(item => item.segment.collapsed);
+  if (pixelHeight > 0) {
+    let added;
+    do {
+      const remainingPixels = pixelHeight - reserved.reduce((total, item) => total + item.pixels, 0);
+      const remainingDuration = segments.filter(segment => !reserved.some(item => item.segment === segment))
+        .reduce((total, segment) => total + segment.displayDuration, 0);
+      added = minimums.filter(item => !reserved.includes(item)
+        && item.segment.displayDuration / remainingDuration * remainingPixels < item.pixels);
+      reserved.push(...added);
+    } while (added.length);
+  }
+  const reservedPixels = reserved.reduce((total, item) => total + item.pixels, 0);
+  const linearDuration = segments.filter(segment => !reserved.some(item => item.segment === segment))
+    .reduce((total, segment) => total + segment.displayDuration, 0);
+  if (pixelHeight > 0 && reservedPixels > 0 && linearDuration > 0) {
+    const budget = Math.min(reservedPixels, pixelHeight * .7);
+    for (const segment of segments) {
+      const fixed = reserved.find(item => item.segment === segment);
+      segment.displaySize = fixed ? fixed.pixels * budget / reservedPixels
+        : segment.displayDuration / linearDuration * (pixelHeight - budget);
+    }
+  } else {
+    segments.forEach(segment => { segment.displaySize = segment.displayDuration; });
+  }
+  const displaySize = segments.reduce((total, segment) => total + segment.displaySize, 0);
   const position = instant => {
-    if (!(displayDuration > 0)) return 0;
+    if (!(displaySize > 0)) return 0;
     const target = Math.max(start, Math.min(end, instant));
     let elapsed = 0;
     for (const segment of segments) {
       if (target >= segment.end) {
-        elapsed += segment.displayDuration;
+        elapsed += segment.displaySize;
         continue;
       }
       if (target > segment.start) elapsed += (target - segment.start) / (segment.end - segment.start)
-        * segment.displayDuration;
+        * segment.displaySize;
       break;
     }
-    return elapsed / displayDuration;
+    return elapsed / displaySize;
   };
-  return { position, ranges, displayDuration };
+  return { position, ranges, displayDuration, gapInsets };
 }
 
 export function formatScheduleTimeZoneOffset(instant, timeZone) {
@@ -97,8 +139,8 @@ export function formatScheduleTimeZoneOffset(instant, timeZone) {
   }
 }
 
-export function scheduleTimelineTicks(start, end, pixelHeight = 0, minimumGap = 20, collapsedRanges = []) {
-  const scale = createScheduleTimelineScale(start, end, collapsedRanges);
+export function scheduleTimelineTicks(start, end, pixelHeight = 0, minimumGap = 20, collapsedRanges = [], timeScale) {
+  const scale = timeScale ?? createScheduleTimelineScale(start, end, collapsedRanges);
   const collapsed = scale.ranges;
   const candidates = [start];
   for (let instant = Math.ceil(start / HOUR) * HOUR; instant < end; instant += HOUR) {
@@ -114,8 +156,8 @@ export function scheduleTimelineTicks(start, end, pixelHeight = 0, minimumGap = 
   const ticks = [uniqueCandidates[0]];
   for (const instant of uniqueCandidates.slice(1, -1)) {
     if (required.has(instant)) {
-      ticks.push(instant);
-      continue;
+      while (ticks.length > 1 && !required.has(ticks.at(-1))
+        && pixelsBetween(ticks.at(-1), instant) < minimumGap) ticks.pop();
     }
     if (pixelsBetween(ticks.at(-1), instant) >= minimumGap
       && pixelsBetween(instant, end) >= minimumGap) ticks.push(instant);
@@ -144,10 +186,9 @@ function layoutIntervals(intervals) {
   return result;
 }
 
-export function layoutSchedulePoints(points, pixelHeight, range, timePosition) {
+export function layoutSchedulePoints(points, pixelHeight, range, timePosition, { edge = 22, gap = 46 } = {}) {
   const duration = range.end - range.start;
   const position = timePosition ?? (instant => (instant - range.start) / duration);
-  const edge = 22, gap = 46;
   const sorted = [...points].map(item => ({ ...item,
     anchorTop: item.time >= range.end ? .99
       : Math.max(.01, Math.min(.99, position(item.time))),
@@ -191,6 +232,34 @@ function ScheduleIcon({ type }) {
   return <PencilIcon kind={definition.kind} sourceSize={definition.sourceSize}>
     {definition.paths.map((path, index) => <path key={`${path.d}-${index}`} {...path} />)}
   </PencilIcon>;
+}
+
+function ScheduleGapToggle({ range, expanded, timeScale, onToggle, displayTop }) {
+  const top = displayTop === undefined ? timeScale.position(range.start) * 100 : displayTop * 100;
+  const height = (timeScale.position(range.end) - timeScale.position(range.start)) * 100;
+  const insets = displayTop === undefined ? timeScale.gapInsets(range) : { before: 0, after: 0 };
+  const action = expanded ? range.collapseLabel ?? "收起" : range.expandLabel ?? "展开";
+  const label = (expanded ? range.collapseAriaLabel : range.expandAriaLabel)
+    ?? `${range.label ?? "时段"}，${action}`;
+  return <div className="trip-schedule-timeline-gap"
+    style={{ top: `${top}%`, height: displayTop === undefined ? `${height}%` : 44,
+      transform: displayTop === undefined ? undefined : "translateY(-50%)",
+      paddingTop: insets.before, paddingBottom: insets.after }}>
+    <span className="trip-schedule-timeline-gap-line"><PanelDivider /></span>
+    <button type="button" className="trip-schedule-timeline-collapsed-range"
+      aria-expanded={expanded} aria-label={label} title={label} onClick={onToggle}>
+      <span className="trip-schedule-timeline-gap-label"><PencilText>{range.label}</PencilText>
+        {range.endSuffix && <sup aria-hidden="true">{range.endSuffix}</sup>}
+      </span>
+      <PencilIcon kind={expanded ? "fold-time" : "unfold-time"} sourceSize={24}>
+        {/* MUI UnfoldLess / UnfoldMore geometry, rendered with the shared pencil brush. */}
+        <path d={expanded
+          ? "M7.41 18.59 8.83 20 12 16.83 15.17 20l1.41-1.41L12 14zm9.18-13.18L15.17 4 12 7.17 8.83 4 7.41 5.41 12 10z"
+          : "M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"} />
+      </PencilIcon>
+    </button>
+    <span className="trip-schedule-timeline-gap-line"><PanelDivider /></span>
+  </div>;
 }
 
 function PointLeadersInk({ points }) {
@@ -274,6 +343,7 @@ export function scheduleTimelineAutoHeight(duration, pointCount, intervalCount =
 export function AdventureScheduleTimeline({
   range, points = [], intervals = [], formatTick, tickTitle, tickAriaLabel, endTick,
   tickColumns, collapsedRanges = [], ariaLabel, className = "", height = "auto", adaptiveDetail = false,
+  readableLabels = false,
 }) {
   const { theme, resolvedAppearance } = useAdventurePreferences();
   const timelineRef = useRef(null);
@@ -284,12 +354,14 @@ export function AdventureScheduleTimeline({
   const duration = range?.end - range?.start;
   const activeCollapsedRanges = useMemo(() => collapsedRanges.filter((range, index) =>
     !expandedRangeIds.includes(range.id ?? `collapsed-${index}`)), [collapsedRanges, expandedRangeIds]);
+  const expandedRanges = useMemo(() => collapsedRanges.filter((range, index) =>
+    expandedRangeIds.includes(range.id ?? `collapsed-${index}`)), [collapsedRanges, expandedRangeIds]);
   const timeScale = useMemo(() => duration > 0
-    ? createScheduleTimelineScale(range.start, range.end, activeCollapsedRanges) : null,
-  [activeCollapsedRanges, duration, range?.end, range?.start]);
+    ? createScheduleTimelineScale(range.start, range.end, activeCollapsedRanges, { pixelHeight, points, expandedRanges }) : null,
+  [activeCollapsedRanges, duration, expandedRanges, pixelHeight, points, range?.end, range?.start]);
   const ticks = useMemo(() => duration > 0
-    ? scheduleTimelineTicks(range.start, range.end, pixelHeight || 430, 20, activeCollapsedRanges) : [],
-  [activeCollapsedRanges, duration, pixelHeight, range?.end, range?.start]);
+    ? scheduleTimelineTicks(range.start, range.end, pixelHeight || 430, 20, activeCollapsedRanges, timeScale) : [],
+  [activeCollapsedRanges, duration, pixelHeight, range?.end, range?.start, timeScale]);
   const pointRows = useMemo(() => duration > 0
     ? layoutSchedulePoints(points.filter(item => item.time >= range.start && item.time <= range.end),
       pixelHeight, range, timeScale.position) : [],
@@ -297,9 +369,17 @@ export function AdventureScheduleTimeline({
   const visibleIntervals = useMemo(() => duration > 0
     ? intervals.filter(item => item.end > range.start && item.start < range.end) : [],
   [duration, intervals, range]);
-  const condensed = adaptiveDetail && scheduleNeedsSummary(visibleIntervals, pixelHeight);
+  const condensed = !readableLabels && adaptiveDetail && scheduleNeedsSummary(visibleIntervals, pixelHeight);
   const intervalRows = useMemo(() => layoutIntervals(condensed
     ? summarizeScheduleIntervals(visibleIntervals) : visibleIntervals), [condensed, visibleIntervals]);
+  const callouts = useMemo(() => !readableLabels || !timeScale ? [] : layoutSchedulePoints([
+    ...intervalRows.map(row => ({ ...row, time: (Math.max(row.start, range.start)
+      + Math.min(row.end, range.end)) / 2 })),
+    ...points.filter(row => row.time >= range.start && row.time <= range.end),
+    ...normalizedCollapsedRanges(range.start, range.end, collapsedRanges)
+      .map(gap => ({ id: `gap:${gap.id}`, time: (gap.start + gap.end) / 2, gap })),
+  ], pixelHeight, range, timeScale.position, { edge: 26, gap: 54 }),
+  [collapsedRanges, intervalRows, pixelHeight, points, range, readableLabels, timeScale]);
   const timelineHeight = useMemo(() => {
     if (height === "fill") return undefined;
     if (typeof height === "number") return `${height}px`;
@@ -323,8 +403,9 @@ export function AdventureScheduleTimeline({
   return <div className={`trip-schedule-timeline ${className}`.trim()} role="group" aria-label={ariaLabel}
     data-height={height === "fill" ? "fill" : "fixed"}
     data-detail={condensed ? "summary" : "full"}
+    data-readable={readableLabels || undefined}
     data-tick-columns={dualTickColumns ? "dual" : "single"}
-    style={timelineHeight ? { height: timelineHeight } : undefined}>
+    style={{ height: timelineHeight, minHeight: readableLabels ? callouts.length * 54 + 24 : undefined }}>
     {dualTickColumns && <>
       <span className="trip-schedule-timeline-tick-heading is-left"
         title={dualTickColumns[0].headingTitle} aria-label={dualTickColumns[0].headingAriaLabel}>
@@ -371,39 +452,13 @@ export function AdventureScheduleTimeline({
           {isEnd && endTick?.suffix && <sup aria-hidden="true">{endTick.suffix}</sup>}
         </time>;
       })}
-      {timeScale.ranges.map(range => {
-        const configuredIndex = collapsedRanges.findIndex((item, index) =>
-          (item.id ?? `collapsed-${index}`) === range.id);
-        const configured = configuredIndex >= 0 ? collapsedRanges[configuredIndex] : range;
-        const top = timeScale.position(range.start) * 100;
-        const cellHeight = (timeScale.position(range.end) - timeScale.position(range.start)) * 100;
-        return <button key={range.id} type="button" className="trip-schedule-timeline-collapsed-range"
-          style={{ top: `${top}%`, height: `${cellHeight}%` }} aria-expanded="false"
-          aria-label={configured.expandAriaLabel ?? `${configured.label ?? "折叠时段"}，展开`}
-          title={configured.expandTitle ?? configured.label}
-          onClick={() => setExpandedRangeIds(ids => [...ids, range.id])}>
-          <PencilText>{configured.label}</PencilText>
-          {configured.endSuffix && <sup aria-hidden="true">{configured.endSuffix}</sup>}
-          <span><PencilText>{configured.expandLabel ?? "展开"}</PencilText></span>
-        </button>;
-      })}
-      {collapsedRanges.map((range, index) => ({ ...range, id: range.id ?? `collapsed-${index}` }))
-        .filter(range => expandedRangeIds.includes(range.id)).map((range) => {
-          const top = timeScale.position(range.start) * 100;
-          const cellHeight = (timeScale.position(range.end) - timeScale.position(range.start)) * 100;
-          return <button key={range.id} type="button"
-            className="trip-schedule-timeline-collapsed-range is-expanded"
-            style={{ top: `${top}%`, height: `${cellHeight}%` }} aria-expanded="true"
-            aria-label={range.collapseAriaLabel ?? `${range.label ?? "展开时段"}，收起`}
-            title={range.collapseTitle ?? range.label}
-            onClick={() => setExpandedRangeIds(ids => ids.filter(id => id !== range.id))}>
-            <PencilText>{range.label}</PencilText>
-            {range.endSuffix && <sup aria-hidden="true">{range.endSuffix}</sup>}
-            <span><PencilText>{range.collapseLabel ?? "收起"}</PencilText></span>
-          </button>;
-        })}
+      {!readableLabels && normalizedCollapsedRanges(range.start, range.end, collapsedRanges).map(gap =>
+        <ScheduleGapToggle key={gap.id} range={gap} timeScale={timeScale}
+          expanded={expandedRangeIds.includes(gap.id)}
+          onToggle={() => setExpandedRangeIds(ids => ids.includes(gap.id)
+            ? ids.filter(id => id !== gap.id) : [...ids, gap.id])} />)}
       <div className="trip-schedule-timeline-lanes">
-        <PointLeadersInk points={pointRows} />
+        <PointLeadersInk points={readableLabels ? callouts.filter(row => !row.gap) : pointRows} />
         {intervalRows.map((row) => {
           const { id, start, end, timeLabel, label, summary, meta, details, iconType, mapsUrl, active, color,
             title, ariaLabel: rowAriaLabel, onSelect, lane, lanes, milestones = [], showTime = true } = row;
@@ -414,20 +469,22 @@ export function AdventureScheduleTimeline({
           const height = (timeScale.position(visibleEnd) - timeScale.position(visibleStart)) * 100;
           const rowPixels = pixelHeight * height / 100;
           const compact = rowPixels < 48;
-          const minimal = adaptiveDetail && pixelHeight > 0 && rowPixels < 24;
-          const showMap = mapsUrl && (!adaptiveDetail || !condensed && rowPixels >= 44);
+          const minimal = readableLabels || adaptiveDetail && pixelHeight > 0 && rowPixels < 24;
+          const showMap = !readableLabels && mapsUrl && (!adaptiveDetail || !condensed && rowPixels >= 44);
           const clock = instant => formatTick?.(instant) ?? new Date(instant).toISOString().slice(11, 16);
           const rowTitle = row.summaryCount ? `${clock(visibleStart)} — ${clock(visibleEnd)} · ${label}` : title;
           return <div key={id} className="trip-schedule-timeline-slot"
             data-summary-count={row.summaryCount} data-minimal={minimal || undefined}
-            style={{ top: `${top}%`, height: `${height}%`, left: `${lane / lanes * 100}%`, width: `${100 / lanes}%` }}>
+            style={{ top: `${top}%`, height: `${height}%`,
+              left: readableLabels ? lane / lanes * 16 : `${lane / lanes * 100}%`,
+              width: readableLabels ? 16 / lanes : `${100 / lanes}%` }}>
             <PencilSurface variant="badge"
               className={`trip-schedule-timeline-interval${compact ? " is-compact" : ""}${adaptiveDetail ? " is-adaptive" : ""}${minimal ? " is-minimal" : ""}`}
               data-active={Boolean(active)} style={{ "--trip-surface-badge-wash": scheduleWash(color) }}>
               {content && !minimal ? <div className="trip-schedule-timeline-interval-main trip-schedule-timeline-row-content">
                 {content}
               </div> : <>
-                {onSelect && <button type="button" className="trip-schedule-timeline-interval-hit"
+                {!readableLabels && onSelect && <button type="button" className="trip-schedule-timeline-interval-hit"
                   title={rowTitle} aria-label={row.summaryCount ? rowTitle : rowAriaLabel ?? (timeLabel ? `${timeLabel} · ${label}` : label)}
                   onClick={onSelect} />}
                 {!minimal && <div className="trip-schedule-timeline-interval-copy"
@@ -451,7 +508,25 @@ export function AdventureScheduleTimeline({
             </PencilSurface>
           </div>;
         })}
-        {pointRows.map((row) => {
+        {readableLabels && callouts.map(row => row.gap
+          ? <ScheduleGapToggle key={row.id} range={row.gap} timeScale={timeScale} displayTop={row.displayTop}
+            expanded={expandedRangeIds.includes(row.gap.id)}
+            onToggle={() => setExpandedRangeIds(ids => ids.includes(row.gap.id)
+              ? ids.filter(id => id !== row.gap.id) : [...ids, row.gap.id])} />
+          : <button key={row.id} type="button" className="trip-schedule-callout"
+            style={{ top: `${row.displayTop * 100}%` }} data-active={Boolean(row.active)}
+            title={row.title} aria-label={row.ariaLabel ?? row.title}
+            onClick={row.onSelect}>
+            {row.iconType && <span className="trip-schedule-timeline-point-icon"><ScheduleIcon type={row.iconType} /></span>}
+            <span className="trip-schedule-callout-copy">
+              <strong><PencilText ellipsis>{row.label}</PencilText></strong>
+              <span className="trip-schedule-callout-time">
+                <PencilText>{row.timeLabel ?? formatTick?.(row.time)}</PencilText>
+                {row.durationLabel && <PencilText>{row.durationLabel}</PencilText>}
+              </span>
+            </span>
+          </button>)}
+        {!readableLabels && pointRows.map((row) => {
           const { id, time, timeLabel, label, iconType, mapsUrl, active, color, title,
             ariaLabel: rowAriaLabel, onSelect, displayTop, showTime = true } = row;
           const content = rowContent(row);

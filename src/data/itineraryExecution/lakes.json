@@ -381,9 +381,9 @@
     },
     {
       "date": "2026-10-04",
-      "reviewedAt": "2026-10-04",
-      "highlight": "观星后晚起，10:00玩 Puzzling World，中午回瓦纳卡吃饭，下午慢游 Lake Hāwea 南岸；回住宿休息、晚餐后再去湖中树，不叠加 Mount Iron。",
-      "highlightEn": "Sleep in after stargazing, visit Puzzling World at 10:00, return to Wānaka for lunch and spend the afternoon by Lake Hāwea's southern shore. Rest at the stay and have dinner before the evening tree stop; do not add Mount Iron.",
+      "reviewedAt": "2026-10-05",
+      "highlight": "日间原计划为 Puzzling World、Lake Hāwea 与湖中树。夜间已到瓦纳卡神树公园停车场拍星空，并于次日10月5日约00:20求婚成功。",
+      "highlightEn": "The daytime plan remains Puzzling World, Lake Hāwea and the tree. That night, night-sky photography at the park car park near That Wānaka Tree was followed by a successful proposal around 00:20 on 5 October.",
       "alternative": {
         "title": "雨天或低体力 · 室内与休息",
         "desc": "雨天上午只玩 Puzzling World 室内区；下午若风雨大或仍困倦，取消 Hāwea 和 Albert Town，留在瓦纳卡休息。傍晚湖中树也可缩短，不补爬山。"
@@ -481,6 +481,13 @@
           "text": "约19:15再到 That Wanaka Tree 与 Roys Bay 西端湖岸，按现场天光和体力短走拍照，目标20:15收尾；这个时段不是核验后的日落时刻。只在岸上拍照，不涉水；回房后准备休息，保留10月5日08:45出发去库克山的安排。",
           "textEn": "Return to That Wānaka Tree and western Roys Bay around 19:15 for a short walk and photos, adjusting to the light and energy levels and aiming to finish by 20:15. This is not a verified sunset time. Stay on shore without wading, then return to rest. Keep the planned 08:45 departure for Mount Cook on 5 October.",
           "sourceIds": ["lakes-wanaka-waterfront", "lakes-qldc-parking"]
+        },
+        {
+          "summary": "出发与星空摄影已完成",
+          "summaryEn": "Departure and night-sky photography completed",
+          "text": "用户确认在对话后出发，到瓦纳卡神树公园（That Wānaka Tree 附近）停车场拍星空，随后在10月5日约00:20求婚成功。22:00为依据晚间对话暂记的出发估时，不是精确出发或开始拍摄时刻；这一段包含前往现场和拍摄，求婚时点单列在10月5日。",
+          "textEn": "The user confirmed leaving after the conversation, photographing the stars at the park car park near That Wānaka Tree, then successfully proposing around 00:20 on 5 October. The 22:00 departure is a provisional estimate from the evening conversation, not an exact departure or photography start time. This block includes travel to the site and photography; the proposal milestone is recorded separately on 5 October.",
+          "sourceIds": []
         }
       ]
     }

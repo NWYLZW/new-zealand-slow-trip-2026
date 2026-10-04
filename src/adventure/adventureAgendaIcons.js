@@ -1,4 +1,14 @@
 export const agendaIconDefinitions = {
+  rest: {
+    kind: "rest",
+    sourceSize: 24,
+    paths: [{ d: "M2 21v-6H1V9h2v4h18V9h2v6h-1v6h-2v-2H4v2zm3-10V5c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v6h-2V7H7v4z" }],
+  },
+  wait: {
+    kind: "wait",
+    sourceSize: 24,
+    paths: [{ d: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16m.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" }],
+  },
   meal: {
     kind: "meal",
     sourceSize: 24,
@@ -51,6 +61,10 @@ export const agendaIconDefinitions = {
     paths: [{ d: "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2m4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23z" }],
   },
 };
+
+export function agendaActivityIcon(activityType) {
+  return { drive: "car", sightseeing: "scenic", meal: "meal", rest: "rest", wait: "wait" }[activityType];
+}
 
 export function agendaIconType(text, mode) {
   if (/直升机/.test(text)) return "helicopter";

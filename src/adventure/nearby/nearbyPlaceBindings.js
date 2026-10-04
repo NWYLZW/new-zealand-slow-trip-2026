@@ -31,7 +31,12 @@ export const nearbyPlaceBindings = {
   "2026-10-04": { 0: ["pin:puzzling-world"], 1: ["place:WKA"],
     2: ["place:WKA", "place:HWA"], 3: ["place:HWA"], 4: ["place:HWA", "place:WKA"],
     5: ["place:WKA"], 6: ["place:WKA"], 7: ["pin:wanaka-tree", "pin:wanaka-lakefront"] },
-  "2026-10-05": { 0: ["place:WKA", "waypoint:lindis-pass-area"] },
+  "2026-10-05": {
+    0: ["place:WKA", "waypoint:lindis-pass-area"],
+    10: ["waypoint:lindis-pass-area", "waypoint:omarama-town"],
+    11: ["waypoint:omarama-town", "waypoint:lake-pukaki-south"],
+    12: ["waypoint:lake-pukaki-south", "waypoint:mount-cook-airport"],
+  },
   "2026-10-06": { 0: ["place:AOR"], 1: ["place:AOR"],
     4: ["place:OAM"], 5: ["place:OAM"], 6: ["place:OAM", "waypoint:oamaru-blue-penguin-colony"], 9: ["place:OAM"] },
   "2026-10-07": { 0: ["place:OAM", "waypoint:timaru-town"] },

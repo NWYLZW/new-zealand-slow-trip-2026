@@ -1,5 +1,5 @@
 import { getInlineEventParts } from "../eventLinks";
-import { agendaIconType } from "./adventureAgendaIcons";
+import { agendaActivityIcon, agendaIconType } from "./adventureAgendaIcons";
 
 function exactClock(value) {
   const match = /^(?:[01]?\d|2[0-3]):([0-5]\d)$/.exec(String(value ?? "").trim());
@@ -48,7 +48,8 @@ export function eventAgendaItems(event, { language = "zh" } = {}) {
       executionStatus: meta.executionStatus ?? "planned",
       date: meta.date ?? null, endDate: meta.endDate ?? null,
       timeZone: meta.timeZone ?? null, choice: meta.choice ?? null,
-      title, summary, summaryEn, localizedSummary, iconType: agendaIconType(title, event.icon),
+      title, summary, summaryEn, localizedSummary, activityType: meta.activityType ?? null,
+      iconType: agendaActivityIcon(meta.activityType) ?? agendaIconType(rawTitle, event.icon),
       mapsUrl: mapPart?.url ?? null, linkKind: mapPart ? "map" : null };
     return [{ ...item, id: agendaItemId(event, item, index) }];
   });

@@ -11,6 +11,7 @@
 .trip-route-agenda-icon { display: grid; place-items: center; width: 27px; height: 27px; }
 .trip-route-agenda-icon .trip-pencil-icon { width: 26px; height: 26px; }
 .trip-route-agenda-text { min-width: 0; font-size: 15px; line-height: 1.45; overflow-wrap: anywhere; }
+.trip-route-agenda-text small { display:block; margin-top:2px; color:var(--trip-ink-muted,#526a57); font-size:11px; }
 .trip-route-agenda--mapped>button .trip-route-agenda-text { color:#2e5740; text-decoration:underline; text-decoration-color:#829d85; text-decoration-style:wavy; text-underline-offset:4px; }
 .trip-route-agenda--mapped>button:hover .trip-route-agenda-text { color:#183d2a; }
 

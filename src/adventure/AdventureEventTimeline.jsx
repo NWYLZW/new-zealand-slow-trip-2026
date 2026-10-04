@@ -3,6 +3,7 @@ import { eventAgendaItems } from "./adventureEventAgenda";
 import { adventureEventInterval, flightEndpointInstant, zonedLocalInstant } from "./adventureEventTime";
 import { AdventureScheduleTimeline, formatScheduleTimeZoneOffset } from "./AdventureScheduleTimeline";
 import { PencilText } from "./pencil/PencilText";
+import { scheduleDurationLabel } from "./scheduleDuration";
 
 const airportZones = { SZX: "Asia/Shanghai", KUL: "Asia/Kuala_Lumpur", AKL: "Pacific/Auckland",
   ZQN: "Pacific/Auckland", CHC: "Pacific/Auckland" };
@@ -180,9 +181,12 @@ function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
       const endDate = item.endDate ?? (item.endMinutes < item.startMinutes ? nextDate(startDate) : startDate);
       const end = zonedLocalInstant(endDate, item.endTime, zone);
       const timeRange = `${completed && item.isEstimated ? (language === "en" ? "Around " : "约") : ""}${intervalTimeLabel(item, startDate, endDate, language)}`;
-      if (end !== null && end > start) intervals.push({ ...base, start, end, onSelect: undefined,
-        title: `${timeRange} · ${item.title}`,
-        ariaLabel: `${timeRange}，${item.title}${!completed && item.isEstimated ? "，计划时段" : ""}`,
+      const durationLabel = scheduleDurationLabel(start, end, { ...item, language });
+      if (end !== null && end > start) intervals.push({ ...base, start, end,
+        label: item.localizedSummary ?? item.title,
+        timeLabel: timeRange, durationLabel, activityType: item.activityType,
+        title: `${timeRange} · ${item.title} · ${durationLabel}`,
+        ariaLabel: `${timeRange}，${item.title}，${durationLabel}`,
         renderContent: item.choice
           ? <OptionalAgendaChoice item={item} language={language} renderContent={renderContent} timeLabel={timeRange} />
           : <div className="trip-event-agenda-interval-content">
@@ -191,7 +195,7 @@ function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
             <PencilText>{timeRange}</PencilText>
           </button>
           <span>{renderContent(item.title)}</span>
-          {!completed && item.isEstimated && <small><PencilText>{language === "en" ? "Planned" : "计划"}</PencilText></small>}
+          <small><PencilText>{durationLabel}</PencilText></small>
         </div>,
         meta: completed ? null : item.derivedFromNext
           ? (language === "en" ? "Planned occupancy · bounded by the next start" : "计划占用 · 由下一项开始时间划分")
@@ -252,6 +256,7 @@ export function AdventureEventTimeline({ event, dateId, language = "zh", activeA
   }) : null;
   return <section className="trip-event-timeline-adapter">
     {model.range && <AdventureScheduleTimeline range={model.range} points={model.points} intervals={model.intervals}
+      readableLabels={model.intervals.some(row => row.activityType) && !model.intervals.some(row => row.milestones?.length)}
       height="fill" ariaLabel={language === "en" ? "Event schedule timeline" : "事件行程时间轴"}
       className="trip-event-schedule-timeline"
       tickColumns={tickColumns}

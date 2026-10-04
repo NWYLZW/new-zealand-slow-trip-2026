@@ -133,9 +133,9 @@
   "days": [
     {
       "date": "2026-10-05",
-      "reviewedAt": "2026-10-01",
-      "highlight": "先机场、后村内入住；15:30 飞行与21:30观星均为未确认参考，保住晚餐和休息。",
-      "highlightEn": "Airport first, then village check-in. The 15:30 flight and 21:30 stargazing times are unconfirmed references; protect dinner and rest.",
+      "reviewedAt": "2026-10-05",
+      "highlight": "凌晨约00:20在瓦纳卡神树公园停车场的星空下求婚成功。白天原计划仍为先机场、后村内入住；15:30飞行与21:30观星均为未确认参考。",
+      "highlightEn": "A successful proposal under the stars around 00:20 at the park car park near That Wānaka Tree. The daytime plan remains airport first, then village check-in; the 15:30 flight and 21:30 stargazing times are unconfirmed references.",
       "alternative": {
         "title": "天气或体力不足",
         "desc": "停飞后只询问不影响次日10:00离开的候补，不自动改期。观星取消方案须核对；无确认或疲惫就回房休息，不另加徒步或夜间长途。"
@@ -209,10 +209,10 @@
           ]
         },
         {
-          "summary": "山口短停后继续行车",
-          "summaryEn": "Brief pass stop, then drive",
-          "text": "只在 Lindis Pass 有标示且可安全进入的停车处短停约10分钟，伸展后继续向 Omarama；停车区关闭、风大或视线差就跳过，整段时间包含后续行车。",
-          "textEn": "Stop for about ten minutes only at a signed, safely accessible Lindis Pass parking area, then continue towards Omarama. Skip the stop if access is closed, wind is strong or visibility is poor; this block also includes onward driving.",
+          "summary": "山口观景与伸展",
+          "summaryEn": "Pass viewpoint and stretch",
+          "text": "计划10:15—10:25在 Lindis Pass 有标示且可安全进入的停车处观景、伸展。停车区关闭、风大或视线差就跳过。后续驾驶另列，不计入这10分钟。",
+          "textEn": "Plan a 10:15–10:25 viewpoint and stretch break at a signed, safely accessible Lindis Pass parking area. Skip it if access is closed, wind is strong or visibility is poor. Onward driving is listed separately.",
           "sourceIds": [
             "alpine-road",
             "alpine-weather"
@@ -221,8 +221,8 @@
         {
           "summary": "午餐补给，驾驶员休息",
           "summaryEn": "Lunch, supplies and driver rest",
-          "text": "在 Omarama 停车吃午餐、上洗手间并按油量补油，驾驶员至少坐下歇一会儿；同时备好晚餐补给再开往 Pukaki。此段包含行车，不在镇上停满两小时。",
-          "textEn": "Park in Omarama for lunch, a toilet break and fuel as needed. Give the driver a seated rest and pick up dinner supplies before continuing to Pukaki. This block includes driving, not a two-hour town stop.",
+          "text": "计划11:15—12:15在 Omarama 停车吃午餐、上洗手间并按油量补油，驾驶员坐下休息，可一并买晚餐补给。这一小时仅为停留；12:15—13:30驾驶及缓冲另列。",
+          "textEn": "Allow 11:15–12:15 in Omarama for lunch, toilets, fuel as needed, seated driver rest and dinner supplies. This hour is a stop only; the 12:15–13:30 driving allowance is listed separately.",
           "sourceIds": [
             "alpine-road"
           ]
@@ -286,6 +286,34 @@
             "alpine-bigsky",
             "alpine-bigsky-mandarin"
           ]
+        },
+        {
+          "summary": "星空下求婚成功",
+          "summaryEn": "A successful proposal under the stars",
+          "text": "用户确认先在瓦纳卡神树公园（That Wānaka Tree 附近）停车场拍了一会儿星空，然后在新西兰当地时间2026年10月5日约00:20求婚成功，之后已返回。00:20为用户回忆的近似时刻，未记录精确结束或返程时间。",
+          "textEn": "The user confirmed photographing the stars first at the park car park near That Wānaka Tree, successfully proposing around 00:20 on 5 October 2026 in New Zealand local time, and returning afterwards. The 00:20 time is approximate as recalled by the user; the exact end and return times are not recorded.",
+          "sourceIds": []
+        },
+        {
+          "summary": "驾车至 Omarama，预留50分钟",
+          "summaryEn": "Drive to Omarama; allow 50 minutes",
+          "text": "在原计划时段内，10:25—11:15分配给 Lindis Pass 至 Omarama 的驾驶及道路缓冲。50分钟是计划预留，不是核验过的纯驾驶时间或实时导航预计抵达时间。",
+          "textEn": "Within the existing schedule, allocate 10:25–11:15 to driving from Lindis Pass to Omarama and road buffer. The 50 minutes is a planning allowance, not a verified driving duration or live navigation ETA.",
+          "sourceIds": ["alpine-road"]
+        },
+        {
+          "summary": "驾车至 Pukaki，预留75分钟",
+          "summaryEn": "Drive to Pukaki; allow 75 minutes",
+          "text": "午餐后12:15从 Omarama 出发，至13:30的75分钟预留给前往 Lake Pukaki 的驾驶及缓冲，不包含已另列的午餐。沿用原到达目标，不代表实时路况下的准确车程。",
+          "textEn": "After lunch, allocate 12:15–13:30 to driving from Omarama to Lake Pukaki and buffer, excluding the separately listed lunch. This preserves the original arrival target, not an exact drive time under live road conditions.",
+          "sourceIds": ["alpine-road"]
+        },
+        {
+          "summary": "驾车至机场，预留35分钟",
+          "summaryEn": "Drive to the airport; allow 35 minutes",
+          "text": "Pukaki短停后13:40出发，14:15机场到达目标保持不变；35分钟为驾驶及缓冲的计划分配，不是实时导航车程。若此前延误，缩短或取消湖景停留，不赶路。",
+          "textEn": "Leave after the Pukaki stop at 13:40, keeping the original 14:15 airport arrival target. The 35 minutes is a driving and buffer allocation, not a live navigation duration. If delayed, shorten or skip the lake stop without rushing.",
+          "sourceIds": ["alpine-road", "alpine-flight-faq"]
         }
       ]
     },

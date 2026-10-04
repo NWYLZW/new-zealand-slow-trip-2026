@@ -8,6 +8,8 @@ export const eventTitleEn = {
   "箭镇与 Crown Range": "Arrowtown and Crown Range",
   "抵达瓦纳卡": "Arrive in Wānaka",
   "瓦纳卡星空摄影": "Night-sky photography in Wānaka",
+  "瓦纳卡求婚之夜": "Proposal night in Wānaka",
+  "瓦纳卡星空下求婚成功": "A successful proposal under the stars in Wānaka",
   "瓦纳卡湖边慢游": "Relaxed day by Lake Wānaka",
   "自驾前往库克山": "Drive to Aoraki / Mount Cook",
   "冰川直升机": "Glacier helicopter flight",

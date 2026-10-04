@@ -8,6 +8,7 @@ import { adventureEventInterval, adventureEventPoint, adventureEventTime,
 import { AdventureScheduleTimeline, attachScheduleMilestones,
   formatScheduleTimeZoneOffset } from "./AdventureScheduleTimeline";
 import { PencilText } from "./pencil/PencilText";
+import { scheduleDurationLabel } from "./scheduleDuration";
 import "./AdventureDayDetails.css";
 
 const HOUR = 60 * 60 * 1000;
@@ -410,6 +411,8 @@ export function AdventureDayDetails({ dateId, onSelectEvent }) {
         const fullLabel = canonicalLabel ?? label;
         const fullDetails = [details, ...rowDetails].filter(Boolean).join("；");
         return { id: key, start: interval.start, end: interval.end, label, showTime: false,
+          timeLabel: fullTimeLabel, activityType: agendaItem?.activityType,
+          durationLabel: scheduleDurationLabel(interval.start, interval.end, { ...agendaItem, language }),
           iconType: rowIconType ?? agendaItem?.iconType, mapsUrl: agendaItem?.mapsUrl,
           color: rowColor ?? event.color, groupId: event.urlId,
           summaryGroup: !event.isFlightTransfer || event.flights?.length === 1
@@ -450,8 +453,10 @@ export function AdventureDayDetails({ dateId, onSelectEvent }) {
     ?? model.primaryTimeZone;
   const nextDateLabel = language === "en" ? `${nextDate} 00:00 ${zoneCity} (${model.primaryTimeZone})`
     : `${nextDate} 00:00 ${zoneCity}当地时间（${model.primaryTimeZone}）`;
-  return <section className="trip-day-details" aria-label={`${entry.day.date}日程时间线`}>
-    <AdventureScheduleTimeline height="fill" adaptiveDetail range={{ start: model.axisStart, end: model.axisEnd }}
+  const readableLabels = model.intervals.some(row => row.activityType)
+    && !model.intervals.some(row => row.milestones?.length);
+  return <section className="trip-day-details" data-readable={readableLabels || undefined} aria-label={`${entry.day.date}日程时间线`}>
+    <AdventureScheduleTimeline height="fill" adaptiveDetail readableLabels={readableLabels} range={{ start: model.axisStart, end: model.axisEnd }}
       intervals={model.intervals} points={model.points}
       tickColumns={model.tickColumns}
       collapsedRanges={model.collapsedRanges}
