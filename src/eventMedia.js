@@ -293,19 +293,25 @@ export const eventMediaByTitle = {
   },
   "库克山观星夜": {
     location: "奥拉基 / 库克山暗夜保护区",
-    localNames: ["The Hermitage Hotel", "Aoraki Mackenzie International Dark Sky Reserve"],
+    localNames: ["Aoraki / Mount Cook Village", "Aoraki Mackenzie International Dark Sky Reserve"],
     ...mediaGallery(aorakiNightImage, aorakiImage),
-    links: [official("Big Sky Stargazing 预订", "https://www.hermitage.co.nz/experience/big-sky-stargazing/"), googleMaps("The Hermitage Hotel Mount Cook"), redbook("库克山 观星 Big Sky")],
+    links: [googleMaps("Mount Cook Village", "库克山村区域地图"), redbook("库克山 自行观星")],
   },
-  "库克山候补安排": {
+  "库克山徒步": {
+    location: "奥拉基 / 库克山区域，具体步道待补充",
+    localNames: ["Aoraki / Mount Cook"],
+    ...mediaGallery(aorakiImage),
+    links: [googleMaps("Mount Cook Village", "库克山村区域地图")],
+  },
+  "库克山酒店早餐": {
     location: "奥拉基 / 库克山",
-    localNames: ["Mount Cook Airport", "Aoraki / Mount Cook Visitor Centre", "The Hermitage Hotel"],
-    ...mediaGallery(aorakiImage, aorakiHelicopterImage, aorakiNightImage),
-    links: [official("Glacier Highlights 直升机预订", "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/"), official("库克山步道与天气 DOC", "https://www.doc.govt.nz/parks-and-recreation/places-to-go/canterbury/places/aoraki-mount-cook-national-park/"), googleMaps("Mount Cook Airport", "库克山机场地图"), googleMaps("Aoraki Mount Cook Visitor Centre", "游客中心地图"), redbook("库克山 天气 直升机 备选")],
+    localNames: ["Aoraki / Mount Cook Village"],
+    ...mediaGallery(aorakiImage),
+    links: [googleMaps("Mount Cook Village", "库克山村地图")],
   },
   "蒂卡波到奥马鲁": {
     route: "库克山 → 蒂卡波 → 奥马鲁",
-    localNames: ["Mt Cook Lodge & Motels", "Lake Tekapo / Takapō", "Church of the Good Shepherd", "Ōamaru / Te Oha-a-Maru"],
+    localNames: ["Mt Cook Lodge & Motels", "Lake Tekapo / Takapō", "Church of the Good Shepherd", "Omarama", "Ōamaru / Te Oha-a-Maru"],
     ...mediaGallery(tekapoImage, aorakiImage, oamaruPenguinImage),
     links: [official("Lake Tekapo 官方旅游信息", "https://www.mackenzienz.com/visit-lake-tekapo/"), googleDirections("库克山—蒂卡波—奥马鲁路线", "Mt Cook Lodge & Motels", "Oamaru New Zealand", ["Church of the Good Shepherd Lake Tekapo"]), redbook("蒂卡波 奥马鲁 自驾")],
   },

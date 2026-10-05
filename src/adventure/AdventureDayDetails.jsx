@@ -414,6 +414,7 @@ export function AdventureDayDetails({ dateId, onSelectEvent }) {
           timeLabel: fullTimeLabel, activityType: agendaItem?.activityType,
           durationLabel: scheduleDurationLabel(interval.start, interval.end, { ...agendaItem, language }),
           iconType: rowIconType ?? agendaItem?.iconType, mapsUrl: agendaItem?.mapsUrl,
+          mapLinks: agendaItem?.mapLinks,
           color: rowColor ?? event.color, groupId: event.urlId,
           summaryGroup: !event.isFlightTransfer || event.flights?.length === 1
             ? { id: event.urlId, label: adventureEventLabel(event), color: event.color,
@@ -433,6 +434,7 @@ export function AdventureDayDetails({ dateId, onSelectEvent }) {
       return { id: key, time, timeLabel, showTime: false,
         label: `${label}${afterDay ? " · 次日续接" : knownPoint ? "" : " · 时点/待定"}`,
         iconType: agendaItem?.iconType ?? event.icon, mapsUrl: agendaItem?.mapsUrl,
+        mapLinks: agendaItem?.mapLinks,
         color: event.color, groupId: groupId ?? (agendaItem ? event.urlId : null),
         title: `${timeLabel} · ${fullLabel}${afterDay ? " · 次日续接" : ""}`,
         ariaLabel: `${timeLabel}，${fullLabel}${afterDay ? "，次日续接" : knownPoint ? "" : "，时点或待定"}`,

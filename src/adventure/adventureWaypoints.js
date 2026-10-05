@@ -127,15 +127,15 @@ const waypointRecords = [
     },
   },
   {
-    id: "hermitage-big-sky", routeId: "wanaka-aoraki", eventIndexes: [6, 7, 8],
+    id: "hermitage-big-sky", routeId: "wanaka-aoraki", eventIndexes: [],
     markerType: "activity", iconType: "stars",
     name: "The Hermitage / Big Sky", nameEn: "The Hermitage / Big Sky",
     position: [-43.7331633, 170.0937221], specificity: "place", kind: "活动与服务区域",
-    summary: "圆点复用 The Hermitage 既有点位，用于表示 Big Sky 活动集合区域；用餐与休息的具体场所仍以当天安排为准。",
+    summary: "The Hermitage 既有参考点。10月5日已改为自行观星，不再用此点代表当晚集合、用餐或观星位置。",
     source: existingPinSource("复用主站 The Hermitage 景点点位与 Big Sky 官方活动链接。", "src/components/HotelComparisonDialog.jsx"),
   },
   {
-    id: "tekapo-stop", routeId: "aoraki-oamaru", eventIndexes: [2, 3],
+    id: "tekapo-stop", routeId: "aoraki-oamaru", eventIndexes: [2, 11, 12, 3],
     markerType: "nature", iconType: "meal",
     name: "特卡波湖 · Tekapo", nameEn: "Lake Tekapo",
     position: stopByTag.get("TEK").position, specificity: "town", kind: "城镇与湖岸",

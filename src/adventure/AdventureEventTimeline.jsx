@@ -173,6 +173,7 @@ function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
     const confirmedMilestone = !completed && !item.isEstimated && !item.endTime;
     const displayTime = item.timeLabel ?? item.time;
     const base = { id: item.id, label: item.title, iconType: item.iconType, groupId: event.urlId,
+      mapLinks: item.mapLinks, preserveContent: Boolean(item.choice),
       active: item.id === activeAgendaId, color: event.color,
       title: `${displayTime} · ${item.title}${confirmedMilestone ? " · 已预约时间点" : ""}`,
       ariaLabel: `${displayTime}，${item.title}${confirmedMilestone ? "，已预约时间点" : !completed && item.isEstimated ? "，计划时间" : ""}`,
@@ -203,7 +204,7 @@ function agendaRows(event, dateId, language, activeAgendaId, onSelectAgenda, ren
     } else if (item.choice) points.push({ ...base, mapsUrl: null, onSelect: undefined,
       time: start, timeLabel: displayTime, groupId: event.urlId,
       renderContent: <OptionalAgendaChoice item={item} language={language} renderContent={renderContent} /> });
-    else if (item.mapsUrl) points.push({ ...base, mapsUrl: null, onSelect: undefined,
+    else if (item.mapsUrl) points.push({ ...base, mapsUrl: null,
       time: start, timeLabel: displayTime, groupId: event.urlId,
       renderContent: <div className="trip-event-agenda-interval-content">
         <button type="button" className="trip-event-agenda-select" onClick={() => onSelectAgenda?.(item)}
@@ -256,7 +257,9 @@ export function AdventureEventTimeline({ event, dateId, language = "zh", activeA
   }) : null;
   return <section className="trip-event-timeline-adapter">
     {model.range && <AdventureScheduleTimeline range={model.range} points={model.points} intervals={model.intervals}
-      readableLabels={model.intervals.some(row => row.activityType) && !model.intervals.some(row => row.milestones?.length)}
+      readableLabels={model.intervals.some(row => row.activityType)
+        && !model.intervals.some(row => row.milestones?.length)
+        && ![...model.intervals, ...model.points].some(row => row.preserveContent)}
       height="fill" ariaLabel={language === "en" ? "Event schedule timeline" : "事件行程时间轴"}
       className="trip-event-schedule-timeline"
       tickColumns={tickColumns}

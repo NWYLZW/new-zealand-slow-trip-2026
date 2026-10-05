@@ -134,24 +134,20 @@
     {
       "date": "2026-10-05",
       "reviewedAt": "2026-10-05",
-      "highlight": "凌晨约00:20在瓦纳卡神树公园停车场的星空下求婚成功。白天原计划仍为先机场、后村内入住；15:30飞行与21:30观星均为未确认参考。",
-      "highlightEn": "A successful proposal under the stars around 00:20 at the park car park near That Wānaka Tree. The daytime plan remains airport first, then village check-in; the 15:30 flight and 21:30 stargazing times are unconfirmed references.",
+      "highlight": "凌晨约00:20在瓦纳卡求婚成功，直升机已完成，约18:00—19:30已完成徒步。晚上自行观星，不参加 Big Sky 观星团；21:30—23:00仅沿用原计划窗口，具体出发和返回未确定。",
+      "highlightEn": "A successful proposal in Wānaka around 00:20, a completed helicopter flight and a completed hike around 18:00–19:30. Stargaze independently instead of attending Big Sky; 21:30–23:00 remains a provisional window, not confirmed departure or return times.",
       "alternative": {
         "title": "天气或体力不足",
-        "desc": "停飞后只询问不影响次日10:00离开的候补，不自动改期。观星取消方案须核对；无确认或疲惫就回房休息，不另加徒步或夜间长途。"
+        "desc": "直升机已由用户确认完成，次晨不再候补。晚间自行观星，具体地点待定；若云多或疲惫就休息。用户已决定不参加观星团，本站未向运营方办理取消或退款。"
       },
       "alternativeEn": {
         "title": "Weather or low energy",
-        "desc": "If grounded, ask only about a backup that still permits departure by 10:00 next day; do not automatically reschedule. Verify stargazing cancellation arrangements. Rest if unconfirmed or tired, without adding a hike or a long night drive."
+        "desc": "The user confirmed completing the helicopter flight; no next-morning backup is needed. Stargaze independently at a location still to be chosen, or rest if cloudy or tired. The user will not attend the guided tour; this site has not arranged cancellation or a refund with the operator."
       },
       "links": [
         [
           "Glacier Highlights 直升机",
           "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/"
-        ],
-        [
-          "Big Sky Stargazing",
-          "https://www.hermitage.co.nz/experience/big-sky-stargazing/"
         ],
         [
           "天气取消政策",
@@ -174,10 +170,6 @@
         [
           "Glacier Highlights helicopter",
           "https://www.mtcookskiplanes.com/flights-and-tours/glacier-highlights/"
-        ],
-        [
-          "Big Sky Stargazing",
-          "https://www.hermitage.co.nz/experience/big-sky-stargazing/"
         ],
         [
           "Weather cancellation policy",
@@ -238,54 +230,46 @@
           ]
         },
         {
-          "summary": "核对确认、机型与天气",
-          "summaryEn": "Check confirmation, aircraft and weather",
-          "text": "在库克山机场停车，先核对是否已有有效确认；15:30 仍是参考。实际报到须早于起飞并以确认邮件为准，核对直升机而非滑雪飞机；停飞时先问翌日候补条件。",
-          "textEn": "Park at Mount Cook Airport and first establish whether you hold a valid confirmation; 15:30 remains a reference. Check-in is earlier than departure and follows the confirmation email. Verify helicopter, not ski plane, and ask about next-day options if grounded.",
+          "summary": "机场报到计划记录",
+          "summaryEn": "Airport check-in planning record",
+          "text": "用户已确认当天乘坐直升机。此处保留原机场报到计划，实际报到和起飞时刻未提供，不再安排翌日候补。",
+          "textEn": "The user confirmed taking the helicopter flight that day. Keep the original airport check-in plan as a planning record; actual check-in and departure times were not supplied, and no next-day backup is scheduled.",
           "sourceIds": [
             "alpine-flight-faq",
             "alpine-flight"
           ]
         },
         {
-          "summary": "Glacier Highlights 直升机",
-          "summaryEn": "Glacier Highlights helicopter flight",
-          "text": "Glacier Highlights 直升机，45分钟含约10—15分钟冰川降落",
-          "textEn": "Glacier Highlights helicopter flight: 45 minutes including a 10–15 minute glacier landing",
-          "sourceIds": [
-            "alpine-flight",
-            "alpine-flight-faq"
-          ]
+          "summary": "直升机已完成",
+          "summaryEn": "Helicopter flight completed",
+          "text": "用户确认2026年10月5日已乘坐直升机。15:30—16:15沿用原估算窗口，不是已核实的实际起降时刻或飞行时长；次晨候补已取消。",
+          "textEn": "The user confirmed taking the helicopter flight on 5 October 2026. The original estimated 15:30–16:15 window is retained, not verified actual flight times or duration. The next-morning backup has been removed.",
+          "sourceIds": []
         },
         {
           "summary": "先办 Motel 入住，再晚餐",
           "summaryEn": "Motel check-in before dinner",
-          "text": "飞行结束后先驶入村内，按现有住宿记录到 Mt Cook Lodge 为已订 Motel 办理入住、放行李，再吃晚餐；取出保暖层，并核对翌日含早套餐的用餐地点、时刻和退房安排。",
-          "textEn": "After the flight, drive into the village. Following the existing stay record, check in for the booked Motel at Mt Cook Lodge before unloading and having dinner. Set out warm layers and verify where and when to use the included breakfast, plus checkout arrangements.",
+          "text": "用餐与保暖准备暂留17:00—18:00计划窗口，避开用户确认的约18:00—19:30徒步；不代表实际用餐时间。住宿入住、早餐和退房信息沿用原记录。",
+          "textEn": "Keep a provisional 17:00–18:00 window for dinner and warm layers, clear of the user-confirmed hike around 18:00–19:30. This is not a record of the actual meal time. Existing stay, breakfast and checkout details are unchanged.",
           "sourceIds": [
             "alpine-motel"
           ]
         },
         {
-          "summary": "休息并复核观星场次",
-          "summaryEn": "Rest and verify stargazing",
-          "text": "回房休息，确认 Big Sky 是否订妥、实际场次、语言和报到位置；21:30 未确认，建议按最终通知另留停车步行余量。若仍无确认或太疲惫，就留在住宿休息。",
-          "textEn": "Rest in the room and verify whether Big Sky is booked, its actual session, language and meeting point. The 21:30 time is unconfirmed; allow extra parking and walking time around the final instructions. Stay in if unconfirmed or too tired.",
+          "summary": "徒步后休息与观星准备",
+          "summaryEn": "Rest after the hike and prepare for stargazing",
+          "text": "徒步约19:30结束后休息、准备自行观星。19:30—21:30是计划休息窗口，并非已完成记录；不再安排观星团场次确认或集合。",
+          "textEn": "Rest after the hike ends around 19:30 and prepare for independent stargazing. The 19:30–21:30 rest window is a plan, not a completed record. No guided-tour session check or meeting is scheduled.",
           "sourceIds": [
-            "alpine-bigsky",
-            "alpine-bigsky-dated",
             "alpine-motel"
           ]
         },
         {
-          "summary": "观星后回村内住宿",
-          "summaryEn": "Stargaze, then return to the Motel",
-          "text": "仅在场次确认后参加约75—90分钟 Big Sky，穿暖按最终集合指示到场，结束后返回已订 Motel；遇云雨按运营方当日方案处理，不默认全额退款，也不再开回 Twizel。",
-          "textEn": "Attend the 75–90 minute Big Sky tour only with a confirmed session. Dress warmly and follow the final meeting instructions, returning to the booked Motel afterwards. Follow the operator's weather decision without assuming a full refund or driving back to Twizel.",
-          "sourceIds": [
-            "alpine-bigsky",
-            "alpine-bigsky-mandarin"
-          ]
+          "summary": "自行观星，不参加观星团",
+          "summaryEn": "Independent stargazing, without the guided tour",
+          "text": "用户决定今晚自行观星，不参加 Big Sky Stargazing。暂沿用21:30—23:00作为计划窗口，非确认的出发或结束时刻；具体观星位置未提供，不再绑定 The Hermitage 集合点。本站只更新行程，未向运营方取消预约或办理退款。",
+          "textEn": "The user will stargaze independently tonight instead of attending Big Sky Stargazing. Retain 21:30–23:00 as a provisional planning window, not confirmed departure or finish times. No observing location was supplied, so the Hermitage meeting-point binding is removed. Only the itinerary is updated; no operator booking cancellation or refund has been processed.",
+          "sourceIds": []
         },
         {
           "summary": "星空下求婚成功",
@@ -299,36 +283,50 @@
           "summaryEn": "Drive to Omarama; allow 50 minutes",
           "text": "在原计划时段内，10:25—11:15分配给 Lindis Pass 至 Omarama 的驾驶及道路缓冲。50分钟是计划预留，不是核验过的纯驾驶时间或实时导航预计抵达时间。",
           "textEn": "Within the existing schedule, allocate 10:25–11:15 to driving from Lindis Pass to Omarama and road buffer. The 50 minutes is a planning allowance, not a verified driving duration or live navigation ETA.",
-          "sourceIds": ["alpine-road"]
+          "sourceIds": [
+            "alpine-road"
+          ]
         },
         {
           "summary": "驾车至 Pukaki，预留75分钟",
           "summaryEn": "Drive to Pukaki; allow 75 minutes",
           "text": "午餐后12:15从 Omarama 出发，至13:30的75分钟预留给前往 Lake Pukaki 的驾驶及缓冲，不包含已另列的午餐。沿用原到达目标，不代表实时路况下的准确车程。",
           "textEn": "After lunch, allocate 12:15–13:30 to driving from Omarama to Lake Pukaki and buffer, excluding the separately listed lunch. This preserves the original arrival target, not an exact drive time under live road conditions.",
-          "sourceIds": ["alpine-road"]
+          "sourceIds": [
+            "alpine-road"
+          ]
         },
         {
           "summary": "驾车至机场，预留35分钟",
           "summaryEn": "Drive to the airport; allow 35 minutes",
           "text": "Pukaki短停后13:40出发，14:15机场到达目标保持不变；35分钟为驾驶及缓冲的计划分配，不是实时导航车程。若此前延误，缩短或取消湖景停留，不赶路。",
           "textEn": "Leave after the Pukaki stop at 13:40, keeping the original 14:15 airport arrival target. The 35 minutes is a driving and buffer allocation, not a live navigation duration. If delayed, shorten or skip the lake stop without rushing.",
-          "sourceIds": ["alpine-road", "alpine-flight-faq"]
+          "sourceIds": [
+            "alpine-road",
+            "alpine-flight-faq"
+          ]
+        },
+        {
+          "summary": "徒步已完成",
+          "summaryEn": "Hike completed",
+          "text": "用户确认2026年10月5日约18:00出发徒步、约19:30结束。具体步道与精确起止时间尚未提供；记录为已完成的约90分钟区间。直升机完成状态另由用户确认。",
+          "textEn": "The user confirmed starting a hike around 18:00 and finishing around 19:30 on 5 October 2026. The specific trail and exact times were not supplied. Record an approximately 90-minute completed interval. Completion of the helicopter flight was separately confirmed by the user.",
+          "sourceIds": []
         }
       ]
     },
     {
       "date": "2026-10-06",
-      "reviewedAt": "2026-10-01",
-      "highlight": "10:00离开、13:00离开特卡波；企鹅是晚间重点但仍待订，先入住，港边散步可删。",
-      "highlightEn": "Leave Mount Cook by 10:00 and Tekapo at 13:00. Penguins remain the evening focus but are unbooked; check in first and drop the harbour walk if needed.",
+      "reviewedAt": "2026-10-06",
+      "highlight": "10:00酒店早餐完成，退房装车后10:15出发；驾车、游览、午餐与休息分段安排，13:00离开蒂卡波，计划15:45到奥马鲁。企鹅晚场仍待订。",
+      "highlightEn": "Finish hotel breakfast at 10:00, then check out, load the car and leave at 10:15. Driving, sightseeing, meals and rest have separate blocks: leave Tekapo at 13:00 and plan to reach Ōamaru at 15:45. The penguin evening is still unbooked.",
       "alternative": {
-        "title": "候补不挤占企鹅晚场",
-        "desc": "飞行不能兼顾10:00离开就不继续候补；延误时缩短特卡波、取消港边散步。企鹅未订妥则先问官方当日选项，不把路边等候当替代晚场，也不追加南下支线。"
+        "title": "延误时减少游览，不压缩休息",
+        "desc": "直升机已完成，不再安排候补。道路延误时缩短蒂卡波游览、取消港边散步，保留用餐与驾驶员休息；企鹅未订妥则先问官方当日选项，不把路边等候当替代晚场。"
       },
       "alternativeEn": {
-        "title": "Protect the penguin evening",
-        "desc": "Stop pursuing the flight backup if it prevents leaving by 10:00. Shorten Tekapo and skip the harbour walk if delayed. If penguins remain unbooked, ask about official same-day options; roadside waiting is not a substitute and no southbound detour is added."
+        "title": "Reduce sightseeing if delayed, not rest",
+        "desc": "The helicopter flight is complete and no backup is scheduled. If delayed, shorten Tekapo sightseeing and skip the harbour walk while keeping meals and driver rest. If penguins remain unbooked, check official same-day options rather than treating roadside waiting as an alternative."
       },
       "links": [
         [
@@ -384,53 +382,45 @@
       ],
       "events": [
         {
-          "summary": "候补须守住10:00离开",
-          "summaryEn": "Backup only if leaving by 10:00",
-          "text": "08:30 只是候补占位，并非已确认首班。仅当前日停飞、运营方确认可飞且早餐、提前报到、退房和10:00离开均可兼顾时执行；否则在住宿吃早餐，不继续等飞。",
-          "textEn": "08:30 is a backup placeholder, not a confirmed first departure. Use it only after a previous-day cancellation if the operator confirms a flight compatible with breakfast, earlier check-in, checkout and leaving by 10:00. Otherwise have breakfast at the stay and do not keep waiting.",
+          "summary": "酒店早餐",
+          "summaryEn": "Hotel breakfast",
+          "text": "09:00—10:00预留酒店早餐，不再安排直升机候补；早餐具体供应安排沿用住宿确认资料。",
+          "textEn": "Allow 09:00–10:00 for hotel breakfast, without a helicopter backup. Refer to the existing stay confirmation for breakfast arrangements.",
           "sourceIds": [
-            "alpine-flight-faq",
             "alpine-motel"
           ]
         },
         {
-          "summary": "退房装车，10:00前离开",
-          "summaryEn": "Check out and depart by 10:00",
-          "text": "10:00 前完成退房、装车并离开库克山区域，守住特卡波短停和奥马鲁晚场；候补延误就放弃继续等候。出发前再查 SH80、SH8 路况，封路或疲劳时安全优先。",
-          "textEn": "Finish checkout and loading and leave the Mount Cook area by 10:00 to protect the Tekapo stop and Ōamaru evening. Stop waiting if the backup overruns. Recheck SH80/SH8 before leaving; closures or fatigue take priority over the schedule.",
+          "summary": "酒店早餐完成",
+          "summaryEn": "Hotel breakfast finished",
+          "text": "10:00为早餐完成的计划时点，不再表示最晚离开库克山；随后退房、装车另列。",
+          "textEn": "10:00 is the planned breakfast-finished milestone, not a latest departure from Mount Cook. Checkout and loading are listed separately.",
+          "sourceIds": []
+        },
+        {
+          "summary": "驾车至蒂卡波，预留90分钟",
+          "summaryEn": "Drive to Tekapo; allow 90 minutes",
+          "text": "10:15—11:45安排从库克山至蒂卡波的驾驶及缓冲，不包含游览和午餐。90分钟是行程预留，并非实时导航车程；出发前核对SH80、SH8路况。",
+          "textEn": "Allocate 10:15–11:45 to driving from Mount Cook to Tekapo and buffer, excluding sightseeing and lunch. The 90 minutes is a planning allowance, not a live navigation duration; check SH80 and SH8 conditions before leaving.",
           "sourceIds": [
             "alpine-road"
           ]
         },
         {
-          "summary": "特卡波午餐与湖边短停",
-          "summaryEn": "Tekapo lunch and short lake stop",
-          "text": "开到特卡波后在正规车位停车，先吃午餐，再短看好牧羊人教堂外观和湖边；内部开放未核实，不把入内作为必去项。此段包含驾驶，13:00离开，晚到就缩短游览。",
-          "textEn": "In Tekapo, park in a designated space and have lunch before a brief look at the Church of the Good Shepherd exterior and lakefront. Interior access is unverified and is not essential. This block includes driving; leave at 13:00 and shorten sightseeing if late.",
-          "sourceIds": [
-            "alpine-church",
-            "alpine-road",
-            "alpine-church-visit"
-          ]
-        },
-        {
-          "summary": "直接前往奥马鲁，留短休",
-          "summaryEn": "Drive to Ōamaru with a short break",
-          "text": "13:00 从特卡波出发前往已订奥马鲁住宿，途中按需要安排一次洗手间和驾驶员短休；不加支线景点。15:30只是预计到达，若延误先取消港边散步，不赶路追时间。",
-          "textEn": "Leave Tekapo at 13:00 for the booked Ōamaru stay, allowing a toilet and driver break as needed without side trips. The 15:30 arrival is an estimate; if delayed, drop the harbour walk first instead of rushing on the road.",
+          "summary": "驾车至 Omarama，预留60分钟",
+          "summaryEn": "Drive to Omarama; allow 60 minutes",
+          "text": "13:00—14:00预留蒂卡波至 Omarama 的驾驶及缓冲，后续15分钟休息单独安排。不把预留时间当作核验过的纯驾驶耗时。",
+          "textEn": "Allow 13:00–14:00 for driving from Tekapo to Omarama and buffer, with a separate 15-minute break afterwards. This is a planning allowance, not a verified drive duration.",
           "sourceIds": [
             "alpine-road"
           ]
         },
         {
-          "summary": "入住休息，核对企鹅票",
-          "summaryEn": "Check in, rest and verify tickets",
-          "text": "先到已订奥马鲁房源，按私下保存的指示停车、办理入住并卸行李，至少留一段坐下休息的时间；核对晚场是否订妥及实际开始时间，再决定是否去港边。",
-          "textEn": "Go first to the booked Ōamaru stay, park and enter using the privately held instructions, unload and take a seated rest. Check whether the evening viewing is booked and its actual start time before deciding on the harbour walk.",
-          "sourceIds": [
-            "alpine-penguins",
-            "alpine-penguins-dated"
-          ]
+          "summary": "停车、入住与卸行李",
+          "summaryEn": "Park, check in and unload",
+          "text": "15:45—16:15计划到达已订奥马鲁住宿、停车、入住及卸行李，按私下保存的指示办理；实际入住条件以住宿确认为准，休息另列。",
+          "textEn": "Plan 15:45–16:15 for arrival at the booked Ōamaru stay, parking, check-in and unloading using privately held instructions. Actual access follows the stay confirmation; rest is listed separately.",
+          "sourceIds": []
         },
         {
           "summary": "港边短走，可整段休息",
@@ -442,20 +432,19 @@
           ]
         },
         {
-          "summary": "早晚餐后前往保护区",
-          "summaryEn": "Early dinner, then the colony",
-          "text": "18:00先吃晚餐、上洗手间，取保暖外套后前往企鹅保护区；为找停车位留余量。19:30是围绕20:00参考场次安排的报到缓冲，实际按最终票面提前到场。",
-          "textEn": "Have dinner and a toilet break at 18:00, collect warm outer layers and head to the colony with time to find parking. The 19:30 arrival is a planning buffer around the 20:00 reference session; arrive early according to the eventual ticket.",
+          "summary": "晚餐与洗手间",
+          "summaryEn": "Dinner and toilets",
+          "text": "18:00—19:00只安排奥马鲁晚餐、洗手间和保暖准备；前往企鹅保护区的驾驶和停车另列。",
+          "textEn": "Reserve 18:00–19:00 for dinner in Ōamaru, toilets and warm layers only. Driving to the penguin colony and parking are listed separately.",
           "sourceIds": [
-            "alpine-penguins-visit",
-            "alpine-penguins"
+            "alpine-penguins-visit"
           ]
         },
         {
-          "summary": "停车报到，收好电子设备",
-          "summaryEn": "Park, check in and put devices away",
-          "text": "有有效晚场确认后才按票面报到，建议预留30分钟停车与候场，停车和入场均按现场指示；沿用现有活动记录，晚场收好相机和手机，不拍照、不录像、不亮屏，规则仍须复核。",
-          "textEn": "With a valid evening confirmation, follow its check-in instructions and allow a suggested 30 minutes for parking and waiting. Follow on-site directions. Under the existing activity record, put cameras and phones away: no photography, filming or bright screens; recheck current rules.",
+          "summary": "企鹅报到与候场",
+          "summaryEn": "Penguin check-in and waiting",
+          "text": "19:30—20:00是围绕原20:00参考场次的报到候场计划，须先取得有效确认并按票面调整。驾驶停车已另列；沿用现有晚场记录，收好相机和手机，不拍照、不录像、不亮屏，规则仍须复核。",
+          "textEn": "19:30–20:00 is a check-in and waiting plan around the existing 20:00 reference session, subject to valid booking confirmation and ticket instructions. Driving and parking are separate. Under the existing evening record, put cameras and phones away without photos, filming or bright screens; recheck the current rules.",
           "sourceIds": [
             "alpine-penguins-visit",
             "alpine-penguins"
@@ -472,13 +461,83 @@
           ]
         },
         {
-          "summary": "散场后回房，不追结束点",
-          "summaryEn": "Return after the viewing, without rushing",
-          "text": "等工作人员安排离场后再回已入住的奥马鲁住宿，停车区和港边慢行留意野生动物；不为21:30时间点提前赶离，也不追加夜游，回房整理翌日行李后休息。",
-          "textEn": "Return to the already checked-in Ōamaru stay after staff release the group, moving slowly through the car park and harbour area and watching for wildlife. Do not rush to meet the 21:30 marker or add a night outing; prepare tomorrow's luggage and rest.",
+          "summary": "散场后驾车回住宿",
+          "summaryEn": "Drive back to the stay after viewing",
+          "text": "21:30—22:00为离场后返回奥马鲁住宿的计划驾驶及缓冲，不是确认的散场或车程；按工作人员安排离场，停车区和港边慢行留意野生动物，不为时间点赶路。",
+          "textEn": "21:30–22:00 is a planning allowance for driving back to the Ōamaru stay after viewing, not confirmed finish or drive times. Leave as directed by staff and drive slowly around the car park and harbour, watching for wildlife without rushing.",
           "sourceIds": [
             "alpine-penguins"
           ]
+        },
+        {
+          "summary": "退房与装车",
+          "summaryEn": "Check out and load the car",
+          "text": "10:00早餐完成后，预留15分钟退房、装车；10:15是计划出发时刻，不代表酒店允许的最晚退房，实际按住宿确认办理。",
+          "textEn": "After finishing breakfast at 10:00, allow 15 minutes for checkout and loading. The 10:15 departure is a plan, not the hotel's checkout deadline; follow the stay confirmation.",
+          "sourceIds": [
+            "alpine-motel"
+          ]
+        },
+        {
+          "summary": "教堂外观与湖边短停",
+          "summaryEn": "Church exterior and lakefront stop",
+          "text": "11:45—12:15只安排好牧羊人教堂外观和蒂卡波湖边，约30分钟。内部开放未核实，不作为必去项；驾驶和午餐分别列出。",
+          "textEn": "Allow 11:45–12:15 for the Church of the Good Shepherd exterior and Tekapo lakefront only. Interior access is unverified and not essential; driving and lunch are separate.",
+          "sourceIds": [
+            "alpine-church",
+            "alpine-church-visit"
+          ]
+        },
+        {
+          "summary": "蒂卡波午餐",
+          "summaryEn": "Tekapo lunch",
+          "text": "12:15—13:00预留45分钟午餐和洗手间，不含驾驶；13:00计划出发往 Omarama。餐厅和预约未指定。",
+          "textEn": "Allow 12:15–13:00 for lunch and toilets, excluding driving, before the planned 13:00 departure towards Omarama. No restaurant or reservation has been specified.",
+          "sourceIds": []
+        },
+        {
+          "summary": "洗手间与伸展休息",
+          "summaryEn": "Toilets and stretch break",
+          "text": "14:00—14:15在 Omarama 合法停车，上洗手间、伸展并让驾驶员休息；这是独立停留，不含下一段驾驶。",
+          "textEn": "Plan a 14:00–14:15 stop in a legal parking place in Omarama for toilets, stretching and driver rest, excluding the next driving leg.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "驾车至奥马鲁，预留90分钟",
+          "summaryEn": "Drive to Ōamaru; allow 90 minutes",
+          "text": "14:15—15:45安排 Omarama 至已订奥马鲁住宿的驾驶及缓冲；15:45只作计划到达。延误就减少后续游览，不压缩休息或赶路。",
+          "textEn": "Allocate 14:15–15:45 to driving from Omarama to the booked Ōamaru stay and buffer. The 15:45 arrival is a plan; reduce later sightseeing if delayed rather than rushing or cutting rest.",
+          "sourceIds": [
+            "alpine-road"
+          ]
+        },
+        {
+          "summary": "住宿休息",
+          "summaryEn": "Rest at the stay",
+          "text": "16:15—16:45入住后坐下休息，并核对企鹅是否订妥及实际场次；体力不足时继续休息，港边散步可取消。",
+          "textEn": "Rest after check-in from 16:15–16:45 and check the penguin booking and actual session. Keep resting and skip the harbour walk if tired.",
+          "sourceIds": [
+            "alpine-penguins",
+            "alpine-penguins-dated"
+          ]
+        },
+        {
+          "summary": "前往企鹅保护区与停车",
+          "summaryEn": "Drive to the penguin colony and park",
+          "text": "19:00—19:30预留前往企鹅保护区及停车的时间，不是纯驾驶预计耗时。19:30报到仍须按最终票面调整，不假定已预订。",
+          "textEn": "Allow 19:00–19:30 to reach the penguin colony and park, not as a pure driving estimate. The planned 19:30 check-in must follow the eventual ticket; no booking is assumed.",
+          "sourceIds": [
+            "alpine-penguins-visit"
+          ]
+        },
+        {
+          "summary": "住宿至港边与停车",
+          "summaryEn": "Stay to harbour and parking",
+          "text": "16:45—17:00预留从奥马鲁住宿到港边及停车；实际车程取决于住宿位置，不把15分钟作为核验导航时间。若取消港边散步，这段一并取消。",
+          "textEn": "Allow 16:45–17:00 to reach the harbour from the Ōamaru stay and park. Actual driving depends on the stay location; 15 minutes is not a verified navigation duration. Skip this transfer if skipping the harbour walk.",
+          "sourceIds": []
         }
       ]
     },

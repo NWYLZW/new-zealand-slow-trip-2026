@@ -14,7 +14,7 @@ const stayIdsByPlace = {
 
 const activityIdsByPlace = {
   ZQN: ["walter-peak"],
-  AOR: ["mount-cook-helicopter", "mount-cook-stargazing"],
+  AOR: ["mount-cook-helicopter"],
   OAM: ["oamaru-penguins"],
   AKC: ["hobbiton"],
   HBT: ["hobbiton"],

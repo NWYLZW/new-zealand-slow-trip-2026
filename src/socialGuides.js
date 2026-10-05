@@ -853,7 +853,6 @@ export const socialGuidesByEvent = {
   "自驾前往库克山": [rentalInsurancePitfallPost, ...mountCookPostsFor("drive", [0, 1, 3, 4])],
   "冰川直升机": [guide({ platform: "YouTube", title: "Mount Cook Ski Planes and Helicopters · Adventure Awaits", source: "YouTube · 运营方", url: "https://www.youtube.com/watch?v=1jjOrVPxlK4", points: ["展示飞越冰川与雪地着陆的核心场景。", "可快速校准飞行内容和保暖需求。"], tip: "着陆需天气允许，官方短片不代表当天一定起飞。" }), ...mountCookPostsFor("helicopter")],
   "库克山观星夜": [guide({ platform: "YouTube", title: "Big Sky Stargazing Aoraki / Mount Cook", source: "The Hermitage 官方", url: "https://www.youtube.com/watch?v=XNQmXF6my3E", points: ["展示暗夜保护区观星主题与深空观测定位。", "可提前了解活动形式和夜间保暖需求。"], tip: "云量和月相影响很大，保留可取消备选。" }), ...mountCookPostsFor("stargazing")],
-  "库克山候补安排": [guide({ platform: "YouTube", title: "Is 3 Days at Mt Cook too much?", source: "YouTube · 多项目实测", url: "https://www.youtube.com/watch?v=WS113I5hYqc", points: ["串联步道、直升机和冰川项目。", "适合天气造成改期时评估可替换的活动。"], tip: "步道查 DOC；飞行由运营方当天决定。" }), ...mountCookPostsFor("fallback")],
   "蒂卡波到奥马鲁": [rentalInsurancePitfallPost, ...tekapoChristchurchPostsFor("drive")],
   "奥马鲁企鹅与海狗": oamaruWildlifeContextPosts,
   "奥马鲁前往基督城": [rentalInsurancePitfallPost, ...tekapoChristchurchPostsFor("drive")],

@@ -36,7 +36,10 @@ export function eventAgendaItems(event, { language = "zh" } = {}) {
     if (isFlightGeometryEntry(event, rawTime, rawTitle, meta)) return [];
     const endClock = exactClock(meta.end);
     const sourceIndex = Number.isInteger(event.items?.[index]) ? event.items[index] : index;
-    const mapPart = getInlineEventParts(rawTitle).find((part) => part.kind === "place" && part.url);
+    const mapLinks = getInlineEventParts(rawTitle).filter((part) => part.kind === "place" && part.url)
+      .filter((part, index, parts) => parts.findIndex(candidate => candidate.url === part.url) === index)
+      .map(part => ({ url: part.url, label: part.label ?? part.text }));
+    const mapPart = mapLinks[0];
     const title = language === "en" && typeof entry?.titleEn === "string" ? entry.titleEn : rawTitle;
     const summary = meta.summary ?? null, summaryEn = meta.summaryEn ?? null;
     const localizedSummary = language === "en" ? (summaryEn ?? summary) : summary;
@@ -50,7 +53,7 @@ export function eventAgendaItems(event, { language = "zh" } = {}) {
       timeZone: meta.timeZone ?? null, choice: meta.choice ?? null,
       title, summary, summaryEn, localizedSummary, activityType: meta.activityType ?? null,
       iconType: agendaActivityIcon(meta.activityType) ?? agendaIconType(rawTitle, event.icon),
-      mapsUrl: mapPart?.url ?? null, linkKind: mapPart ? "map" : null };
+      mapsUrl: mapPart?.url ?? null, mapLinks, linkKind: mapPart ? "map" : null };
     return [{ ...item, id: agendaItemId(event, item, index) }];
   });
   if (!items.length) return [];

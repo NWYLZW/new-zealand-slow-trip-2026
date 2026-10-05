@@ -9,6 +9,7 @@ import { pencilStroke } from "./pencil/stroke";
 import { GoogleMapIcon } from "./SketchIcons";
 import { useAdventurePreferences } from "./AdventurePreferences";
 import { scheduleNeedsSummary, summarizeScheduleIntervals } from "./scheduleTimelineDensity";
+import { createScheduleCardScale } from "./scheduleCardScale";
 import "./AdventureScheduleTimeline.css";
 
 const HOUR = 60 * 60 * 1000;
@@ -148,10 +149,11 @@ export function scheduleTimelineTicks(start, end, pixelHeight = 0, minimumGap = 
       candidates.push(instant);
   }
   collapsed.forEach(range => candidates.push(range.start, range.end));
+  candidates.push(...(scale.boundaries ?? []));
   if (end > start) candidates.push(end);
   const uniqueCandidates = [...new Set(candidates)].sort((a, b) => a - b);
   if (!(pixelHeight > 0) || uniqueCandidates.length <= 2) return uniqueCandidates;
-  const required = new Set([start, end, ...collapsed.flatMap(range => [range.start, range.end])]);
+  const required = new Set([start, end, ...(scale.boundaries ?? []), ...collapsed.flatMap(range => [range.start, range.end])]);
   const pixelsBetween = (a, b) => (scale.position(b) - scale.position(a)) * pixelHeight;
   const ticks = [uniqueCandidates[0]];
   for (const instant of uniqueCandidates.slice(1, -1)) {
@@ -234,16 +236,15 @@ function ScheduleIcon({ type }) {
   </PencilIcon>;
 }
 
-function ScheduleGapToggle({ range, expanded, timeScale, onToggle, displayTop }) {
-  const top = displayTop === undefined ? timeScale.position(range.start) * 100 : displayTop * 100;
+function ScheduleGapToggle({ range, expanded, timeScale, onToggle }) {
+  const top = timeScale.position(range.start) * 100;
   const height = (timeScale.position(range.end) - timeScale.position(range.start)) * 100;
-  const insets = displayTop === undefined ? timeScale.gapInsets(range) : { before: 0, after: 0 };
+  const insets = timeScale.gapInsets(range);
   const action = expanded ? range.collapseLabel ?? "收起" : range.expandLabel ?? "展开";
   const label = (expanded ? range.collapseAriaLabel : range.expandAriaLabel)
     ?? `${range.label ?? "时段"}，${action}`;
   return <div className="trip-schedule-timeline-gap"
-    style={{ top: `${top}%`, height: displayTop === undefined ? `${height}%` : 44,
-      transform: displayTop === undefined ? undefined : "translateY(-50%)",
+    style={{ top: `${top}%`, height: `${height}%`,
       paddingTop: insets.before, paddingBottom: insets.after }}>
     <span className="trip-schedule-timeline-gap-line"><PanelDivider /></span>
     <button type="button" className="trip-schedule-timeline-collapsed-range"
@@ -357,8 +358,10 @@ export function AdventureScheduleTimeline({
   const expandedRanges = useMemo(() => collapsedRanges.filter((range, index) =>
     expandedRangeIds.includes(range.id ?? `collapsed-${index}`)), [collapsedRanges, expandedRangeIds]);
   const timeScale = useMemo(() => duration > 0
-    ? createScheduleTimelineScale(range.start, range.end, activeCollapsedRanges, { pixelHeight, points, expandedRanges }) : null,
-  [activeCollapsedRanges, duration, expandedRanges, pixelHeight, points, range?.end, range?.start]);
+    ? readableLabels
+      ? createScheduleCardScale(range.start, range.end, intervals, points, activeCollapsedRanges, expandedRanges)
+      : createScheduleTimelineScale(range.start, range.end, activeCollapsedRanges, { pixelHeight, points, expandedRanges }) : null,
+  [activeCollapsedRanges, duration, expandedRanges, intervals, pixelHeight, points, range?.end, range?.start, readableLabels]);
   const ticks = useMemo(() => duration > 0
     ? scheduleTimelineTicks(range.start, range.end, pixelHeight || 430, 20, activeCollapsedRanges, timeScale) : [],
   [activeCollapsedRanges, duration, pixelHeight, range?.end, range?.start, timeScale]);
@@ -372,14 +375,15 @@ export function AdventureScheduleTimeline({
   const condensed = !readableLabels && adaptiveDetail && scheduleNeedsSummary(visibleIntervals, pixelHeight);
   const intervalRows = useMemo(() => layoutIntervals(condensed
     ? summarizeScheduleIntervals(visibleIntervals) : visibleIntervals), [condensed, visibleIntervals]);
-  const callouts = useMemo(() => !readableLabels || !timeScale ? [] : layoutSchedulePoints([
-    ...intervalRows.map(row => ({ ...row, time: (Math.max(row.start, range.start)
-      + Math.min(row.end, range.end)) / 2 })),
-    ...points.filter(row => row.time >= range.start && row.time <= range.end),
-    ...normalizedCollapsedRanges(range.start, range.end, collapsedRanges)
-      .map(gap => ({ id: `gap:${gap.id}`, time: (gap.start + gap.end) / 2, gap })),
-  ], pixelHeight, range, timeScale.position, { edge: 26, gap: 54 }),
-  [collapsedRanges, intervalRows, pixelHeight, points, range, readableLabels, timeScale]);
+  const cards = useMemo(() => !readableLabels || !timeScale ? [] : [
+    ...intervalRows.map(row => {
+      const top = timeScale.position(Math.max(row.start, range.start), "after");
+      return { ...row, top, size: timeScale.position(Math.min(row.end, range.end)) - top };
+    }),
+    ...points.filter(row => row.time >= range.start && row.time <= range.end)
+      .map(row => ({ ...row, top: timeScale.position(row.time), size: timeScale.pointHeight, lane: 0, lanes: 1 })),
+  ].sort((a, b) => a.top - b.top || a.id.localeCompare(b.id)),
+  [intervalRows, points, range, readableLabels, timeScale]);
   const timelineHeight = useMemo(() => {
     if (height === "fill") return undefined;
     if (typeof height === "number") return `${height}px`;
@@ -405,7 +409,7 @@ export function AdventureScheduleTimeline({
     data-detail={condensed ? "summary" : "full"}
     data-readable={readableLabels || undefined}
     data-tick-columns={dualTickColumns ? "dual" : "single"}
-    style={{ height: timelineHeight, minHeight: readableLabels ? callouts.length * 54 + 24 : undefined }}>
+    style={{ height: timelineHeight, minHeight: readableLabels ? timeScale.minHeight : undefined }}>
     {dualTickColumns && <>
       <span className="trip-schedule-timeline-tick-heading is-left"
         title={dualTickColumns[0].headingTitle} aria-label={dualTickColumns[0].headingAriaLabel}>
@@ -452,14 +456,16 @@ export function AdventureScheduleTimeline({
           {isEnd && endTick?.suffix && <sup aria-hidden="true">{endTick.suffix}</sup>}
         </time>;
       })}
-      {!readableLabels && normalizedCollapsedRanges(range.start, range.end, collapsedRanges).map(gap =>
-        <ScheduleGapToggle key={gap.id} range={gap} timeScale={timeScale}
+      {normalizedCollapsedRanges(range.start, range.end, collapsedRanges).map(gap =>
+        <ScheduleGapToggle key={gap.id} range={gap} timeScale={readableLabels
+          ? { ...timeScale, position: instant => timeScale.position(instant, instant === gap.start ? "after" : "before") }
+          : timeScale}
           expanded={expandedRangeIds.includes(gap.id)}
           onToggle={() => setExpandedRangeIds(ids => ids.includes(gap.id)
             ? ids.filter(id => id !== gap.id) : [...ids, gap.id])} />)}
       <div className="trip-schedule-timeline-lanes">
-        <PointLeadersInk points={readableLabels ? callouts.filter(row => !row.gap) : pointRows} />
-        {intervalRows.map((row) => {
+        {!readableLabels && <PointLeadersInk points={pointRows} />}
+        {!readableLabels && intervalRows.map((row) => {
           const { id, start, end, timeLabel, label, summary, meta, details, iconType, mapsUrl, active, color,
             title, ariaLabel: rowAriaLabel, onSelect, lane, lanes, milestones = [], showTime = true } = row;
           const content = rowContent(row);
@@ -469,22 +475,21 @@ export function AdventureScheduleTimeline({
           const height = (timeScale.position(visibleEnd) - timeScale.position(visibleStart)) * 100;
           const rowPixels = pixelHeight * height / 100;
           const compact = rowPixels < 48;
-          const minimal = readableLabels || adaptiveDetail && pixelHeight > 0 && rowPixels < 24;
-          const showMap = !readableLabels && mapsUrl && (!adaptiveDetail || !condensed && rowPixels >= 44);
+          const minimal = adaptiveDetail && pixelHeight > 0 && rowPixels < 24;
+          const showMap = mapsUrl && (!adaptiveDetail || !condensed && rowPixels >= 44);
           const clock = instant => formatTick?.(instant) ?? new Date(instant).toISOString().slice(11, 16);
           const rowTitle = row.summaryCount ? `${clock(visibleStart)} — ${clock(visibleEnd)} · ${label}` : title;
           return <div key={id} className="trip-schedule-timeline-slot"
             data-summary-count={row.summaryCount} data-minimal={minimal || undefined}
             style={{ top: `${top}%`, height: `${height}%`,
-              left: readableLabels ? lane / lanes * 16 : `${lane / lanes * 100}%`,
-              width: readableLabels ? 16 / lanes : `${100 / lanes}%` }}>
+              left: `${lane / lanes * 100}%`, width: `${100 / lanes}%` }}>
             <PencilSurface variant="badge"
               className={`trip-schedule-timeline-interval${compact ? " is-compact" : ""}${adaptiveDetail ? " is-adaptive" : ""}${minimal ? " is-minimal" : ""}`}
               data-active={Boolean(active)} style={{ "--trip-surface-badge-wash": scheduleWash(color) }}>
               {content && !minimal ? <div className="trip-schedule-timeline-interval-main trip-schedule-timeline-row-content">
                 {content}
               </div> : <>
-                {!readableLabels && onSelect && <button type="button" className="trip-schedule-timeline-interval-hit"
+                {onSelect && <button type="button" className="trip-schedule-timeline-interval-hit"
                   title={rowTitle} aria-label={row.summaryCount ? rowTitle : rowAriaLabel ?? (timeLabel ? `${timeLabel} · ${label}` : label)}
                   onClick={onSelect} />}
                 {!minimal && <div className="trip-schedule-timeline-interval-copy"
@@ -508,24 +513,27 @@ export function AdventureScheduleTimeline({
             </PencilSurface>
           </div>;
         })}
-        {readableLabels && callouts.map(row => row.gap
-          ? <ScheduleGapToggle key={row.id} range={row.gap} timeScale={timeScale} displayTop={row.displayTop}
-            expanded={expandedRangeIds.includes(row.gap.id)}
-            onToggle={() => setExpandedRangeIds(ids => ids.includes(row.gap.id)
-              ? ids.filter(id => id !== row.gap.id) : [...ids, row.gap.id])} />
-          : <button key={row.id} type="button" className="trip-schedule-callout"
-            style={{ top: `${row.displayTop * 100}%` }} data-active={Boolean(row.active)}
-            title={row.title} aria-label={row.ariaLabel ?? row.title}
-            onClick={row.onSelect}>
-            {row.iconType && <span className="trip-schedule-timeline-point-icon"><ScheduleIcon type={row.iconType} /></span>}
-            <span className="trip-schedule-callout-copy">
-              <strong><PencilText ellipsis>{row.label}</PencilText></strong>
-              <span className="trip-schedule-callout-time">
-                <PencilText>{row.timeLabel ?? formatTick?.(row.time)}</PencilText>
-                {row.durationLabel && <PencilText>{row.durationLabel}</PencilText>}
+        {readableLabels && cards.map(row =>
+          <PencilSurface key={row.id} variant="badge" className="trip-schedule-callout"
+            style={{ top: `calc(${row.top * 100}% + 2px)`, height: `calc(${row.size * 100}% - 4px)`,
+              left: `${row.lane / row.lanes * 100}%`, width: `${100 / row.lanes}%`,
+              "--trip-surface-badge-wash": scheduleWash(row.color) }}
+            data-active={Boolean(row.active)}>
+            {row.onSelect && <button type="button" className="trip-schedule-callout-hit"
+              title={row.title} aria-label={row.ariaLabel ?? row.title ?? row.label}
+              aria-pressed={Boolean(row.active)} onClick={row.onSelect} />}
+            <span className="trip-schedule-callout-main">
+              {row.iconType && <span className="trip-schedule-timeline-point-icon"><ScheduleIcon type={row.iconType} /></span>}
+              <span className="trip-schedule-callout-copy">
+                <strong><PencilText ellipsis>{row.label}</PencilText></strong>
+                {row.durationLabel && <small><PencilText>{row.durationLabel}</PencilText></small>}
               </span>
             </span>
-          </button>)}
+            {(row.mapLinks?.length ? row.mapLinks : row.mapsUrl ? [{ url: row.mapsUrl, label: row.label }] : [])
+              .map(link => <a key={link.url} className="trip-schedule-timeline-map-link" href={link.url}
+                target="_blank" rel="noopener noreferrer" aria-label={`${link.label} · Google Maps`}
+                title={`${link.label} · Google Maps`}><GoogleMapIcon /></a>)}
+          </PencilSurface>)}
         {!readableLabels && pointRows.map((row) => {
           const { id, time, timeLabel, label, iconType, mapsUrl, active, color, title,
             ariaLabel: rowAriaLabel, onSelect, displayTop, showTime = true } = row;

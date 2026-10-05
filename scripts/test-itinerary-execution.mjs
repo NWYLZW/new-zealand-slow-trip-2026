@@ -14,14 +14,14 @@ const isPublicUrl = value => {
 };
 
 try {
-  const { southDays, northDays, activityBookingPlans } = await server.ssrLoadModule("/src/tripData.js");
+  const { southDays, northDays, activityBookingPlans, bookingItems } = await server.ssrLoadModule("/src/tripData.js");
   const { itineraryDaysEn } = await server.ssrLoadModule("/src/englishTripData.js");
   const { getAdventureCalendarDays } = await server.ssrLoadModule("/src/components/calendar/tripCalendarData.js");
   const { withItineraryExecution } = await server.ssrLoadModule("/src/data/itineraryExecution.js");
   const days = [...southDays, ...northDays];
   const refined = days.filter(day => day.executionSources);
   assert.deepEqual(refined.map(day => day.date), Array.from({ length: 11 }, (_, i) => `10月${i + 2}日`));
-  assert.deepEqual(refined.map(day => day.events.length), [6, 7, 9, 13, 10, 7, 6, 7, 6, 3, 4]);
+  assert.deepEqual(refined.map(day => day.events.length), [6, 7, 9, 14, 18, 7, 6, 7, 6, 3, 4]);
   const earlier = days.filter(day => !day.executionSources);
   assert.equal(earlier.length, 4);
   for (const day of earlier) assert.equal(withItineraryExecution(day), day);
@@ -73,7 +73,7 @@ try {
     }
     coverage += indices.length;
   }
-  assert.equal(coverage, 78);
+  assert.equal(coverage, 87);
   const wanaka = refined.find(day => day.date === "10月4日");
   assert.deepEqual(wanaka.events.map(([, , metadata]) => [metadata.start, metadata.end]), [
     ["10:00", "12:00"], ["12:15", "13:30"], ["13:30", "14:00"], ["14:00", "16:00"],
@@ -129,6 +129,65 @@ try {
   assert(!record.pointOnly, "photography is an interval, not an untimed or point event");
   assert(!nearby.untimed.some(row => row.event.urlId === starEvent.urlId));
   const { adventureDayEventRows, adventureDayRowsForDate } = await server.ssrLoadModule("/src/adventure/AdventureDayDetails.jsx");
+  const cookDay = refined.find(day => day.date === "10月5日");
+  const helicopter = cookDay.events[5][2];
+  assert.equal(helicopter.executionStatus, "completed");
+  assert.equal(helicopter.source, "user-confirmed");
+  assert.equal(helicopter.isEstimated, true);
+  assert.equal(activityBookingPlans.find(plan => plan.id === "mount-cook-helicopter").executionStatus, "completed");
+  const onwardDay = refined.find(day => day.date === "10月6日");
+  assert.equal(onwardDay.events[1][1], "酒店早餐完成");
+  assert.equal(onwardDay.events[1][2].end, undefined);
+  const onwardRows = adventureDayRowsForDate("2026-10-06");
+  const breakfastPoint = onwardRows.find(row => row.agendaItem?.sourceIndex === 1);
+  assert.equal(breakfastPoint.point, Date.parse("2026-10-06T10:00:00+13:00"));
+  assert.equal(breakfastPoint.interval, null);
+  const orderedRows = onwardRows.filter(row => row.interval);
+  assert.deepEqual(orderedRows.map(row => row.agendaItem.sourceIndex),
+    [0, 10, 2, 11, 12, 3, 13, 14, 4, 15, 17, 5, 6, 16, 7, 8, 9]);
+  orderedRows.slice(1).forEach((row, index) => assert.equal(row.interval.start, orderedRows[index].interval.end));
+  assert.equal(orderedRows[0].interval.start, Date.parse("2026-10-06T09:00:00+13:00"));
+  assert.equal(orderedRows.at(-1).interval.end, Date.parse("2026-10-06T22:00:00+13:00"));
+  assert(orderedRows.every(row => row.agendaItem.activityType));
+  for (const index of [2, 3, 14]) {
+    const row = orderedRows.find(row => row.agendaItem.sourceIndex === index);
+    assert.equal(row.agendaItem.iconType, "car");
+    assert.equal(row.agendaItem.mapLinks.length, 2, "Intercity driving keeps both map endpoints");
+  }
+  const colonyTransfer = orderedRows.find(row => row.agendaItem.sourceIndex === 16);
+  assert.match(decodeURIComponent(colonyTransfer.agendaItem.mapsUrl), /Oamaru Blue Penguin Colony/);
+  const onwardCalendar = zhCalendar.find(day => day.dateId === "2026-10-06");
+  assert(!onwardCalendar.events.some(event => /候补/.test(event.title)));
+  const stayEvent = onwardCalendar.events.find(event => event.title === "蒂卡波到奥马鲁");
+  assert.equal(stayEvent.items[stayEvent.stayIntegration.linkEventIndex], 4);
+  const onwardEn = adventureDayRowsForDate("2026-10-06", "en");
+  assert(onwardEn.every(row => !/\p{Script=Han}/u.test(row.label)));
+  assert.deepEqual(onwardEn.map(row => row.agendaItem?.iconType), onwardRows.map(row => row.agendaItem?.iconType));
+  assert(nearby.sourceItems.filter(item => item.dateId === "2026-10-06").every(item => item.status === "represented"));
+  for (const [index, expected] of [
+    [2, ["place:AOR", "place:TEK"]],
+    [3, ["place:TEK", "waypoint:omarama-town"]],
+    [14, ["waypoint:omarama-town", "place:OAM"]],
+  ]) {
+    const row = nearby.rows.find(row => row.dateId === "2026-10-06" && row.sourceIndex === index);
+    assert.deepEqual(row.places.map(place => place.id), expected);
+    assert(row.moving);
+  }
+  const hike = cookDay.events[13];
+  assert.equal(hike[2].executionStatus, "completed");
+  assert.equal(hike[2].start, "18:00");
+  assert.equal(hike[2].end, "19:30");
+  assert.equal(hike[2].isEstimated, true);
+  assert.equal(cookDay.events[6][2].end, "18:00");
+  assert.equal(cookDay.events[7][2].start, "19:30");
+  assert.match(cookDay.events[8][1], /自行观星/);
+  assert(!activityBookingPlans.some(plan => plan.id === "mount-cook-stargazing"));
+  assert(!bookingItems.some(([id]) => id === "mount-cook-stargazing"));
+  const hikeRow = adventureDayRowsForDate("2026-10-05").find(row => row.agendaItem?.sourceIndex === 13);
+  assert.equal(hikeRow.interval.end - hikeRow.interval.start, 90 * 60000);
+  const independentStars = nearby.rows.find(row => row.dateId === "2026-10-05" && row.sourceIndex === 8);
+  assert.deepEqual(independentStars.places.map(place => place.id), ["place:AOR"]);
+  assert.equal(independentStars.places[0].evidenceRole, "area-reference");
   const { scheduleDurationLabel } = await server.ssrLoadModule("/src/adventure/scheduleDuration.js");
   const driveRows = adventureDayRowsForDate("2026-10-05").filter(row =>
     row.event.urlId === "2026-10-05|自驾前往库克山");
@@ -234,7 +293,7 @@ try {
     const json = await readFile(new URL(`../src/data/itineraryExecution/${region}.json`, import.meta.url), "utf8");
     assert(!/\/Users\/|repo:|expectedText|coordinator|主协调|latitude|longitude/.test(json));
   }
-  console.log("Itinerary execution: 11 days / 78 entries; split driving/stops, durations, cross-midnight photography and proposal, bilingual notes, nearby geography, weather segments and calendar/stay contracts passed.");
+  console.log(`Itinerary execution: ${refined.length} days / ${coverage} entries; split driving/stops, completed hike, independent stargazing, durations, cross-midnight photography and proposal, bilingual notes, nearby geography, weather segments and calendar/stay contracts passed.`);
 } finally {
   await server.close();
 }

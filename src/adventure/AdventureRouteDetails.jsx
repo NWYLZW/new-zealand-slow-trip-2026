@@ -32,12 +32,11 @@ export function AdventureRouteDetails({ route, navigate }) {
         const start = zonedLocalInstant(meta.date, meta.start, meta.timeZone);
         const end = zonedLocalInstant(meta.endDate ?? meta.date, meta.end, meta.timeZone);
         const duration = scheduleDurationLabel(start, end, meta);
-        const endClock = `${meta.endDate && meta.endDate !== meta.date ? "次日 " : ""}${meta.end}`;
         const contents = <>
           <time><PencilText>{time}</PencilText></time>
           <span className="trip-route-agenda-icon"><AgendaIcon type={iconType} /></span>
           <span className="trip-route-agenda-text"><PencilText>{meta.activityType ? meta.summary ?? text : text}</PencilText>
-            {duration && <small><PencilText>{`${meta.start}—${endClock} · ${duration}`}</PencilText></small>}
+            {duration && <small><PencilText>{duration}</PencilText></small>}
           </span>
         </>;
         return <li key={`${time}-${index}`} className={waypoint ? "trip-route-agenda--mapped" : undefined}>
