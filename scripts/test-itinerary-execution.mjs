@@ -37,7 +37,7 @@ try {
     assert.equal(sourceIds.size, day.executionSources.length);
     for (const source of day.executionSources) {
       assert(isPublicUrl(source.url));
-      assert(["2026-10-01", "2026-10-04", "2026-10-07"].includes(source.checkedAt));
+      assert(["2026-10-01", "2026-10-04", "2026-10-07", "2026-10-08"].includes(source.checkedAt));
       assert(["verified", "needs-recheck", "official-unreachable"].includes(source.status));
       assert(source.title && source.titleEn);
     }

@@ -51,6 +51,22 @@ try {
   assert.deepEqual([finalFlight.flightNumber, finalFlight.date, finalFlight.departure], ["MH0132", "2026-10-11", "01:25"]);
   const evening = calendar.find(item => item.dateId === "2026-10-08").events[2];
   const eveningAgenda = eventAgendaItems(evening);
+  const eveningSource = calendar.find(item => item.dateId === "2026-10-08").day.events;
+  for (const [index, start, end] of [[11, "18:00", "18:30"], [12, "18:30", "19:00"], [13, "19:00", "19:35"], [14, "19:35", "20:00"], [16, "20:15", "20:27"]]) {
+    assert.deepEqual([eveningSource[index][0], eveningSource[index][2].start, eveningSource[index][2].end], [start, start, end]);
+  }
+  const payment = eveningSource[8][2];
+  assert.match(eveningAgenda.find(item => item.sourceIndex === 8).localizedSummary, /每人单独刷卡/);
+  assert.match(payment.summaryEn, /per person/);
+  assert.match(payment.execution.text, /同一卡或设备/);
+  assert.match(payment.execution.textEn, /same card or device/);
+  assert(payment.execution.sourceIds.includes("return-at-payment"));
+  const gallery = source[1][2];
+  assert.match(agenda.find(item => item.sourceIndex === 1).localizedSummary, /背包先寄存/);
+  assert.match(gallery.summaryEn, /cloakroom/);
+  assert.match(gallery.execution.text, /不安排付费特展/);
+  assert.match(gallery.execution.text, /免费寄存/);
+  assert.match(gallery.execution.textEn, /no paid special exhibition/);
   const hotelReturn = eveningAgenda.find(item => item.sourceIndex === 17);
   assert.match(hotelReturn.title, /步行或打车/);
   assert.notEqual(hotelReturn.activityType, "walk");
@@ -115,7 +131,7 @@ try {
   assert(!/仍待预订|remains unbooked|GS10H/.test(JSON.stringify(tourDay.day.events)));
   const tourEn = getAdventureCalendarDays({ language: "en" }).find(item => item.dateId === "2026-10-09");
   assert(tourEn.day.events.every(([, title]) => !/\p{Script=Han}/u.test(title)));
-  console.log("Both days load: 35 entries; Christchurch 10:00–11:00 drive, private stay binding, 11:00 return, JQ236 preserved; mistaken Auckland timing change reversed; bilingual data and non-overlap verified.");
+  console.log("Both days load: 35 entries; 19:00 summit, visible payment/cloakroom reminders and free collection verified; booked transport, hotel navigation, bilingual data and non-overlap preserved.");
 } finally {
   await server.close();
 }

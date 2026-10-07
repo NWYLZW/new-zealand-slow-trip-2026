@@ -122,6 +122,14 @@
       "status": "verified"
     },
     {
+      "id": "return-at-payment",
+      "url": "https://at.govt.nz/bus-train-ferry/at-hop-card/paying-with-at-hop-card",
+      "title": "AT轮渡刷卡与购票方式",
+      "titleEn": "AT ferry payment and ticket guidance",
+      "checkedAt": "2026-10-08",
+      "status": "verified"
+    },
+    {
       "id": "return-devonport",
       "url": "https://www.aucklandnz.com/explore/devonport",
       "title": "德文港小镇",
@@ -156,9 +164,9 @@
     {
       "id": "return-art-gallery",
       "url": "https://www.aucklandartgallery.com/visit/plan-your-visit",
-      "title": "奥克兰美术馆参观时间",
-      "titleEn": "Auckland Art Gallery visitor hours",
-      "checkedAt": "2026-10-07",
+      "title": "奥克兰美术馆开放、免费展区与寄存规定",
+      "titleEn": "Auckland Art Gallery hours, free collection and cloakroom rules",
+      "checkedAt": "2026-10-08",
       "status": "verified"
     },
     {
@@ -340,10 +348,11 @@
         {
           "summary": "找登船口并候船",
           "summaryEn": "Find the pier and wait",
-          "text": "AT施工公告将德文港航线临时改到Pier 4，经Pier 6/7通道进入；现场标识及当日通知优先于旧PDF。",
-          "textEn": "AT's works notice moves Devonport sailings to Pier 4, accessed via the Pier 6/7 gangway. Follow current signs and same-day notices over the old PDF.",
+          "text": "按现场标识前往Pier 4，施工可能需经Pier 6/7通道。两人各用自己的银行卡、Apple Pay或AT HOP，上下船均使用同一卡或设备；不能用同一非接触支付方式连续刷两人。没有独立支付方式就先买各自船票。",
+          "textEn": "Follow current signs to Pier 4; works may require the Pier 6/7 gangway. Each traveller uses their own payment card, Apple Pay or AT HOP, tagging on and off with the same card or device. One contactless method cannot pay for both people. Buy separate tickets before boarding if needed.",
           "sourceIds": [
-            "return-devonport-pier"
+            "return-devonport-pier",
+            "return-at-payment"
           ]
         },
         {
@@ -367,8 +376,8 @@
         {
           "summary": "德文港晚餐",
           "summaryEn": "Dinner in Devonport",
-          "text": "在Victoria Road附近选择营业中的餐厅，未指定或预订餐厅；若等位过久改简单餐食，18:40开始上山。",
-          "textEn": "Choose an open place near Victoria Road; no restaurant is booked. Use a quick meal if queues are long and start uphill at 18:40.",
+          "text": "18:00至18:30在Victoria Road附近简单晚餐，未指定或预订餐厅；若等位过久改外带，18:30开始上山。",
+          "textEn": "Have a simple dinner near Victoria Road from 18:00 to 18:30; no restaurant is booked. Switch to takeaway if queues are long and start uphill at 18:30.",
           "sourceIds": [
             "return-devonport"
           ]
@@ -376,8 +385,8 @@
         {
           "summary": "步行登维多利亚山",
           "summaryEn": "Walk up Mount Victoria",
-          "text": "经Victoria Road、Kerr Street步行上山，普通私家车不能驶上山顶；遵守现场步道和施工标识。",
-          "textEn": "Walk uphill via Victoria Road and Kerr Street. Private vehicles cannot drive to the summit; follow current path and works signs.",
+          "text": "18:30经Victoria Road、Kerr Street步行上山，计划19:00到顶，提前留出取景时间；普通私家车不能驶上山顶，遵守现场步道和施工标识。",
+          "textEn": "Start uphill via Victoria Road and Kerr Street at 18:30, aiming to reach the summit at 19:00 for more time to frame photos. Private vehicles cannot drive to the summit; follow current path and works signs.",
           "sourceIds": [
             "return-mount-victoria"
           ]
@@ -385,8 +394,8 @@
         {
           "summary": "山顶日落与拍照",
           "summaryEn": "Sunset and photos at the summit",
-          "text": "奥克兰10月8日日落约19:30，山顶地平线和天气会影响观感；19:35开始下山，夏季入口20:30关闭。",
-          "textEn": "Auckland sunset on 8 October is around 19:30; the local horizon and weather affect the view. Start down at 19:35, before the summer gate closes at 20:30.",
+          "text": "19:00至19:35在山顶看海港和城市全景、拍照。奥克兰10月8日日落约19:30，山顶地平线和天气会影响观感；19:35开始下山，夏季入口20:30关闭。",
+          "textEn": "Enjoy harbour and city views and photos at the summit from 19:00 to 19:35. Auckland sunset on 8 October is around 19:30; the local horizon and weather affect the view. Start down at 19:35, before the summer gate closes at 20:30.",
           "sourceIds": [
             "return-mount-victoria",
             "return-auckland-sunset"
@@ -611,8 +620,8 @@
         {
           "summary": "奥克兰美术馆",
           "summaryEn": "Auckland Art Gallery",
-          "text": "11:45至13:15参观常设展；官方每天10:00至17:00开放，普通藏品展免费，部分特展另收费。",
-          "textEn": "Visit the collection from 11:45 to 13:15. Official hours are 10:00–17:00 daily; collection exhibitions are free, while some special exhibitions charge.",
+          "text": "11:45至13:15参观免费普通藏品展，不安排付费特展。背包、大包、购物袋和雨伞先到免费寄存处存放；个人手持摄影遵守展品标识，未经许可不用闪光灯或三脚架。开放时间10:00至17:00。",
+          "textEn": "Visit the free general collection from 11:45 to 13:15; no paid special exhibition is planned. Check backpacks, large bags, shopping bags and umbrellas into the free cloakroom first. Follow artwork signs for personal handheld photography; no flash or tripods without permission. Open 10:00–17:00.",
           "sourceIds": [
             "return-art-gallery"
           ]
