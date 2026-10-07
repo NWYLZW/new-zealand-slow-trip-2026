@@ -56,6 +56,34 @@ const flightSummary = {
   note: "两位旅客均已出票；个人姓名、证件号、PNR 与电子票号不在公开页面展示。",
 };
 
+// Public attraction references, not hotel positions or turn-by-turn entrances.
+const aucklandVisitStops = {
+  DEV: { name: "德文港", nameEn: "Devonport", date: "10/8",
+    desc: "Victoria Road 小镇片区", descEn: "Victoria Road village area",
+    position: [-36.8246787, 174.7985219], timeZone: "Pacific/Auckland",
+    coordinateSourceUrl: "https://www.aucklandnz.com/explore/devonport", reviewedAt: "2026-10-07" },
+  TKR: { name: "维多利亚山", nameEn: "Mount Victoria / Takarunga", date: "10/8",
+    desc: "步行登山、日落与拍照", descEn: "Walk uphill for sunset and photos",
+    position: [-36.826629362352946, 174.79918930740973], timeZone: "Pacific/Auckland",
+    coordinateSourceUrl: "https://maunga.nz/maunga/takarunga", reviewedAt: "2026-10-07" },
+  EDN: { name: "伊甸山", nameEn: "Mount Eden / Maungawhau", date: "10/10",
+    desc: "步道与火山口观景，车辆不能上山顶", descEn: "Walking paths and crater views; no private vehicles at the summit",
+    position: [-36.877467936344765, 174.7643509809509], timeZone: "Pacific/Auckland",
+    coordinateSourceUrl: "https://maunga.nz/maunga/maungawhau", reviewedAt: "2026-10-07" },
+  AAG: { name: "奥克兰美术馆", nameEn: "Auckland Art Gallery", date: "10/10",
+    desc: "1 Kitchener Street · 每天10:00–17:00", descEn: "1 Kitchener Street · Daily 10:00–17:00",
+    position: [-36.851354, 174.766237], timeZone: "Pacific/Auckland",
+    coordinateSourceUrl: "https://www.aucklandartgallery.com/visit/plan-your-visit", reviewedAt: "2026-10-07" },
+  VDH: { name: "维达克港", nameEn: "Viaduct Harbour", date: "10/10",
+    desc: "滨水散步与咖啡休息", descEn: "Waterfront walk and coffee break",
+    position: [-36.8429963, 174.761586], timeZone: "Pacific/Auckland",
+    coordinateSourceUrl: "https://www.aucklandnz.com/explore/viaduct-waterfront", reviewedAt: "2026-10-07" },
+  SKY: { name: "天空塔", nameEn: "Sky Tower", date: "10/10",
+    desc: "观景台 · 尚未购票", descEn: "Observation decks · Tickets not purchased",
+    position: [-36.8488038, 174.7619987], timeZone: "Pacific/Auckland",
+    coordinateSourceUrl: "https://www.aucklandnz.com/explore/sky-tower-skycity-auckland", reviewedAt: "2026-10-07" },
+};
+
 export function parseTripDate(dateText) {
   const match = dateText.match(/(\d+)月(\d+)日/);
   if (!match) return null;
@@ -148,8 +176,11 @@ const calendarEventGroupsByDate = {
     { title: "基督城补充半日", time: "15:30—20:00", color: eventColors.christchurch, icon: "city", items: [4, 5, 6], segmentIds: [], stopTags: ["CHC"], stopOverrides: { CHC: { name: "基督城市中心", date: "10/7—10/8", desc: "市中心住1晚；10月8日11:00机场还车", position: [-43.5321, 172.6362] } } },
   ],
   "10月8日": [
-    { title: "按更新订单还车", time: "08:30—11:00", color: eventColors.christchurchRoad, icon: "car", items: [0, 1, 2], segmentIds: ["christchurch-car-return"], stopTags: ["CHC"] },
+    { title: "按更新订单还车", time: "09:00—11:00", timeEn: "09:00–11:00", color: eventColors.christchurchRoad, icon: "car", items: [0, 1, 2], segmentIds: ["christchurch-car-return"], stopTags: ["CHC"] },
     { title: "前往机场飞奥克兰", calendarLabel: "飞往奥克兰", calendarLabelEn: "Fly to Auckland", isFlightTransfer: true, time: "11:00—16:30", timeEn: "11:00–16:30", color: eventColors.flightTransfer, icon: "domesticFlight", items: [3, 4, 5], flights: [{ flightNumber: "JQ236", date: "2026-10-08", from: "基督城 CHC", to: "奥克兰 AKL", departure: "13:50", arrival: "15:10", departureTerminal: "未在票面标注", arrivalTerminal: "国内航站楼 D", cabin: "经济舱", status: "已出票 · 票面状态 OK", priceNoteZh: "2026-08-03 出票；当前截图对应单人票面总额 CNY 794（票价 CNY 746 + 税费 CNY 48）。", priceNoteEn: "Issued on 3 Aug 2026; the supplied image shows a one-passenger ticket total of CNY 794 (fare CNY 746 + tax CNY 48).", reliabilityNoteZh: "当前截图仅能确认其中一位乘客；另一位仍需用其电子客票单独核对。11:00还车距起飞约2小时50分钟。", reliabilityNoteEn: "The supplied image confirms only one passenger; verify the other passenger against their own e-ticket. The 11:00 car return leaves about 2 hr 50 min before departure." }], segmentIds: ["chc-akl", "akl-akc-transfer"], stopTags: ["CHC", "AKL", "AKC"] },
+    { title: "德文港与维多利亚山日落", time: "16:30—21:00", timeEn: "16:30–21:00",
+      color: eventColors.boat, icon: "boat", items: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+      segmentIds: [], stopTags: ["AKC", "DEV", "TKR"], stopOverrides: aucklandVisitStops },
   ],
   "10月9日": [
     { title: "大巴前往霍比屯", time: "07:00—09:30", color: eventColors.northRoad, icon: "bus", items: [0, 1, 2], segmentIds: ["akc-hobbiton-coach"], stopTags: ["AKC", "HBT"] },
@@ -157,9 +188,12 @@ const calendarEventGroupsByDate = {
     { title: "大巴返回奥克兰", time: "13:15—16:30", timeEn: "13:15–16:30", color: eventColors.northRoad, icon: "bus", items: [4, 5, 6], segmentIds: ["hobbiton-akc-coach"], stopTags: ["HBT", "AKC"] },
   ],
   "10月10日": [
-    { title: "奥克兰轻松半日", time: "09:00—15:30", color: eventColors.auckland, icon: "city", items: [0, 1, 2], segmentIds: [], stopTags: ["AKC"] },
-    { title: "前往奥克兰机场", time: "15:30—21:45", color: eventColors.northRoad, icon: "bus", items: [3, 4], segmentIds: ["akc-akl-transfer"], stopTags: ["AKC", "AKL"] },
-    { title: "办理返程值机", time: "21:45—次日 00:30", timeEn: "21:45–00:30 next day",
+    { title: "奥克兰轻松半日", calendarLabel: "奥克兰城市慢游", calendarLabelEn: "Auckland city day",
+      time: "09:00—20:30", timeEn: "09:00–20:30", color: eventColors.auckland, icon: "city",
+      items: [0, 6, 7, 8, 1, 2, 9, 10, 11, 12, 13, 14, 15, 16], segmentIds: [],
+      stopTags: ["AKC", "EDN", "AAG", "VDH", "SKY"], stopOverrides: aucklandVisitStops },
+    { title: "前往奥克兰机场", time: "20:30—22:15", timeEn: "20:30–22:15", color: eventColors.northRoad, icon: "car", items: [3, 4], segmentIds: ["akc-akl-transfer"], stopTags: ["AKC", "AKL"] },
+    { title: "办理返程值机", time: "22:15—次日 00:30", timeEn: "22:15–00:30 next day",
       endDate: "2026-10-11", color: eventColors.internationalFlight, icon: "flight", items: [5],
       flights: internationalFlights.inbound, flightsAsDetailsOnly: true, flightSummary, segmentIds: [], stopTags: ["AKL"] },
   ],
@@ -237,6 +271,7 @@ const stayIntegrationByEvent = {
   "基督城补充半日": { mapPhases: ["check-in"] },
   "按更新订单还车": { mapPhases: ["check-out"], routeOrigin: "check-out", omitStopTags: ["CHC"] },
   "前往机场飞奥克兰": { mapPhases: ["check-out", "check-in"], linkPhase: "check-in", linkEventIndex: 2 },
+  "德文港与维多利亚山日落": { mapPhases: ["check-in"], linkPhase: "check-in", linkEventIndex: 0 },
   "大巴前往霍比屯": { mapPhases: ["overnight"], routeOrigin: "overnight" },
   "大巴返回奥克兰": { mapPhases: ["overnight"], routeDestination: "overnight" },
   "奥克兰轻松半日": { mapPhases: ["check-out"] },

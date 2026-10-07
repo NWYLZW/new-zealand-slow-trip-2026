@@ -21,7 +21,7 @@ try {
   const days = [...southDays, ...northDays];
   const refined = days.filter(day => day.executionSources);
   assert.deepEqual(refined.map(day => day.date), Array.from({ length: 11 }, (_, i) => `10月${i + 2}日`));
-  assert.deepEqual(refined.map(day => day.events.length), [6, 7, 9, 14, 18, 7, 6, 7, 6, 3, 4]);
+  assert.deepEqual(refined.map(day => day.events.length), [6, 7, 9, 14, 18, 7, 18, 7, 17, 3, 4]);
   const earlier = days.filter(day => !day.executionSources);
   assert.equal(earlier.length, 4);
   for (const day of earlier) assert.equal(withItineraryExecution(day), day);
@@ -37,8 +37,7 @@ try {
     assert.equal(sourceIds.size, day.executionSources.length);
     for (const source of day.executionSources) {
       assert(isPublicUrl(source.url));
-      assert.equal(source.checkedAt, ["lakes-puzzling-hours", "lakes-hawea-loop"].includes(source.id)
-        ? "2026-10-04" : "2026-10-01");
+      assert(["2026-10-01", "2026-10-04", "2026-10-07"].includes(source.checkedAt));
       assert(["verified", "needs-recheck", "official-unreachable"].includes(source.status));
       assert(source.title && source.titleEn);
     }
@@ -73,7 +72,7 @@ try {
     }
     coverage += indices.length;
   }
-  assert.equal(coverage, 87);
+  assert.equal(coverage, 110);
   const wanaka = refined.find(day => day.date === "10月4日");
   assert.deepEqual(wanaka.events.map(([, , metadata]) => [metadata.start, metadata.end]), [
     ["10:00", "12:00"], ["12:15", "13:30"], ["13:30", "14:00"], ["14:00", "16:00"],
@@ -287,7 +286,7 @@ try {
     }
   }
   assert.match(activityBookingPlans.find(item => item.id === "walter-peak").status, /待付款/);
-  assert.match(activityBookingPlans.find(item => item.id === "hobbiton").status, /待预订/);
+  assert.equal(activityBookingPlans.find(item => item.id === "hobbiton").bookingConfirmed, true);
   assert.match(refined.find(day => day.date === "10月11日").highlight, /13小时10分/);
   for (const region of ["lakes", "alpine", "return"]) {
     const json = await readFile(new URL(`../src/data/itineraryExecution/${region}.json`, import.meta.url), "utf8");

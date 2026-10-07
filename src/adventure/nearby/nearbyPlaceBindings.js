@@ -49,11 +49,17 @@ export const nearbyPlaceBindings = {
   },
   "2026-10-07": { 0: ["place:OAM", "waypoint:timaru-town"] },
   "2026-10-08": { 0: ["place:CHC"], 1: ["place:CHC", "waypoint:christchurch-airport"],
-    5: ["airport:AKL", "place:AKC"] },
+    5: ["airport:AKL", "place:AKC"], 6: ["place:AKC"], 7: ["place:AKC"], 8: ["place:AKC"],
+    9: ["place:AKC", "place:DEV"], 10: ["place:DEV"], 11: ["place:DEV"],
+    12: ["place:DEV", "place:TKR"], 13: ["place:TKR"], 14: ["place:TKR", "place:DEV"],
+    15: ["place:DEV"], 16: ["place:DEV", "place:AKC"], 17: ["place:AKC"] },
   "2026-10-09": { 0: ["place:AKC"], 1: ["place:AKC", "place:HBT"],
     4: ["place:HBT", "place:AKC"], 5: ["place:AKC"], 6: ["place:AKC"] },
-  "2026-10-10": { 1: ["pin:queen-street", "pin:britomart"], 3: ["place:AKC", "pin:international-terminal"],
-    4: ["pin:international-terminal"], 5: ["pin:international-terminal"] },
+  "2026-10-10": { 0: ["place:AKC"], 1: ["place:AAG"], 2: ["pin:queen-street"],
+    3: ["place:AKC", "pin:international-terminal"], 4: ["pin:international-terminal"], 5: ["pin:international-terminal"],
+    6: ["place:AKC", "place:EDN"], 7: ["place:EDN"], 8: ["place:EDN", "place:AAG"],
+    9: ["pin:queen-street"], 10: ["place:VDH"], 11: ["place:VDH"], 12: ["place:VDH", "place:SKY"],
+    13: ["place:SKY"], 14: ["place:SKY"], 15: ["place:SKY", "place:AKC"], 16: ["place:AKC"] },
   "2026-10-11": { 0: ["pin:international-terminal"] },
   "2026-10-12": { 1: ["airport:SZX"], 2: ["airport:SZX"], 3: [] },
 };
@@ -82,8 +88,8 @@ export function nearbyMovement(title, flight = false, summary = "") {
   const text = `${title} ${summary}`;
   const stationary = /^(返城后自由休息|直升机报到、天气确认与候飞|机场休息候机|候机并准备登机)$/.test(summary);
   if (stationary && !flight) return { transit: false, moving: false };
-  const transit = /驶向|驾车|自驾|开车|开往|继续上路|继续北上|继续前往|大巴前往|大巴返回|进城|自由驾驶|前往蒂卡波|返回皇后镇(?!后)|前往已确认住宿|从深圳机场返家|前往奥克兰机场(?!国内)|前往机场、|前往库克山机场/.test(text);
-  const moving = flight || transit || /前往深圳机场|步行到|前往 Skyline|前往国内航站楼|并前往市中心|活动后返回|返回原酒店|前往企鹅保护区|巡游/.test(text)
+  const transit = /驶向|驾车|自驾|开车|开往|打车前往|轮渡前往|轮渡返回|继续上路|继续北上|继续前往|大巴前往|大巴返回|进城|自由驾驶|前往蒂卡波|返回皇后镇(?!后)|前往已确认住宿|从深圳机场返家|前往奥克兰机场(?!国内)|前往机场、|前往库克山机场/.test(text);
+  const moving = flight || transit || /前往深圳机场|步行到|步行登|步行下山|前往 Skyline|前往国内航站楼|并前往市中心|活动后返回|返回原酒店|前往企鹅保护区|巡游/.test(text)
     || /直升机/.test(text) && !/报到|候飞/.test(text);
   return { transit, moving };
 }

@@ -359,8 +359,8 @@ export const aucklandCityHotels = [
       "https://www.booking.com/hotel/nz/grand-chancellor-auckland.html",
     agodaUrl:
       "https://www.agoda.com/hotel-grand-chancellor-auckland/hotel/auckland-nz.html",
-    position: [-36.8467, 174.7598],
-    mapQuery: "Hotel Grand Chancellor Auckland",
+    position: [-36.8497607, 174.759702],
+    mapQuery: "Hotel Grand Chancellor Auckland, 80 Wellesley Street West, Auckland",
   },
   {
     id: "holiday-inn-express-auckland-city",

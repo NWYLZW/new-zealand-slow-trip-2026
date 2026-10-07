@@ -24,6 +24,9 @@ const popupSearchParams = ["compare", "hotel", "photo", "photoIndex", "stay", "e
 const hotelPopupSearchParams = ["compare", "hotel", "photo", "photoIndex", "stay"];
 const eventPopupSearchParams = ["event", "eventTab"];
 const bookingItemIds = bookingItems.map(([id]) => id);
+const confirmedActivityChecks = Object.fromEntries(
+  activityBookingPlans.filter((activity) => activity.bookingConfirmed).map(({ id }) => [id, true]),
+);
 const comparisonLabels = {
   "auckland-city": ["奥克兰市中心", "Central Auckland"],
   queenstown: ["皇后镇", "Queenstown"],
@@ -116,15 +119,15 @@ export default function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem(languageStorageKey) === "en" ? "en" : "zh");
   const [checked, setChecked] = useState(() => {
     try {
-      return { ...JSON.parse(localStorage.getItem(storageKey) || "{}"), "south-car": true };
+      return { ...JSON.parse(localStorage.getItem(storageKey) || "{}"), "south-car": true, ...confirmedActivityChecks };
     } catch {
-      return { "south-car": true };
+      return { "south-car": true, ...confirmedActivityChecks };
     }
   });
   const activeTab = tabs.find((item) => item.value === tab) ?? tabs[0];
   const parentTitle = tabText(activeTab, "label", language);
   const progress = useMemo(() => {
-    const fixedConfirmedIds = new Set(Object.keys(confirmedAccommodationBookings));
+    const fixedConfirmedIds = new Set([...Object.keys(confirmedAccommodationBookings), ...Object.keys(confirmedActivityChecks)]);
     const done = bookingItemIds.filter((id) => fixedConfirmedIds.has(id) || Boolean(checked[id])).length;
     return { done, total: bookingItemIds.length, percent: Math.round((done / bookingItemIds.length) * 100) };
   }, [checked]);

@@ -704,20 +704,20 @@ const christchurchAirportReturnPosts = contextualizeVerifiedPosts([
 const hobbitonCoachReferencePosts = contextualizeVerifiedPosts(verifiedAucklandShoppingGuides, {
   excerpt: "仓库暂无已逐帖核验的霍比屯或 GreatSights 原帖；这里只复用已核验的奥克兰帖子作为市中心集合、返程后活动和时间管理参考，不是该产品证据：",
   excerptEn: "No individually verified Hobbiton or GreatSights post is available in the repository. These verified Auckland posts are reused only for city-centre meeting, post-return activity and time-management context—not as evidence for the product: ",
-  tip: "帖子不能证明大巴班次、霍比屯体验、价格或余位；07:00报到、行程内容、价格和取消条款只能以 GreatSights 官网订单为准。",
-  tipEn: "The post does not verify coach timing, the Hobbiton experience, price or availability. Use only the GreatSights booking for the 07:00 check-in, inclusions, price and cancellation terms. ",
+  tip: "帖子不能证明大巴班次、价格或退改；以已提供的InterCity GA7657确认单为准：07:00前报到，含2人游览与午餐，取消不退款。",
+  tipEn: "Posts do not establish schedules, prices or fare terms. Follow the supplied InterCity GA7657 confirmation: report by 07:00, with tours and lunch for two included; cancellation is non-refundable. ",
 });
 
 const hobbitonVisitReferencePosts = contextualizeVerifiedPosts(verifiedAucklandShoppingGuides, {
   excerpt: "仓库暂无已逐帖核验的霍比屯原帖；这是已核验奥克兰帖的明确跨主题复用，只用于全日时间与返城安排，不是霍比屯体验评价：",
   excerptEn: "No individually verified Hobbiton post is available in the repository. This explicit cross-topic reuse of verified Auckland posts is only for full-day timing and the return to the city—not a review of Hobbiton: ",
-  tip: "不能据此判断霍比屯现场；导览、Bagshot Row、Green Dragon 饮品和 Party Marquee 午餐以 GreatSights 官网及订单为准。",
-  tipEn: "Do not use these posts to judge conditions at Hobbiton. Confirm the guided visit, Bagshot Row interiors, Green Dragon drink and Party Marquee lunch in the GreatSights booking. ",
+  tip: "不能据此判断霍比屯现场；确认单已含上午游览与自助午餐，未列明的具体餐厅、饮品和现场时刻听从运营方。",
+  tipEn: "Do not use these posts to judge conditions at Hobbiton. The confirmation includes the morning tour and buffet lunch; follow the operator for specific venues, drinks and timings not listed in the booking. ",
 });
 
 const aucklandFinalDayReferencePosts = contextualizeVerifiedPosts(verifiedAucklandShoppingGuides, {
-  excerpt: "作为退房寄存行李、奥克兰轻松半日和前往机场的已核验城市参考；原帖不是本次酒店寄存或机场接驳实测：",
-  excerptEn: "Verified city context for leaving luggage after checkout, an easy Auckland half-day and the airport transfer; the post is not a test of this hotel's storage service or this airport transfer: ",
+  excerpt: "作为奥克兰城市慢游与购物的已核验城市参考；原帖不是本次酒店寄存、景点开放时间或机场接驳实测：",
+  excerptEn: "Verified city context for Auckland sightseeing and shopping; the post does not verify this hotel's storage, attraction opening hours or this airport transfer: ",
   tip: "先向酒店确认寄存条件，并按实时交通为国际航班留足缓冲；帖子不能证明当日营业或接驳时间。",
   tipEn: "Confirm luggage storage with the hotel and allow ample buffer using live traffic. The post does not verify same-day opening or transfer times. ",
 });

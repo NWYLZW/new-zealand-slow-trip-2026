@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -87,6 +87,7 @@ function ActivityDetail({ activity, checked, isEnglish, onToggle }) {
           </Box>
           <Button
             aria-pressed={checked}
+            disabled={activity.bookingConfirmed}
             color={checked ? "success" : "primary"}
             onClick={onToggle}
             startIcon={checked ? <CheckCircleOutlineIcon /> : <RadioButtonUncheckedIcon />}
@@ -135,8 +136,7 @@ export function ActivitiesPanel({ checked, onDetailChange, setChecked }) {
   const isEnglish = language === "en";
   const [selectedActivityId, setSelectedActivityId] = useState(readActivityUrl);
   const selectedActivity = activitiesById.get(selectedActivityId) ?? null;
-  const activityIds = useMemo(() => new Set(activityBookingPlans.map((activity) => activity.id)), []);
-  const done = Object.entries(checked).filter(([id, value]) => activityIds.has(id) && value).length;
+  const done = activityBookingPlans.filter((activity) => activity.bookingConfirmed || checked[activity.id]).length;
   const percent = activityBookingPlans.length ? Math.round((done / activityBookingPlans.length) * 100) : 0;
 
   useEffect(() => {
@@ -195,6 +195,7 @@ export function ActivitiesPanel({ checked, onDetailChange, setChecked }) {
   useEffect(() => () => onDetailChange?.(null), [onDetailChange]);
 
   const toggleActivity = (activityId) => {
+    if (activitiesById.get(activityId)?.bookingConfirmed) return;
     setChecked((current) => {
       return { ...current, [activityId]: !current[activityId] };
     });
@@ -205,7 +206,7 @@ export function ActivitiesPanel({ checked, onDetailChange, setChecked }) {
       <Box className="activities-panel activity-detail-page">
         <ActivityDetail
           activity={selectedActivity}
-          checked={Boolean(checked[selectedActivity.id])}
+          checked={Boolean(selectedActivity.bookingConfirmed || checked[selectedActivity.id])}
           isEnglish={isEnglish}
           onToggle={() => toggleActivity(selectedActivity.id)}
         />
@@ -262,11 +263,11 @@ export function ActivitiesPanel({ checked, onDetailChange, setChecked }) {
                       <Button
                         aria-label={`${isEnglish ? activity.titleEn : activity.title} · ${isEnglish ? activity.statusEn : activity.status}`}
                         className="activity-calendar-ticket"
-                        data-checked={checked[activity.id] || undefined}
+                        data-checked={activity.bookingConfirmed || checked[activity.id] || undefined}
                         key={activity.id}
                         onClick={() => selectActivity(activity.id)}
                         size="small"
-                        startIcon={checked[activity.id] ? <CheckCircleOutlineIcon /> : <LocalActivityIcon />}
+                        startIcon={activity.bookingConfirmed || checked[activity.id] ? <CheckCircleOutlineIcon /> : <LocalActivityIcon />}
                         title={isEnglish ? activity.titleEn : activity.title}
                         variant="contained"
                       >

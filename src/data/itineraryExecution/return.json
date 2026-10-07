@@ -78,7 +78,7 @@
       "url": "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html",
       "title": "马航登机与托运要求",
       "titleEn": "Malaysia Airlines boarding and bag drop",
-      "checkedAt": "2026-10-01",
+      "checkedAt": "2026-10-07",
       "status": "verified"
     },
     {
@@ -104,21 +104,112 @@
       "titleEn": "Sky Suite lounge facilities (not booked)",
       "checkedAt": "2026-10-01",
       "status": "verified"
+    },
+    {
+      "id": "return-devonport-ferry",
+      "url": "https://at.govt.nz/media/3igbyuqo/auckland-transport-devonport-ferry-timetable.pdf",
+      "title": "AT 德文港轮渡时刻表",
+      "titleEn": "AT Devonport ferry timetable",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-devonport-pier",
+      "url": "https://at.govt.nz/bus-train-ferry/ferry-services/low-emission-ferries-are-coming/downtown-ferry-terminal-electric-ferry-charging",
+      "title": "市中心轮渡码头施工与登船口",
+      "titleEn": "Downtown ferry works and pier changes",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-devonport",
+      "url": "https://www.aucklandnz.com/explore/devonport",
+      "title": "德文港小镇",
+      "titleEn": "Devonport village",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-mount-victoria",
+      "url": "https://maunga.nz/maunga/takarunga",
+      "title": "维多利亚山开放与步行规定",
+      "titleEn": "Takarunga / Mount Victoria visitor access",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-auckland-sunset",
+      "url": "https://www.timeanddate.com/sun/new-zealand/auckland?month=10&year=2026",
+      "title": "奥克兰2026年10月日落时间",
+      "titleEn": "Auckland October 2026 sunset times",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-mount-eden",
+      "url": "https://maunga.nz/maunga/maungawhau",
+      "title": "伊甸山开放与步行规定",
+      "titleEn": "Maungawhau / Mount Eden visitor access",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-art-gallery",
+      "url": "https://www.aucklandartgallery.com/visit/plan-your-visit",
+      "title": "奥克兰美术馆参观时间",
+      "titleEn": "Auckland Art Gallery visitor hours",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-sky-tower",
+      "url": "https://skycityauckland.co.nz/sky-tower/",
+      "title": "天空塔开放时间",
+      "titleEn": "Sky Tower opening hours",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-queen-street",
+      "url": "https://www.aucklandnz.com/explore/queen-street",
+      "title": "皇后街步行与购物",
+      "titleEn": "Queen Street walking and shopping",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-viaduct",
+      "url": "https://www.aucklandnz.com/explore/viaduct-waterfront",
+      "title": "维达克港滨水区",
+      "titleEn": "Viaduct Harbour waterfront",
+      "checkedAt": "2026-10-07",
+      "status": "verified"
+    },
+    {
+      "id": "return-hobbiton-confirmation",
+      "url": "https://www.intercity.co.nz/",
+      "title": "用户提供的 InterCity 预订确认单（已核对）",
+      "titleEn": "User-provided InterCity booking confirmation (reviewed)",
+      "checkedAt": "2026-10-07",
+      "status": "verified",
+      "evidenceType": "user-confirmed-document",
+      "note": "事实来自用户提供的两页确认单及成功页；URL仅为运营平台入口，不含私密确认号。",
+      "noteEn": "Facts come from the supplied two-page confirmation and success page. The URL is the platform homepage, not the private booking."
     }
   ],
   "days": [
     {
       "date": "2026-10-08",
-      "reviewedAt": "2026-10-01",
-      "highlight": "今天只完成还车和换城。11:00至13:50有2小时50分总余量，须包含交车、步行和机场手续；入住后先确认翌日GS10H是否已落实及接送安排，晚餐后早休息。",
-      "highlightEn": "Focus only on returning the car and changing cities. The 2 hr 50 min from 11:00 to 13:50 includes handover, walking and airport formalities. After check-in, confirm whether tomorrow's GS10H booking and transfers are in place, then eat and rest early.",
+      "reviewedAt": "2026-10-07",
+      "highlight": "10:00从已订基督城住宿出发，驾驶及途中加油合计预留一小时，保留11:00还车和JQ236航班。入住后前往德文港，步行登维多利亚山看约19:30日落，计划20:15返航、21:00回酒店。接驳为计划预算而非实时车程，轮渡班次临行复核。",
+      "highlightEn": "Leave the confirmed Christchurch stay at 10:00, allowing one hour for driving and refuelling before the booked 11:00 car return and JQ236. After hotel check-in, take the Devonport ferry and walk up Mount Victoria for sunset around 19:30, aiming for the 20:15 return ferry and the hotel by 21:00. Transfers are planning allowances, not live drive times; recheck sailings before departure.",
       "alternative": {
-        "title": "延误就取消额外停留",
-        "desc": "出发前复核道路与航班；如加油、还车或航班延误，压缩购物和用餐停留，必要时询问柜台。晚到奥克兰就直回已订酒店，不补市区游。"
+        "title": "晚到或停航就留市中心",
+        "desc": "若17:30仍未安顿好，或轮渡停航、风雨不适合登山，取消当晚跨海，改酒店附近晚餐与休息；不赶末班船。入住时确认次晨霍比屯集合及10日退房后寄存到晚间是否可用。"
       },
       "alternativeEn": {
-        "title": "Drop optional stops if delayed",
-        "desc": "Recheck roads and the flight before leaving. If refuelling, car return or the flight is delayed, shorten shopping and meal stops and ask the desk for help where needed. A late Auckland arrival means going straight to the booked hotel, without city sightseeing."
+        "title": "Stay downtown if delayed or sailings stop",
+        "desc": "If still unsettled at 17:30, sailings are cancelled, or wind and rain make the hill unsuitable, skip the crossing and have dinner near the hotel. Do not chase the last boat. Confirm tomorrow's Hobbiton meeting and whether luggage can be stored until the evening after checkout on 10 October."
       },
       "links": [
         [
@@ -132,6 +223,22 @@
         [
           "奥克兰机场出租车接驳",
           "https://www.aucklandairport.co.nz/transport/taxis-and-shuttles"
+        ],
+        [
+          "AT 德文港轮渡时刻表",
+          "https://at.govt.nz/media/3igbyuqo/auckland-transport-devonport-ferry-timetable.pdf"
+        ],
+        [
+          "市中心轮渡码头施工与登船口",
+          "https://at.govt.nz/bus-train-ferry/ferry-services/low-emission-ferries-are-coming/downtown-ferry-terminal-electric-ferry-charging"
+        ],
+        [
+          "维多利亚山开放与步行规定",
+          "https://maunga.nz/maunga/takarunga"
+        ],
+        [
+          "奥克兰2026年10月日落时间",
+          "https://www.timeanddate.com/sun/new-zealand/auckland?month=10&year=2026"
         ]
       ],
       "linksEn": [
@@ -146,21 +253,37 @@
         [
           "Auckland Airport taxi transfers",
           "https://www.aucklandairport.co.nz/transport/taxis-and-shuttles"
+        ],
+        [
+          "AT Devonport ferry timetable",
+          "https://at.govt.nz/media/3igbyuqo/auckland-transport-devonport-ferry-timetable.pdf"
+        ],
+        [
+          "Downtown ferry works and pier changes",
+          "https://at.govt.nz/bus-train-ferry/ferry-services/low-emission-ferries-are-coming/downtown-ferry-terminal-electric-ferry-charging"
+        ],
+        [
+          "Takarunga / Mount Victoria visitor access",
+          "https://maunga.nz/maunga/takarunga"
+        ],
+        [
+          "Auckland October 2026 sunset times",
+          "https://www.timeanddate.com/sun/new-zealand/auckland?month=10&year=2026"
         ]
       ],
       "events": [
         {
           "summary": "早餐、退房与行李清点",
           "summaryEn": "Breakfast, checkout and luggage check",
-          "text": "在已订基督城住宿吃早餐、清点行李并按原说明交还钥匙；证件和两人的机票随身放，检查房间及车内，09:30出发，不再补景点。",
-          "textEn": "Have breakfast at the confirmed Christchurch stay, check the room and luggage, and return the keys as instructed. Keep both travellers' tickets and ID handy, check the car and leave at 09:30 without another sightseeing stop.",
+          "text": "09:00早餐后收拾行李并退房，按房东说明交还钥匙；在10:00退房期限前完成装车，10:00从当前住宿出发。证件随身带，不再补景点。",
+          "textEn": "From 09:00, have breakfast, pack and check out, returning the keys as instructed. Load the car before the 10:00 checkout deadline and leave the current stay at 10:00. Keep documents handy; no extra sightseeing stop.",
           "sourceIds": []
         },
         {
-          "summary": "加油并提前到还车区",
-          "summaryEn": "Refuel and reach the return area early",
-          "text": "从当前住宿直去机场，途中按租约加满油并留收据；提前核对Budget还车指示，到机场跟租车还车标识进场，以10:40到还车区为建议目标，余量留给排队和清车。",
-          "textEn": "Drive from the current stay to the airport, refuel as required by the rental agreement and keep the receipt. Check Budget's return instructions beforehand and follow the airport's rental-return signs. Aim for the return area by 10:40 as a planning target, leaving time to queue and empty the car.",
+          "summary": "住宿至机场还车点，含加油",
+          "summaryEn": "Stay to airport car return, including refuelling",
+          "text": "按用户安排10:00从当日退房住宿出发，11:00在Budget基督城机场还车点交车。60分钟合计预留驾驶、按租约加油及还车准备，不代表纯驾驶需要一小时或已核验实时车程；解锁后使用该住宿位置导航，按路况与油量分配时间，必要时提前出发。",
+          "textEn": "As requested, leave the checked-out stay at 10:00 and return the car to Budget Christchurch Airport at 11:00. The 60 minutes covers driving, refuelling under the rental agreement and return preparation, not a one-hour driving claim or a verified live ETA. Use the stay's location after unlocking, allow for traffic and fuel needs, and leave earlier if necessary.",
           "sourceIds": [
             "return-budget-chc"
           ]
@@ -192,141 +315,230 @@
           "sourceIds": []
         },
         {
-          "summary": "取行李、进城与酒店入住",
-          "summaryEn": "Baggage, city transfer and hotel check-in",
-          "text": "15:10落地后取齐行李，到国内航站楼4号门外出租车队列，直达已订市中心酒店办理入住；16:30仅为计划到店时间。安顿后休息、就近晚餐，并确认次晨集合。",
-          "textEn": "After the 15:10 arrival, collect all bags and use the taxi rank outside domestic terminal door 4 for a direct trip to the booked central hotel and check-in. The 16:30 arrival is only a target. Once settled, rest, eat nearby and confirm the next morning's meeting arrangements.",
+          "summary": "取行李并前往酒店",
+          "summaryEn": "Baggage and transfer to the hotel",
+          "text": "15:10落地后取齐行李并乘车前往已确认住宿；16:30为计划到店时间，不保证实际交通耗时。",
+          "textEn": "Collect bags after the 15:10 arrival and transfer to the confirmed stay. The 16:30 hotel arrival is a planning target, not a guaranteed journey time.",
           "sourceIds": [
-            "return-akl-taxis",
-            "return-greatsights-transfers"
+            "return-akl-taxis"
           ]
+        },
+        {
+          "summary": "酒店入住与休息",
+          "summaryEn": "Hotel check-in and rest",
+          "text": "办理入住、放下行李并稍作休息；延误就取消德文港晚间行程。",
+          "textEn": "Check in, leave bags and rest briefly. Skip the Devonport evening if delayed.",
+          "sourceIds": []
+        },
+        {
+          "summary": "步行到市中心轮渡码头",
+          "summaryEn": "Walk to Downtown Ferry Terminal",
+          "text": "从当前酒店步行到Downtown Ferry Terminal，20分钟为含找路的计划预算。",
+          "textEn": "Walk from the current hotel to Downtown Ferry Terminal; allow a planned 20 minutes including wayfinding.",
+          "sourceIds": []
+        },
+        {
+          "summary": "找登船口并候船",
+          "summaryEn": "Find the pier and wait",
+          "text": "AT施工公告将德文港航线临时改到Pier 4，经Pier 6/7通道进入；现场标识及当日通知优先于旧PDF。",
+          "textEn": "AT's works notice moves Devonport sailings to Pier 4, accessed via the Pier 6/7 gangway. Follow current signs and same-day notices over the old PDF.",
+          "sourceIds": [
+            "return-devonport-pier"
+          ]
+        },
+        {
+          "summary": "17:40计划去程",
+          "summaryEn": "Planned 17:40 outbound ferry",
+          "text": "工作日时刻表列17:40开船、约17:52到德文港；未预订，不保证准点或不停航，临行复核AT。",
+          "textEn": "The weekday timetable lists a 17:40 sailing arriving around 17:52. This is not booked or guaranteed to run on time; recheck AT before travelling.",
+          "sourceIds": [
+            "return-devonport-ferry"
+          ]
+        },
+        {
+          "summary": "走进德文港小镇",
+          "summaryEn": "Walk into Devonport village",
+          "text": "下船后往Victoria Road餐饮区短走。",
+          "textEn": "After disembarking, walk towards the Victoria Road dining area.",
+          "sourceIds": [
+            "return-devonport"
+          ]
+        },
+        {
+          "summary": "德文港晚餐",
+          "summaryEn": "Dinner in Devonport",
+          "text": "在Victoria Road附近选择营业中的餐厅，未指定或预订餐厅；若等位过久改简单餐食，18:40开始上山。",
+          "textEn": "Choose an open place near Victoria Road; no restaurant is booked. Use a quick meal if queues are long and start uphill at 18:40.",
+          "sourceIds": [
+            "return-devonport"
+          ]
+        },
+        {
+          "summary": "步行登维多利亚山",
+          "summaryEn": "Walk up Mount Victoria",
+          "text": "经Victoria Road、Kerr Street步行上山，普通私家车不能驶上山顶；遵守现场步道和施工标识。",
+          "textEn": "Walk uphill via Victoria Road and Kerr Street. Private vehicles cannot drive to the summit; follow current path and works signs.",
+          "sourceIds": [
+            "return-mount-victoria"
+          ]
+        },
+        {
+          "summary": "山顶日落与拍照",
+          "summaryEn": "Sunset and photos at the summit",
+          "text": "奥克兰10月8日日落约19:30，山顶地平线和天气会影响观感；19:35开始下山，夏季入口20:30关闭。",
+          "textEn": "Auckland sunset on 8 October is around 19:30; the local horizon and weather affect the view. Start down at 19:35, before the summer gate closes at 20:30.",
+          "sourceIds": [
+            "return-mount-victoria",
+            "return-auckland-sunset"
+          ]
+        },
+        {
+          "summary": "下山回码头",
+          "summaryEn": "Walk down to the ferry terminal",
+          "text": "沿开放步道下山返回德文港码头，预留25分钟，不为追船走未开放捷径。",
+          "textEn": "Allow 25 minutes to descend on open paths and return to the ferry terminal; do not use closed shortcuts to catch a boat.",
+          "sourceIds": [
+            "return-mount-victoria"
+          ]
+        },
+        {
+          "summary": "候船返回市中心",
+          "summaryEn": "Wait for the return ferry",
+          "text": "20:00到码头候船；如计划船班取消或错过，先看AT当日安排，不把后续班次当已确认。",
+          "textEn": "Aim to reach the terminal at 20:00. If the planned ferry is cancelled or missed, check AT's current departures rather than assuming the next boat is confirmed.",
+          "sourceIds": [
+            "return-devonport-ferry"
+          ]
+        },
+        {
+          "summary": "20:15计划返程",
+          "summaryEn": "Planned 20:15 return ferry",
+          "text": "工作日时刻表列20:15从德文港开船、约20:27到市中心；以现场运营为准。",
+          "textEn": "The weekday timetable lists 20:15 from Devonport, arriving downtown around 20:27; actual operations take precedence.",
+          "sourceIds": [
+            "return-devonport-ferry"
+          ]
+        },
+        {
+          "summary": "返回酒店，可步行或打车",
+          "summaryEn": "Return to the hotel on foot or by taxi",
+          "text": "返航抵达Downtown Ferry Terminal后按体力和天气选择步行或出租车／网约车回原酒店，不限定步行。20:27至21:00合计33分钟是返程和等车预算，不是核验过的步行或行车耗时；未预订接送，车费和实际到达以现场为准。早到即可休息，准备次晨霍比屯行程。",
+          "textEn": "After arriving at Downtown Ferry Terminal, walk or take a taxi/rideshare back to the same hotel according to energy and weather; walking is not compulsory. The 20:27–21:00 block is a 33-minute return and pickup allowance, not a verified walking or driving time. No transfer is booked; fares and arrival depend on actual conditions. Rest if back early and prepare for tomorrow's Hobbiton trip.",
+          "sourceIds": []
         }
       ]
     },
     {
       "date": "2026-10-09",
-      "reviewedAt": "2026-10-01",
-      "highlight": "霍比屯是今天唯一主项目，但GS10H仍待预订。沿用07:00报到和现有时间块，具体班次、午餐与酒店接送须凭确认单落实；返城后不再跨区赶景点。",
-      "highlightEn": "Hobbiton is the day's only main activity, but GS10H remains unbooked. Keep the planned 07:00 check-in and existing blocks; the actual service, lunch and hotel transfers require a booking confirmation. Avoid further cross-city sightseeing after returning.",
+      "reviewedAt": "2026-10-07",
+      "highlight": "霍比屯游览与自助午餐已预订并付款，2人，GreatSights Gray Line GA7657。10月9日07:00前在Sky City Bus Terminal（102 Hobson St）向司机报到，07:15出发、15:30计划返回同一车站。确认单未列中途各段精确时刻，09:30入园与13:15返程仍为计划分配，不保证酒店接送。",
+      "highlightEn": "The Hobbiton tour and buffet lunch are booked and paid for two on GreatSights Gray Line GA7657. On 9 October, report to the driver at Sky City Bus Terminal, 102 Hobson St, by 07:00 for the 07:15 departure and scheduled 15:30 return to the same terminal. Intermediate timings are not listed: the 09:30 visit and 13:15 return leg remain planning estimates. Hotel transfers are not confirmed.",
       "alternative": {
-        "title": "未落实或停运就留市区",
-        "desc": "若订单未落实或运营方取消，改为酒店周边咖啡、短走和休息，不临时租车追团；下雨先看运营通知并备雨具。已购行程的变更先按订单处理，不保证退款。"
+        "title": "延误先核对运营通知",
+        "desc": "当天查看InterCity延误信息；车身标识可能不同，向司机核对GA7657后上车。本单取消不退款，最晚出发前2小时可按条件修改，可能收改签费及差价；运营方取消时先联系处理，不自行租车追团。"
       },
       "alternativeEn": {
-        "title": "Stay in the city if unbooked or cancelled",
-        "desc": "If the booking is not secured or the operator cancels, choose coffee, a short walk and rest around the hotel; do not rent a car to chase the tour. For rain, check operator notices and bring rain protection. Handle any booked-tour changes under the actual booking terms, without assuming a refund."
+        "title": "Check operator notices for delays",
+        "desc": "Check InterCity delay notices on the day. Vehicle branding may differ; confirm GA7657 with the driver before boarding. This fare is non-refundable on cancellation; conditional changes are allowed up to two hours before departure, with possible fees and fare differences. Contact the operator if it cancels rather than renting a car to chase the group."
       },
       "links": [
         [
-          "GreatSights官方登记地点",
-          "https://www.newzealand.com/nz/plan/business/greatsights-new-zealand/"
+          "InterCity 当日延误",
+          "https://www.intercity.co.nz/delays"
         ],
         [
-          "GreatSights酒店接送说明",
-          "https://www.greatsights.co.nz/travel-info/hotel-transfers/"
-        ],
-        [
-          "GS10H原产品入口（待复核）",
-          "https://www.greatsights.co.nz/new-zealand-tour-destinations/hobbiton-tours/hobbiton-movie-set-day-tour/"
+          "GreatSights 条款",
+          "https://www.greatsights.co.nz/terms-and-conditions"
         ]
       ],
       "linksEn": [
         [
-          "GreatSights official location listing",
-          "https://www.newzealand.com/nz/plan/business/greatsights-new-zealand/"
+          "InterCity travel delays",
+          "https://www.intercity.co.nz/delays"
         ],
         [
-          "GreatSights hotel transfer information",
-          "https://www.greatsights.co.nz/travel-info/hotel-transfers/"
-        ],
-        [
-          "Original GS10H product link (recheck needed)",
-          "https://www.greatsights.co.nz/new-zealand-tour-destinations/hobbiton-tours/hobbiton-movie-set-day-tour/"
+          "GreatSights terms",
+          "https://www.greatsights.co.nz/terms-and-conditions"
         ]
       ],
       "events": [
         {
-          "summary": "确认订单后到SkyCity报到",
-          "summaryEn": "Confirm booking and check in at SkyCity",
-          "text": "前晚确认GS10H订单与接送；未确认酒店接车就自行从当前酒店出发，约06:30动身、按距离留余量，07:00到SkyCity Coach Terminal（102 Hobson Street）报到。",
-          "textEn": "Confirm the GS10H booking and transfers the evening before. Without confirmed hotel pickup, leave the current hotel independently around 06:30, allowing for the actual distance, and check in at SkyCity Coach Terminal, 102 Hobson Street, at the planned 07:00.",
+          "summary": "07:00前向司机报到",
+          "summaryEn": "Report to the driver by 07:00",
+          "text": "确认单要求至少提前15分钟到站。10月9日07:00前到Sky City Bus Terminal，102 Hobson St，向司机报到，07:15发车；携带私密确认单。订单起点是车站，不是酒店接车。",
+          "textEn": "The confirmation requires arrival at least 15 minutes early. Reach Sky City Bus Terminal, 102 Hobson St, and report to the driver by 07:00 on 9 October for departure at 07:15. Carry the private confirmation; the booked pickup is the terminal, not the hotel.",
           "sourceIds": [
-            "return-greatsights-address",
-            "return-greatsights-transfers",
-            "return-greatsights-product"
+            "return-hobbiton-confirmation"
           ]
         },
         {
-          "summary": "带好日用包，上车休息",
-          "summaryEn": "Pack a day bag and rest on the coach",
-          "text": "上车前吃好早餐、上洗手间，随身带水、薄外套、雨具和步行鞋；向司机确认午餐与返程集合方式，路上以休息为主，实际发车与抵达听从运营方。",
-          "textEn": "Eat breakfast and use the toilet before boarding. Bring water, a light layer, rain protection and walking shoes. Ask the driver about lunch and the return meeting arrangements, then rest on the coach. Actual departure and arrival follow the operator's instructions.",
+          "summary": "GA7657已预订，上车后休息",
+          "summaryEn": "GA7657 booked; rest on the coach",
+          "text": "2人Standard座位，GreatSights Gray Line GA7657，07:15从奥克兰发车；车身品牌可能不同，以司机核对为准。带水、雨具和步行鞋。09:30抵达是原计划估算，不是确认单给出的时刻。",
+          "textEn": "Two Standard passengers on GreatSights Gray Line GA7657 depart Auckland at 07:15. Branding may differ; verify with the driver. Bring water, rain protection and walking shoes. Arrival at 09:30 remains a planning estimate, not a time shown on the confirmation.",
           "sourceIds": [
-            "return-hobbiton-walking",
-            "return-greatsights-product"
+            "return-hobbiton-confirmation"
           ]
         },
         {
-          "summary": "确认集合点后跟团入场",
-          "summaryEn": "Confirm the meeting point and join the group",
-          "text": "到The Shire’s Rest后先听司机交代集合点，再上洗手间、整理雨具；按团队安排进入游览，不把09:30抵达当作另购散客票的报到时间。",
-          "textEn": "At The Shire's Rest, listen to the driver's meeting instructions before using the toilet and organising rain gear. Join the visit through the coach group's arrangements; the planned 09:30 arrival is not a check-in time for a separate individual ticket.",
+          "summary": "按团队安排入场",
+          "summaryEn": "Enter with the group",
+          "text": "确认单包含2份Hobbiton Movie Set Tour (AM)。按司机安排在The Shire’s Rest集合并入场，不另外购买散客票；09:30仅为计划抵达时刻。",
+          "textEn": "The confirmation includes two Hobbiton Movie Set Tour (AM) entries. Follow the driver's arrangements at The Shire's Rest and enter with the group, without buying separate tickets. The 09:30 arrival is only a planning estimate.",
           "sourceIds": [
-            "return-hobbiton-walking",
-            "return-greatsights-product"
+            "return-hobbiton-confirmation"
           ]
         },
         {
-          "summary": "跟团步行与按单安排午餐",
-          "summaryEn": "Guided walk and lunch as confirmed",
-          "text": "跟随导览步行，按团队节奏拍照和短休；午餐是否包含及用餐时段仍按GS10H确认单核对，不另排餐厅。脚累及时告知工作人员，保留回集合点的余量。",
-          "textEn": "Follow the guided walk, taking photos and brief rests at the group's pace. Check the GS10H confirmation for lunch inclusion and timing rather than arranging a separate restaurant. Tell staff if walking becomes tiring and leave time to reach the return meeting point.",
+          "summary": "霍比屯导览与自助午餐",
+          "summaryEn": "Hobbiton tour and buffet lunch",
+          "text": "已订产品Hobbiton Movie Set and Buffet Lunch包含2人上午游览及2份午餐，不再另安排午餐。09:30至13:15是合并计划窗口，具体导览、用餐及返程集合时间听从工作人员，不把未提供的餐厅或饮品细节当确认内容。",
+          "textEn": "Hobbiton Movie Set and Buffet Lunch includes two morning tour entries and two lunches, so no separate lunch is needed. The combined 09:30–13:15 block is a planning window; follow staff for tour, meal and return-meeting times. Specific venues or drinks not listed on the confirmation are not treated as confirmed.",
           "sourceIds": [
-            "return-hobbiton-walking",
-            "return-greatsights-product"
+            "return-hobbiton-confirmation"
           ]
         },
         {
-          "summary": "提前集合，返程休息",
-          "summaryEn": "Meet early and rest on the return",
-          "text": "按司机公布的集合时间提前到上车点，先上洗手间并清点随身物品；返程车上休息，不把13:15或15:30视为保证时刻，晚餐无需安排固定预约。",
-          "textEn": "Reach the boarding point ahead of the meeting time announced by the driver, use the toilet and check your belongings. Rest on the return coach. Neither 13:15 nor 15:30 is guaranteed, so leave dinner flexible without a fixed reservation.",
+          "summary": "按司机通知返程",
+          "summaryEn": "Return as directed by the driver",
+          "text": "提前到司机指定上车点，清点随身物品。13:15离开霍比屯是计划估算；确认单列15:30返回奥克兰Sky City Bus Terminal，路况仍可能影响实际到达。",
+          "textEn": "Reach the boarding point ahead of the driver's announced meeting time and check belongings. Departure from Hobbiton at 13:15 is a planning estimate. The confirmation schedules Auckland Sky City Bus Terminal arrival at 15:30; traffic may change the actual arrival.",
           "sourceIds": [
-            "return-greatsights-product"
+            "return-hobbiton-confirmation"
           ]
         },
         {
-          "summary": "到站核对送回安排",
-          "summaryEn": "Check drop-off arrangements on arrival",
-          "text": "回到SkyCity后先确认是否还需换接送车，并取齐随身物品；未获酒店送回确认就从车站自行步行或乘出租车回原酒店，不在车站等待未经确认的接送。",
-          "textEn": "On returning to SkyCity, confirm whether a transfer vehicle is still required and collect your belongings. Without confirmed hotel drop-off, walk or take a taxi from the terminal to the same hotel rather than waiting for an unconfirmed transfer.",
+          "summary": "15:30计划返回原车站",
+          "summaryEn": "Scheduled return to the same terminal at 15:30",
+          "text": "确认单终点是Sky City Bus Terminal，102 Hobson St；15:30为计划返回时刻，全程8小时15分钟。取齐行李后自行回酒店，不等待未经确认的酒店接送。",
+          "textEn": "The confirmed destination is Sky City Bus Terminal, 102 Hobson St, with scheduled return at 15:30 and total duration 8 hr 15 min. Collect belongings and return to the hotel independently; do not wait for an unconfirmed hotel transfer.",
           "sourceIds": [
-            "return-greatsights-transfers"
+            "return-hobbiton-confirmation"
           ]
         },
         {
-          "summary": "接送待确认，回酒店休息",
-          "summaryEn": "Transfer unconfirmed; return and rest",
-          "text": "仅在运营方确认覆盖当前酒店后乘接送车，否则自行返回同一住宿；先坐下休息、补水，再就近晚餐。顺便向前台确认明日退房寄存是否可用及最晚取回时间。",
-          "textEn": "Use hotel drop-off only if the operator confirms service to the current hotel; otherwise return independently to the same stay. Rest and hydrate before a nearby dinner. Ask reception whether luggage storage is available after tomorrow's checkout and when bags must be collected.",
+          "summary": "自行回酒店休息",
+          "summaryEn": "Return independently and rest",
+          "text": "从SkyCity车站步行或打车回同一酒店，按体力选择；15:45至16:30是含短休的预留，不是核验车程。确认单不承诺酒店送回；回去补水休息，并向前台确认次日退房后的行李寄存。",
+          "textEn": "Walk or take a taxi from SkyCity to the same hotel according to energy. The 15:45–16:30 block includes a short rest and is not a verified journey time. The confirmation does not promise hotel drop-off. Rest, hydrate and confirm luggage storage after tomorrow's checkout.",
           "sourceIds": [
-            "return-greatsights-transfers"
+            "return-hobbiton-confirmation"
           ]
         }
       ]
     },
     {
       "date": "2026-10-10",
-      "reviewedAt": "2026-10-01",
-      "highlight": "沿用15:30离城、16:30到机场的原计划，但这距次日01:25起飞有8小时55分，可能长时间带行李在公共区等候。值机柜台开放时间仍待马航确认，不把早到等同于早托运。",
-      "highlightEn": "Keep the original 15:30 city departure and 16:30 airport arrival, but this is 8 hr 55 min before the next day's 01:25 flight and may mean a long public-area wait with bags. Malaysia Airlines' counter opening remains unconfirmed; arriving early does not guarantee early bag drop.",
+      "reviewedAt": "2026-10-07",
+      "highlight": "伊甸山、美术馆、皇后街、维达克港与天空塔顺路串联，分开交通、游览、用餐和休息。20:30从酒店出发，目标22:00到国际航站楼，距10月11日01:25起飞3小时25分；90分钟为含路况的计划缓冲，不是实测车程。",
+      "highlightEn": "Link Mount Eden, the art gallery, Queen Street, Viaduct Harbour and Sky Tower with separate travel, visits, meals and rest. Leave the hotel at 20:30 and aim for the international terminal at 22:00, 3 hr 25 min before the 01:25 flight on 11 October. The 90 minutes is a planning buffer, not a measured drive.",
       "alternative": {
-        "title": "寄存不可用或体力不足",
-        "desc": "未确认寄存就不带大箱走完整市区路线，先向酒店询问可用替代；雨天缩短步行、多坐休。若考虑晚些去机场，先确认行李安排、交通缓冲与柜台开放，再决定是否调整。"
+        "title": "寄存、天气与交通备选",
+        "desc": "先确认行李可寄存到20:00；不能寄存则落实替代，不拖大箱登山。风雨大省略伊甸山，天空塔能见度差或关闭则改室内休息。19:30前复核路况与航司到场要求，必要时提前离城，不能再推迟机场目标。"
       },
       "alternativeEn": {
-        "title": "Storage unavailable or energy low",
-        "desc": "Do not attempt the full city walk with large bags when storage is unconfirmed; ask the hotel about workable alternatives first. Shorten walking and rest more in rain. Before deciding on a later airport transfer, confirm luggage arrangements, a traffic buffer and counter opening."
+        "title": "Luggage, weather and traffic alternatives",
+        "desc": "Confirm luggage storage until 20:00; arrange an alternative if unavailable rather than taking suitcases up the hill. Skip Mount Eden in poor weather and replace Sky Tower with indoor rest if visibility is poor or it closes. Recheck traffic and airline arrival instructions before 19:30, leaving earlier if needed rather than delaying the airport target."
       },
       "links": [
         [
@@ -338,8 +550,24 @@
           "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html"
         ],
         [
-          "马航建议提前到机场时间",
-          "https://www.askmh.malaysiaairlines.com/faq/s/article/When-do-check-in-counters-close-and-how-early-should-I-arrive-at-the-airport"
+          "伊甸山开放与步行规定",
+          "https://maunga.nz/maunga/maungawhau"
+        ],
+        [
+          "奥克兰美术馆参观时间",
+          "https://www.aucklandartgallery.com/visit/plan-your-visit"
+        ],
+        [
+          "天空塔开放时间",
+          "https://skycityauckland.co.nz/sky-tower/"
+        ],
+        [
+          "皇后街步行与购物",
+          "https://www.aucklandnz.com/explore/queen-street"
+        ],
+        [
+          "维达克港滨水区",
+          "https://www.aucklandnz.com/explore/viaduct-waterfront"
         ]
       ],
       "linksEn": [
@@ -352,62 +580,175 @@
           "https://www.malaysiaairlines.com/hq/en/travel-info/check-in.html"
         ],
         [
-          "Malaysia Airlines airport arrival guidance",
-          "https://www.askmh.malaysiaairlines.com/faq/s/article/When-do-check-in-counters-close-and-how-early-should-I-arrive-at-the-airport"
+          "Maungawhau / Mount Eden visitor access",
+          "https://maunga.nz/maunga/maungawhau"
+        ],
+        [
+          "Auckland Art Gallery visitor hours",
+          "https://www.aucklandartgallery.com/visit/plan-your-visit"
+        ],
+        [
+          "Sky Tower opening hours",
+          "https://skycityauckland.co.nz/sky-tower/"
+        ],
+        [
+          "Queen Street walking and shopping",
+          "https://www.aucklandnz.com/explore/queen-street"
+        ],
+        [
+          "Viaduct Harbour waterfront",
+          "https://www.aucklandnz.com/explore/viaduct-waterfront"
         ]
       ],
       "events": [
         {
-          "summary": "退房并确认行李寄存",
-          "summaryEn": "Check out and confirm luggage storage",
-          "text": "在已订酒店退房，先问清寄存是否可用、费用和取回时限，拿好行李凭据；证件、药品和贵重物品随身留。若不能寄存，先落实替代办法再开始慢游。",
-          "textEn": "Check out of the booked hotel and confirm storage availability, any fee and the collection deadline before leaving bags. Keep the luggage receipt, ID, medicines and valuables with you. If storage is unavailable, settle an alternative before starting the city walk.",
+          "summary": "早餐、退房与寄存",
+          "summaryEn": "Breakfast, checkout and storage",
+          "text": "早餐后退房，确认寄存是否可用、费用及20:00取回安排；证件和贵重物品随身带，未确认寄存先落实替代。",
+          "textEn": "After breakfast, check out and confirm luggage storage, fees and collection at 20:00. Keep ID and valuables with you and arrange an alternative if storage is unavailable.",
           "sourceIds": []
         },
         {
-          "summary": "市中心短走与咖啡休息",
-          "summaryEn": "A short city walk and coffee break",
-          "text": "从酒店出发，沿Queen Street到Britomart，体力好再到海港短走；中途坐下喝咖啡，不跨区购物。风雨大或脚累就省略海港，保留室内坐休和午餐。",
-          "textEn": "Leave the hotel for Queen Street and Britomart, adding a short harbour walk only if energy allows. Sit down for coffee en route and avoid cross-city shopping. Skip the waterfront in wind, rain or fatigue, keeping indoor rest and lunch instead.",
-          "sourceIds": []
+          "summary": "奥克兰美术馆",
+          "summaryEn": "Auckland Art Gallery",
+          "text": "11:45至13:15参观常设展；官方每天10:00至17:00开放，普通藏品展免费，部分特展另收费。",
+          "textEn": "Visit the collection from 11:45 to 13:15. Official hours are 10:00–17:00 daily; collection exhibitions are free, while some special exhibitions charge.",
+          "sourceIds": [
+            "return-art-gallery"
+          ]
         },
         {
-          "summary": "午餐、取行李与出发准备",
-          "summaryEn": "Lunch, luggage collection and preparation",
-          "text": "在市中心吃午餐后回原酒店取齐行李，按已确认寄存时限提前返回；整理购物品、检查两段登机资料，并预留等车时间，15:30按原计划去机场。",
-          "textEn": "Have lunch in the city, then return to the same hotel for every bag before the confirmed storage deadline. Repack purchases, check documents for both flight legs and allow time for the car to arrive before the planned 15:30 airport transfer.",
-          "sourceIds": []
+          "summary": "皇后街附近午餐",
+          "summaryEn": "Lunch near Queen Street",
+          "text": "从美术馆到皇后街附近吃午餐，45分钟包含短步行；按现场营业情况选择，未预订餐厅。",
+          "textEn": "Have lunch near Queen Street after the gallery, with 45 minutes including the short walk. Choose an open venue; no restaurant is booked.",
+          "sourceIds": [
+            "return-queen-street"
+          ]
         },
         {
           "summary": "酒店直达国际航站楼",
           "summaryEn": "Hotel to the international terminal",
-          "text": "带齐行李从酒店乘出租车直达奥克兰国际航站楼，告知司机乘马航国际航班；出发前复核道路及值机区，16:30到达只是计划估计，不作为已核验车程。",
-          "textEn": "Take all bags in a taxi from the hotel to Auckland's international terminal, telling the driver this is a Malaysia Airlines international departure. Recheck the roads and check-in zone before leaving; 16:30 is a planning estimate, not a verified journey time.",
+          "text": "20:30带齐行李乘车出发，22:00为目标到达时间；90分钟含等车和交通缓冲，不是已核验路程耗时。遇道路或航司更早要求时提前出发。",
+          "textEn": "Leave with all bags at 20:30 and target arrival at 22:00. The 90 minutes includes traffic and pickup contingency, not a verified journey time. Leave earlier for road issues or airline instructions.",
           "sourceIds": [
             "return-akl-taxis",
             "return-akl-departures"
           ]
         },
         {
-          "summary": "公共区休息与晚餐",
-          "summaryEn": "Public-area rest and dinner",
-          "text": "先看屏幕找MH0132值机区并询问何时收行李；未开放就带行李在公共区坐休，约18:00吃晚餐、轮流短走。不要预设可提前托运或进入安检后区域。",
-          "textEn": "Find the MH0132 check-in zone on the screens and ask when bags will be accepted. If it is not open, stay with your bags in the public area, have dinner around 18:00 and take turns stretching your legs. Do not assume early bag drop or access beyond security.",
+          "summary": "核对值机区与行李",
+          "summaryEn": "Find check-in and organise baggage",
+          "text": "22:00目标抵达，距次日01:25起飞3小时25分；看屏幕查马航柜台，不保证此时已开放或可托运。",
+          "textEn": "Target arrival at 22:00, 3 hr 25 min before the next day's 01:25 departure. Find the Malaysia Airlines desk on the screens; counter opening and bag acceptance are not guaranteed.",
           "sourceIds": [
             "return-akl-departures",
             "return-mh-checkin"
           ]
         },
         {
-          "summary": "核对柜台、联程与行李",
-          "summaryEn": "Check counter, connections and baggage",
-          "text": "21:45先复核柜台是否开放；可办理后核对两段登机牌及行李是否直挂深圳，完成托运、离境和安检。按登机牌提前到口，21:45并非已确认开放时间。",
-          "textEn": "At 21:45, first confirm that the counter is open. When processing is available, verify boarding passes for both legs and whether bags are checked through to Shenzhen, then complete bag drop, departure formalities and security. Reach the gate early as instructed; 21:45 is not a confirmed opening time.",
+          "summary": "国际值机、安检与候机",
+          "summaryEn": "International check-in, security and waiting",
+          "text": "22:15起预留办理手续的时段，不表示柜台已确认开放。核对两段登机牌和行李直挂，按登机牌到口；马航托运至少提前60分钟，登机口起飞前30分钟关闭。",
+          "textEn": "The block from 22:15 is a planning allowance, not confirmed desk opening. Verify both boarding passes and through-checked bags. Follow the boarding pass; Malaysia Airlines requires bag drop at least 60 minutes before departure and closes the gate 30 minutes before departure.",
           "sourceIds": [
-            "return-mh-checkin",
-            "return-mh-arrival-guidance",
-            "return-akl-departures"
+            "return-mh-checkin"
           ]
+        },
+        {
+          "summary": "乘车去伊甸山入口",
+          "summaryEn": "Taxi to the Mount Eden entrance",
+          "text": "从酒店打车到伊甸山开放的步行入口，30分钟为叫车和路况预算，不导航到山顶。",
+          "textEn": "Take a taxi from the hotel to an open walking entrance; 30 minutes allows for pickup and traffic. Do not direct the car to the summit.",
+          "sourceIds": [
+            "return-mount-eden"
+          ]
+        },
+        {
+          "summary": "伊甸山步道与火山口",
+          "summaryEn": "Mount Eden walk and crater",
+          "text": "预留一小时上下步道、看火山口和城市全景；夏季入口07:00至20:30开放，山顶禁止普通机动车。沿指定步道，不进入火山口。",
+          "textEn": "Allow one hour for the walking paths, crater views and city panorama. Summer gates open 07:00–20:30; private motor vehicles cannot access the summit. Stay on designated paths and out of the crater.",
+          "sourceIds": [
+            "return-mount-eden"
+          ]
+        },
+        {
+          "summary": "乘车返回美术馆",
+          "summaryEn": "Taxi to the art gallery",
+          "text": "下山后叫车至1 Kitchener Street美术馆入口，30分钟含叫车预算。",
+          "textEn": "After descending, take a taxi to the gallery entrance at 1 Kitchener Street, allowing a planned 30 minutes including pickup.",
+          "sourceIds": [
+            "return-art-gallery"
+          ]
+        },
+        {
+          "summary": "皇后街购物与街景",
+          "summaryEn": "Queen Street shopping and streetscape",
+          "text": "沿皇后街向海港方向走，购物按各店实际营业时间，不把整条街视为统一营业场馆。",
+          "textEn": "Walk down Queen Street towards the harbour. Shop opening times vary; the street has no single venue-wide trading schedule.",
+          "sourceIds": [
+            "return-queen-street"
+          ]
+        },
+        {
+          "summary": "维达克港滨水散步",
+          "summaryEn": "Viaduct Harbour waterfront walk",
+          "text": "从皇后街海港端走到维达克港，看港湾和船只，停留拍照；这一小时包含到达的步行。",
+          "textEn": "Walk from the harbour end of Queen Street to Viaduct Harbour for boats, waterfront views and photos. The hour includes the approach walk.",
+          "sourceIds": [
+            "return-viaduct"
+          ]
+        },
+        {
+          "summary": "海港咖啡与坐休",
+          "summaryEn": "Harbour coffee and seated rest",
+          "text": "在港边营业中的咖啡或餐饮店坐休补水，未预订；保留休息，不再添加景点。",
+          "textEn": "Sit down for refreshments at an open harbour venue; nothing is booked. Keep the rest break instead of adding another sight.",
+          "sourceIds": [
+            "return-viaduct"
+          ]
+        },
+        {
+          "summary": "步行去天空塔",
+          "summaryEn": "Walk to Sky Tower",
+          "text": "从海港步行至Victoria Street与Federal Street附近的天空塔入口，20分钟为计划预算。",
+          "textEn": "Walk from the harbour to the Sky Tower entrance near Victoria and Federal Streets; allow a planned 20 minutes.",
+          "sourceIds": [
+            "return-sky-tower"
+          ]
+        },
+        {
+          "summary": "天空塔观景",
+          "summaryEn": "Sky Tower observation decks",
+          "text": "17:00至18:15为拟参观时段，尚未购票。10月周六开放09:30至21:30、最晚20:45入场；恶劣天气或私人活动可能关闭，能见度差则省略。",
+          "textEn": "17:00–18:15 is a planned visit, with no ticket purchased. October Saturday hours are 09:30–21:30, last entry 20:45. Weather or private events may close the tower; skip it if visibility is poor.",
+          "sourceIds": [
+            "return-sky-tower"
+          ]
+        },
+        {
+          "summary": "Federal Street附近晚餐",
+          "summaryEn": "Dinner near Federal Street",
+          "text": "天空塔下来后在Federal Street附近晚餐；餐厅未预订，19:30结束并复核机场路况。",
+          "textEn": "After Sky Tower, have dinner near Federal Street. No table is booked; finish at 19:30 and recheck airport traffic.",
+          "sourceIds": [
+            "return-sky-tower"
+          ]
+        },
+        {
+          "summary": "步行回酒店",
+          "summaryEn": "Walk back to the hotel",
+          "text": "回当日退房的原酒店取行李，按已确认寄存时限返回；并非再次入住或有客房休息。",
+          "textEn": "Return to the checked-out hotel for luggage within the confirmed collection window. This does not imply another check-in or access to a room.",
+          "sourceIds": []
+        },
+        {
+          "summary": "取行李、整理与等车",
+          "summaryEn": "Collect luggage, repack and wait for pickup",
+          "text": "20:00取回全部行李，整理购物品与证件、等车；20:30按计划出发。若寄存窗口更早，则相应提前取回。",
+          "textEn": "Collect every bag at 20:00, repack purchases, check documents and wait for pickup. Leave at 20:30; collect bags earlier if the agreed storage window requires it.",
+          "sourceIds": []
         }
       ]
     },

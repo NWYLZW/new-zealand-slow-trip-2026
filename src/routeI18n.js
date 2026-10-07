@@ -25,7 +25,8 @@ export const eventTitleEn = {
   "大巴前往霍比屯": "Coach to Hobbiton",
   "霍比屯游览": "Hobbiton Movie Set tour",
   "大巴返回奥克兰": "Coach back to Auckland",
-  "奥克兰轻松半日": "Relaxed half-day in Auckland",
+  "奥克兰轻松半日": "Auckland city day",
+  "德文港与维多利亚山日落": "Devonport and Mount Victoria sunset",
   "前往奥克兰机场": "Travel to Auckland Airport",
   "办理返程值机": "Check in for the return flight",
   "返程回深圳": "Fly back to Shenzhen",
@@ -71,7 +72,7 @@ export const mapStopEn = {
   OAM: ["Ōamaru", "One-night main-route stop; 20:00 little-penguin viewing and possible New Zealand fur seals near the harbour"],
   KAT: ["Kātiki Point", "A stronger fur-seal stop; yellow-eyed penguins are only a possibility; open 07:30–17:30"],
   CHC: ["Christchurch", "One-night stay; return the South Island car at 11:00 on 8 Oct, then take JQ236 at 13:50"],
-  HBT: ["Hobbiton Movie Set", "GreatSights GS10H return coach tour from Auckland"],
+  HBT: ["Hobbiton Movie Set", "Booked GreatSights Gray Line GA7657; Hobbiton tour and buffet lunch"],
 };
 
 export const routeUiEn = {
